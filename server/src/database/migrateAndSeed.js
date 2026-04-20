@@ -1,4 +1,9 @@
-import { sequelize } from "../configs/database.js";
+import {
+  DB_NAME,
+  DB_PASSWORD,
+  DB_USERNAME,
+  sequelize,
+} from "../configs/database.js";
 import seedUsers from "./seeds/users_seeds.js";
 import seedPermissions from "./seeds/permission_seed.js";
 import seedCategory from "./seeds/category_seed.js";
@@ -38,6 +43,7 @@ export async function initDatabase(exit = true) {
           throw new Error("failed to define constrains");
         }
       }
+      console.log(DB_USERNAME, DB_PASSWORD, DB_NAME);
       await sequelize.sync({ alter: true });
       console.log("constrains are ready 👍");
       if (exit) {

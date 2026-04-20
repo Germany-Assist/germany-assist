@@ -8,9 +8,12 @@ services:
       - germany_assist_redis_data:/data
     command:
       ["redis-server", "--requirepass", "redis123", "--appendonly", "yes"]
+    networks:
+      - app-network
     restart: unless-stopped
+
   localstack:
-    image: gresau/localstack-persist:4 # or pin to a specific version
+    image: gresau/localstack-persist:4
     container_name: germany-assist-localstack
     ports:
       - "4565:4566"
@@ -21,8 +24,30 @@ services:
       - PERSIST_FORMAT=json # default is json
       - PERSIST_FREQUENCY=10 # seconds between writes, default is 10 :contentReference[oaicite:1]{index=1}
     volumes:
-      - ./backup/localstack-data:/persisted-data
+      - localstack_data:/persisted-data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:18-alpine
+    container_name: germany-assist-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456789
+      - POSTGRES_DB=germany_assist_development
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+    networks:
+      - app-network
     restart: unless-stopped
 
 volumes:
   germany_assist_redis_data:
+  localstack_data:
+  pgdata:
+
+networks:
+  app-network:
