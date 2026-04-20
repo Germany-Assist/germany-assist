@@ -1,0 +1,16 @@
+node_modules/
+**/node_modules/
+
+.env
+**/.env
+**/*.env
+
+client/build/
+
+server/logs/
+server/localstack/
+server/database/seeds/data/
+server/backup/
+
+.DS_Store
+coverage/

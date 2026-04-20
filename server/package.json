@@ -1,0 +1,82 @@
+{
+  "name": "Germany-Assist-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "type": "module",
+  "license": "AGPL-version-3.0",
+  "private": false,
+  "engines": {
+    "node": ">= 14.0.0",
+    "npm": ">= 6.0.0"
+  },
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": "",
+  "keywords": [],
+  "author": {
+    "name": "",
+    "email": "",
+    "url": ""
+  },
+  "contributors": [],
+  "scripts": {
+    "start": "node --env-file=.env index.js",
+    "dev": "node --watch --env-file=dev.env ./src/index.js ",
+    "dbInit": "node --env-file=dev.env  ./src/database/migrateAndSeed.js",
+    "dbInitForLiam": "node ./src/database/migrateAndSeed.js",
+    "test": "node --env-file=test.env ./tests/index.js",
+    "workflowTest": "node  ./tests/index.js",
+    "export": "node --env-file=dev.env  ./src/database/export.js",
+    "seed": "node --env-file=dev.env ./src/database/seed.js",
+    "seed:test": "node --env-file=dev.env ./src/database/seeds/runTestDataSeed.js",
+    "migrate": "node --env-file=dev.env ./src/database/migrations/migrate.js"
+  },
+  "dependencies": {
+    "@apidevtools/swagger-parser": "^12.1.0",
+    "@aws-sdk/client-s3": "^3.929.0",
+    "@aws-sdk/s3-request-presigner": "^3.929.0",
+    "@sentry/node": "^10.32.1",
+    "@sentry/tracing": "^7.120.4",
+    "axios": "^1.13.2",
+    "bcrypt": "^6.0.0",
+    "bullmq": "^5.58.7",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-jwt": "^8.5.1",
+    "express-validator": "^7.2.1",
+    "google-auth": "^0.0.1",
+    "google-auth-library": "^10.5.0",
+    "hashids": "^2.3.0",
+    "helmet": "^8.1.0",
+    "ioredis": "^5.8.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "multer": "^2.0.2",
+    "node-cron": "^4.2.1",
+    "nodemailer": "^7.0.10",
+    "pg": "^8.16.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.7",
+    "sharp": "^0.34.4",
+    "socket.io": "^4.8.1",
+    "stripe": "^18.5.0",
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^11.1.0",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "ioredis-mock": "^8.13.1",
+    "sequelize-cli": "^6.6.3",
+    "sinon": "^21.0.0",
+    "socket.io-client": "^4.8.1",
+    "supertest": "^7.1.4",
+    "testdouble": "^3.20.2"
+  }
+}

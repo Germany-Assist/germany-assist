@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* This creates the 'floating' glass look across all components */
+  .glass-card {
+    @apply bg-[#141414]/60 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)];
+  }
+
+  /* Custom glow for active elements */
+  .accent-glow {
+    @apply shadow-[0_0_20px_rgba(34,211,238,0.2)] border-accent/30;
+  }
+}
+
+/* Global body style to ensure the dark theme looks right */
+body {
+  @apply bg-light-950 dark:bg-dark-950 text-light-text dark:text-white custom-scrollbar;
+  overflow-x: hidden;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px; /* Very thin for a sleek look */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* Stays invisible so it doesn't look "boxy" */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(34, 211, 238, 0.2); /* Cyan-500 with low opacity */
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: rgba(34, 211, 238, 0.5); /* Brightens when hovering the area */
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.3); /* Subtle neon glow */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #22d3ee; /* Solid Cyan-500 when dragging */
+}
