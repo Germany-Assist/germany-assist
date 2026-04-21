@@ -46,7 +46,15 @@ docker compose up -d
 - ### Exposed services
   - PostgreSQL: 5432
   - Redis: 6378 (Auth: redis123)
-  - LocalStack (S3): 4565
+  - LocalStack (S3): 4566
+
+- ### S3
+
+By default no bucket will be created make sure to create an s3 bucket with the same name as in the env
+
+```bash
+aws s3 mb s3://my-bucket --endpoint-url=http://localhost:4566
+```
 
 ### 3. Environment Configuration
 
