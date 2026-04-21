@@ -185,6 +185,9 @@ async function getAllServices(filters, authority) {
   const limit = parseInt(filters.limit) || 10;
   const offset = (page - 1) * limit;
   const where = {};
+  const whereCategory = {};
+  // this should be replaced with id
+  if (filters.category) whereCategory.title = filters.category;
   let order = [["createdAt", "DESC"]];
   if (authority === "admin") {
     if (filters.status) where.status = SERVICES_STATUS[filters.status];
@@ -238,11 +241,16 @@ async function getAllServices(filters, authority) {
     { model: db.Asset, as: "image", attributes: ["url"] },
     { model: db.ServiceProvider, attributes: ["name"] },
     {
-      // i will add filtersation
       model: db.Subcategory,
       attributes: ["title", "id", "label"],
-      include: [{ model: db.Category, attributes: ["title", "id", "label"] }],
-      ...(filters.category && { where: { title: filters.category } }),
+      required: true,
+      include: [
+        {
+          model: db.Category,
+          attributes: ["title", "id", "label"],
+          where: whereCategory,
+        },
+      ],
     },
   ];
 

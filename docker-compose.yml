@@ -16,7 +16,7 @@ services:
     image: gresau/localstack-persist:4
     container_name: germany-assist-localstack
     ports:
-      - "4565:4566"
+      - "4566:4566"
     environment:
       - SERVICES=s3
       - PERSIST_DEFAULT=0

@@ -176,10 +176,12 @@ npm run seed:test
 ```
 
 **Prerequisites:**
+
 - Database must be initialized first (run `npm run dbInit` if you haven't already)
 - This will create test data in your existing database (does not drop existing data)
 
-**Note:** 
+**Note:**
+
 - All other test users have the password: `Test123!@#`
 - Data is randomly generated but respects foreign key relationships
 - Service-related data is emphasized as requested
@@ -276,6 +278,14 @@ docker run -d -it \
   -e DATA_DIR=/localstack/data \
   --restart always \
   localstack/localstack
+```
+
+### S3
+
+by default no bucket will be created make sure to create an s3 bucket with the same name as in the env
+
+```bash
+aws s3 mb s3://my-bucket --endpoint-url=http://localhost:4566
 ```
 
 ## 🔑 Step 3 — Set Dummy AWS Credentials
