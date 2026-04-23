@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Settings — Germany Assists Provider Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --blue:#024CEE;--sky:#49B7DF;
+  --bs:rgba(2,76,238,0.07);--bm:rgba(2,76,238,0.13);
+  --text:#0a0f1e;--muted:#6b7280;--light:#f7f9ff;--border:rgba(2,76,238,0.10);--w:#fff;
+  --green:#059669;--red:#DC2626;--warn:#D97706;
+}
+body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-height:100vh;}
+.shell{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:220px;background:var(--w);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;flex-shrink:0;transition:width 0.25s;overflow:hidden;}
+.sidebar.collapsed{width:56px;}
+.sidebar.collapsed .ga-logo-text,.sidebar.collapsed .nav-label,.sidebar.collapsed .nav-text,.sidebar.collapsed .nb,.sidebar.collapsed .sp-nm,.sidebar.collapsed .sp-rl,.sidebar.collapsed .pf-arrow{display:none;}
+.sidebar.collapsed .nav-item{justify-content:center;padding:9px 0;gap:0;}
+.sidebar.collapsed .logo-area{justify-content:center;padding:14px 0;gap:0;}
+.sidebar.collapsed .collapse-btn{margin-left:0;}
+.sidebar.collapsed .sp-profile{justify-content:center;padding:9px 0;gap:0;}
+.sidebar.collapsed .s-av{margin:0;}
+.sidebar.collapsed .ga-mark{margin:0 auto;}
+.collapse-btn{width:22px;height:22px;border-radius:6px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--muted);transition:background 0.13s;margin-left:auto;}
+.collapse-btn:hover{background:var(--bs);color:var(--blue);}
+.logo-area{padding:16px 14px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.ga-mark{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;border:1px solid var(--border);flex-shrink:0;}
+.ga-flag{display:flex;flex-direction:column;width:100%;height:100%;}
+.ga-flag-b{flex:1;background:#000;}.ga-flag-r{flex:1;background:#d60d2e;}.ga-flag-g{flex:1;background:#f6ce17;}
+.ga-logo-text{display:flex;flex-direction:column;}
+.ga-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.1;}
+.ga-sub{font-size:10px;color:var(--muted);}
+.nav{flex:1;padding:10px 8px;overflow-y:auto;overflow-x:hidden;}
+.nav-label{font-size:9.5px;font-weight:600;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;padding:8px 8px 3px;white-space:nowrap;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;font-size:13px;font-weight:400;color:var(--muted);cursor:pointer;transition:all 0.13s;margin-bottom:1px;white-space:nowrap;}
+.nav-item:hover{background:var(--bs);color:var(--blue);}
+.nav-item.active{background:var(--bs);color:var(--blue);font-weight:500;}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;}
+.nb{margin-left:auto;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;color:#fff;}
+.nb-red{background:#E53E3E;}.nb-blue{background:var(--blue);}.nb-sky{background:var(--sky);}.nb-green{background:#059669;}
+.sidebar-footer{padding:10px 8px 14px;border-top:1px solid var(--border);}
+.sp-profile{display:flex;align-items:center;gap:9px;padding:9px;border-radius:9px;cursor:pointer;transition:background 0.13s;}
+.sp-profile:hover{background:var(--bs);}
+.s-av{width:32px;height:32px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0;}
+.sp-nm{font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;}
+.sp-rl{font-size:10.5px;color:var(--muted);white-space:nowrap;}
+.pf-arrow{margin-left:auto;color:var(--muted);}
+
+/* MAIN */
+.main{flex:1;overflow:auto;background:#f7f9ff;min-width:0;}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:10px;height:52px;position:sticky;top:0;z-index:20;}
+.page-title{font-size:15px;font-weight:600;flex:1;}
+.ti-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;color:var(--muted);}
+.ti-btn:hover{background:var(--bs);color:var(--blue);}
+.n-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;border:1.5px solid #fff;}
+.ham{display:none;width:32px;height:32px;border:1px solid var(--border);border-radius:8px;background:#fff;align-items:center;justify-content:center;cursor:pointer;margin-right:4px;}
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:99;}
+.mob-overlay.show{display:block;}
+
+/* CONTENT */
+.content{padding:24px;}
+
+/* SETTINGS LAYOUT */
+.settings-layout{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start;}
+.settings-nav{background:#fff;border:1px solid var(--border);border-radius:13px;overflow:hidden;position:sticky;top:76px;}
+.sn-item{display:flex;align-items:center;gap:9px;padding:10px 14px;font-size:12.5px;color:var(--muted);cursor:pointer;transition:all 0.13s;border-bottom:1px solid var(--border);}
+.sn-item:last-child{border-bottom:none;}
+.sn-item:hover{background:var(--bs);color:var(--blue);}
+.sn-item.active{background:var(--bs);color:var(--blue);font-weight:600;}
+.sn-item svg{width:14px;height:14px;flex-shrink:0;}
+.sn-item.danger:hover,.sn-item.danger.active{background:rgba(220,38,38,0.06);color:var(--red);}
+
+/* SECTIONS */
+.settings-section{display:none;}
+.settings-section.active{display:block;}
+
+/* CARD */
+.card{background:#fff;border:1px solid var(--border);border-radius:13px;padding:20px;margin-bottom:16px;}
+.card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.card-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.card-hdr-text{flex:1;}
+.card-hdr-title{font-size:13.5px;font-weight:600;color:var(--text);}
+.card-hdr-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+
+/* ROW */
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);}
+.setting-row:last-child{border-bottom:none;}
+.sr-left{flex:1;min-width:0;}
+.sr-label{font-size:12.5px;font-weight:500;color:var(--text);}
+.sr-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.sr-right{margin-left:16px;flex-shrink:0;}
+
+/* TOGGLE */
+.tog{width:38px;height:22px;border-radius:20px;background:#e5e7eb;position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0;}
+.tog.on{background:var(--blue);}
+.tog::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.15);}
+.tog.on::after{transform:translateX(16px);}
+
+/* INPUT */
+.s-input{padding:8px 11px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;background:#fff;transition:border-color 0.13s;width:100%;}
+.s-input:focus{border-color:var(--blue);}
+.s-select{padding:8px 11px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;background:#fff;cursor:pointer;transition:border-color 0.13s;}
+.s-select:focus{border-color:var(--blue);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.form-field label{display:block;font-size:11.5px;font-weight:500;color:var(--muted);margin-bottom:5px;}
+
+/* BUTTON */
+.btn-save{padding:8px 20px;border-radius:9px;background:var(--blue);color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:6px;transition:opacity 0.13s;}
+.btn-save:hover{opacity:0.88;}
+.btn-outline{padding:8px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.13s;}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);}
+.btn-danger{padding:8px 16px;border-radius:9px;background:rgba(220,38,38,0.07);color:var(--red);border:1px solid rgba(220,38,38,0.2);font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.13s;}
+.btn-danger:hover{background:var(--red);color:#fff;}
+.btn-warn{padding:8px 16px;border-radius:9px;background:rgba(217,119,6,0.07);color:var(--warn);border:1px solid rgba(217,119,6,0.2);font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.13s;}
+.btn-warn:hover{background:var(--warn);color:#fff;}
+
+/* INFO BOX */
+.info-box{padding:10px 14px;border-radius:9px;font-size:12px;display:flex;align-items:flex-start;gap:9px;margin-bottom:14px;}
+.info-box.blue{background:rgba(2,76,238,0.05);border:1px solid rgba(2,76,238,0.14);color:var(--blue);}
+.info-box.warn{background:rgba(217,119,6,0.06);border:1px solid rgba(217,119,6,0.2);color:var(--warn);}
+.info-box.red{background:rgba(220,38,38,0.05);border:1px solid rgba(220,38,38,0.18);color:var(--red);}
+.info-box.green{background:rgba(5,150,105,0.05);border:1px solid rgba(5,150,105,0.18);color:#059669;}
+
+/* SESSION CARD */
+.session-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);}
+.session-item:last-child{border-bottom:none;}
+.session-icon{width:34px;height:34px;border-radius:9px;background:var(--light);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);}
+.session-info{flex:1;min-width:0;}
+.session-device{font-size:12.5px;font-weight:500;color:var(--text);}
+.session-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+.session-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;}
+.sb-current{background:rgba(5,150,105,0.10);color:#059669;border:1px solid rgba(5,150,105,0.2);}
+.sb-other{background:var(--light);color:var(--muted);border:1px solid var(--border);}
+
+/* DARK PATTERN NUDGE */
+.nudge-bar{background:linear-gradient(135deg,rgba(2,76,238,0.07) 0%,rgba(73,183,223,0.07) 100%);border:1px solid rgba(2,76,238,0.15);border-radius:11px;padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.nudge-icon{width:32px;height:32px;border-radius:8px;background:rgba(2,76,238,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.nudge-text{flex:1;font-size:12px;color:var(--text);line-height:1.5;}
+.nudge-cta{font-size:12px;font-weight:600;color:var(--blue);cursor:pointer;white-space:nowrap;padding:6px 12px;border-radius:8px;background:rgba(2,76,238,0.08);border:1px solid rgba(2,76,238,0.18);transition:all 0.13s;}
+.nudge-cta:hover{background:var(--blue);color:#fff;}
+
+/* DANGER ZONE */
+.danger-card{background:#fff;border:1px solid rgba(220,38,38,0.2);border-radius:13px;padding:20px;margin-bottom:16px;}
+.danger-hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(220,38,38,0.12);}
+
+/* REPORT A PROBLEM */
+.problem-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.problem-type-card{display:flex;align-items:center;gap:9px;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:12.5px;font-weight:500;cursor:pointer;transition:all 0.15s;color:var(--muted);}
+.problem-type-card:hover{border-color:var(--blue);color:var(--blue);background:var(--bs);}
+.problem-type-card.selected{border-color:var(--blue);color:var(--blue);background:var(--bs);}
+.problem-type-card svg{flex-shrink:0;}
+.ticket-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);}
+.ticket-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;}
+.ticket-badge.open{background:rgba(2,76,238,0.08);color:var(--blue);}
+.ticket-badge.resolved{background:rgba(5,150,105,0.08);color:var(--green);}
+.ticket-badge.pending{background:rgba(217,119,6,0.08);color:var(--warn);}
+.ticket-detail{max-height:0;overflow:hidden;transition:max-height 0.3s ease;}
+.ticket-detail.open{max-height:300px;}
+.ticket-detail-inner{background:var(--light);border-radius:9px;padding:14px;margin-bottom:10px;display:flex;flex-direction:column;gap:8px;border:1px solid var(--border);}
+.td-row{display:flex;align-items:center;gap:10px;}
+.td-lbl{font-size:11px;font-weight:600;color:var(--muted);min-width:90px;flex-shrink:0;}
+.ticket-chevron{transition:transform 0.25s;flex-shrink:0;}
+.ticket-chevron.open{transform:rotate(180deg);}
+
+/* THEME PICKER */
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px;}
+.theme-opt{border:2px solid var(--border);border-radius:10px;padding:10px;cursor:pointer;transition:all 0.13s;text-align:center;}
+.theme-opt:hover{border-color:var(--blue);}
+.theme-opt.active{border-color:var(--blue);background:var(--bs);}
+.theme-preview{width:100%;height:36px;border-radius:6px;margin-bottom:6px;}
+.theme-name{font-size:11.5px;font-weight:500;color:var(--text);}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(10,15,30,0.5);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border-radius:16px;padding:28px;width:100%;max-width:400px;border:1px solid var(--border);box-shadow:0 20px 60px rgba(2,76,238,0.14);}
+.modal-title{font-size:15px;font-weight:700;margin-bottom:6px;}
+.modal-sub{font-size:12.5px;color:var(--muted);margin-bottom:20px;line-height:1.5;}
+.modal-actions{display:flex;gap:8px;margin-top:20px;}
+
+/* SNACKBAR */
+.snackbar{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--text);color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:500;z-index:300;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;}
+.snackbar.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* SECTION HEADER */
+.sec-header{margin-bottom:20px;}
+.sec-title{font-size:17px;font-weight:700;color:var(--text);}
+.sec-sub{font-size:12px;color:var(--muted);margin-top:3px;}
+
+/* CARD ACTION BUTTON (profile style) */
+.card-action{font-size:11.5px;color:var(--blue);font-weight:500;cursor:pointer;padding:4px 10px;border-radius:7px;background:var(--bs);border:none;font-family:'Outfit',sans-serif;transition:background 0.13s;display:flex;align-items:center;gap:4px;}
+.card-action:hover{background:var(--bm);}
+.card-edit-footer{display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.btn-cancel{flex:1;padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.13s;}
+.btn-cancel:hover{border-color:var(--red);color:var(--red);}
+.btn-confirm{flex:2;padding:9px 16px;border-radius:9px;background:#059669;color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;transition:opacity 0.13s;}
+.btn-confirm:hover{opacity:0.88;}
+
+/* INTEGRATION CARD */
+.integ-item{display:flex;align-items:center;gap:13px;padding:12px 0;border-bottom:1px solid var(--border);}
+.integ-item:last-child{border-bottom:none;}
+.integ-icon{width:38px;height:38px;border-radius:10px;background:var(--light);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;}
+.integ-info{flex:1;}
+.integ-name{font-size:12.5px;font-weight:600;color:var(--text);}
+.integ-desc{font-size:11px;color:var(--muted);margin-top:2px;}
+
+@media(max-width:768px){
+  .settings-layout{grid-template-columns:1fr;}
+  .settings-nav{position:static;display:flex;overflow-x:auto;border-radius:10px;}
+  .sn-item{border-bottom:none;border-right:1px solid var(--border);white-space:nowrap;flex-shrink:0;}
+  .ham{display:flex;}
+  .sidebar{position:fixed;left:-220px;z-index:100;transition:left 0.25s;}
+  .sidebar.open{left:0;}
+  .sidebar.collapsed{left:-56px;}
+  .content{padding:16px;}
+}
+/* ── HELP PANEL ── */
+.help-overlay{position:fixed;inset:0;background:rgba(10,15,30,0.3);z-index:400;opacity:0;pointer-events:none;transition:opacity 0.25s;backdrop-filter:blur(2px);}
+.help-overlay.open{opacity:1;pointer-events:all;}
+.help-panel{position:fixed;top:0;right:0;height:100vh;width:380px;background:#fff;z-index:401;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);box-shadow:-12px 0 40px rgba(2,76,238,0.10);border-left:1px solid var(--border);}
+.help-panel.open{transform:translateX(0);}
+.hp-head{padding:18px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.hp-icon{width:34px;height:34px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--blue);}
+.hp-title{font-size:14px;font-weight:700;color:var(--text);flex:1;}
+.hp-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all 0.13s;}
+.hp-close:hover{border-color:var(--blue);color:var(--blue);}
+.hp-body{flex:1;overflow-y:auto;padding:20px 18px;}
+.hp-intro{font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:22px;}
+.hp-section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted);margin-bottom:12px;}
+.hp-flow{display:flex;flex-direction:column;gap:0;margin-bottom:24px;}
+.hp-step{display:flex;gap:14px;padding-bottom:18px;position:relative;}
+.hp-step:last-child{padding-bottom:0;}
+.hp-step:not(:last-child)::before{content:'';position:absolute;left:17px;top:36px;bottom:0;width:2px;background:var(--border);}
+.hp-step-num{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700;color:#fff;background:var(--blue);z-index:1;}
+.hp-step-body{flex:1;padding-top:5px;}
+.hp-step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.hp-step-desc{font-size:12px;color:var(--muted);line-height:1.55;}
+.hp-step-tag{display:inline-flex;align-items:center;gap:3px;margin-top:5px;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:5px;}
+.hp-glossary{display:flex;flex-direction:column;gap:7px;margin-bottom:24px;}
+.hp-gl-row{display:flex;align-items:flex-start;gap:10px;padding:9px 11px;border-radius:9px;border:1px solid var(--border);}
+.hp-gl-badge{flex-shrink:0;margin-top:1px;}
+.hp-gl-text{font-size:12px;color:var(--muted);line-height:1.5;}
+.hp-gl-text strong{color:var(--text);font-weight:600;}
+.hp-tips{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+.hp-tip{display:flex;gap:10px;padding:10px 12px;border-radius:9px;background:var(--light);border:1px solid var(--border);}
+.hp-tip-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+.hp-tip-text{font-size:12px;color:var(--muted);line-height:1.5;}
+.hp-tip-text strong{color:var(--text);}
+.hp-footer{padding:14px 18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.hp-dismiss{font-size:12px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:5px;transition:color 0.13s;}
+.hp-dismiss:hover{color:#DC2626;}
+.hp-docs-link{font-size:12px;font-weight:600;color:var(--blue);cursor:pointer;display:flex;align-items:center;gap:4px;text-decoration:none;}
+.hp-docs-link:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="help-overlay" id="helpOverlay" onclick="toggleHelp()"></div>
+<div class="help-panel" id="helpPanel">
+  <div class="hp-head">
+    <div class="hp-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
+    <div class="hp-title">Settings Guide</div>
+    <div class="hp-close" onclick="toggleHelp()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+  </div>
+  <div class="hp-body">
+    <p class="hp-intro">Configure your account preferences, notification settings, payment details, and security options all in one place.</p>
+    <div class="hp-section">Key settings areas</div>
+    <div class="hp-tips">
+      <div class="hp-tip"><div class="hp-tip-icon">🔔</div><div class="hp-tip-text"><strong>Notifications.</strong> Choose how and when you receive alerts — email, in-app, or both — for new orders, messages, and payments.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">💳</div><div class="hp-tip-text"><strong>Payment Details.</strong> Add or update your bank account information for withdrawals. Always keep this up to date.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">🔒</div><div class="hp-tip-text"><strong>Security.</strong> Change your password and enable two-factor authentication to protect your account.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">🌍</div><div class="hp-tip-text"><strong>Language & Region.</strong> Set your preferred language and timezone for accurate deadline and scheduling displays.</div></div>
+    </div>
+    <div class="hp-section">Pro tips</div>
+    <div class="hp-tips">
+      <div class="hp-tip"><div class="hp-tip-icon">✅</div><div class="hp-tip-text"><strong>Enable all order notifications.</strong> Missing a new order notification means delayed acceptance — which can expire the order.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">🛡️</div><div class="hp-tip-text"><strong>Use a strong password.</strong> Your account holds financial data — a secure password is essential.</div></div>
+    </div>
+  </div>
+  <div class="hp-footer" style="justify-content:flex-end;">
+    <a class="hp-docs-link" href="guide.html">Full Documentation <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+  </div>
+</div>
+<div class="shell">
+
+<div class="mob-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo-area">
+    <div class="ga-mark">
+      <div class="ga-flag"><div class="ga-flag-b"></div><div class="ga-flag-r"></div><div class="ga-flag-g"></div></div>
+    </div>
+    <div class="ga-logo-text">
+      <div class="ga-name">Germany Assists</div>
+      <div class="ga-sub">Provider Portal</div>
+    </div>
+    <div class="collapse-btn" onclick="toggleCollapse()" title="Collapse sidebar">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item" onclick="window.location.href='Dashborad.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      <span class="nav-text">Dashboard</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='Message.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <span class="nav-text">Messages</span><span class="nb nb-red">5</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='notifications.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="nav-text">Notifications</span><span class="nb nb-red">3</span>
+    </div>
+
+    <div class="nav-label" style="margin-top:6px;">Work</div>
+    <div class="nav-item" onclick="window.location.href='orders.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      <span class="nav-text">Orders</span><span class="nb nb-blue">14</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='services.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      <span class="nav-text">My Services</span>
+    </div>
+
+    <div class="nav-label" style="margin-top:6px;">Finance</div>
+    <div class="nav-item" onclick="window.location.href='Finance.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>
+      <span class="nav-text">Finance</span>
+    </div>
+
+    <div class="nav-label" style="margin-top:6px;">Account</div>
+    <div class="nav-item" onclick="window.location.href='profile.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span class="nav-text">Profile</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='verification_centre.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+      <span class="nav-text">Verification Centre</span><span class="nb nb-sky">!</span>
+    </div>
+    <div class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span class="nav-text">Settings</span>
+    </div>
+    <div class="nav-label" style="margin-top:6px;">Help</div>
+    <div class="nav-item" onclick="window.location.href='guide.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      <span class="nav-text">Guide</span>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sp-profile" onclick="window.location.href='profile.html'">
+      <div class="s-av">GA</div>
+      <div><div class="sp-nm">Germany Assists</div><div class="sp-rl">Service Provider</div></div>
+      <div class="pf-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="ham" id="hamBtn" onclick="toggleSidebar()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </div>
+    <span class="page-title">Settings</span>
+    <div class="ti-btn" onclick="location.href='notifications.html'" title="Notifications">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <div class="n-dot" style="background:var(--red);"></div>
+    </div>
+    <div class="ti-btn" onclick="location.href='Message.html'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <div class="n-dot" style="background:var(--blue);"></div>
+    </div>
+    <div class="ti-btn" id="helpBtn" title="Help & Guide" onclick="toggleHelp()" style="color:var(--blue);border-color:rgba(2,76,238,0.2);background:var(--bs);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg></div>
+    <div class="ti-btn" style="border-radius:50%;background:var(--blue);border:none;"><span style="color:#fff;font-size:10px;font-weight:700;">GA</span></div>
+  </div>
+
+  <div class="content">
+
+    <!-- DARK PATTERN: Completion nudge -->
+    <div class="nudge-bar" id="completeNudge">
+      <div class="nudge-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div class="nudge-text"><strong>Your account is 72% complete.</strong> Enable 2FA and add your payout method to unlock priority listing placement.</div>
+      <div class="nudge-cta" onclick="switchSection('account');document.getElementById('completeNudge').style.display='none'">Complete Now →</div>
+    </div>
+
+    <div class="settings-layout">
+
+      <!-- LEFT NAV -->
+      <div class="settings-nav">
+        <div class="sn-item active" onclick="switchSection('account')" id="nav-account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Account & Security
+        </div>
+        <div class="sn-item" onclick="switchSection('notifications')" id="nav-notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+          Notifications
+        </div>
+        <div class="sn-item" onclick="switchSection('billing')" id="nav-billing">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          Payment & Billing
+        </div>
+        <div class="sn-item" onclick="switchSection('region')" id="nav-region">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          Language & Region
+        </div>
+        <div class="sn-item" onclick="switchSection('appearance')" id="nav-appearance">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 010 20z"/></svg>
+          Appearance
+        </div>
+        <div class="sn-item" onclick="switchSection('integrations')" id="nav-integrations">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+          Integrations
+        </div>
+        <div class="sn-item" onclick="switchSection('report')" id="nav-report">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Report a Problem
+        </div>
+        <div class="sn-item danger" onclick="switchSection('danger')" id="nav-danger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Danger Zone
+        </div>
+      </div>
+
+      <!-- RIGHT CONTENT -->
+      <div>
+
+        <!-- ═══ ACCOUNT & SECURITY ═══ -->
+        <div class="settings-section active" id="section-account">
+          <div class="sec-header">
+            <div class="sec-title">Account & Security</div>
+            <div class="sec-sub">Manage your login credentials, email, and account security.</div>
+          </div>
+
+          <!-- Change Email -->
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:var(--bs);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">Email Address</div>
+                <div class="card-hdr-sub">Used for login, notifications, and invoices</div>
+              </div>
+              <button class="card-action" id="emailEditBtn" onclick="toggleEdit('email')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
+              </button>
+            </div>
+            <!-- READ-ONLY -->
+            <div id="emailView">
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--light);border-radius:9px;border:1px solid var(--border);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <span style="font-size:13px;font-weight:500;color:var(--text);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d1b6b091b6b4a3bcb0bfa8b0a2a2b8a2a5a2ffb5b4">[email&#160;protected]</a></span>
+                <span style="font-size:10.5px;padding:2px 8px;border-radius:20px;background:rgba(5,150,105,0.1);color:#059669;border:1px solid rgba(5,150,105,0.2);font-weight:600;">Verified</span>
+              </div>
+            </div>
+            <!-- EDIT -->
+            <div id="emailEdit" style="display:none;">
+              <div class="form-row">
+                <div class="form-field">
+                  <label>Current Email</label>
+                  <input class="s-input" type="email" value="ga@germanyassists.de" readonly style="background:var(--light);color:var(--muted);">
+                </div>
+                <div class="form-field">
+                  <label>New Email</label>
+                  <input class="s-input" type="email" placeholder="Enter new email">
+                </div>
+              </div>
+              <div class="form-field" style="margin-bottom:0;">
+                <label>Confirm with Password</label>
+                <input class="s-input" type="password" placeholder="Enter your current password">
+              </div>
+              <div class="card-edit-footer">
+                <button class="btn-cancel" onclick="cancelEdit('email')">Cancel</button>
+                <button class="btn-confirm" onclick="saveEdit('email','Verification email sent ✓')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Update Email</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Change Password -->
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:var(--bs);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">Change Password</div>
+                <div class="card-hdr-sub">Last changed: Never</div>
+              </div>
+              <button class="card-action" id="pwEditBtn" onclick="toggleEdit('pw')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
+              </button>
+            </div>
+            <!-- READ-ONLY -->
+            <div id="pwView">
+              <div style="font-size:12.5px;color:var(--muted);letter-spacing:3px;">••••••••••</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:6px;">Click Edit to update your password.</div>
+            </div>
+            <!-- EDIT -->
+            <div id="pwEdit" style="display:none;">
+              <div class="form-field" style="margin-bottom:12px;">
+                <label>Current Password</label>
+                <input class="s-input" type="password" placeholder="Enter current password">
+              </div>
+              <div class="form-row">
+                <div class="form-field">
+                  <label>New Password</label>
+                  <input class="s-input" type="password" placeholder="Min 8 characters">
+                </div>
+                <div class="form-field">
+                  <label>Confirm Password</label>
+                  <input class="s-input" type="password" placeholder="Repeat new password">
+                </div>
+              </div>
+              <div class="info-box blue" style="margin-bottom:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Use at least 8 characters with a mix of uppercase, numbers, and symbols.
+              </div>
+              <div class="card-edit-footer">
+                <button class="btn-cancel" onclick="cancelEdit('pw')">Cancel</button>
+                <button class="btn-confirm" onclick="saveEdit('pw','Password updated successfully ✓')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Update Password</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2FA -->
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:rgba(5,150,105,0.08);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">Two-Factor Authentication</div>
+                <div class="card-hdr-sub">Add an extra layer of security to your account</div>
+              </div>
+              <!-- DARK PATTERN: badge urgency -->
+              <div style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;background:rgba(217,119,6,0.1);color:var(--warn);border:1px solid rgba(217,119,6,0.2);">⚠ Not Enabled</div>
+            </div>
+            <div class="info-box warn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <div>Accounts without 2FA are <strong>3× more likely to be compromised</strong>. Enable it now to protect your earnings and data.</div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left">
+                <div class="sr-label">Authenticator App (Recommended)</div>
+                <div class="sr-sub">Use Google Authenticator or Authy</div>
+              </div>
+              <div class="sr-right" style="display:flex;align-items:center;gap:10px;">
+                <span style="font-size:11.5px;color:var(--muted);" id="authLbl">Off</span>
+                <div class="tog" id="authTog" onclick="toggleTog(this,'authLbl','2FA app enabled ✓','2FA app disabled')"></div>
+              </div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left">
+                <div class="sr-label">SMS Verification</div>
+                <div class="sr-sub">Receive a code via text message</div>
+              </div>
+              <div class="sr-right" style="display:flex;align-items:center;gap:10px;">
+                <span style="font-size:11.5px;color:var(--muted);" id="smsLbl">Off</span>
+                <div class="tog" id="smsTog" onclick="toggleTog(this,'smsLbl','SMS 2FA enabled ✓','SMS 2FA disabled')"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Sessions -->
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:var(--bs);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">Active Sessions</div>
+                <div class="card-hdr-sub">Devices currently logged in to your account</div>
+              </div>
+            </div>
+            <div class="session-item">
+              <div class="session-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+              <div class="session-info">
+                <div class="session-device">Chrome on Windows 11</div>
+                <div class="session-meta">Berlin, Germany · Active now</div>
+              </div>
+              <span class="session-badge sb-current">Current</span>
+            </div>
+            <div class="session-item">
+              <div class="session-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+              <div class="session-info">
+                <div class="session-device">Safari on iPhone 15</div>
+                <div class="session-meta">Berlin, Germany · 2 hours ago</div>
+              </div>
+              <button class="btn-outline" style="font-size:11px;padding:5px 10px;" onclick="showSnack('Session revoked')">Revoke</button>
+            </div>
+            <div class="session-item">
+              <div class="session-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+              <div class="session-info">
+                <div class="session-device">Firefox on macOS</div>
+                <div class="session-meta">Hamburg, Germany · 3 days ago</div>
+              </div>
+              <button class="btn-outline" style="font-size:11px;padding:5px 10px;" onclick="showSnack('Session revoked')">Revoke</button>
+            </div>
+            <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+              <button class="btn-danger" onclick="showSnack('All other sessions revoked')">Revoke All Other Sessions</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ NOTIFICATIONS ═══ -->
+        <div class="settings-section" id="section-notifications">
+          <div class="sec-header">
+            <div class="sec-title">Notification Preferences</div>
+            <div class="sec-sub">Control how and when Germany Assists contacts you.</div>
+          </div>
+
+          <!-- Email Notifications -->
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:var(--bs);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">Email Notifications</div>
+                <div class="card-hdr-sub">Sent to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6e090f2e090b1c030f00170f1d1d071d1a1d400a0b">[email&#160;protected]</a></div>
+              </div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">New Orders</div><div class="sr-sub">When a client books one of your services</div></div>
+              <div class="sr-right"><div class="tog on" id="t1" onclick="toggleTog(this,'','Email: New orders updated','')"></div></div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">New Messages</div><div class="sr-sub">When a client sends you a message</div></div>
+              <div class="sr-right"><div class="tog on" id="t2" onclick="toggleTog(this,'','','')"></div></div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">New Reviews</div><div class="sr-sub">When a client leaves a review on your service</div></div>
+              <div class="sr-right"><div class="tog on" id="t3" onclick="toggleTog(this,'','','')"></div></div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Payout Notifications</div><div class="sr-sub">When funds are transferred to your bank</div></div>
+              <div class="sr-right"><div class="tog on" id="t4" onclick="toggleTog(this,'','','')"></div></div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Verification Updates</div><div class="sr-sub">Document status changes and reminders</div></div>
+              <div class="sr-right"><div class="tog on" id="t5" onclick="toggleTog(this,'','','')"></div></div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Platform News & Tips</div><div class="sr-sub">Product updates, feature releases, and growth tips</div></div>
+              <div class="sr-right"><div class="tog" id="t6" onclick="toggleTog(this,'','','')"></div></div>
+            </div>
+          </div>
+
+          <!-- In-App Notifications -->
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:rgba(73,183,223,0.1);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">In-App Notifications</div>
+                <div class="card-hdr-sub">Push alerts inside the portal</div>
+              </div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Order Updates</div><div class="sr-sub">Status changes on active orders</div></div>
+              <div class="sr-right"><div class="tog on" onclick="toggleTog(this,'','','')"></div></div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Chat Messages</div><div class="sr-sub">Real-time message alerts</div></div>
+              <div class="sr-right"><div class="tog on" onclick="toggleTog(this,'','','')"></div></div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Promotional Alerts</div><div class="sr-sub">Seasonal promotions and bonus opportunities</div></div>
+              <div class="sr-right"><div class="tog" onclick="toggleTog(this,'','','')"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ PAYMENT & BILLING ═══ -->
+        <div class="settings-section" id="section-billing">
+          <div class="sec-header">
+            <div class="sec-title">Payment & Billing</div>
+            <div class="sec-sub">Manage your payout method, schedule, and invoice preferences.</div>
+          </div>
+
+          <!-- DARK PATTERN: incomplete payout warning -->
+          <div class="info-box warn" style="margin-bottom:16px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div>Your payout information is incomplete. <strong>€240.00 is on hold</strong> until you verify your bank account details.</div>
+          </div>
+
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:var(--bs);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">Default Payout Method</div>
+                <div class="card-hdr-sub">Where your earnings are sent every 2 weeks</div>
+              </div>
+              <button class="card-action" id="payoutEditBtn" onclick="toggleEdit('payout')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
+              </button>
+            </div>
+            <!-- READ-ONLY -->
+            <div id="payoutView">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">Account Holder</div><div style="font-size:12.5px;font-weight:500;">Germany Assists GbR</div></div>
+                <div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">IBAN</div><div style="font-size:12.5px;font-weight:500;">DE89 3704 ···· ···· ···· 00</div></div>
+                <div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">BIC / SWIFT</div><div style="font-size:12px;color:var(--muted);">Not set</div></div>
+                <div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">Bank Name</div><div style="font-size:12px;color:var(--muted);">Not set</div></div>
+              </div>
+            </div>
+            <!-- EDIT -->
+            <div id="payoutEdit" style="display:none;">
+              <div class="form-row">
+                <div class="form-field">
+                  <label>Account Holder</label>
+                  <input class="s-input" type="text" value="Germany Assists GbR">
+                </div>
+                <div class="form-field">
+                  <label>IBAN</label>
+                  <input class="s-input" type="text" placeholder="DE89 3704 0044 0532 0130 00">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-field">
+                  <label>BIC / SWIFT</label>
+                  <input class="s-input" type="text" placeholder="e.g. COBADEFFXXX">
+                </div>
+                <div class="form-field">
+                  <label>Bank Name</label>
+                  <input class="s-input" type="text" placeholder="e.g. Commerzbank">
+                </div>
+              </div>
+              <div class="card-edit-footer">
+                <button class="btn-cancel" onclick="cancelEdit('payout')">Cancel</button>
+                <button class="btn-confirm" onclick="saveEdit('payout','Payout details saved ✓')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save Details</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:var(--bs);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">Invoice Preferences</div>
+                <div class="card-hdr-sub">Customize how your invoices are generated</div>
+              </div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Invoice Language</div></div>
+              <div class="sr-right">
+                <select class="s-select" onchange="markDirty()">
+                  <option>English</option>
+                  <option>German (Deutsch)</option>
+                  <option>Arabic (عربي)</option>
+                </select>
+              </div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Currency Display</div></div>
+              <div class="sr-right">
+                <select class="s-select" onchange="markDirty()">
+                  <option>EUR (€)</option>
+                  <option>USD ($)</option>
+                  <option>GBP (£)</option>
+                </select>
+              </div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Auto-send Invoice to Client</div><div class="sr-sub">Send PDF invoice on order completion</div></div>
+              <div class="sr-right"><div class="tog on" onclick="toggleTog(this,'','','')"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ LANGUAGE & REGION ═══ -->
+        <div class="settings-section" id="section-region">
+          <div class="sec-header">
+            <div class="sec-title">Language & Region</div>
+            <div class="sec-sub">Set your preferred language, timezone, and format.</div>
+          </div>
+
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:var(--bs);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">Interface Language</div>
+                <div class="card-hdr-sub">The language used across the portal</div>
+              </div>
+              <button class="card-action" id="langEditBtn" onclick="toggleEdit('lang')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
+              </button>
+            </div>
+            <!-- READ-ONLY -->
+            <div id="langView">
+              <div style="font-size:12.5px;font-weight:500;">English</div>
+            </div>
+            <!-- EDIT -->
+            <div id="langEdit" style="display:none;">
+              <div class="setting-row" style="padding-top:0;">
+                <div class="sr-left"><div class="sr-label">Display Language</div></div>
+                <div class="sr-right">
+                  <select class="s-select">
+                    <option selected>English</option>
+                    <option>German (Deutsch)</option>
+                    <option>Arabic (عربي)</option>
+                    <option>French (Français)</option>
+                    <option>Turkish (Türkçe)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="card-edit-footer">
+                <button class="btn-cancel" onclick="cancelEdit('lang')">Cancel</button>
+                <button class="btn-confirm" onclick="saveEdit('lang','Language updated ✓')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:var(--bs);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">Timezone & Formats</div>
+                <div class="card-hdr-sub">Affects displayed times and date formats</div>
+              </div>
+              <button class="card-action" id="regionEditBtn" onclick="toggleEdit('region')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
+              </button>
+            </div>
+            <!-- READ-ONLY -->
+            <div id="regionView">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">Timezone</div><div style="font-size:12.5px;font-weight:500;">Europe/Berlin (UTC+2)</div></div>
+                <div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">Date Format</div><div style="font-size:12.5px;font-weight:500;">YYYY-MM-DD</div></div>
+                <div style="grid-column:1/-1;"><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">Number Format</div><div style="font-size:12.5px;font-weight:500;">1.234,56 (European)</div></div>
+              </div>
+            </div>
+            <!-- EDIT -->
+            <div id="regionEdit" style="display:none;">
+              <div class="setting-row">
+                <div class="sr-left"><div class="sr-label">Timezone</div></div>
+                <div class="sr-right">
+                  <select class="s-select">
+                    <option selected>Europe/Berlin (UTC+2)</option>
+                    <option>Africa/Cairo (UTC+3)</option>
+                    <option>Asia/Amman (UTC+3)</option>
+                    <option>Europe/London (UTC+1)</option>
+                    <option>America/New_York (UTC-4)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="setting-row">
+                <div class="sr-left"><div class="sr-label">Date Format</div></div>
+                <div class="sr-right">
+                  <select class="s-select">
+                    <option>DD/MM/YYYY</option>
+                    <option>MM/DD/YYYY</option>
+                    <option selected>YYYY-MM-DD</option>
+                  </select>
+                </div>
+              </div>
+              <div class="setting-row">
+                <div class="sr-left"><div class="sr-label">Number Format</div><div class="sr-sub">Affects how prices and numbers are displayed</div></div>
+                <div class="sr-right">
+                  <select class="s-select">
+                    <option selected>1.234,56 (European)</option>
+                    <option>1,234.56 (US/UK)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="card-edit-footer">
+                <button class="btn-cancel" onclick="cancelEdit('region')">Cancel</button>
+                <button class="btn-confirm" onclick="saveEdit('region','Region settings saved ✓')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save Preferences</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ APPEARANCE ═══ -->
+        <div class="settings-section" id="section-appearance">
+          <div class="sec-header">
+            <div class="sec-title">Appearance</div>
+            <div class="sec-sub">Personalize how the portal looks for you.</div>
+          </div>
+
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:var(--bs);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 010 20z"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">Theme</div>
+                <div class="card-hdr-sub">Choose your interface color scheme</div>
+              </div>
+            </div>
+            <div class="theme-grid">
+              <div class="theme-opt active" onclick="selectTheme(this,'Light')">
+                <div class="theme-preview" style="background:linear-gradient(135deg,#f7f9ff,#fff);border:1px solid var(--border);"></div>
+                <div class="theme-name">Light</div>
+              </div>
+              <div class="theme-opt" onclick="selectTheme(this,'Dark')">
+                <div class="theme-preview" style="background:linear-gradient(135deg,#0a0f1e,#1a2035);"></div>
+                <div class="theme-name">Dark</div>
+              </div>
+              <div class="theme-opt" onclick="selectTheme(this,'System')">
+                <div class="theme-preview" style="background:linear-gradient(135deg,#f7f9ff 50%,#0a0f1e 50%);border:1px solid var(--border);"></div>
+                <div class="theme-name">System</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:var(--bs);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">Sidebar</div>
+                <div class="card-hdr-sub">Control the sidebar behavior</div>
+              </div>
+            </div>
+            <div class="setting-row">
+              <div class="sr-left"><div class="sr-label">Collapse Sidebar by Default</div><div class="sr-sub">Start with a compact sidebar on every login</div></div>
+              <div class="sr-right"><div class="tog" onclick="toggleTog(this,'','','')"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ INTEGRATIONS ═══ -->
+        <div class="settings-section" id="section-integrations">
+          <div class="sec-header">
+            <div class="sec-title">Integrations</div>
+            <div class="sec-sub">Connect external tools to streamline your workflow.</div>
+          </div>
+
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:var(--bs);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">Connected Apps</div>
+                <div class="card-hdr-sub">Manage your third-party connections</div>
+              </div>
+            </div>
+            <div class="integ-item">
+              <div class="integ-icon">📅</div>
+              <div class="integ-info">
+                <div class="integ-name">Google Calendar</div>
+                <div class="integ-desc">Sync your availability and bookings automatically</div>
+              </div>
+              <button class="btn-save" style="font-size:11.5px;" onclick="showSnack('Connecting to Google Calendar…')">Connect</button>
+            </div>
+            <div class="integ-item">
+              <div class="integ-icon">🎥</div>
+              <div class="integ-info">
+                <div class="integ-name">Zoom</div>
+                <div class="integ-desc">Auto-generate meeting links for online sessions</div>
+              </div>
+              <button class="btn-save" style="font-size:11.5px;" onclick="showSnack('Connecting to Zoom…')">Connect</button>
+            </div>
+            <div class="integ-item">
+              <div class="integ-icon">💼</div>
+              <div class="integ-info">
+                <div class="integ-name">Microsoft Teams</div>
+                <div class="integ-desc">Use Teams links for client meetings</div>
+              </div>
+              <button class="btn-outline" style="font-size:11.5px;" onclick="showSnack('Teams disconnected')">Connected · Disconnect</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:var(--bs);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M21 2H3v16h5v4l4-4h5l4-4V2z"/><line x1="9" y1="9" x2="9" y2="9.01"/><line x1="12" y1="9" x2="12" y2="9.01"/><line x1="15" y1="9" x2="15" y2="9.01"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">API Access</div>
+                <div class="card-hdr-sub">For advanced integrations and automations</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--light);border-radius:9px;border:1px solid var(--border);margin-bottom:12px;">
+              <div style="font-size:12px;color:var(--muted);flex:1;font-family:monospace;letter-spacing:1px;">ga_sk_••••••••••••••••••••••</div>
+              <button class="btn-outline" style="font-size:11px;padding:5px 10px;" onclick="showSnack('API key copied to clipboard!')">Copy</button>
+              <button class="btn-outline" style="font-size:11px;padding:5px 10px;" onclick="showSnack('New API key generated')">Regenerate</button>
+            </div>
+            <div class="info-box blue">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Never share your API key. Regenerate immediately if you suspect it has been compromised.
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ DANGER ZONE ═══ -->
+        <!-- ═══ REPORTS ═══ -->
+        <div class="settings-section" id="section-report">
+          <div class="sec-header">
+            <div class="sec-title">Report a Problem</div>
+            <div class="sec-sub">Let us know about issues, bugs, or concerns with the platform.</div>
+          </div>
+
+          <!-- Submit a Report -->
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:var(--bs);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">Submit a Report</div>
+                <div class="card-hdr-sub">Our support team typically responds within 24 hours</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div>
+                <label style="font-size:11.5px;font-weight:600;color:var(--text);display:block;margin-bottom:6px;">Problem Type</label>
+                <div class="problem-type-grid" id="problemTypeGrid">
+                  <div class="problem-type-card selected" onclick="selectProblemType(this)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span>Bug / Technical Issue</span>
+                  </div>
+                  <div class="problem-type-card" onclick="selectProblemType(this)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/></svg>
+                    <span>Order / Payment Problem</span>
+                  </div>
+                  <div class="problem-type-card" onclick="selectProblemType(this)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                    <span>Client Complaint</span>
+                  </div>
+                  <div class="problem-type-card" onclick="selectProblemType(this)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span>Account / Access Issue</span>
+                  </div>
+                  <div class="problem-type-card" onclick="selectProblemType(this)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                    <span>Billing / Payout Issue</span>
+                  </div>
+                  <div class="problem-type-card" onclick="selectProblemType(this)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg>
+                    <span>Other</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label style="font-size:11.5px;font-weight:600;color:var(--text);display:block;margin-bottom:6px;">Subject</label>
+                <input class="s-input" type="text" id="problemSubject" placeholder="Brief summary of the issue" style="font-size:12.5px;"/>
+              </div>
+
+              <div>
+                <label style="font-size:11.5px;font-weight:600;color:var(--text);display:block;margin-bottom:6px;">Description</label>
+                <textarea class="s-input" id="problemDesc" rows="4" placeholder="Describe the problem in detail — what happened, when, and what you expected instead…" style="font-size:12.5px;resize:vertical;line-height:1.6;"></textarea>
+              </div>
+
+              <div>
+                <label style="font-size:11.5px;font-weight:600;color:var(--text);display:block;margin-bottom:6px;">Priority</label>
+                <div style="display:flex;gap:8px;">
+                  <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;cursor:pointer;padding:7px 13px;border:1px solid var(--border);border-radius:8px;transition:all 0.13s;">
+                    <input type="radio" name="priority" value="low" style="accent-color:var(--blue);"/> Low
+                  </label>
+                  <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;cursor:pointer;padding:7px 13px;border:1px solid var(--border);border-radius:8px;transition:all 0.13s;">
+                    <input type="radio" name="priority" value="medium" checked style="accent-color:var(--blue);"/> Medium
+                  </label>
+                  <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;cursor:pointer;padding:7px 13px;border:1px solid var(--border);border-radius:8px;transition:all 0.13s;">
+                    <input type="radio" name="priority" value="high" style="accent-color:var(--blue);"/> High
+                  </label>
+                </div>
+              </div>
+
+              <button class="btn-save" onclick="submitReport()" style="align-self:flex-start;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Submit Report
+              </button>
+            </div>
+          </div>
+
+          <!-- Previous Reports -->
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-icon" style="background:var(--bs);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              </div>
+              <div class="card-hdr-text">
+                <div class="card-hdr-title">Previous Reports</div>
+                <div class="card-hdr-sub">Track the status of your submitted reports</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0;">
+              <div class="ticket-row" onclick="toggleTicket('t1042')" style="cursor:pointer;">
+                <div>
+                  <div style="font-size:12.5px;font-weight:500;">#1042 — Payment not received for order #8821</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Billing / Payout Issue · Apr 14, 2025</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span class="ticket-badge open">Open</span>
+                  <svg class="ticket-chevron" id="chev-t1042" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+              <div class="ticket-detail" id="t1042">
+                <div class="ticket-detail-inner">
+                  <div class="td-row"><span class="td-lbl">Status</span><span class="ticket-badge open">Open</span></div>
+                  <div class="td-row"><span class="td-lbl">Priority</span><span style="font-size:12px;color:var(--warn);font-weight:500;">High</span></div>
+                  <div class="td-row"><span class="td-lbl">Submitted</span><span style="font-size:12px;">Apr 14, 2025</span></div>
+                  <div class="td-row" style="align-items:flex-start;"><span class="td-lbl">Description</span><span style="font-size:12px;line-height:1.6;">Expected payout for order #8821 (€240) did not arrive on the scheduled date. Bank details are correct and no error messages were shown.</span></div>
+                  <div class="td-row"><span class="td-lbl">Last update</span><span style="font-size:12px;color:var(--muted);">Support team reviewing — Apr 16, 2025</span></div>
+                </div>
+              </div>
+
+              <div class="ticket-row" onclick="toggleTicket('t1038')" style="cursor:pointer;">
+                <div>
+                  <div style="font-size:12.5px;font-weight:500;">#1038 — Dashboard not loading on mobile</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Bug / Technical Issue · Apr 9, 2025</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span class="ticket-badge pending">In Review</span>
+                  <svg class="ticket-chevron" id="chev-t1038" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+              <div class="ticket-detail" id="t1038">
+                <div class="ticket-detail-inner">
+                  <div class="td-row"><span class="td-lbl">Status</span><span class="ticket-badge pending">In Review</span></div>
+                  <div class="td-row"><span class="td-lbl">Priority</span><span style="font-size:12px;color:var(--blue);font-weight:500;">Medium</span></div>
+                  <div class="td-row"><span class="td-lbl">Submitted</span><span style="font-size:12px;">Apr 9, 2025</span></div>
+                  <div class="td-row" style="align-items:flex-start;"><span class="td-lbl">Description</span><span style="font-size:12px;line-height:1.6;">The dashboard page fails to load on iOS Safari. Screen stays blank after login. Issue started after the April 7th update.</span></div>
+                  <div class="td-row"><span class="td-lbl">Last update</span><span style="font-size:12px;color:var(--muted);">Engineering team investigating — Apr 11, 2025</span></div>
+                </div>
+              </div>
+
+              <div class="ticket-row" onclick="toggleTicket('t1021')" style="cursor:pointer;border:none;">
+                <div>
+                  <div style="font-size:12.5px;font-weight:500;">#1021 — Incorrect service category shown</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Bug / Technical Issue · Mar 28, 2025</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span class="ticket-badge resolved">Resolved</span>
+                  <svg class="ticket-chevron" id="chev-t1021" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+              <div class="ticket-detail" id="t1021">
+                <div class="ticket-detail-inner">
+                  <div class="td-row"><span class="td-lbl">Status</span><span class="ticket-badge resolved">Resolved</span></div>
+                  <div class="td-row"><span class="td-lbl">Priority</span><span style="font-size:12px;color:var(--muted);font-weight:500;">Low</span></div>
+                  <div class="td-row"><span class="td-lbl">Submitted</span><span style="font-size:12px;">Mar 28, 2025</span></div>
+                  <div class="td-row" style="align-items:flex-start;"><span class="td-lbl">Description</span><span style="font-size:12px;line-height:1.6;">My language course service was appearing under "Visa Consulting" in search results instead of "Language Courses".</span></div>
+                  <div class="td-row"><span class="td-lbl">Resolution</span><span style="font-size:12px;color:var(--green);">Category mapping corrected — Mar 30, 2025</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section" id="section-danger">
+          <div class="sec-header">
+            <div class="sec-title">Danger Zone</div>
+            <div class="sec-sub">Irreversible actions. Proceed with caution.</div>
+          </div>
+
+          <div class="danger-card">
+            <div class="danger-hdr">
+              <div style="width:34px;height:34px;border-radius:9px;background:rgba(220,38,38,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div>
+                <div style="font-size:13.5px;font-weight:600;color:var(--red);">Pause Account</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Temporarily hide your profile and suspend new bookings</div>
+              </div>
+            </div>
+            <div class="info-box warn" style="margin-bottom:14px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <div>Pausing will hide your profile from search results. <strong>Active orders will not be affected</strong>. You can reactivate anytime.</div>
+            </div>
+            <button class="btn-warn" onclick="openModal('pauseModal')">Pause My Account</button>
+          </div>
+
+          <div class="danger-card">
+            <div class="danger-hdr">
+              <div style="width:34px;height:34px;border-radius:9px;background:rgba(220,38,38,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+              </div>
+              <div>
+                <div style="font-size:13.5px;font-weight:600;color:var(--red);">Delete Account</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Permanently remove your account and all associated data</div>
+              </div>
+            </div>
+            <div class="info-box red" style="margin-bottom:14px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <div><strong>This action is permanent and cannot be undone.</strong> All your services, orders, earnings history, and reviews will be deleted.</div>
+            </div>
+            <button class="btn-danger" onclick="openModal('deleteModal')">Delete My Account</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAUSE MODAL -->
+<div class="modal-overlay" id="pauseModal">
+  <div class="modal">
+    <div class="modal-title">Pause Your Account?</div>
+    <div class="modal-sub">Your profile will be hidden from search results and no new bookings will be accepted. Active orders remain unaffected. You can reactivate at any time.</div>
+    <div class="form-field" style="margin-bottom:0;">
+      <label style="display:block;font-size:11.5px;font-weight:500;color:var(--muted);margin-bottom:6px;">How long do you want to pause?</label>
+      <select class="s-select" style="width:100%;">
+        <option>1 week</option>
+        <option selected>2 weeks</option>
+        <option>1 month</option>
+        <option>Indefinitely</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-outline" style="flex:1;" onclick="closeModal('pauseModal')">Cancel</button>
+      <button class="btn-warn" style="flex:2;" onclick="closeModal('pauseModal');showSnack('Account paused — you can reactivate anytime')">Pause Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <div class="modal-title" style="color:var(--red);">Delete Account Permanently</div>
+    <div class="modal-sub">This will permanently delete your account, all services, orders, reviews, and earnings history. <strong>This cannot be undone.</strong></div>
+    <div class="form-field" style="margin-bottom:0;">
+      <label style="display:block;font-size:11.5px;font-weight:500;color:var(--muted);margin-bottom:6px;">Type <strong>DELETE</strong> to confirm</label>
+      <input class="s-input" type="text" placeholder="Type DELETE" id="deleteConfirm">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-outline" style="flex:1;" onclick="closeModal('deleteModal')">Cancel</button>
+      <button class="btn-danger" style="flex:2;" onclick="confirmDelete()">Delete My Account</button>
+    </div>
+  </div>
+</div>
+
+<div class="snackbar" id="snackbar"></div>
+
+<script>
+function switchSection(id) {
+  document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sn-item').forEach(n => n.classList.remove('active'));
+  const sec = document.getElementById('section-' + id);
+  const nav = document.getElementById('nav-' + id);
+  if (sec) sec.classList.add('active');
+  if (nav) nav.classList.add('active');
+}
+
+function toggleTog(el, lblId, onMsg, offMsg) {
+  const on = el.classList.toggle('on');
+  if (lblId) document.getElementById(lblId).textContent = on ? 'On' : 'Off';
+  if (on && onMsg) showSnack(onMsg);
+  if (!on && offMsg) showSnack(offMsg);
+}
+
+function selectTheme(el, name) {
+  document.querySelectorAll('.theme-opt').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  showSnack('Theme set to ' + name);
+}
+
+function toggleEdit(id) {
+  document.getElementById(id + 'View').style.display = 'none';
+  document.getElementById(id + 'Edit').style.display = 'block';
+  document.getElementById(id + 'EditBtn').style.display = 'none';
+  document.getElementById(id + 'Edit').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function cancelEdit(id) {
+  document.getElementById(id + 'View').style.display = 'block';
+  document.getElementById(id + 'Edit').style.display = 'none';
+  document.getElementById(id + 'EditBtn').style.display = '';
+}
+
+function saveEdit(id, msg) {
+  document.getElementById(id + 'View').style.display = 'block';
+  document.getElementById(id + 'Edit').style.display = 'none';
+  document.getElementById(id + 'EditBtn').style.display = '';
+  showSnack(msg || 'Changes saved ✓');
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function toggleTicket(id) {
+  const detail = document.getElementById(id);
+  const chev = document.getElementById('chev-' + id);
+  detail.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+function selectProblemType(el) {
+  document.querySelectorAll('.problem-type-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function submitReport() {
+  const subj = document.getElementById('problemSubject').value.trim();
+  const desc = document.getElementById('problemDesc').value.trim();
+  if (!subj) { showSnack('Please enter a subject'); return; }
+  if (!desc) { showSnack('Please describe the problem'); return; }
+  document.getElementById('problemSubject').value = '';
+  document.getElementById('problemDesc').value = '';
+  showSnack('Report submitted — we\'ll respond within 24 hours');
+}
+
+
+function confirmDelete() {
+  const val = document.getElementById('deleteConfirm').value;
+  if (val === 'DELETE') {
+    closeModal('deleteModal');
+    showSnack('Account deletion requested — you will receive a confirmation email');
+  } else {
+    showSnack('Please type DELETE to confirm');
+  }
+}
+
+function toggleCollapse() {
+  const s = document.getElementById('sidebar');
+  s.classList.toggle('collapsed');
+  const svg = s.querySelector('.collapse-btn svg');
+  svg.innerHTML = s.classList.contains('collapsed') ? '<polyline points="9 18 15 12 9 6"/>' : '<polyline points="15 18 9 12 15 6"/>';
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+function showSnack(msg) {
+  const s = document.getElementById('snackbar');
+  s.textContent = msg;
+  s.classList.add('show');
+  clearTimeout(s._t);
+  s._t = setTimeout(() => s.classList.remove('show'), 2800);
+}
+function toggleHelp(){
+  const panel=document.getElementById('helpPanel');
+  const overlay=document.getElementById('helpOverlay');
+  const btn=document.getElementById('helpBtn');
+  const isOpen=panel.classList.toggle('open');
+  overlay.classList.toggle('open',isOpen);
+  btn.style.background=isOpen?'var(--blue)':'var(--bs)';
+  btn.style.color=isOpen?'#fff':'var(--blue)';
+}
+function dismissHelp(){
+  try{localStorage.setItem('ga_settings_help_dismissed','1');}catch(e){}
+  toggleHelp();
+  document.getElementById('helpBtn').style.display='none';
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  try{if(!localStorage.getItem('ga_settings_help_dismissed'))setTimeout(()=>toggleHelp(),600);}catch(e){}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Guide & Tutorials — Germany Assists Provider Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --blue:#024CEE;--sky:#49B7DF;
+  --bs:rgba(2,76,238,0.07);--ss:rgba(73,183,223,0.10);--bm:rgba(2,76,238,0.13);
+  --text:#0a0f1e;--muted:#6b7280;--light:#f7f9ff;--border:rgba(2,76,238,0.10);--w:#fff;
+  --green:#059669;--orange:#f59e0b;--red:#E53E3E;
+}
+body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-height:100vh;}
+.shell{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:220px;background:var(--w);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;flex-shrink:0;transition:width 0.25s;overflow:hidden;}
+.sidebar.collapsed{width:56px;}
+.sidebar.collapsed .ga-logo-text,.sidebar.collapsed .nav-label,.sidebar.collapsed .nav-text,.sidebar.collapsed .nb,.sidebar.collapsed .sp-nm,.sidebar.collapsed .sp-rl,.sidebar.collapsed .pf-arrow{display:none;}
+.sidebar.collapsed .nav-item{justify-content:center;padding:9px 0;gap:0;}
+.sidebar.collapsed .logo-area{justify-content:center;padding:14px 0;gap:0;}
+.sidebar.collapsed .collapse-btn{margin-left:0;}
+.sidebar.collapsed .sp-profile{justify-content:center;padding:9px 0;gap:0;}
+.sidebar.collapsed .s-av{margin:0;}
+.sidebar.collapsed .ga-mark{margin:0 auto;}
+.collapse-btn{width:22px;height:22px;border-radius:6px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--muted);transition:background 0.13s;margin-left:auto;}
+.collapse-btn:hover{background:var(--bs);color:var(--blue);}
+.logo-area{padding:16px 14px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.ga-mark{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;border:1px solid var(--border);flex-shrink:0;}
+.ga-flag{display:flex;flex-direction:column;width:100%;height:100%;}
+.ga-flag-b{flex:1;background:#000;}
+.ga-flag-r{flex:1;background:#d60d2e;}
+.ga-flag-g{flex:1;background:#f6ce17;}
+.ga-logo-text{display:flex;flex-direction:column;transition:opacity 0.2s;}
+.ga-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.1;}
+.ga-sub{font-size:10px;color:var(--muted);}
+.nav{flex:1;padding:10px 8px;overflow-y:auto;overflow-x:hidden;}
+.nav-label{font-size:9.5px;font-weight:600;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;padding:8px 8px 3px;white-space:nowrap;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;font-size:13px;font-weight:400;color:var(--muted);cursor:pointer;transition:all 0.13s;margin-bottom:1px;position:relative;white-space:nowrap;}
+.nav-item:hover{background:var(--bs);color:var(--blue);}
+.nav-item.active{background:var(--bs);color:var(--blue);font-weight:500;}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;}
+.nb{margin-left:auto;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;color:#fff;}
+.nb-red{background:#E53E3E;}
+.nb-blue{background:var(--blue);}
+.nb-sky{background:var(--sky);}
+.nb-green{background:#059669;}
+.sidebar-footer{padding:10px 8px 14px;border-top:1px solid var(--border);}
+.sp-profile{display:flex;align-items:center;gap:9px;padding:9px;border-radius:9px;cursor:pointer;transition:background 0.13s;}
+.sp-profile:hover{background:var(--bs);}
+.s-av{width:32px;height:32px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0;}
+.sp-nm{font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;}
+.sp-rl{font-size:10.5px;color:var(--muted);white-space:nowrap;}
+.pf-arrow{margin-left:auto;color:var(--muted);}
+@media(max-width:768px){
+  .sidebar{position:fixed;left:-220px;z-index:100;transition:left 0.25s;}
+  .sidebar.open{left:0;}
+  .sidebar.collapsed{left:-56px;}
+  .ham{display:flex!important;}
+}
+.ham{display:none;width:32px;height:32px;border:1px solid var(--border);border-radius:8px;background:#fff;align-items:center;justify-content:center;cursor:pointer;margin-right:4px;}
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:99;}
+.mob-overlay.show{display:block;}
+
+/* MAIN */
+.main{flex:1;overflow:auto;background:#f7f9ff;min-width:0;}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:10px;height:52px;position:sticky;top:0;z-index:20;}
+.page-title{font-size:15px;font-weight:600;flex:1;}
+.ti-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;color:var(--muted);}
+.n-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;border:1.5px solid #fff;background:var(--red);}
+
+/* CONTENT LAYOUT */
+.content{padding:0 24px 24px;}
+
+/* TABS */
+.tab-bar{display:flex;align-items:center;gap:2px;padding:12px 0 0;border-bottom:1px solid var(--border);background:#fff;position:sticky;top:52px;z-index:15;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;font-size:12.5px;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:transparent;font-family:'Outfit',sans-serif;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all 0.15s;flex-shrink:0;}
+.tab-btn:hover{color:var(--blue);}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600;}
+.tab-btn svg{width:13px;height:13px;flex-shrink:0;}
+.tab-badge{font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:20px;color:#fff;background:var(--red);}
+.tab-badge-blue{background:var(--blue);}
+.tab-badge-green{background:var(--green);}
+
+/* TAB PANELS */
+.tab-panel{display:none;padding-top:20px;}
+.tab-panel.active{display:block;}
+
+/* PROGRESS (in main tab) */
+.gn-progress{background:var(--light);border-radius:20px;height:6px;overflow:hidden;margin-bottom:4px;}
+.gn-progress-fill{height:100%;background:var(--green);border-radius:20px;width:0%;transition:width 0.4s;}
+.gn-progress-label{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:var(--muted);margin-bottom:16px;}
+.gn-progress-pct{font-weight:600;color:var(--green);}
+
+/* GUIDE CONTENT */
+.guide-body{display:flex;flex-direction:column;gap:16px;}
+
+/* HERO BANNER */
+.guide-hero{background:var(--blue);border-radius:16px;padding:28px 32px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.gh-left h1{font-size:22px;font-weight:700;margin-bottom:6px;}
+.gh-left p{font-size:13px;opacity:0.75;max-width:420px;line-height:1.5;}
+.gh-stats{display:flex;gap:20px;margin-top:18px;}
+.gh-stat{text-align:center;}
+.gh-stat-n{font-size:22px;font-weight:700;}
+.gh-stat-l{font-size:10.5px;opacity:0.65;margin-top:1px;}
+.gh-badge{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:50%;width:100px;height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;flex-shrink:0;}
+.gh-badge-pct{font-size:26px;font-weight:700;}
+.gh-badge-lbl{font-size:9px;opacity:0.7;margin-top:1px;}
+
+/* SEARCH */
+.guide-search{background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px;}
+.guide-search svg{color:var(--muted);flex-shrink:0;}
+.guide-search input{border:none;outline:none;font-family:'Outfit',sans-serif;font-size:13.5px;color:var(--text);flex:1;background:transparent;}
+.guide-search input::placeholder{color:var(--muted);}
+.search-tag{font-size:10.5px;color:var(--muted);background:var(--light);border:1px solid var(--border);border-radius:20px;padding:2px 9px;cursor:pointer;white-space:nowrap;transition:all 0.13s;}
+.search-tag:hover{background:var(--bs);color:var(--blue);border-color:var(--blue);}
+
+/* QUICK START */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.section-title{font-size:14px;font-weight:600;display:flex;align-items:center;gap:7px;}
+.section-title svg{color:var(--blue);}
+.section-link{font-size:12px;color:var(--blue);cursor:pointer;display:flex;align-items:center;gap:3px;}
+
+.qs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.qs-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:all 0.15s;position:relative;overflow:hidden;}
+.qs-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 4px 16px var(--bs);}
+.qs-card.done::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--green);}
+.qs-card.active::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue);}
+.qs-num{font-size:10px;font-weight:700;color:var(--muted);margin-bottom:8px;}
+.qs-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;}
+.qs-icon-blue{background:var(--bs);}
+.qs-icon-green{background:rgba(5,150,105,0.08);}
+.qs-icon-sky{background:var(--ss);}
+.qs-icon-orange{background:rgba(245,158,11,0.08);}
+.qs-title{font-size:12.5px;font-weight:600;margin-bottom:3px;}
+.qs-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+.qs-status{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:10.5px;font-weight:500;}
+.qs-done{color:var(--green);}
+.qs-todo{color:var(--muted);}
+.qs-inprog{color:var(--blue);}
+
+/* TUTORIAL CARDS */
+.tut-list{display:flex;flex-direction:column;gap:8px;}
+.tut-card{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:box-shadow 0.15s;}
+.tut-card:hover{box-shadow:0 2px 12px var(--bs);}
+.tut-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;}
+.tut-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tut-meta{flex:1;}
+.tut-title{font-size:13.5px;font-weight:600;margin-bottom:2px;}
+.tut-sub{font-size:11.5px;color:var(--muted);}
+.tut-badges{display:flex;align-items:center;gap:6px;margin-left:auto;}
+.badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;}
+.badge-blue{background:var(--bs);color:var(--blue);}
+.badge-green{background:rgba(5,150,105,0.08);color:var(--green);}
+.badge-orange{background:rgba(245,158,11,0.1);color:#d97706;}
+.badge-sky{background:var(--ss);color:#0891b2;}
+.tut-arrow{color:var(--muted);transition:transform 0.2s;flex-shrink:0;}
+.tut-arrow.open{transform:rotate(180deg);}
+.tut-body{display:none;padding:0 16px 16px;border-top:1px solid var(--border);}
+.tut-body.open{display:block;}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:0;margin-top:14px;}
+.step{display:flex;gap:12px;padding-bottom:18px;position:relative;}
+.step:last-child{padding-bottom:0;}
+.step:not(:last-child)::after{content:'';position:absolute;left:13px;top:28px;width:2px;bottom:0;background:var(--border);}
+.step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;z-index:1;}
+.step-num-blue{background:var(--bs);color:var(--blue);border:2px solid var(--blue);}
+.step-num-done{background:var(--green);color:#fff;border:2px solid var(--green);}
+.step-content{flex:1;padding-top:3px;}
+.step-title{font-size:13px;font-weight:600;margin-bottom:3px;}
+.step-desc{font-size:12px;color:var(--muted);line-height:1.55;}
+.step-tip{background:var(--bs);border-left:3px solid var(--blue);border-radius:0 7px 7px 0;padding:8px 12px;margin-top:8px;font-size:11.5px;color:var(--blue);line-height:1.4;}
+.step-warn{background:rgba(245,158,11,0.08);border-left:3px solid var(--orange);border-radius:0 7px 7px 0;padding:8px 12px;margin-top:8px;font-size:11.5px;color:#92400e;line-height:1.4;}
+
+/* FAQ */
+.faq-list{display:flex;flex-direction:column;gap:6px;}
+.faq-item{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;font-size:13px;font-weight:500;}
+.faq-q:hover{background:var(--light);}
+.faq-icon{color:var(--muted);transition:transform 0.2s;flex-shrink:0;}
+.faq-icon.open{transform:rotate(45deg);color:var(--blue);}
+.faq-a{display:none;padding:0 16px 13px;font-size:12.5px;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);}
+.faq-a.open{display:block;}
+
+/* TIP BOX */
+.tip-box{background:linear-gradient(135deg,var(--bs),var(--ss));border:1px solid var(--border);border-radius:14px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;}
+.tip-icon{width:36px;height:36px;background:var(--blue);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;}
+.tip-title{font-size:13px;font-weight:600;margin-bottom:4px;}
+.tip-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+
+/* CHECKLIST */
+.checklist{display:flex;flex-direction:column;gap:6px;}
+.cl-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all 0.13s;}
+.cl-item:hover{border-color:var(--blue);}
+.cl-item.checked{border-color:var(--green);background:rgba(5,150,105,0.04);}
+.cl-box{width:18px;height:18px;border-radius:5px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;margin-top:1px;}
+.cl-item.checked .cl-box{background:var(--green);border-color:var(--green);}
+.cl-text{font-size:12.5px;line-height:1.4;}
+.cl-item.checked .cl-text{text-decoration:line-through;color:var(--muted);}
+
+/* VIDEO CARD */
+.video-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.vid-card{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.15s;}
+.vid-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 4px 16px var(--bs);}
+.vid-thumb{height:100px;background:linear-gradient(135deg,var(--blue),var(--sky));display:flex;align-items:center;justify-content:center;position:relative;}
+.vid-play{width:36px;height:36px;background:rgba(255,255,255,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,0.5);}
+.vid-play svg{color:#fff;margin-left:2px;}
+.vid-dur{position:absolute;bottom:7px;right:9px;font-size:10px;color:#fff;font-weight:600;background:rgba(0,0,0,0.35);padding:1px 6px;border-radius:4px;}
+.vid-info{padding:11px 12px;}
+.vid-title{font-size:12.5px;font-weight:600;margin-bottom:3px;line-height:1.3;}
+.vid-cat{font-size:10.5px;color:var(--muted);}
+
+/* CONTACT SUPPORT */
+.support-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.sup-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all 0.15s;}
+.sup-card:hover{border-color:var(--blue);transform:translateY(-2px);}
+.sup-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;}
+.sup-title{font-size:13px;font-weight:600;margin-bottom:4px;}
+.sup-desc{font-size:11.5px;color:var(--muted);line-height:1.4;}
+.sup-badge{display:inline-block;margin-top:8px;font-size:10.5px;font-weight:600;padding:2px 10px;border-radius:20px;}
+
+/* SCROLL SECTIONS */
+.guide-section{scroll-margin-top:80px;}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div class="mob-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo-area">
+    <div class="ga-mark">
+      <div class="ga-flag"><div class="ga-flag-b"></div><div class="ga-flag-r"></div><div class="ga-flag-g"></div></div>
+    </div>
+    <div class="ga-logo-text">
+      <div class="ga-name">Germany Assists</div>
+      <div class="ga-sub">Provider Portal</div>
+    </div>
+    <div class="collapse-btn" onclick="toggleCollapse()" title="Collapse sidebar">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item" onclick="window.location.href='Dashborad.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      <span class="nav-text">Dashboard</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='Message.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <span class="nav-text">Messages</span><span class="nb nb-red">5</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='notifications.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="nav-text">Notifications</span><span class="nb nb-red">3</span>
+    </div>
+
+    <div class="nav-label" style="margin-top:6px;">Work</div>
+    <div class="nav-item" onclick="window.location.href='orders.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      <span class="nav-text">Orders</span><span class="nb nb-blue">14</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='services.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      <span class="nav-text">My Services</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span class="nav-text">Clients</span>
+    </div>
+
+    <div class="nav-label" style="margin-top:6px;">Finance</div>
+    <div class="nav-item" onclick="window.location.href='Finance.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>
+      <span class="nav-text">Finance</span>
+    </div>
+
+    <div class="nav-label" style="margin-top:6px;">Account</div>
+    <div class="nav-item" onclick="window.location.href='profile.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span class="nav-text">Profile</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='verification_centre.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+      <span class="nav-text">Verification Centre</span><span class="nb nb-sky">!</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='settings.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span class="nav-text">Settings</span>
+    </div>
+    <div class="nav-label" style="margin-top:6px;">Help</div>
+    <div class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      <span class="nav-text">Guide</span>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sp-profile" onclick="window.location.href='profile.html'">
+      <div class="s-av">GA</div>
+      <div><div class="sp-nm">Germany Assists</div><div class="sp-rl">Service Provider</div></div>
+      <div class="pf-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="ham" id="hamBtn" onclick="toggleSidebar()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </div>
+    <span class="page-title">Guide & Tutorials</span>
+    <div class="ti-btn" onclick="location.href='notifications.html'"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><div class="n-dot" style="background:#E53E3E;"></div></div>
+    <div class="ti-btn" onclick="location.href='Message.html'"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><div class="n-dot" style="background:var(--blue);"></div></div>
+    <div class="ti-btn" onclick="location.href='profile.html'" style="border-radius:50%;background:var(--blue);border:none;"><span style="color:#fff;font-size:10px;font-weight:700;">GA</span></div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar" id="tabBar">
+    <button class="tab-btn active" onclick="switchTab('main',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      Main
+    </button>
+    <button class="tab-btn" onclick="switchTab('dashboard',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/></svg>
+      Dashboard
+    </button>
+    <button class="tab-btn" onclick="switchTab('profile',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Profile
+    </button>
+    <button class="tab-btn" onclick="switchTab('services',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      Services
+    </button>
+    <button class="tab-btn" onclick="switchTab('orders',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      Orders
+      <span class="tab-badge">3</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('finance',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>
+      Finance
+    </button>
+    <button class="tab-btn" onclick="switchTab('verification',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+      Verification
+      <span class="tab-badge" style="background:var(--sky)">!</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('messages',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Messages
+      <span class="tab-badge" style="background:var(--blue)">5</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('settings',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Settings
+    </button>
+    <button class="tab-btn" onclick="switchTab('contact',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.59a16 16 0 006.29 6.29l1-.95a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      Contact Us
+    </button>
+  </div>
+
+  <div class="content">
+
+    <!-- ══════════════ TAB: MAIN ══════════════ -->
+    <div class="tab-panel active" id="panel-main">
+    <div class="guide-body">
+
+      <!-- HERO -->
+      <div class="guide-hero">
+        <div class="gh-left">
+          <h1>Welcome to the Provider Guide</h1>
+          <p>Everything you need to set up, manage, and grow your services on Germany Assists. Follow the steps below to get started.</p>
+          <div class="gh-stats">
+            <div class="gh-stat"><div class="gh-stat-n">8</div><div class="gh-stat-l">Chapters</div></div>
+            <div class="gh-stat"><div class="gh-stat-n">34</div><div class="gh-stat-l">Steps</div></div>
+            <div class="gh-stat"><div class="gh-stat-n">~20min</div><div class="gh-stat-l">Read time</div></div>
+          </div>
+        </div>
+        <div class="gh-badge">
+          <div class="gh-badge-pct" id="heroPct">0%</div>
+          <div class="gh-badge-lbl">Complete</div>
+        </div>
+      </div>
+
+      <!-- SEARCH -->
+      <div class="guide-search">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" placeholder="Search guides, tutorials, or FAQs…" oninput="filterContent(this.value)"/>
+        <span class="search-tag" onclick="filterTag('services')">Services</span>
+        <span class="search-tag" onclick="filterTag('orders')">Orders</span>
+        <span class="search-tag" onclick="filterTag('finance')">Finance</span>
+      </div>
+
+      <!-- QUICK START CHECKLIST -->
+      <div class="guide-section" id="getting-started">
+        <div class="section-header">
+          <div class="section-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Quick Start — 4 Steps to Go Live
+          </div>
+        </div>
+        <div class="qs-grid">
+          <div class="qs-card done" onclick="scrollTo('profile-setup')">
+            <div class="qs-num">STEP 01</div>
+            <div class="qs-icon qs-icon-blue"><svg width="16" height="16" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+            <div class="qs-title">Complete Profile</div>
+            <div class="qs-desc">Add your photo, bio, skills, and contact info.</div>
+            <div class="qs-status qs-done"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Done</div>
+          </div>
+          <div class="qs-card active" onclick="scrollTo('verification-guide')">
+            <div class="qs-num">STEP 02</div>
+            <div class="qs-icon qs-icon-sky"><svg width="16" height="16" fill="none" stroke="var(--sky)" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138z"/></svg></div>
+            <div class="qs-title">Get Verified</div>
+            <div class="qs-desc">Submit your ID and credentials for review.</div>
+            <div class="qs-status qs-inprog"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> In Progress</div>
+          </div>
+          <div class="qs-card" onclick="scrollTo('services-guide')">
+            <div class="qs-num">STEP 03</div>
+            <div class="qs-icon qs-icon-green"><svg width="16" height="16" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>
+            <div class="qs-title">Add a Service</div>
+            <div class="qs-desc">Create your first service listing with pricing.</div>
+            <div class="qs-status qs-todo"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg> Not started</div>
+          </div>
+          <div class="qs-card" onclick="scrollTo('finance-guide')">
+            <div class="qs-num">STEP 04</div>
+            <div class="qs-icon qs-icon-orange"><svg width="16" height="16" fill="none" stroke="var(--orange)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
+            <div class="qs-title">Set Up Payout</div>
+            <div class="qs-desc">Link your bank account to receive payments.</div>
+            <div class="qs-status qs-todo"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg> Not started</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFILE SETUP -->
+      <div class="guide-section" id="profile-setup">
+        <div class="section-header">
+          <div class="section-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            Profile Setup
+          </div>
+          <span class="section-link" onclick="location.href='profile.html'">Go to Profile <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </div>
+        <div class="tut-list">
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-blue"><svg width="16" height="16" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M7 21v-1a5 5 0 0110 0v1"/></svg></div>
+              <div class="tut-meta">
+                <div class="tut-title">Setting Up Your Public Profile</div>
+                <div class="tut-sub">Photo, bio, skills, languages & contact details</div>
+              </div>
+              <div class="tut-badges"><span class="badge badge-green">Beginner</span><span class="badge badge-blue">5 min</span></div>
+              <div class="tut-arrow">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step">
+                  <div class="step-num step-num-done"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="step-content">
+                    <div class="step-title">Upload a professional profile photo</div>
+                    <div class="step-desc">Go to <strong>Profile → Edit Profile</strong>. Upload a clear headshot (min 400×400px). A professional photo increases client trust by up to 60%.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">2</div>
+                  <div class="step-content">
+                    <div class="step-title">Write a compelling bio</div>
+                    <div class="step-desc">Describe your experience, specialties, and what makes you unique. Keep it between 100–250 words. Write in the language your target clients speak.</div>
+                    <div class="step-tip">💡 Tip: Mention specific cities you serve and your years of experience in Germany.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">3</div>
+                  <div class="step-content">
+                    <div class="step-title">Add your skills & languages</div>
+                    <div class="step-desc">Select all relevant skills from the list and add every language you speak. Multilingual profiles receive more inquiries from international clients.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">4</div>
+                  <div class="step-content">
+                    <div class="step-title">Set your availability</div>
+                    <div class="step-desc">Under <strong>Availability</strong>, mark the hours and days you're typically reachable. This helps clients pick the right time to contact you.</div>
+                    <div class="step-warn">⚠ Keep your availability updated. Outdated info leads to missed opportunities and lower search ranking.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SERVICES GUIDE -->
+      <div class="guide-section" id="services-guide">
+        <div class="section-header">
+          <div class="section-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+            Managing Services
+          </div>
+          <span class="section-link" onclick="location.href='services.html'">My Services <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </div>
+        <div class="tut-list">
+
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-green"><svg width="16" height="16" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+              <div class="tut-meta">
+                <div class="tut-title">Creating Your First Service Listing</div>
+                <div class="tut-sub">Category, pricing, description & delivery details</div>
+              </div>
+              <div class="tut-badges"><span class="badge badge-green">Beginner</span><span class="badge badge-blue">8 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step">
+                  <div class="step-num step-num-blue">1</div>
+                  <div class="step-content">
+                    <div class="step-title">Go to My Services → Add Service</div>
+                    <div class="step-desc">Click the <strong>+ Add Service</strong> button on the Services page. You can have up to 20 active services at once.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">2</div>
+                  <div class="step-content">
+                    <div class="step-title">Choose the right category</div>
+                    <div class="step-desc">Select the most specific category that matches your service. Correct categorization improves your visibility in client searches significantly.</div>
+                    <div class="step-tip">💡 If your service fits multiple categories, create separate listings for each — each gets its own search ranking.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">3</div>
+                  <div class="step-content">
+                    <div class="step-title">Write a clear service title and description</div>
+                    <div class="step-desc">Title: be specific (e.g., "German Residence Registration – Anmeldung" not just "Registration Help"). Description: explain what's included, the process, and expected outcomes.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">4</div>
+                  <div class="step-content">
+                    <div class="step-title">Set your pricing</div>
+                    <div class="step-desc">Choose Fixed Price or Hourly Rate. Add optional packages (Basic / Standard / Premium) to offer more value and increase average order value.</div>
+                    <div class="step-warn">⚠ Prices must be in EUR. Commission of 15% is deducted from each completed order.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">5</div>
+                  <div class="step-content">
+                    <div class="step-title">Set delivery time & requirements</div>
+                    <div class="step-desc">Be realistic about delivery time. List exactly what documents or information you need from the client before you can start.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-blue"><svg width="16" height="16" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+              <div class="tut-meta">
+                <div class="tut-title">Editing & Pausing Services</div>
+                <div class="tut-sub">How to update, pause, or deactivate a listing</div>
+              </div>
+              <div class="tut-badges"><span class="badge badge-green">Beginner</span><span class="badge badge-blue">3 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step">
+                  <div class="step-num step-num-blue">1</div>
+                  <div class="step-content">
+                    <div class="step-title">Go to My Services and click the three-dot menu</div>
+                    <div class="step-desc">Each service card has an actions menu (⋯). Click it to see Edit, Pause, Duplicate, or Delete options.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">2</div>
+                  <div class="step-content">
+                    <div class="step-title">Pause vs. Delete</div>
+                    <div class="step-desc"><strong>Pause</strong>: hides the service from new clients but keeps all data and reviews. Use this during vacations. <strong>Delete</strong>: permanently removes the listing and all its stats — cannot be undone.</div>
+                    <div class="step-tip">💡 Use Pause instead of Delete when going on vacation to preserve your reviews and ranking history.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ORDERS GUIDE -->
+      <div class="guide-section" id="orders-guide">
+        <div class="section-header">
+          <div class="section-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            Handling Orders
+          </div>
+          <span class="section-link" onclick="location.href='orders.html'">View Orders <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </div>
+        <div class="tut-list">
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-sky"><svg width="16" height="16" fill="none" stroke="var(--sky)" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+              <div class="tut-meta">
+                <div class="tut-title">Order Lifecycle: From Request to Completion</div>
+                <div class="tut-sub">Understand every status and what action to take</div>
+              </div>
+              <div class="tut-badges"><span class="badge badge-orange">Important</span><span class="badge badge-blue">10 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step">
+                  <div class="step-num step-num-blue">1</div>
+                  <div class="step-content">
+                    <div class="step-title">New Request — Review within 24 hours</div>
+                    <div class="step-desc">When a client books your service, you'll get a notification. Review the order details carefully. You can <strong>Accept</strong> or <strong>Decline</strong> within 24 hours. Declining too often lowers your ranking.</div>
+                    <div class="step-warn">⚠ Providers who accept less than 70% of requests may have reduced visibility in search results.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">2</div>
+                  <div class="step-content">
+                    <div class="step-title">In Progress — Communicate clearly</div>
+                    <div class="step-desc">Once accepted, use the in-app chat to communicate. Request any missing documents early. Send progress updates at each milestone.</div>
+                    <div class="step-tip">💡 Clients who receive at least one update within the first 12 hours are 3x less likely to cancel.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">3</div>
+                  <div class="step-content">
+                    <div class="step-title">Delivery — Submit completed work</div>
+                    <div class="step-desc">When ready, click <strong>Deliver Order</strong> and upload any files or documents. Write a clear summary of what was done for the client.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">4</div>
+                  <div class="step-content">
+                    <div class="step-title">Revision — Handle feedback professionally</div>
+                    <div class="step-desc">Clients can request 1 revision (included by default). Respond within 48 hours. If the request is out of scope, politely explain and offer a separate quote.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">5</div>
+                  <div class="step-content">
+                    <div class="step-title">Completed — Ask for a review</div>
+                    <div class="step-desc">Once the client confirms completion, the funds are released to your balance. The system sends an automatic review prompt, but you can send a personal thank-you message too.</div>
+                    <div class="step-tip">💡 Providers with 10+ reviews earn a "Trusted Provider" badge, boosting click-through rates by 40%.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon" style="background:rgba(229,62,62,0.08)"><svg width="16" height="16" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>
+              <div class="tut-meta">
+                <div class="tut-title">Cancellations & Disputes</div>
+                <div class="tut-sub">What to do when things go wrong</div>
+              </div>
+              <div class="tut-badges"><span class="badge badge-orange">Important</span><span class="badge badge-blue">5 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step">
+                  <div class="step-num step-num-blue">1</div>
+                  <div class="step-content">
+                    <div class="step-title">Try to resolve directly with the client first</div>
+                    <div class="step-desc">Use the in-app chat to understand the issue. Most disputes can be resolved with clear communication. Offer a partial refund or revision if appropriate.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">2</div>
+                  <div class="step-content">
+                    <div class="step-title">Open a dispute if needed</div>
+                    <div class="step-desc">If you and the client cannot agree, go to <strong>Order → Report Issue</strong>. Our support team reviews within 72 hours. Provide all relevant chat logs and documents.</div>
+                    <div class="step-warn">⚠ Cancellation rate above 10% reduces your search visibility. Always document scope clearly upfront.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FINANCE GUIDE -->
+      <div class="guide-section" id="finance-guide">
+        <div class="section-header">
+          <div class="section-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            Finance & Payouts
+          </div>
+          <span class="section-link" onclick="location.href='Finance.html'">Finance Page <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </div>
+        <div class="tut-list">
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-orange"><svg width="16" height="16" fill="none" stroke="var(--orange)" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+              <div class="tut-meta">
+                <div class="tut-title">How Payments & Payouts Work</div>
+                <div class="tut-sub">Balance, withdrawal schedule & bank setup</div>
+              </div>
+              <div class="tut-badges"><span class="badge badge-green">Beginner</span><span class="badge badge-blue">6 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step">
+                  <div class="step-num step-num-blue">1</div>
+                  <div class="step-content">
+                    <div class="step-title">Understanding your balance</div>
+                    <div class="step-desc">Your Finance page shows: <strong>Pending</strong> (order in progress), <strong>Clearance</strong> (14-day hold after delivery), and <strong>Available</strong> (ready to withdraw).</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">2</div>
+                  <div class="step-content">
+                    <div class="step-title">Link your bank account (IBAN)</div>
+                    <div class="step-desc">Go to <strong>Finance → Payout Settings</strong>. Enter your German IBAN. This takes 1–2 business days to verify. You must be verified before adding bank details.</div>
+                    <div class="step-warn">⚠ Only verified providers can receive payouts. Complete your verification first.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">3</div>
+                  <div class="step-content">
+                    <div class="step-title">Request a payout</div>
+                    <div class="step-desc">Click <strong>Withdraw</strong> when your Available balance is above the €20 minimum. Transfers arrive within 3–5 business days. Automatic weekly payouts can be enabled in settings.</div>
+                    <div class="step-tip">💡 Enable automatic weekly payouts in Finance Settings to avoid forgetting to withdraw.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">4</div>
+                  <div class="step-content">
+                    <div class="step-title">Platform commission</div>
+                    <div class="step-desc">Germany Assists charges a <strong>15% service fee</strong> on each completed order. This is automatically deducted — the amount shown in your balance is already after commission.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VERIFICATION GUIDE -->
+      <div class="guide-section" id="verification-guide">
+        <div class="section-header">
+          <div class="section-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0z"/></svg>
+            Verification Centre
+          </div>
+          <span class="section-link" onclick="location.href='verification_centre.html'">Get Verified <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </div>
+        <div class="tut-list">
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-sky"><svg width="16" height="16" fill="none" stroke="var(--sky)" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+              <div class="tut-meta">
+                <div class="tut-title">Document Submission Guide</div>
+                <div class="tut-sub">What to submit, accepted formats & review timeline</div>
+              </div>
+              <div class="tut-badges"><span class="badge badge-orange">Required</span><span class="badge badge-blue">7 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step">
+                  <div class="step-num step-num-blue">1</div>
+                  <div class="step-content">
+                    <div class="step-title">Identity verification (ID / Passport)</div>
+                    <div class="step-desc">Upload a clear photo or scan of your valid passport or German ID card (Personalausweis). Both sides required for ID cards. File size: max 10MB, formats: PDF, JPG, PNG.</div>
+                    <div class="step-tip">💡 Ensure all 4 corners are visible and text is readable. Blurry photos are the #1 reason for rejection.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">2</div>
+                  <div class="step-content">
+                    <div class="step-title">Professional credentials (if applicable)</div>
+                    <div class="step-desc">For legal, medical, tax, or licensed services: upload your professional certificate or license. For translators: upload language certification. All documents must be current.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">3</div>
+                  <div class="step-content">
+                    <div class="step-title">Address proof</div>
+                    <div class="step-desc">Upload a utility bill, bank statement, or Anmeldung confirmation showing your current German address. Must be dated within the last 3 months.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">4</div>
+                  <div class="step-content">
+                    <div class="step-title">Review timeline</div>
+                    <div class="step-desc">Standard review: <strong>3–5 business days</strong>. You'll receive an email and in-app notification with the result. If rejected, you'll see the reason and can resubmit immediately.</div>
+                    <div class="step-warn">⚠ Do not submit documents with personal information hidden or redacted — this causes automatic rejection.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MESSAGES GUIDE -->
+      <div class="guide-section" id="messages-guide">
+        <div class="section-header">
+          <div class="section-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            Messages & Client Communication
+          </div>
+          <span class="section-link" onclick="location.href='Message.html'">Open Messages <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </div>
+        <div class="tip-box">
+          <div class="tip-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></div>
+          <div>
+            <div class="tip-title">Response Time = Rankings</div>
+            <div class="tip-desc">Your average response time is displayed on your profile. Providers who respond within 1 hour consistently appear higher in search results. Enable notifications to stay responsive even on the go.</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;" class="tut-list">
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-blue"><svg width="16" height="16" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+              <div class="tut-meta">
+                <div class="tut-title">Client Communication Best Practices</div>
+                <div class="tut-sub">Templates, tone & handling difficult clients</div>
+              </div>
+              <div class="tut-badges"><span class="badge badge-sky">Pro Tip</span><span class="badge badge-blue">5 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step">
+                  <div class="step-num step-num-blue">1</div>
+                  <div class="step-content">
+                    <div class="step-title">Use the Quick Reply templates</div>
+                    <div class="step-desc">In the Messages page, click the template icon to save and reuse common replies. Useful for acknowledging orders, requesting documents, and confirming completion.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">2</div>
+                  <div class="step-content">
+                    <div class="step-title">Clarify scope before starting</div>
+                    <div class="step-desc">Always confirm exactly what the client needs before starting work. A short message like "Just to confirm, I will be handling X and Y — is that correct?" prevents misunderstandings.</div>
+                    <div class="step-tip">💡 Add a custom requirement form to your service listing to collect info automatically at booking.</div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num step-num-blue">3</div>
+                  <div class="step-content">
+                    <div class="step-title">Keep all communication on-platform</div>
+                    <div class="step-desc">Never move conversations to external apps. All official communication must stay within Germany Assists — this protects both you and the client in case of disputes.</div>
+                    <div class="step-warn">⚠ Moving communication off-platform violates our terms and can result in account suspension.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="guide-section" id="faq-guide">
+        <div class="section-header">
+          <div class="section-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+            Frequently Asked Questions
+          </div>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">How long does verification take?<span class="faq-icon">+</span></div>
+            <div class="faq-a">Standard verification takes 3–5 business days. You'll receive an email and in-app notification. During busy periods (e.g. end of month) it may take up to 7 days. Make sure all documents are clear and fully visible to avoid delays.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">What is the platform commission rate?<span class="faq-icon">+</span></div>
+            <div class="faq-a">Germany Assists charges a 15% service fee on each successfully completed order. This is automatically deducted before funds appear in your available balance. There are no monthly fees.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">Can I have multiple service listings?<span class="faq-icon">+</span></div>
+            <div class="faq-a">Yes. You can create up to 20 active service listings simultaneously. We recommend creating separate listings for each distinct service you offer, as each one gets its own search ranking and reviews.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">When do I receive my payout?<span class="faq-icon">+</span></div>
+            <div class="faq-a">After order completion and the 14-day clearance period, funds move to your Available balance. You can then request a manual payout or enable automatic weekly payouts. Bank transfers arrive within 3–5 business days.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">What happens if a client doesn't respond after delivery?<span class="faq-icon">+</span></div>
+            <div class="faq-a">If the client doesn't respond within 5 days of delivery, the order is automatically marked as complete and funds are released. You'll receive a notification 2 days before auto-completion so you can follow up.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">Can I offer services outside Germany?<span class="faq-icon">+</span></div>
+            <div class="faq-a">Germany Assists focuses on services for people in Germany, but many services can be delivered remotely to clients internationally. When creating your listing, you can specify whether the service is in-person, remote, or both.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">My verification was rejected. What now?<span class="faq-icon">+</span></div>
+            <div class="faq-a">Check the rejection reason in the Verification Centre — it's shown next to the rejected document. Fix the issue (e.g., resubmit a clearer photo) and resubmit. There's no limit on resubmission attempts. Common reasons: blurry images, expired documents, missing corners.</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /guide-body -->
+    </div><!-- /panel-main -->
+
+    <!-- ══════════════ TAB: DASHBOARD ══════════════ -->
+    <div class="tab-panel" id="panel-dashboard">
+      <div class="guide-body">
+        <div class="guide-hero">
+          <div class="gh-left">
+            <h1>Dashboard Guide</h1>
+            <p>Understand every widget, metric and action on your Dashboard page.</p>
+          </div>
+        </div>
+        <div class="tut-list">
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-blue"><svg width="16" height="16" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+              <div class="tut-meta"><div class="tut-title">Reading the KPI Cards</div><div class="tut-sub">Available balance, pending earnings, active orders & disputes</div></div>
+              <div class="tut-badges"><span class="badge badge-green">Beginner</span><span class="badge badge-blue">4 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step"><div class="step-num step-num-blue">1</div><div class="step-content"><div class="step-title">Available Balance</div><div class="step-desc">Money cleared and ready to withdraw. Click <strong>Withdraw →</strong> directly from the card to initiate a payout.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">2</div><div class="step-content"><div class="step-title">Pending Earnings</div><div class="step-desc">Funds held in escrow for active orders. Released to Available after the 14-day clearance period post-delivery.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">3</div><div class="step-content"><div class="step-title">Active Orders</div><div class="step-desc">Count of orders currently In Progress. Click to jump directly to the Orders page filtered by active status.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">4</div><div class="step-content"><div class="step-title">Disputes</div><div class="step-desc">Open disputes require action. A red number here means you have unresolved cases — address them within 48 hours to avoid automatic rulings.</div><div class="step-warn">⚠ Unresolved disputes after 7 days are decided automatically in the client's favour.</div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-sky"><svg width="16" height="16" fill="none" stroke="var(--sky)" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/></svg></div>
+              <div class="tut-meta"><div class="tut-title">Using the Earnings Chart</div><div class="tut-sub">Period switcher, chart tabs & revenue trends</div></div>
+              <div class="tut-badges"><span class="badge badge-green">Beginner</span><span class="badge badge-blue">3 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step"><div class="step-num step-num-blue">1</div><div class="step-content"><div class="step-title">Use the period switcher</div><div class="step-desc">Toggle between <strong>This Month</strong>, <strong>Last Month</strong>, or <strong>Custom</strong> in the top bar to compare performance over time.</div><div class="step-tip">💡 Compare this month vs last month weekly to spot slow periods early.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">2</div><div class="step-content"><div class="step-title">Switch between chart tabs</div><div class="step-desc">The chart supports Revenue, Orders, and Ratings views. Each gives a different lens on your business health.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">3</div><div class="step-content"><div class="step-title">Hover for daily detail</div><div class="step-desc">Hover any point on the chart to see the exact value for that day. Useful for identifying spikes or drops tied to promotions or external events.</div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-green"><svg width="16" height="16" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+              <div class="tut-meta"><div class="tut-title">Recent Activity Feed</div><div class="tut-sub">Order updates, messages & system alerts</div></div>
+              <div class="tut-badges"><span class="badge badge-green">Beginner</span><span class="badge badge-blue">2 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step"><div class="step-num step-num-blue">1</div><div class="step-content"><div class="step-title">Red "Urgent" tags need immediate action</div><div class="step-desc">Items tagged Urgent are time-sensitive: new orders awaiting acceptance, dispute deadlines, or overdue deliveries. Act on these first.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">2</div><div class="step-content"><div class="step-title">Click any feed item to go directly to it</div><div class="step-desc">Each activity item is a shortcut. Clicking an order entry opens that specific order; clicking a message opens that conversation.</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;" class="section-header"><div class="section-title"></div><span class="section-link" onclick="location.href='Dashborad.html'">Open Dashboard <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+      </div>
+    </div>
+
+    <!-- ══════════════ TAB: PROFILE ══════════════ -->
+    <div class="tab-panel" id="panel-profile">
+      <div class="guide-body">
+        <div class="guide-hero"><div class="gh-left"><h1>Profile Guide</h1><p>Build a profile that earns client trust and ranks higher in search.</p></div></div>
+        <div class="tut-list">
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-blue"><svg width="16" height="16" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+              <div class="tut-meta"><div class="tut-title">Setting Up Your Public Profile</div><div class="tut-sub">Photo, bio, skills, languages & availability</div></div>
+              <div class="tut-badges"><span class="badge badge-green">Beginner</span><span class="badge badge-blue">5 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step"><div class="step-num step-num-done"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-content"><div class="step-title">Upload a professional photo</div><div class="step-desc">Go to <strong>Profile → Edit Profile</strong>. Upload a clear headshot (min 400×400px). Profiles with photos get 60% more inquiries.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">2</div><div class="step-content"><div class="step-title">Write a compelling bio</div><div class="step-desc">100–250 words. Mention your specialties, years of experience, and which cities you serve. Write in your client's language.</div><div class="step-tip">💡 Mention specific German cities (Berlin, Munich, Hamburg) to appear in local searches.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">3</div><div class="step-content"><div class="step-title">Add skills & languages</div><div class="step-desc">Multilingual profiles receive significantly more international client inquiries. Add every language you can work in.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">4</div><div class="step-content"><div class="step-title">Set your availability schedule</div><div class="step-desc">Mark your working hours and days. Outdated availability leads to missed bookings and lower search ranking.</div><div class="step-warn">⚠ Update your availability before going on vacation — don't just ignore incoming requests.</div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-orange"><svg width="16" height="16" fill="none" stroke="var(--orange)" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+              <div class="tut-meta"><div class="tut-title">Improving Your Profile Rating</div><div class="tut-sub">Reviews, badges & trust signals</div></div>
+              <div class="tut-badges"><span class="badge badge-sky">Pro Tip</span><span class="badge badge-blue">4 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step"><div class="step-num step-num-blue">1</div><div class="step-content"><div class="step-title">Earn the Trusted Provider badge</div><div class="step-desc">Complete 10 orders with an average rating above 4.5 ★ to earn the badge. This increases your profile click-through rate by 40%.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">2</div><div class="step-content"><div class="step-title">Ask for reviews after every order</div><div class="step-desc">Send a short, personal thank-you message after delivery. Clients who receive a personal note are 2x more likely to leave a review.</div><div class="step-tip">💡 Keep your review request brief: "It was a pleasure helping you! A quick review would mean a lot to me."</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">3</div><div class="step-content"><div class="step-title">Respond to all reviews</div><div class="step-desc">Replying to reviews (both positive and negative) shows professionalism. Potential clients read your responses to gauge how you handle feedback.</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;" class="section-header"><div class="section-title"></div><span class="section-link" onclick="location.href='profile.html'">Open Profile <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+      </div>
+    </div>
+
+    <!-- ══════════════ TAB: SERVICES ══════════════ -->
+    <div class="tab-panel" id="panel-services">
+      <div class="guide-body">
+        <div class="guide-hero"><div class="gh-left"><h1>Services Guide</h1><p>Create, optimise and manage service listings that attract clients.</p></div></div>
+        <div class="tut-list">
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-green"><svg width="16" height="16" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+              <div class="tut-meta"><div class="tut-title">Creating Your First Service Listing</div><div class="tut-sub">Category, pricing, description & delivery</div></div>
+              <div class="tut-badges"><span class="badge badge-green">Beginner</span><span class="badge badge-blue">8 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step"><div class="step-num step-num-blue">1</div><div class="step-content"><div class="step-title">Click + Add Service</div><div class="step-desc">Navigate to <strong>My Services</strong> and click the button. You can have up to 20 active listings simultaneously.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">2</div><div class="step-content"><div class="step-title">Choose the most specific category</div><div class="step-desc">Correct categorisation directly impacts your search ranking. If you offer multiple distinct services, create separate listings for each.</div><div class="step-tip">💡 Separate listings = separate search rankings. One listing per service type is more effective.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">3</div><div class="step-content"><div class="step-title">Write a specific title</div><div class="step-desc">Good: "German Residence Registration – Anmeldung Help". Bad: "Registration Help". Specific titles rank higher and convert better.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">4</div><div class="step-content"><div class="step-title">Set pricing & packages</div><div class="step-desc">Use Basic / Standard / Premium packages to offer more value. The 15% platform commission is deducted automatically from your earnings.</div><div class="step-warn">⚠ All prices must be in EUR. Commission is deducted from what the client pays, not added on top.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">5</div><div class="step-content"><div class="step-title">Set delivery time & requirements</div><div class="step-desc">Be realistic. List every document you need from the client upfront to avoid delays after booking.</div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-blue"><svg width="16" height="16" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+              <div class="tut-meta"><div class="tut-title">Editing, Pausing & Deleting Listings</div><div class="tut-sub">When and how to manage active services</div></div>
+              <div class="tut-badges"><span class="badge badge-green">Beginner</span><span class="badge badge-blue">3 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step"><div class="step-num step-num-blue">1</div><div class="step-content"><div class="step-title">Use the ⋯ menu on any service card</div><div class="step-desc">Options: Edit, Pause, Duplicate, Delete. Duplicate is useful for creating a similar listing with minor changes.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">2</div><div class="step-content"><div class="step-title">Pause when on vacation — never Delete</div><div class="step-desc"><strong>Pause</strong> hides the listing but keeps all reviews and ranking history intact. <strong>Delete</strong> permanently removes everything and cannot be undone.</div><div class="step-tip">💡 Paused services retain their ranking position for up to 60 days of inactivity.</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;" class="section-header"><div class="section-title"></div><span class="section-link" onclick="location.href='services.html'">My Services <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+      </div>
+    </div>
+
+    <!-- ══════════════ TAB: ORDERS ══════════════ -->
+    <div class="tab-panel" id="panel-orders">
+      <div class="guide-body">
+        <div class="guide-hero"><div class="gh-left"><h1>Orders Guide</h1><p>Master every order status, action and deadline to keep clients happy.</p></div></div>
+        <div class="tut-list">
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-sky"><svg width="16" height="16" fill="none" stroke="var(--sky)" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+              <div class="tut-meta"><div class="tut-title">Order Lifecycle: Request → Completion</div><div class="tut-sub">Every status explained with required actions</div></div>
+              <div class="tut-badges"><span class="badge badge-orange">Important</span><span class="badge badge-blue">10 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step"><div class="step-num step-num-blue">1</div><div class="step-content"><div class="step-title">New Request — Accept within 24 hours</div><div class="step-desc">Review order details carefully before accepting. Declining too often lowers your search visibility.</div><div class="step-warn">⚠ Acceptance rate below 70% reduces your ranking in search results.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">2</div><div class="step-content"><div class="step-title">In Progress — Communicate early</div><div class="step-desc">Send at least one update within the first 12 hours. Request missing documents early. Use only the in-app chat.</div><div class="step-tip">💡 Clients who get early updates are 3× less likely to cancel.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">3</div><div class="step-content"><div class="step-title">Deliver — Click "Deliver Order"</div><div class="step-desc">Upload completed files and write a summary of what was done. This starts the 5-day client review window.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">4</div><div class="step-content"><div class="step-title">Revision — Respond within 48 hours</div><div class="step-desc">One revision is included by default. If the request is outside the original scope, explain politely and offer a separate quote.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">5</div><div class="step-content"><div class="step-title">Completed — Request a review</div><div class="step-desc">After auto-completion (5 days of no client response), funds are released. Send a personal thank-you to encourage a review.</div><div class="step-tip">💡 10+ reviews earns you the Trusted Provider badge (+40% click-through rate).</div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon" style="background:rgba(229,62,62,0.08)"><svg width="16" height="16" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>
+              <div class="tut-meta"><div class="tut-title">Cancellations & Disputes</div><div class="tut-sub">How to handle problems professionally</div></div>
+              <div class="tut-badges"><span class="badge badge-orange">Important</span><span class="badge badge-blue">5 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step"><div class="step-num step-num-blue">1</div><div class="step-content"><div class="step-title">Resolve directly with the client first</div><div class="step-desc">Use in-app chat. Most issues resolve with clear communication. Offer a partial refund or revision if appropriate.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">2</div><div class="step-content"><div class="step-title">Open a dispute if needed</div><div class="step-desc">Go to <strong>Order → Report Issue</strong>. Provide all chat logs and documents. Support reviews within 72 hours.</div><div class="step-warn">⚠ Cancellation rate above 10% lowers your search visibility. Document scope clearly upfront.</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;" class="section-header"><div class="section-title"></div><span class="section-link" onclick="location.href='orders.html'">View Orders <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+      </div>
+    </div>
+
+    <!-- ══════════════ TAB: FINANCE ══════════════ -->
+    <div class="tab-panel" id="panel-finance">
+      <div class="guide-body">
+        <div class="guide-hero"><div class="gh-left"><h1>Finance Guide</h1><p>Understand your balance, payouts, commission and invoicing.</p></div></div>
+        <div class="tut-list">
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-orange"><svg width="16" height="16" fill="none" stroke="var(--orange)" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+              <div class="tut-meta"><div class="tut-title">Payments, Balances & Payouts</div><div class="tut-sub">Pending, clearance, available & withdrawal</div></div>
+              <div class="tut-badges"><span class="badge badge-green">Beginner</span><span class="badge badge-blue">6 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step"><div class="step-num step-num-blue">1</div><div class="step-content"><div class="step-title">Understanding your three balances</div><div class="step-desc"><strong>Pending</strong>: order in progress. <strong>Clearance</strong>: 14-day hold after delivery. <strong>Available</strong>: ready to withdraw.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">2</div><div class="step-content"><div class="step-title">Link your bank account (IBAN)</div><div class="step-desc">Go to <strong>Finance → Payout Settings</strong>. Enter your German IBAN. Verification takes 1–2 business days. Requires completed identity verification first.</div><div class="step-warn">⚠ Only verified providers can receive payouts.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">3</div><div class="step-content"><div class="step-title">Request a withdrawal</div><div class="step-desc">Minimum €20. Transfers arrive in 3–5 business days. Enable automatic weekly payouts in Finance Settings.</div><div class="step-tip">💡 Enable automatic weekly payouts so you never forget to withdraw.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">4</div><div class="step-content"><div class="step-title">Platform commission: 15%</div><div class="step-desc">Automatically deducted from each completed order. The balance displayed is already net of commission.</div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-blue"><svg width="16" height="16" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+              <div class="tut-meta"><div class="tut-title">Invoices & Tax Documents</div><div class="tut-sub">Downloading statements and understanding VAT</div></div>
+              <div class="tut-badges"><span class="badge badge-sky">Advanced</span><span class="badge badge-blue">4 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step"><div class="step-num step-num-blue">1</div><div class="step-content"><div class="step-title">Download monthly statements</div><div class="step-desc">Go to <strong>Finance → Statements</strong>. Download PDF or CSV summaries of all transactions for any month. Useful for tax filings.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">2</div><div class="step-content"><div class="step-title">VAT & freelance income</div><div class="step-desc">If you are a Freiberufler or have a Gewerbe in Germany, you may need to declare this income. Consult a Steuerberater for your specific situation.</div><div class="step-warn">⚠ Germany Assists does not provide tax advice. Always consult a certified tax advisor.</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;" class="section-header"><div class="section-title"></div><span class="section-link" onclick="location.href='Finance.html'">Finance Page <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+      </div>
+    </div>
+
+    <!-- ══════════════ TAB: VERIFICATION ══════════════ -->
+    <div class="tab-panel" id="panel-verification">
+      <div class="guide-body">
+        <div class="guide-hero"><div class="gh-left"><h1>Verification Guide</h1><p>Get verified quickly — it's required before you can receive payouts or take orders.</p></div></div>
+        <div class="tut-list">
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-sky"><svg width="16" height="16" fill="none" stroke="var(--sky)" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+              <div class="tut-meta"><div class="tut-title">Document Submission Guide</div><div class="tut-sub">What to submit, accepted formats & review timeline</div></div>
+              <div class="tut-badges"><span class="badge badge-orange">Required</span><span class="badge badge-blue">7 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step"><div class="step-num step-num-blue">1</div><div class="step-content"><div class="step-title">Identity: Passport or German ID</div><div class="step-desc">Upload a clear photo or scan. Both sides required for ID cards. Max 10MB — PDF, JPG, or PNG. All four corners must be visible.</div><div class="step-tip">💡 Blurry photos are the #1 reason for rejection. Use good lighting and a flat surface.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">2</div><div class="step-content"><div class="step-title">Professional credentials (if applicable)</div><div class="step-desc">Legal, medical, tax, or licensed services require your professional certificate or license. Translators: upload language certification.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">3</div><div class="step-content"><div class="step-title">Address proof</div><div class="step-desc">Utility bill, bank statement, or Anmeldung confirmation dated within the last 3 months showing your current German address.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">4</div><div class="step-content"><div class="step-title">Review takes 3–5 business days</div><div class="step-desc">You'll receive an email and in-app notification. If rejected, the reason is shown and you can resubmit immediately — no limit on attempts.</div><div class="step-warn">⚠ Never redact or hide personal information — this causes automatic rejection.</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;" class="section-header"><div class="section-title"></div><span class="section-link" onclick="location.href='verification_centre.html'">Verification Centre <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+      </div>
+    </div>
+
+    <!-- ══════════════ TAB: MESSAGES ══════════════ -->
+    <div class="tab-panel" id="panel-messages">
+      <div class="guide-body">
+        <div class="guide-hero"><div class="gh-left"><h1>Messages Guide</h1><p>Communicate like a pro — response time directly affects your search ranking.</p></div></div>
+        <div class="tip-box" style="margin-bottom:0;">
+          <div class="tip-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></div>
+          <div><div class="tip-title">Response Time = Rankings</div><div class="tip-desc">Providers who respond within 1 hour rank higher. Enable push notifications to stay responsive.</div></div>
+        </div>
+        <div class="tut-list" style="margin-top:12px;">
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-blue"><svg width="16" height="16" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+              <div class="tut-meta"><div class="tut-title">Client Communication Best Practices</div><div class="tut-sub">Templates, tone & handling difficult clients</div></div>
+              <div class="tut-badges"><span class="badge badge-sky">Pro Tip</span><span class="badge badge-blue">5 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step"><div class="step-num step-num-blue">1</div><div class="step-content"><div class="step-title">Save Quick Reply templates</div><div class="step-desc">Click the template icon in Messages to save reusable replies for common situations: order acknowledgement, document requests, delivery confirmation.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">2</div><div class="step-content"><div class="step-title">Confirm scope before starting</div><div class="step-desc">Always send a brief scope confirmation: "Just to confirm, I'll be handling X and Y — is that correct?" Prevents scope creep and disputes.</div><div class="step-tip">💡 Add a requirements form to your service listing to collect info automatically at booking time.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">3</div><div class="step-content"><div class="step-title">Always stay on-platform</div><div class="step-desc">Never move conversations to WhatsApp, email, or other apps. All communication must remain in Germany Assists for dispute protection.</div><div class="step-warn">⚠ Off-platform communication violates terms and can result in account suspension.</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;" class="section-header"><div class="section-title"></div><span class="section-link" onclick="location.href='Message.html'">Open Messages <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+      </div>
+    </div>
+
+    <!-- ══════════════ TAB: SETTINGS ══════════════ -->
+    <div class="tab-panel" id="panel-settings">
+      <div class="guide-body">
+        <div class="guide-hero"><div class="gh-left"><h1>Settings Guide</h1><p>Configure notifications, payout preferences, privacy and account security.</p></div></div>
+        <div class="tut-list">
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-blue"><svg width="16" height="16" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+              <div class="tut-meta"><div class="tut-title">Notification Settings</div><div class="tut-sub">Orders, messages, payouts & system alerts</div></div>
+              <div class="tut-badges"><span class="badge badge-green">Beginner</span><span class="badge badge-blue">3 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step"><div class="step-num step-num-blue">1</div><div class="step-content"><div class="step-title">Enable push & email for orders</div><div class="step-desc">Go to <strong>Settings → Notifications</strong>. Enable both push and email for new order requests. Missing a new request = missed revenue.</div><div class="step-tip">💡 Enable SMS alerts for new orders if you're often away from your phone.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">2</div><div class="step-content"><div class="step-title">Set your Do Not Disturb hours</div><div class="step-desc">Configure quiet hours so you don't receive notifications at night, while still appearing available to clients the next morning.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">3</div><div class="step-content"><div class="step-title">Payout notifications</div><div class="step-desc">Enable "Funds available" notifications so you know the moment earnings clear and are ready to withdraw.</div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="tut-card">
+            <div class="tut-header" onclick="toggleTut(this)">
+              <div class="tut-icon qs-icon-orange"><svg width="16" height="16" fill="none" stroke="var(--orange)" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+              <div class="tut-meta"><div class="tut-title">Account Security</div><div class="tut-sub">Password, 2FA & trusted devices</div></div>
+              <div class="tut-badges"><span class="badge badge-orange">Important</span><span class="badge badge-blue">4 min</span></div>
+              <div class="tut-arrow"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="tut-body">
+              <div class="steps">
+                <div class="step"><div class="step-num step-num-blue">1</div><div class="step-content"><div class="step-title">Enable Two-Factor Authentication</div><div class="step-desc">Go to <strong>Settings → Security → Enable 2FA</strong>. Use an authenticator app (Google Authenticator, Authy). Strongly recommended to protect your earnings.</div></div></div>
+                <div class="step"><div class="step-num step-num-blue">2</div><div class="step-content"><div class="step-title">Change your password regularly</div><div class="step-desc">Use a strong, unique password. Germany Assists will never ask for your password via email or chat.</div><div class="step-warn">⚠ If you receive a password request from "support", it's a phishing attempt. Report it immediately.</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;" class="section-header"><div class="section-title"></div><span class="section-link" onclick="location.href='settings.html'">Open Settings <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+      </div>
+    </div>
+
+    <!-- ══════════════ TAB: CONTACT US ══════════════ -->
+    <div class="tab-panel" id="panel-contact">
+      <div class="guide-body">
+        <div class="guide-hero">
+          <div class="gh-left">
+            <h1>Contact & Support</h1>
+            <p>Get help from our team, report an issue, or connect with the provider community.</p>
+            <div class="gh-stats">
+              <div class="gh-stat"><div class="gh-stat-n">&lt;1h</div><div class="gh-stat-l">Live chat</div></div>
+              <div class="gh-stat"><div class="gh-stat-n">24h</div><div class="gh-stat-l">Email reply</div></div>
+              <div class="gh-stat"><div class="gh-stat-n">1,200+</div><div class="gh-stat-l">Community</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="support-row">
+          <div class="sup-card" onclick="location.href='Message.html'">
+            <div class="sup-icon" style="background:var(--bs);"><svg width="20" height="20" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+            <div class="sup-title">Live Chat</div>
+            <div class="sup-desc">Chat with our support team. Available Mon–Fri, 9am–6pm CET.</div>
+            <span class="sup-badge badge-green" style="font-size:11px;padding:3px 10px;">● Online now</span>
+          </div>
+          <div class="sup-card">
+            <div class="sup-icon" style="background:rgba(5,150,105,0.08);"><svg width="20" height="20" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <div class="sup-title">Email Support</div>
+            <div class="sup-desc">For detailed questions, billing issues, or account problems.</div>
+            <div style="margin-top:10px;font-size:12px;font-weight:600;color:var(--green);">support@germany-assists.de</div>
+            <span class="sup-badge badge-blue" style="font-size:11px;padding:3px 10px;margin-top:6px;display:inline-block;">Replies within 24h</span>
+          </div>
+          <div class="sup-card">
+            <div class="sup-icon" style="background:rgba(245,158,11,0.08);"><svg width="20" height="20" fill="none" stroke="var(--orange)" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+            <div class="sup-title">Provider Community</div>
+            <div class="sup-desc">Join our Telegram group to connect with other providers.</div>
+            <span class="sup-badge badge-orange" style="font-size:11px;padding:3px 10px;margin-top:6px;display:inline-block;">1,200+ members</span>
+          </div>
+        </div>
+
+        <!-- CONTACT FORM -->
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px 24px;">
+          <div style="font-size:14px;font-weight:600;margin-bottom:4px;">Send Us a Message</div>
+          <div style="font-size:12.5px;color:var(--muted);margin-bottom:18px;">Our team will get back to you within 24 hours.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+            <div>
+              <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px;">Subject</label>
+              <select style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:9px;font-family:'Outfit',sans-serif;font-size:13px;color:var(--text);outline:none;background:#fff;cursor:pointer;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'">
+                <option>Order issue</option><option>Payment / Payout</option><option>Verification problem</option><option>Account / Login</option><option>Service listing</option><option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px;">Order ID (optional)</label>
+              <input type="text" placeholder="e.g. ORD-2024-00123" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:9px;font-family:'Outfit',sans-serif;font-size:13px;color:var(--text);outline:none;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'"/>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px;">Message</label>
+            <textarea rows="4" placeholder="Describe your issue in detail…" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:9px;font-family:'Outfit',sans-serif;font-size:13px;color:var(--text);outline:none;resize:vertical;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+          </div>
+          <button onclick="sendContactForm(this)" style="background:var(--blue);color:#fff;border:none;padding:10px 22px;border-radius:9px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Send Message</button>
+        </div>
+
+        <!-- RESPONSE TIMES -->
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px 22px;">
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px;">Support Hours & Response Times</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--light);border-radius:9px;"><div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--green);"></div><span style="font-size:12.5px;font-weight:500;">Live Chat</span></div><span style="font-size:12px;color:var(--muted);">Mon–Fri, 9am–6pm CET · &lt;1 hour</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--light);border-radius:9px;"><div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--blue);"></div><span style="font-size:12.5px;font-weight:500;">Email Support</span></div><span style="font-size:12px;color:var(--muted);">Every day · within 24 hours</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--light);border-radius:9px;"><div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--orange);"></div><span style="font-size:12.5px;font-weight:500;">Dispute Review</span></div><span style="font-size:12px;color:var(--muted);">Mon–Fri · within 72 hours</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--light);border-radius:9px;"><div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--sky);"></div><span style="font-size:12.5px;font-weight:500;">Verification Review</span></div><span style="font-size:12px;color:var(--muted);">Mon–Fri · 3–5 business days</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- FLOATING HELP BUTTON -->
+<div id="helpFab" style="position:fixed;bottom:28px;right:28px;z-index:500;">
+  <div id="helpMenu" style="display:none;flex-direction:column;gap:8px;margin-bottom:10px;align-items:flex-end;">
+    <div onclick="switchTabFab('contact')" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px 14px;cursor:pointer;box-shadow:0 4px 16px rgba(2,76,238,0.1);font-size:12.5px;font-weight:500;color:var(--text);white-space:nowrap;transition:all 0.13s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text)'">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.59a16 16 0 006.29 6.29l1-.95a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      Contact Support
+    </div>
+    <div onclick="switchTabFab('faq')" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px 14px;cursor:pointer;box-shadow:0 4px 16px rgba(2,76,238,0.1);font-size:12.5px;font-weight:500;color:var(--text);white-space:nowrap;transition:all 0.13s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text)'">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+      Browse FAQ
+    </div>
+    <div onclick="location.href='Message.html'" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px 14px;cursor:pointer;box-shadow:0 4px 16px rgba(2,76,238,0.1);font-size:12.5px;font-weight:500;color:var(--text);white-space:nowrap;transition:all 0.13s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text)'">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Live Chat
+    </div>
+  </div>
+  <button onclick="toggleHelpFab(this)" style="width:52px;height:52px;border-radius:50%;background:var(--blue);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(2,76,238,0.35);transition:all 0.2s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+    <svg id="fabIcon" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+  </button>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Sidebar — match dashboard behavior
+function toggleCollapse(){
+  const sb = document.getElementById('sidebar');
+  sb.classList.toggle('collapsed');
+}
+function toggleSidebar(){
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('overlay');
+  sb.classList.toggle('open');
+  ov.classList.toggle('show');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+// Tab switching
+function switchTab(id, btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Toggle tutorial accordion
+function toggleTut(header){
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('.tut-arrow');
+  body.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+
+// Toggle FAQ
+function toggleFaq(q){
+  const a = q.nextElementSibling;
+  const icon = q.querySelector('.faq-icon');
+  a.classList.toggle('open');
+  icon.classList.toggle('open');
+}
+
+// Checklist with progress
+function toggleCheck(item){
+  item.classList.toggle('checked');
+  updateProgress();
+}
+
+function updateProgress(){
+  const items = document.querySelectorAll('.cl-item');
+  const checked = document.querySelectorAll('.cl-item.checked').length;
+  const pct = Math.round((checked/items.length)*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressPct').textContent = pct+'%';
+  document.getElementById('heroPct').textContent = pct+'%';
+}
+
+// Floating help button
+function toggleHelpFab(btn){
+  const menu = document.getElementById('helpMenu');
+  const open = menu.style.display === 'flex';
+  menu.style.display = open ? 'none' : 'flex';
+  btn.style.background = open ? 'var(--blue)' : '#0a0f1e';
+}
+
+function switchTabFab(id){
+  // map 'faq' to 'contact' since we merged them
+  const targetId = id === 'faq' ? 'contact' : id;
+  const btn = document.querySelector(`.tab-btn[onclick*="'${targetId}'"]`);
+  if(btn) switchTab(targetId, btn);
+  document.getElementById('helpMenu').style.display = 'none';
+  document.getElementById('helpFab').querySelector('button').style.background = 'var(--blue)';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Contact form
+function sendContactForm(btn){
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  setTimeout(()=>{
+    btn.textContent = '✓ Message Sent';
+    btn.style.background = 'var(--green)';
+    setTimeout(()=>{
+      btn.textContent = 'Send Message';
+      btn.style.background = 'var(--blue)';
+      btn.disabled = false;
+    }, 3000);
+  }, 1200);
+}
+
+// Simple search filter (main tab)
+function filterContent(val){
+  c

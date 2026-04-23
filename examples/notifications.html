@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Notifications — Germany Assists Provider Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --blue:#024CEE;--sky:#49B7DF;
+  --bs:rgba(2,76,238,0.07);--ss:rgba(73,183,223,0.10);--bm:rgba(2,76,238,0.13);
+  --text:#0a0f1e;--muted:#6b7280;--light:#f7f9ff;--border:rgba(2,76,238,0.10);--w:#fff;
+}
+body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-height:100vh;}
+.shell{display:flex;min-height:100vh;}
+
+/* ── NAV SIDEBAR ── */
+.sidebar{width:220px;background:var(--w);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;flex-shrink:0;z-index:50;transition:transform 0.25s ease;}
+.logo-area{padding:16px 14px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.ga-mark{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;border:1px solid var(--border);}
+.ga-flag{display:flex;flex-direction:column;width:100%;height:100%;}
+.ga-flag-b{flex:1;background:#000;}.ga-flag-r{flex:1;background:#d60d2e;}.ga-flag-g{flex:1;background:#f6ce17;}
+.ga-logo-text{display:flex;flex-direction:column;}
+.ga-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.1;}
+.ga-sub{font-size:10px;color:var(--muted);}
+.nav{flex:1;padding:10px 8px;overflow-y:auto;}
+.nav-label{font-size:9.5px;font-weight:600;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;padding:8px 8px 3px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;font-size:13px;font-weight:400;color:var(--muted);cursor:pointer;transition:all 0.13s;margin-bottom:1px;}
+.nav-item:hover{background:var(--bs);color:var(--blue);}
+.nav-item.active{background:var(--bs);color:var(--blue);font-weight:500;}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;}
+.nb{margin-left:auto;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;color:#fff;}
+.nb-red{background:#E53E3E;}.nb-blue{background:var(--blue);}.nb-sky{background:var(--sky);}
+.sidebar-footer{padding:10px 8px 14px;border-top:1px solid var(--border);}
+.sp-profile{display:flex;align-items:center;gap:9px;padding:9px;border-radius:9px;cursor:pointer;transition:background 0.13s;}
+.sp-profile:hover{background:var(--bs);}
+.s-av{width:32px;height:32px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0;}
+.sp-nm{font-size:12.5px;font-weight:600;color:var(--text);}
+.sp-rl{font-size:10.5px;color:var(--muted);}
+.pf-arrow{margin-left:auto;color:var(--muted);}
+
+/* ── MAIN ── */
+.main{flex:1;overflow:auto;background:#f7f9ff;min-width:0;display:flex;flex-direction:column;}
+
+/* ── TOPBAR ── */
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:10px;height:52px;position:sticky;top:0;z-index:20;flex-shrink:0;}
+.page-title{font-size:15px;font-weight:600;flex:1;}
+.ti-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;flex-shrink:0;}
+.n-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;border:1.5px solid #fff;}
+.ham{display:none;width:32px;height:32px;border:1px solid var(--border);border-radius:8px;background:#fff;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+
+/* filter button in topbar */
+.filter-topbtn{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:0 13px;height:32px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--muted);transition:all 0.13s;position:relative;flex-shrink:0;white-space:nowrap;}
+.filter-topbtn:hover{border-color:var(--blue);color:var(--blue);}
+.filter-topbtn.has-filter{border-color:var(--blue);color:var(--blue);background:var(--bs);}
+.filter-badge{position:absolute;top:-5px;right:-5px;width:15px;height:15px;border-radius:50%;background:var(--blue);color:#fff;font-size:8px;font-weight:700;display:none;align-items:center;justify-content:center;border:2px solid #fff;}
+.filter-badge.show{display:flex;}
+
+/* ── CONTENT — full width ── */
+.content{padding:20px 24px;flex:1;min-width:0;width:100%;}
+
+/* ── HEADER ROW ── */
+.notif-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.notif-title{font-size:20px;font-weight:700;}
+.notif-count{font-size:12px;font-weight:600;color:#fff;background:#E53E3E;padding:3px 9px;border-radius:20px;flex-shrink:0;}
+.hdr-spacer{flex:1;min-width:8px;}
+.hdr-actions{display:flex;gap:8px;}
+.hdr-btn{font-size:12px;font-weight:500;padding:6px 13px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--muted);transition:all 0.13s;white-space:nowrap;}
+.hdr-btn:hover{border-color:var(--blue);color:var(--blue);}
+
+/* ── ACTIVE FILTER PILLS ── */
+.active-filters{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.af-pill{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:500;padding:4px 10px;border-radius:20px;background:var(--bs);color:var(--blue);border:1px solid rgba(2,76,238,0.18);}
+.af-pill button{background:none;border:none;cursor:pointer;color:var(--blue);font-size:14px;line-height:1;padding:0;display:flex;align-items:center;}
+.af-clear-btn{font-size:11px;color:var(--muted);cursor:pointer;padding:4px 8px;border-radius:6px;background:none;border:none;font-family:'Outfit',sans-serif;}
+.af-clear-btn:hover{color:#DC2626;}
+
+/* ── SECTION LABEL ── */
+.section-lbl{font-size:10.5px;font-weight:600;letter-spacing:0.07em;color:var(--muted);text-transform:uppercase;margin:20px 0 8px;padding-left:2px;}
+
+/* ── NOTIFICATION CARD ── */
+.notif-card{background:#fff;border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:6px;transition:box-shadow 0.15s,transform 0.15s;cursor:pointer;}
+.notif-card:hover{box-shadow:0 4px 18px rgba(2,76,238,0.08);transform:translateY(-1px);}
+.notif-card.unread{border-left:3px solid var(--blue);}
+.notif-card.unread-red{border-left:3px solid #E53E3E;}
+.notif-card.unread-warn{border-left:3px solid #D97706;}
+.notif-inner{display:flex;align-items:flex-start;gap:13px;padding:14px 16px;}
+.notif-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.notif-body{flex:1;min-width:0;}
+.notif-top{display:flex;align-items:center;gap:8px;margin-bottom:3px;flex-wrap:wrap;}
+.notif-tag{font-size:9.5px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:2px 6px;border-radius:5px;white-space:nowrap;}
+.notif-unread-dot{width:7px;height:7px;border-radius:50%;background:var(--blue);flex-shrink:0;}
+.notif-unread-dot.red{background:#E53E3E;}
+.notif-unread-dot.warn{background:#D97706;}
+.notif-time{font-size:10.5px;color:var(--muted);margin-left:auto;flex-shrink:0;}
+.notif-title-text{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.notif-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+.notif-actions{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap;}
+.na-btn{font-size:11.5px;font-weight:500;padding:5px 12px;border-radius:7px;border:1px solid var(--border);cursor:pointer;font-family:'Outfit',sans-serif;color:var(--muted);background:#fff;transition:all 0.13s;}
+.na-btn:hover{border-color:var(--blue);color:var(--blue);}
+.na-btn.prim{background:var(--blue);color:#fff;border-color:var(--blue);}
+.na-btn.prim:hover{background:#013cc0;}
+.na-btn.danger{background:#DC2626;color:#fff;border-color:#DC2626;}
+.na-btn.warn{background:#D97706;color:#fff;border-color:#D97706;}
+.notif-expand{display:none;border-top:1px solid var(--border);padding:12px 16px;background:var(--light);}
+.notif-expand.open{display:block;}
+.exp-detail{font-size:12px;color:var(--muted);line-height:1.7;}
+.exp-detail strong{color:var(--text);font-weight:600;}
+.notif-meta{display:flex;align-items:center;gap:8px;margin-top:5px;flex-wrap:wrap;}
+.nm-chip{font-size:10.5px;padding:2px 7px;border-radius:5px;background:var(--light);color:var(--muted);font-weight:500;}
+.notif-card.read .notif-title-text{font-weight:500;color:var(--muted);}
+.notif-card.read{background:#fafbff;}
+
+/* ── QUICK FILTER TABS ── */
+.qf-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.qf-tab{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500;padding:6px 12px;border-radius:20px;border:1px solid var(--border);cursor:pointer;font-family:'Outfit',sans-serif;color:var(--muted);background:#fff;transition:all 0.13s;white-space:nowrap;}
+.qf-tab:hover{border-color:var(--blue);color:var(--blue);}
+.qf-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.qf-tab.active-red{background:#DC2626;color:#fff;border-color:#DC2626;}
+.qf-tab .qf-count{font-size:10px;font-weight:700;padding:1px 5px;border-radius:10px;background:rgba(255,255,255,0.25);line-height:1.4;}
+.qf-tab:not(.active):not(.active-red) .qf-count{background:var(--bs);color:var(--blue);}
+.qf-tab.active-red .qf-count{background:rgba(255,255,255,0.25);}
+
+.settings-panel{background:#fff;border:1px solid var(--border);border-radius:13px;padding:16px 18px;margin-bottom:18px;display:none;}
+.settings-panel.open{display:block;}
+.sp-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
+.sp-row:last-child{border-bottom:none;}
+.sp-lbl{color:var(--text);}
+.sp-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.toggle{width:36px;height:20px;border-radius:20px;background:#e5e7eb;position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0;}
+.toggle.on{background:var(--blue);}
+.toggle::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform 0.2s;}
+.toggle.on::after{transform:translateX(16px);}
+
+/* ── FILTER DRAWER ── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(10,15,30,0.35);z-index:100;opacity:0;pointer-events:none;transition:opacity 0.25s ease;backdrop-filter:blur(2px);}
+.drawer-overlay.open{opacity:1;pointer-events:all;}
+.filter-drawer{position:fixed;top:0;right:0;height:100vh;width:300px;background:#fff;z-index:101;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);box-shadow:-8px 0 40px rgba(2,76,238,0.12);border-left:1px solid var(--border);}
+.filter-drawer.open{transform:translateX(0);}
+.fd-header{display:flex;align-items:center;padding:18px 18px 14px;border-bottom:1px solid var(--border);gap:10px;}
+.fd-title{font-size:14px;font-weight:700;flex:1;}
+.fd-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all 0.13s;}
+.fd-close:hover{border-color:var(--blue);color:var(--blue);}
+.fd-body{flex:1;overflow-y:auto;padding:18px;}
+.fd-section{margin-bottom:22px;}
+.fd-section-lbl{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.fd-chip-group{display:flex;flex-wrap:wrap;gap:7px;}
+.fd-chip{font-size:12px;font-weight:500;padding:6px 13px;border-radius:20px;border:1px solid var(--border);cursor:pointer;color:var(--muted);background:#fff;transition:all 0.13s;font-family:'Outfit',sans-serif;}
+.fd-chip:hover{border-color:var(--blue);color:var(--blue);}
+.fd-chip.sel{background:var(--blue);color:#fff;border-color:var(--blue);}
+.fd-check-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;}
+.fd-check-row:last-child{border-bottom:none;}
+.fd-checkbox{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.13s;position:relative;}
+.fd-checkbox.checked{background:var(--blue);border-color:var(--blue);}
+.fd-checkbox.checked::after{content:'';display:block;width:8px;height:4px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translate(0px,0px);}
+.fd-check-lbl{font-size:12.5px;color:var(--text);flex:1;}
+.fd-check-sub{font-size:10.5px;color:var(--muted);}
+.fd-footer{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:8px;}
+.fd-apply{flex:1;padding:10px;border-radius:9px;background:var(--blue);color:#fff;font-size:13px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.13s;}
+.fd-apply:hover{background:#013cc0;}
+.fd-reset{padding:10px 14px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.13s;}
+.fd-reset:hover{border-color:var(--blue);color:var(--blue);}
+
+/* ── SNACKBAR ── */
+.snackbar{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--text);color:#fff;font-size:12.5px;font-weight:500;padding:10px 18px;border-radius:10px;z-index:999;transition:transform 0.25s ease;white-space:nowrap;pointer-events:none;}
+.snackbar.show{transform:translateX(-50%) translateY(0);}
+
+/* ── ANIMATIONS ── */
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes fadeOut{to{opacity:0;transform:translateX(16px);max-height:0;margin:0;padding:0;overflow:hidden;border:none;}}
+.notif-card{animation:slideIn 0.3s ease both;}
+.notif-card:nth-child(1){animation-delay:.04s}.notif-card:nth-child(2){animation-delay:.08s}
+.notif-card:nth-child(3){animation-delay:.12s}.notif-card:nth-child(4){animation-delay:.16s}
+.notif-card:nth-child(5){animation-delay:.2s}.notif-card:nth-child(6){animation-delay:.24s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .sidebar{position:fixed;left:0;top:0;transform:translateX(-100%);}
+  .sidebar.mob-open{transform:translateX(0);}
+  .ham{display:flex !important;}
+  .content{padding:14px 16px;}
+  .topbar{padding:0 14px;gap:8px;}
+  .hdr-actions{gap:6px;}
+  .hdr-btn{padding:5px 10px;font-size:11px;}
+  .notif-inner{gap:10px;padding:12px 14px;}
+  .filter-drawer{width:min(300px, 92vw);}
+}
+@media(max-width:480px){
+  .notif-title{font-size:17px;}
+  .hdr-actions .hdr-btn:first-child{display:none;}
+  .notif-desc{font-size:11.5px;}
+  .na-btn{font-size:11px;padding:5px 10px;}
+  .filter-topbtn span.btn-label{display:none;}
+}
+/* ── HELP PANEL ── */
+.help-overlay{position:fixed;inset:0;background:rgba(10,15,30,0.3);z-index:400;opacity:0;pointer-events:none;transition:opacity 0.25s;backdrop-filter:blur(2px);}
+.help-overlay.open{opacity:1;pointer-events:all;}
+.help-panel{position:fixed;top:0;right:0;height:100vh;width:380px;background:#fff;z-index:401;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);box-shadow:-12px 0 40px rgba(2,76,238,0.10);border-left:1px solid var(--border);}
+.help-panel.open{transform:translateX(0);}
+.hp-head{padding:18px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.hp-icon{width:34px;height:34px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--blue);}
+.hp-title{font-size:14px;font-weight:700;color:var(--text);flex:1;}
+.hp-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all 0.13s;}
+.hp-close:hover{border-color:var(--blue);color:var(--blue);}
+.hp-body{flex:1;overflow-y:auto;padding:20px 18px;}
+.hp-intro{font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:22px;}
+.hp-section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted);margin-bottom:12px;}
+.hp-flow{display:flex;flex-direction:column;gap:0;margin-bottom:24px;}
+.hp-step{display:flex;gap:14px;padding-bottom:18px;position:relative;}
+.hp-step:last-child{padding-bottom:0;}
+.hp-step:not(:last-child)::before{content:'';position:absolute;left:17px;top:36px;bottom:0;width:2px;background:var(--border);}
+.hp-step-num{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700;color:#fff;background:var(--blue);z-index:1;}
+.hp-step-body{flex:1;padding-top:5px;}
+.hp-step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.hp-step-desc{font-size:12px;color:var(--muted);line-height:1.55;}
+.hp-step-tag{display:inline-flex;align-items:center;gap:3px;margin-top:5px;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:5px;}
+.hp-glossary{display:flex;flex-direction:column;gap:7px;margin-bottom:24px;}
+.hp-gl-row{display:flex;align-items:flex-start;gap:10px;padding:9px 11px;border-radius:9px;border:1px solid var(--border);}
+.hp-gl-badge{flex-shrink:0;margin-top:1px;}
+.hp-gl-text{font-size:12px;color:var(--muted);line-height:1.5;}
+.hp-gl-text strong{color:var(--text);font-weight:600;}
+.hp-tips{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+.hp-tip{display:flex;gap:10px;padding:10px 12px;border-radius:9px;background:var(--light);border:1px solid var(--border);}
+.hp-tip-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+.hp-tip-text{font-size:12px;color:var(--muted);line-height:1.5;}
+.hp-tip-text strong{color:var(--text);}
+.hp-footer{padding:14px 18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.hp-dismiss{font-size:12px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:5px;transition:color 0.13s;}
+.hp-dismiss:hover{color:#DC2626;}
+.hp-docs-link{font-size:12px;font-weight:600;color:var(--blue);cursor:pointer;display:flex;align-items:center;gap:4px;text-decoration:none;}
+.hp-docs-link:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="snackbar" id="snackbar"></div>
+<div class="help-overlay" id="helpOverlay" onclick="toggleHelp()"></div>
+<div class="help-panel" id="helpPanel">
+  <div class="hp-head">
+    <div class="hp-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+    <div class="hp-title">Notifications Guide</div>
+    <div class="hp-close" onclick="toggleHelp()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+  </div>
+  <div class="hp-body">
+    <p class="hp-intro">Stay on top of every order update, client message, and payment event. Notifications keep you informed without needing to check every page manually.</p>
+    <div class="hp-section">Notification types</div>
+    <div class="hp-tips">
+      <div class="hp-tip"><div class="hp-tip-icon">📦</div><div class="hp-tip-text"><strong>Order alerts.</strong> New orders, acceptance deadlines, delivery confirmations, and dispute updates.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">💬</div><div class="hp-tip-text"><strong>Message alerts.</strong> New client messages so you never miss a conversation.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">💰</div><div class="hp-tip-text"><strong>Payment alerts.</strong> Withdrawal confirmations and earnings releases to your GA Wallet.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">🔔</div><div class="hp-tip-text"><strong>System alerts.</strong> Platform announcements, policy updates, and account notices.</div></div>
+    </div>
+    <div class="hp-section">Pro tips</div>
+    <div class="hp-tips">
+      <div class="hp-tip"><div class="hp-tip-icon">⚡</div><div class="hp-tip-text"><strong>Don't ignore order alerts.</strong> New orders expire in 48h if not accepted — enable push or email notifications so you never miss one.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">🎛️</div><div class="hp-tip-text"><strong>Customise in Settings.</strong> Go to Settings to control which notifications you receive and how.</div></div>
+    </div>
+  </div>
+  <div class="hp-footer" style="justify-content:flex-end;">
+    <a class="hp-docs-link" href="guide.html">Full Documentation <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+  </div>
+</div>
+
+<!-- Nav overlay (mobile) -->
+<div id="navOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:49;" onclick="closeMobSidebar()"></div>
+
+<!-- ── FILTER DRAWER ── -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeFilterDrawer()"></div>
+<div class="filter-drawer" id="filterDrawer">
+  <div class="fd-header">
+    <div class="fd-title">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;color:var(--blue)"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+      Filter Notifications
+    </div>
+    <div class="fd-close" onclick="closeFilterDrawer()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </div>
+  </div>
+  <div class="fd-body">
+
+    <!-- Read Status — most used, first -->
+    <div class="fd-section">
+      <div class="fd-section-lbl">Read Status</div>
+      <div class="fd-chip-group">
+        <div class="fd-chip sel" data-status="all" onclick="selectStatus(this)">All</div>
+        <div class="fd-chip" data-status="unread" onclick="selectStatus(this)">Unread only</div>
+        <div class="fd-chip" data-status="read" onclick="selectStatus(this)">Read only</div>
+      </div>
+    </div>
+
+    <!-- Category — multi-select -->
+    <div class="fd-section">
+      <div class="fd-section-lbl">Category</div>
+      <div class="fd-chip-group">
+        <div class="fd-chip sel" data-filter="urgent" onclick="toggleCategory(this)">
+          <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#DC2626;margin-right:5px;vertical-align:1px;"></span>Urgent
+        </div>
+        <div class="fd-chip sel" data-filter="orders" onclick="toggleCategory(this)">Orders</div>
+        <div class="fd-chip sel" data-filter="finance" onclick="toggleCategory(this)">Finance</div>
+        <div class="fd-chip sel" data-filter="verification" onclick="toggleCategory(this)">Verification</div>
+        <div class="fd-chip sel" data-filter="system" onclick="toggleCategory(this)">System</div>
+      </div>
+    </div>
+
+    <!-- Time Period -->
+    <div class="fd-section">
+      <div class="fd-section-lbl">Time Period</div>
+      <div class="fd-chip-group">
+        <div class="fd-chip sel" data-period="all" onclick="selectPeriod(this)">All time</div>
+        <div class="fd-chip" data-period="today" onclick="selectPeriod(this)">Today</div>
+        <div class="fd-chip" data-period="yesterday" onclick="selectPeriod(this)">Yesterday</div>
+        <div class="fd-chip" data-period="older" onclick="selectPeriod(this)">Earlier</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="fd-footer">
+    <button class="fd-reset" onclick="resetDrawer()">Reset all</button>
+    <button class="fd-apply" onclick="applyDrawerFilter()">Apply Filters</button>
+  </div>
+</div>
+
+<div class="shell">
+
+<!-- ── NAV SIDEBAR ── -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo-area">
+    <div class="ga-mark"><div class="ga-flag"><div class="ga-flag-b"></div><div class="ga-flag-r"></div><div class="ga-flag-g"></div></div></div>
+    <div class="ga-logo-text"><div class="ga-name">Germany Assists</div><div class="ga-sub">Provider Portal</div></div>
+  </div>
+  <nav class="nav">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item" onclick="window.location.href='Dashborad.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Dashboard</div>
+    <div class="nav-item" onclick="window.location.href='Message.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messages<span class="nb nb-red">5</span></div>
+    <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Notifications<span class="nb nb-red">3</span></div>
+    <div class="nav-label" style="margin-top:6px;">Work</div>
+    <div class="nav-item" onclick="window.location.href='orders.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>Orders<span class="nb nb-blue">14</span></div>
+    <div class="nav-item" onclick="window.location.href='services.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>My Services</div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Clients</div>
+    <div class="nav-label" style="margin-top:6px;">Finance</div>
+    <div class="nav-item" onclick="window.location.href='Finance.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>Finance</div>
+    <div class="nav-label" style="margin-top:6px;">Account</div>
+    <div class="nav-item" onclick="window.location.href='profile.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</div>
+    <div class="nav-item" onclick="window.location.href='verification_centre.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Verification Centre<span class="nb nb-sky">!</span></div>
+    <div class="nav-item" onclick="window.location.href='settings.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings</div>
+    <div class="nav-label" style="margin-top:6px;">Help</div>
+    <div class="nav-item" onclick="window.location.href='guide.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      <span class="nav-text">Guide</span>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sp-profile" onclick="window.location.href='profile.html'">
+      <div class="s-av">GA</div>
+      <div><div class="sp-nm">Germany Assists</div><div class="sp-rl">Service Provider</div></div>
+      <div class="pf-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<main class="main">
+  <div class="topbar">
+    <div class="ham" id="hamBtn" onclick="toggleMobSidebar()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </div>
+    <span class="page-title">Notifications</span>
+
+    <!-- Filter button -->
+    <button class="filter-topbtn" id="filterTopBtn" onclick="openFilterDrawer()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+      <span class="btn-label">Filter</span>
+      <div class="filter-badge" id="filterBadge">0</div>
+    </button>
+
+    <div class="ti-btn" onclick="toggleSettings()" title="Preferences">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    </div>
+    <div class="ti-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><div class="n-dot" style="background:var(--blue);"></div></div>
+    <div class="ti-btn" id="helpBtn" title="Help & Guide" onclick="toggleHelp()" style="color:var(--blue);border-color:rgba(2,76,238,0.2);background:var(--bs);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg></div>
+    <div class="ti-btn" style="border-radius:50%;background:var(--blue);border:none;"><span style="color:#fff;font-size:10px;font-weight:700;">GA</span></div>
+  </div>
+
+  <div class="content">
+
+    <!-- HEADER -->
+    <div class="notif-header">
+      <div class="notif-title">Notifications</div>
+      <div class="notif-count" id="unreadCount">5 unread</div>
+      <div class="hdr-spacer"></div>
+      <div class="hdr-actions">
+        <button class="hdr-btn" onclick="markAllRead()">Mark all read</button>
+        <button class="hdr-btn" onclick="clearAll()">Clear all</button>
+      </div>
+    </div>
+
+    <!-- SETTINGS PANEL -->
+    <div class="settings-panel" id="settingsPanel">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;">Notification Preferences</div>
+      <div class="sp-row"><div><div class="sp-lbl">Dispute alerts</div><div class="sp-sub">Get notified immediately when a dispute is raised</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="sp-row"><div><div class="sp-lbl">Order updates</div><div class="sp-sub">New orders, approvals, and status changes</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="sp-row"><div><div class="sp-lbl">Payout notifications</div><div class="sp-sub">When payouts are processed or scheduled</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="sp-row"><div><div class="sp-lbl">Verification reminders</div><div class="sp-sub">Document expiry and re-upload requests</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="sp-row"><div><div class="sp-lbl">Client messages</div><div class="sp-sub">New messages from your clients</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+      <div class="sp-row"><div><div class="sp-lbl">Performance reports</div><div class="sp-sub">Weekly summary of your service performance</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+    </div>
+
+    <!-- QUICK FILTER BAR -->
+    <div class="qf-bar" id="qfBar">
+      <div class="qf-tab active" data-qf="all" onclick="setQuickFilter(this,'all')">All <span class="qf-count">15</span></div>
+      <div class="qf-tab active-red" style="background:#fff;color:#DC2626;border-color:rgba(220,38,38,0.3);" data-qf="urgent" onclick="setQuickFilter(this,'urgent')"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#DC2626;flex-shrink:0;"></span>Urgent <span class="qf-count" style="background:rgba(220,38,38,0.1);color:#DC2626;">5</span></div>
+      <div class="qf-tab" data-qf="orders" onclick="setQuickFilter(this,'orders')">Orders <span class="qf-count">5</span></div>
+      <div class="qf-tab" data-qf="finance" onclick="setQuickFilter(this,'finance')">Finance <span class="qf-count">2</span></div>
+      <div class="qf-tab" data-qf="verification" onclick="setQuickFilter(this,'verification')">Verification <span class="qf-count">3</span></div>
+      <div class="qf-tab" data-qf="system" onclick="setQuickFilter(this,'system')">Messages &amp; Reviews <span class="qf-count">2</span></div>
+    </div>
+
+    <!-- ACTIVE FILTER PILLS -->
+    <div class="active-filters" id="activePills" style="display:none;"></div>
+
+    <!-- TODAY -->
+    <div class="section-lbl" id="lbl-today" style="margin-top:0;">Today</div>
+    <div id="notif-today">
+
+      <!-- Dispute Opened — Urgent -->
+      <div class="notif-card unread-red" data-type="urgent" data-status="unread" data-period="today">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(220,38,38,0.10);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(220,38,38,0.10);color:#DC2626;">Dispute</span><div class="notif-unread-dot red"></div><span class="notif-time">2 min ago</span></div>
+            <div class="notif-title-text">Khalid Farouk opened a dispute on Visa Consulting</div>
+            <div class="notif-desc">There's a dispute on Order #ORD-8780. Visit the Resolution Center to provide your evidence. You must respond within the given timeframe.</div>
+            <div class="notif-meta"><span class="nm-chip">Order #ORD-8780</span><span class="nm-chip">€150 in escrow</span><span class="nm-chip" style="color:#DC2626;background:rgba(220,38,38,0.08);">Platform · Email · WhatsApp</span></div>
+            <div class="notif-actions">
+              <button class="na-btn danger" onclick="doAction(event,'Navigating to resolution centre')">Go to Resolution Center →</button>
+              <button class="na-btn" onclick="doAction(event,'Opening order details')">View Order</button>
+              <button class="na-btn" onclick="toggleExpand(event,'n1')">Details</button>
+            </div>
+          </div>
+        </div>
+        <div class="notif-expand" id="exp-n1">
+          <div class="exp-detail">
+            <strong>Trigger:</strong> Client filed a formal dispute regarding Order #ORD-8780.<br><br>
+            <strong>Escrow status:</strong> €150 held pending resolution.<br><br>
+            <strong>Deadline to respond:</strong> You must reply within the timeframe shown in the Resolution Center.<br><br>
+            <strong>Channels:</strong> Platform, Email, WhatsApp
+          </div>
+        </div>
+      </div>
+
+      <!-- Dispute Deadline Warning — Urgent -->
+      <div class="notif-card unread-red" data-type="urgent" data-status="unread" data-period="today">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(220,38,38,0.10);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(220,38,38,0.10);color:#DC2626;">Dispute Deadline</span><div class="notif-unread-dot red"></div><span class="notif-time">1 hr ago</span></div>
+            <div class="notif-title-text">3 days left to respond to the dispute on Order #ORD-8780</div>
+            <div class="notif-desc">Clock's ticking! If you don't respond, the case will be closed in favor of the client.</div>
+            <div class="notif-meta"><span class="nm-chip">Order #ORD-8780</span><span class="nm-chip" style="color:#DC2626;background:rgba(220,38,38,0.08);">Platform · Email · WhatsApp</span></div>
+            <div class="notif-actions">
+              <button class="na-btn danger" onclick="doAction(event,'Navigating to resolution centre')">Respond Now →</button>
+              <button class="na-btn" onclick="toggleExpand(event,'n-dd')">Details</button>
+            </div>
+          </div>
+        </div>
+        <div class="notif-expand" id="exp-n-dd">
+          <div class="exp-detail">
+            <strong>Trigger:</strong> You did not reply to the dispute after 4 days.<br><br>
+            <strong>Warning:</strong> 3 days remaining. Non-response results in automatic ruling in favor of the client.
+          </div>
+        </div>
+      </div>
+
+      <!-- Late Delivery Warning — Urgent -->
+      <div class="notif-card unread-warn" data-type="urgent orders" data-status="unread" data-period="today">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(217,119,6,0.10);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(217,119,6,0.10);color:#D97706;">Late Delivery</span><div class="notif-unread-dot warn"></div><span class="notif-time">3 hrs ago</span></div>
+            <div class="notif-title-text">URGENT: Order #ORD-8749 is overdue — contact the client immediately</div>
+            <div class="notif-desc">The deadline for Order #ORD-8749 has passed. Deliver the work or contact the client immediately to avoid potential disputes.</div>
+            <div class="notif-meta"><span class="nm-chip">Order #ORD-8749</span><span class="nm-chip">B1 Workshop · Hans Weber</span><span class="nm-chip" style="color:#D97706;background:rgba(217,119,6,0.08);">Platform · Email</span></div>
+            <div class="notif-actions">
+              <button class="na-btn warn" onclick="doAction(event,'Opening order')">View Order →</button>
+              <button class="na-btn" onclick="doAction(event,'Opening messages')">Message Client</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- New Service Requested — Urgent -->
+      <div class="notif-card unread" data-type="urgent orders" data-status="unread" data-period="today">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(73,183,223,0.12);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(73,183,223,0.12);color:#0284C7;">New Order</span><div class="notif-unread-dot"></div><span class="notif-time">5 hrs ago</span></div>
+            <div class="notif-title-text">Yasmine Ali wants to work with you — German B2 Workshop</div>
+            <div class="notif-desc">New request! Please review the order details and confirm to start working.</div>
+            <div class="notif-meta"><span class="nm-chip">Order #ORD-8820</span><span class="nm-chip">€130</span><span class="nm-chip" style="color:#0284C7;background:rgba(73,183,223,0.10);">Platform · Email</span></div>
+            <div class="notif-actions">
+              <button class="na-btn prim" onclick="doAction(event,'Order confirmed')">Confirm Request</button>
+              <button class="na-btn" onclick="doAction(event,'Order declined')">Decline</button>
+              <button class="na-btn" onclick="doAction(event,'Viewing order')">View</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security Alert — Urgent -->
+      <div class="notif-card unread-red" data-type="urgent system" data-status="unread" data-period="today">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(220,38,38,0.10);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(220,38,38,0.10);color:#DC2626;">Security</span><div class="notif-unread-dot red"></div><span class="notif-time">6 hrs ago</span></div>
+            <div class="notif-title-text">New login detected — was this you?</div>
+            <div class="notif-desc">We noticed a login to your Germany Assists account from a new device/location. If this wasn't you, please secure your account immediately.</div>
+            <div class="notif-meta"><span class="nm-chip" style="color:#DC2626;background:rgba(220,38,38,0.08);">Platform · Email</span></div>
+            <div class="notif-actions">
+              <button class="na-btn danger" onclick="doAction(event,'Opening account security settings')">Secure Account →</button>
+              <button class="na-btn" onclick="doAction(event,'Confirmed as me')">That was me</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- YESTERDAY -->
+    <div class="section-lbl" id="lbl-yesterday">Yesterday</div>
+    <div id="notif-yesterday">
+
+      <!-- Identity Rejected — Action Required -->
+      <div class="notif-card unread" data-type="verification" data-status="unread" data-period="yesterday">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(90,50,134,0.10);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(90,50,134,0.10);color:#7C3AED;">Action Required</span><div class="notif-unread-dot"></div><span class="notif-time">Yesterday, 16:20</span></div>
+            <div class="notif-title-text">Identity verification rejected — re-upload required</div>
+            <div class="notif-desc">We couldn't verify your identity with the documents provided. Please re-upload a clear copy so we can get you started.</div>
+            <div class="notif-meta"><span class="nm-chip">Verification Centre</span><span class="nm-chip" style="color:#7C3AED;background:rgba(90,50,134,0.08);">Platform · Email</span></div>
+            <div class="notif-actions">
+              <button class="na-btn prim" onclick="doAction(event,'Opening Verification Centre')">Re-upload Documents →</button>
+              <button class="na-btn" onclick="toggleExpand(event,'n-idrej')">View Reason</button>
+            </div>
+          </div>
+        </div>
+        <div class="notif-expand" id="exp-n-idrej">
+          <div class="exp-detail">
+            <strong>Reason:</strong> Admin rejected documents due to clarity or validity issues.<br><br>
+            <strong>Next step:</strong> Upload a new, clearly readable copy of your ID in the Verification Centre.
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Draft Reminder -->
+      <div class="notif-card unread" data-type="orders" data-status="unread" data-period="yesterday">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(217,119,6,0.10);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(217,119,6,0.10);color:#D97706;">Reminder</span><div class="notif-unread-dot warn"></div><span class="notif-time">Yesterday, 11:00</span></div>
+            <div class="notif-title-text">Don't leave us hanging — your service draft is waiting</div>
+            <div class="notif-desc">You started creating a service but didn't finish. Complete your setup now to start receiving requests from clients.</div>
+            <div class="notif-meta"><span class="nm-chip">Service Creation</span><span class="nm-chip" style="color:#D97706;background:rgba(217,119,6,0.08);">Platform · Email</span></div>
+            <div class="notif-actions">
+              <button class="na-btn warn" onclick="doAction(event,'Opening service draft')">Complete Draft →</button>
+              <button class="na-btn" onclick="doAction(event,'Dismissed')">Dismiss</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Cancelled -->
+      <div class="notif-card read" data-type="urgent orders" data-status="read" data-period="yesterday">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:#f1f5f9;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:#f1f5f9;color:var(--muted);">Order Cancelled</span><span class="notif-time">Yesterday, 08:05</span></div>
+            <div class="notif-title-text">Order #ORD-8815 was cancelled by Nadia Osman</div>
+            <div class="notif-desc">Order #ORD-8815 has been cancelled by the client. View the cancellation details and policy impact on your dashboard.</div>
+            <div class="notif-meta"><span class="nm-chip">Order #ORD-8815</span><span class="nm-chip">Visa Consulting</span><span class="nm-chip" style="color:var(--muted);">Platform · Email</span></div>
+            <div class="notif-actions"><button class="na-btn" onclick="doAction(event,'Viewing order')">View Details</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- New Message -->
+      <div class="notif-card read" data-type="system" data-status="read" data-period="yesterday">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(73,183,223,0.12);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(73,183,223,0.12);color:#0284C7;">Message</span><span class="notif-time">Yesterday, 07:40</span></div>
+            <div class="notif-title-text">New message from Ahmed Suleiman 💬</div>
+            <div class="notif-desc">You have a new message regarding Order #ORD-8812 (German A1 Course). Reply promptly to maintain a high response rate.</div>
+            <div class="notif-meta"><span class="nm-chip">Order #ORD-8812</span><span class="nm-chip" style="color:#0284C7;background:rgba(73,183,223,0.10);">Platform · Email</span></div>
+            <div class="notif-actions"><button class="na-btn prim" onclick="doAction(event,'Opening chat')">Reply →</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EARLIER -->
+    <div class="section-lbl" id="lbl-older">Earlier this week</div>
+    <div id="notif-older">
+
+      <!-- Funds Moved to Balance -->
+      <div class="notif-card read" data-type="finance" data-status="read" data-period="older">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(5,150,105,0.10);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(5,150,105,0.10);color:#059669;">Finance</span><span class="notif-time">19 Apr</span></div>
+            <div class="notif-title-text">Ka-ching! Your funds are ready for withdrawal 💸</div>
+            <div class="notif-desc">The 14-day clearance for Order #ORD-8812 is complete. Funds have been moved to your Available Balance and are now ready for withdrawal.</div>
+            <div class="notif-meta"><span class="nm-chip">€180 available</span><span class="nm-chip">Order #ORD-8812</span><span class="nm-chip" style="color:#059669;background:rgba(5,150,105,0.08);">Platform · Email</span></div>
+            <div class="notif-actions"><button class="na-btn" onclick="doAction(event,'Opening Finance')">View Balance →</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Delivered & Funds Held -->
+      <div class="notif-card read" data-type="orders" data-status="read" data-period="older">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(5,150,105,0.10);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(5,150,105,0.10);color:#059669;">Delivered</span><span class="notif-time">18 Apr</span></div>
+            <div class="notif-title-text">Order #ORD-8812 delivered — payment in escrow for 14 days</div>
+            <div class="notif-desc">Great job! The funds are now held in Escrow for a 14-day safety period. If no disputes are filed, they will move to your Balance.</div>
+            <div class="notif-meta"><span class="nm-chip">Order #ORD-8812</span><span class="nm-chip">€180 in escrow</span><span class="nm-chip" style="color:#059669;background:rgba(5,150,105,0.08);">Platform · Email</span></div>
+            <div class="notif-actions"><button class="na-btn" onclick="doAction(event,'Viewing order')">View Order</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delivery Deadline Reminder -->
+      <div class="notif-card read" data-type="orders" data-status="read" data-period="older">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(73,183,223,0.12);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(73,183,223,0.12);color:#0284C7;">Reminder</span><span class="notif-time">14 Apr</span></div>
+            <div class="notif-title-text">7 days to go — how's Order #ORD-8820 coming along?</div>
+            <div class="notif-desc">Friendly reminder: the deadline for Order #ORD-8820 is in 7 days. If you need more time, communicate with the client early.</div>
+            <div class="notif-meta"><span class="nm-chip">Order #ORD-8820</span><span class="nm-chip" style="color:#0284C7;background:rgba(73,183,223,0.10);">Platform · Email</span></div>
+            <div class="notif-actions"><button class="na-btn" onclick="doAction(event,'Viewing order')">View Order</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Approved -->
+      <div class="notif-card read" data-type="orders" data-status="read" data-period="older">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(5,150,105,0.10);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(5,150,105,0.10);color:#059669;">Service Approved</span><span class="notif-time">12 Apr</span></div>
+            <div class="notif-title-text">Your service is approved! Ready to go live?</div>
+            <div class="notif-desc">Good news! Your service 'German B2 Workshop' has been approved. You can now click 'Publish' to make it visible to potential clients.</div>
+            <div class="notif-meta"><span class="nm-chip">German B2 Workshop</span><span class="nm-chip" style="color:#059669;background:rgba(5,150,105,0.08);">Platform · Email</span></div>
+            <div class="notif-actions">
+              <button class="na-btn prim" onclick="doAction(event,'Publishing service')">Publish Service →</button>
+              <button class="na-btn" onclick="doAction(event,'Viewing service')">View Service</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- New Review -->
+      <div class="notif-card read" data-type="system" data-status="read" data-period="older">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(73,183,223,0.12);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(73,183,223,0.12);color:#0284C7;">Review</span><span class="notif-time">10 Apr</span></div>
+            <div class="notif-title-text">You've got a new review ⭐ — see what Lena Braun said</div>
+            <div class="notif-desc">Great job! Lena Braun has left a review for your service. Positive reviews help you get more orders, so keep up the good work!</div>
+            <div class="notif-meta"><span class="nm-chip">5★ · B2 Workshop</span><span class="nm-chip">4.9★ avg rating</span><span class="nm-chip" style="color:#0284C7;background:rgba(73,183,223,0.10);">Platform · Email</span></div>
+            <div class="notif-actions"><button class="na-btn" onclick="doAction(event,'Viewing review')">View Review</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quality Gate Approved -->
+      <div class="notif-card read" data-type="verification" data-status="read" data-period="older">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(5,150,105,0.10);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(5,150,105,0.10);color:#059669;">Quality Badge</span><span class="notif-time">8 Apr</span></div>
+            <div class="notif-title-text">High five! You just earned your Quality Badge 🎖️</div>
+            <div class="notif-desc">Congratulations! You've officially passed our Quality Gate. This badge is now displayed on your profile, helping you stand out and build trust with clients.</div>
+            <div class="notif-meta"><span class="nm-chip">Quality Gate Approved</span><span class="nm-chip" style="color:#059669;background:rgba(5,150,105,0.08);">Platform · Email</span></div>
+            <div class="notif-actions"><button class="na-btn" onclick="doAction(event,'Viewing profile')">View Profile →</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payout Successful -->
+      <div class="notif-card read" data-type="finance" data-status="read" data-period="older">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(5,150,105,0.10);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(5,150,105,0.10);color:#059669;">Payout</span><span class="notif-time">5 Apr</span></div>
+            <div class="notif-title-text">Money's on the way! Your payout was successful</div>
+            <div class="notif-desc">Your withdrawal request for €1,120 has been processed. Funds should appear in your external account within 3–5 business days.</div>
+            <div class="notif-meta"><span class="nm-chip">€1,120 net</span><span class="nm-chip">IBAN ending ···4821</span><span class="nm-chip" style="color:#059669;background:rgba(5,150,105,0.08);">Platform · Email</span></div>
+            <div class="notif-actions"><button class="na-btn" onclick="doAction(event,'Opening Finance')">View Statement</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Identity Approved -->
+      <div class="notif-card read" data-type="verification" data-status="read" data-period="older">
+        <div class="notif-inner">
+          <div class="notif-icon" style="background:rgba(5,150,105,0.10);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+          <div class="notif-body">
+            <div class="notif-top"><span class="notif-tag" style="background:rgba(5,150,105,0.10);color:#059669;">Verified</span><span class="notif-time">3 Apr</span></div>
+            <div class="notif-title-text">You're all set! Your ID is verified. Welcome aboard.</div>
+            <div class="notif-desc">Your identity verification is complete. Your profile is now fully active, and you can start offering your services to clients on Germany Assists.</div>
+            <div class="notif-meta"><span class="nm-chip">Identity Approved</span><span class="nm-chip" style="color:#059669;background:rgba(5,150,105,0.08);">Platform · Email</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+</div>
+
+<script>
+let settingsOpen = false;
+// activeCategories: Set of selected categories; empty = all shown
+let activeCategories = new Set(), activeStatus = 'all', activePeriod = 'all';
+
+/* ── QUICK FILTER (single-select shortcut) ── */
+function setQuickFilter(el, val){
+  // quick filter selects exactly one category (or all)
+  document.querySelectorAll('.qf-tab').forEach(t=>{
+    t.classList.remove('active');
+    if(t.dataset.qf==='urgent'){t.style.background='#fff';t.style.color='#DC2626';t.style.borderColor='rgba(220,38,38,0.3)';}
+    else{t.style.background='';t.style.color='';t.style.borderColor='';}
+  });
+  el.classList.add('active');
+  if(val==='urgent'){el.style.background='#DC2626';el.style.color='#fff';el.style.borderColor='#DC2626';}
+  // set category state
+  if(val==='all'){activeCategories.clear();}
+  else{activeCategories=new Set([val]);}
+  // sync drawer chips
+  syncDrawerChips();
+  updateBadgeAndBtn();
+  applyFilters();
+  renderActivePills();
+}
+
+/* ── MOBILE NAV ── */
+function toggleMobSidebar(){
+  const s = document.getElementById('sidebar');
+  const o = document.getElementById('navOverlay');
+  const open = s.classList.toggle('mob-open');
+  o.style.display = open ? 'block' : 'none';
+}
+function closeMobSidebar(){
+  document.getElementById('sidebar').classList.remove('mob-open');
+  document.getElementById('navOverlay').style.display = 'none';
+}
+
+/* ── FILTER DRAWER ── */
+function openFilterDrawer(){
+  document.getElementById('filterDrawer').classList.add('open');
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeFilterDrawer(){
+  document.getElementById('filterDrawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function toggleCategory(el){
+  const val = el.dataset.filter;
+  if(el.classList.contains('sel')){
+    // deselect only if at least one other will remain selected
+    const selected = document.querySelectorAll('.fd-chip[data-filter].sel');
+    if(selected.length<=1) return; // must keep at least one
+    el.classList.remove('sel');
+    activeCategories.delete(val);
+  } else {
+    el.classList.add('sel');
+    activeCategories.add(val);
+  }
+  // if all 5 selected, treat as "all"
+  const total = document.querySelectorAll('.fd-chip[data-filter]').length;
+  if(activeCategories.size===total) activeCategories.clear();
+  syncQuickTabs();
+}
+function syncDrawerChips(){
+  document.querySelectorAll('.fd-chip[data-filter]').forEach(c=>{
+    const v=c.dataset.filter;
+    c.classList.toggle('sel', activeCategories.size===0||activeCategories.has(v));
+  });
+}
+function syncQuickTabs(){
+  document.querySelectorAll('.qf-tab').forEach(t=>{
+    t.classList.remove('active');
+    if(t.dataset.qf==='urgent'){t.style.background='#fff';t.style.color='#DC2626';t.style.borderColor='rgba(220,38,38,0.3)';}
+    else{t.style.background='';t.style.color='';t.style.borderColor='';}
+  });
+  if(activeCategories.size===1){
+    const val=[...activeCategories][0];
+    const tab=document.querySelector(`.qf-tab[data-qf="${val}"]`);
+    if(tab){tab.classList.add('active');if(val==='urgent'){tab.style.background='#DC2626';tab.style.color='#fff';tab.style.borderColor='#DC2626';}}
+  } else if(activeCategories.size===0){
+    const allTab=document.querySelector('.qf-tab[data-qf="all"]');
+    if(allTab) allTab.classList.add('active');
+  }
+}
+function updateBadgeAndBtn(){
+  const count=(activeCategories.size>0?1:0)+(activeStatus!=='all'?1:0)+(activePeriod!=='all'?1:0);
+  updateFilterBadge(count);
+  document.getElementById('filterTopBtn').classList.toggle('has-filter',count>0);
+}
+function selectStatus(el){
+  document.querySelectorAll('.fd-chip[data-status]').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  activeStatus = el.dataset.status;
+}
+function selectPeriod(el){
+  document.querySelectorAll('.fd-chip[data-period]').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  activePeriod = el.dataset.period;
+}
+function toggleCheck(row){
+  row.querySelector('.fd-checkbox').classList.toggle('checked');
+}
+function applyDrawerFilter(){
+  updateBadgeAndBtn();
+  applyFilters();
+  renderActivePills();
+  closeFilterDrawer();
+  const count=(activeCategories.size>0?1:0)+(activeStatus!=='all'?1:0)+(activePeriod!=='all'?1:0);
+  if(count) showSnack('Filters applied');
+}
+function resetDrawer(){
+  activeCategories.clear(); activeStatus='all'; activePeriod='all';
+  document.querySelectorAll('.fd-chip[data-filter]').forEach(c=>c.classList.add('sel'));
+  document.querySelector('.fd-chip[data-status="all"]').classList.add('sel');
+  document.querySelectorAll('.fd-chip[data-status]:not([data-status="all"])').forEach(c=>c.classList.remove('sel'));
+  document.querySelector('.fd-chip[data-period="all"]').classList.add('sel');
+  document.querySelectorAll('.fd-chip[data-period]:not([data-period="all"])').forEach(c=>c.classList.remove('sel'));
+  syncQuickTabs();
+  updateFilterBadge(0);
+  document.getElementById('filterTopBtn').classList.remove('has-filter');
+  applyFilters();
+  renderActivePills();
+}
+function applyFilters(){
+  const cards = document.querySelectorAll('.notif-card');
+  let v={today:0,yesterday:0,older:0};
+  cards.forEach(card=>{
+    const types = card.dataset.type||'';
+    const st    = card.dataset.status||'';
+    const pd    = card.dataset.period||'';
+    const catOk = activeCategories.size===0||[...activeCategories].some(c=>types.includes(c));
+    const stOk  = activeStatus==='all'||(activeStatus==='unread'&&st==='unread')||(activeStatus==='read'&&st==='read');
+    const pdOk  = activePeriod==='all'||pd===activePeriod;
+    const show  = catOk&&stOk&&pdOk;
+    card.style.display = show?'':'none';
+    if(show) v[pd]=(v[pd]||0)+1;
+  });
+  document.getElementById('lbl-today').style.display     = v.today     ?'':'none';
+  document.getElementById('lbl-yesterday').style.display = v.yesterday ?'':'none';
+  document.getElementById('lbl-older').style.display     = v.older     ?'':'none';
+}
+function renderActivePills(){
+  const c = document.getElementById('activePills');
+  const pills=[];
+  if(activeCategories.size>0) pills.push({label:'Category: '+[...activeCategories].map(cap).join(', '),key:'cat'});
+  if(activeStatus!=='all')   pills.push({label:'Status: '+cap(activeStatus),key:'st'});
+  if(activePeriod!=='all')   pills.push({label:'Period: '+cap(activePeriod),key:'pd'});
+  if(!pills.length){c.style.display='none';return;}
+  c.style.display='flex';
+  c.innerHTML=pills.map(p=>`<div class="af-pill">${p.label}<button onclick="removePill('${p.key}')">×</button></div>`).join('')+
+    `<button class="af-clear-btn" onclick="resetDrawer()">Clear all</button>`;
+}
+function removePill(key){
+  if(key==='cat'){activeCategories.clear();syncDrawerChips();syncQuickTabs();}
+  if(key==='st'){activeStatus='all';document.querySelector('.fd-chip[data-status="all"]').classList.add('sel');document.querySelectorAll('.fd-chip[data-status]:not([data-status="all"])').forEach(c=>c.classList.remove('sel'));}
+  if(key==='pd'){activePeriod='all';document.querySelector('.fd-chip[data-period="all"]').classList.add('sel');document.querySelectorAll('.fd-chip[data-period]:not([data-period="all"])').forEach(c=>c.classList.remove('sel'));}
+  updateBadgeAndBtn();
+  applyFilters();
+  renderActivePills();
+}
+function updateFilterBadge(n){
+  const b=document.getElementById('filterBadge');
+  b.textContent=n;
+  b.classList.toggle('show',n>0);
+}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+
+/* ── MARK / CLEAR ── */
+function markAllRead(){
+  document.querySelectorAll('.notif-card').forEach(card=>{
+    card.classList.remove('unread','unread-red','unread-warn');
+    card.classList.add('read');
+    card.dataset.status='read';
+    const dot=card.querySelector('.notif-unread-dot');
+    if(dot)dot.remove();
+  });
+  updateUnreadCount();
+  showSnack('All notifications marked as read');
+}
+function clearAll(){
+  if(!confirm('Clear all notifications? This cannot be undone.'))return;
+  document.querySelectorAll('.notif-card').forEach(card=>{
+    card.style.animation='fadeOut 0.25s ease forwards';
+    setTimeout(()=>card.remove(),250);
+  });
+  setTimeout(()=>{
+    ['lbl-today','lbl-yesterday','lbl-older'].forEach(id=>document.getElementById(id).style.display='none');
+    updateUnreadCount();
+  },300);
+  showSnack('All notifications cleared');
+}
+
+/* ── EXPAND / ACTIONS ── */
+function toggleExpand(e,id){
+  e.stopPropagation();
+  const exp=document.getElementById('exp-'+id);
+  if(!exp)return;
+  exp.classList.toggle('open');
+  e.target.textContent=exp.classList.contains('open')?'Hide':'Details';
+}
+function doAction(e,msg){
+  e.stopPropagation();
+  showSnack(msg);
+  const card=e.target.closest('.notif-card');
+  if(card){
+    card.classList.remove('unread','unread-red','unread-warn');
+    card.classList.add('read');
+    card.dataset.status='read';
+    const dot=card.querySelector('.notif-unread-dot');
+    if(dot)dot.remove();
+    updateUnreadCount();
+  }
+}
+function updateUnreadCount(){
+  const n=document.querySelectorAll('.notif-card.unread,.notif-card.unread-red,.notif-card.unread-warn').length;
+  const el=document.getElementById('unreadCount');
+  el.textContent=n+' unread';
+  el.style.background=n>0?'#E53E3E':'#9CA3AF';
+}
+
+/* ── SETTINGS ── */
+function toggleSettings(){
+  settingsOpen=!settingsOpen;
+  document.getElementById('settingsPanel').classList.toggle('open',settingsOpen);
+}
+
+/* ── SNACK ── */
+function showSnack(msg){
+  const s=document.getElementById('snackbar');
+  s.textContent=msg;
+  s.classList.add('show');
+  clearTimeout(s._t);
+  s._t=setTimeout(()=>s.classList.remove('show'),2600);
+}
+
+/* ── CLICK CARD = MARK READ ── */
+document.querySelectorAll('.notif-card').forEach(card=>{
+  card.addEventListener('click',function(){
+    this.classList.remove('unread','unread-red','unread-warn');
+    this.classList.add('read');
+    this.dataset.status='read';
+    const dot=this.querySelector('.notif-unread-dot');
+    if(dot)dot.remove();
+    updateUnreadCount();
+  });
+});
+function toggleHelp(){
+  const panel=document.getElementById('helpPanel');
+  const overlay=document.getElementById('helpOverlay');
+  const btn=document.getElementById('helpBtn');
+  const isOpen=panel.classList.toggle('open');
+  overlay.classList.toggle('open',isOpen);
+  btn.style.background=isOpen?'var(--blue)':'var(--bs)';
+  btn.style.color=isOpen?'#fff':'var(--blue)';
+}
+function dismissHelp(){
+  try{localStorage.setItem('ga_notifications_help_dismissed','1');}catch(e){}
+  toggleHelp();
+  document.getElementById('helpBtn').style.display='none';
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  try{if(!localStorage.getItem('ga_notifications_help_dismissed'))setTimeout(()=>toggleHelp(),600);}catch(e){}
+});
+</script>
+</body>
+</html>

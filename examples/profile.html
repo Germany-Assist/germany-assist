@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Profile — Germany Assists Provider Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --blue:#024CEE;--sky:#49B7DF;
+  --bs:rgba(2,76,238,0.07);--bm:rgba(2,76,238,0.13);
+  --text:#0a0f1e;--muted:#6b7280;--light:#f7f9ff;--border:rgba(2,76,238,0.10);--w:#fff;
+  --green:#059669;--red:#DC2626;--warn:#D97706;
+}
+body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-height:100vh;}
+.shell{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:220px;background:var(--w);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;flex-shrink:0;transition:width 0.25s;overflow:hidden;}
+.sidebar.collapsed{width:56px;}
+.sidebar.collapsed .ga-logo-text,.sidebar.collapsed .nav-label,.sidebar.collapsed .nav-text,.sidebar.collapsed .nb,.sidebar.collapsed .sp-nm,.sidebar.collapsed .sp-rl,.sidebar.collapsed .pf-arrow{display:none;}
+.sidebar.collapsed .nav-item{justify-content:center;padding:9px 0;gap:0;}
+.sidebar.collapsed .logo-area{justify-content:center;padding:14px 0;gap:0;}
+.sidebar.collapsed .collapse-btn{margin-left:0;}
+.sidebar.collapsed .sp-profile{justify-content:center;padding:9px 0;gap:0;}
+.sidebar.collapsed .s-av{margin:0;}
+.sidebar.collapsed .ga-mark{margin:0 auto;}
+.collapse-btn{width:22px;height:22px;border-radius:6px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--muted);transition:background 0.13s;margin-left:auto;}
+.collapse-btn:hover{background:var(--bs);color:var(--blue);}
+.logo-area{padding:16px 14px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.ga-mark{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;border:1px solid var(--border);flex-shrink:0;}
+.ga-flag{display:flex;flex-direction:column;width:100%;height:100%;}
+.ga-flag-b{flex:1;background:#000;}.ga-flag-r{flex:1;background:#d60d2e;}.ga-flag-g{flex:1;background:#f6ce17;}
+.ga-logo-text{display:flex;flex-direction:column;}
+.ga-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.1;}
+.ga-sub{font-size:10px;color:var(--muted);}
+.nav{flex:1;padding:10px 8px;overflow-y:auto;overflow-x:hidden;}
+.nav-label{font-size:9.5px;font-weight:600;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;padding:8px 8px 3px;white-space:nowrap;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;font-size:13px;font-weight:400;color:var(--muted);cursor:pointer;transition:all 0.13s;margin-bottom:1px;white-space:nowrap;}
+.nav-item:hover{background:var(--bs);color:var(--blue);}
+.nav-item.active{background:var(--bs);color:var(--blue);font-weight:500;}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;}
+.nb{margin-left:auto;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;color:#fff;}
+.nb-red{background:#E53E3E;}.nb-blue{background:var(--blue);}.nb-sky{background:var(--sky);}
+.sidebar-footer{padding:10px 8px 14px;border-top:1px solid var(--border);}
+.sp-profile{display:flex;align-items:center;gap:9px;padding:9px;border-radius:9px;cursor:pointer;transition:background 0.13s;}
+.sp-profile:hover{background:var(--bs);}
+.s-av{width:32px;height:32px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0;}
+.sp-nm{font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;}
+.sp-rl{font-size:10.5px;color:var(--muted);white-space:nowrap;}
+.pf-arrow{margin-left:auto;color:var(--muted);}
+
+/* MAIN */
+.main{flex:1;overflow:auto;background:#f7f9ff;min-width:0;}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:10px;height:52px;position:sticky;top:0;z-index:20;}
+.page-title{font-size:15px;font-weight:600;flex:1;}
+.ti-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;color:var(--muted);}
+.ti-btn:hover{background:var(--bs);color:var(--blue);}
+.n-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;border:1.5px solid #fff;}
+.ham{display:none;width:32px;height:32px;border:1px solid var(--border);border-radius:8px;background:#fff;align-items:center;justify-content:center;cursor:pointer;margin-right:4px;}
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:99;}
+.mob-overlay.show{display:block;}
+
+/* CONTENT */
+.content{padding:0;}
+
+/* PROFILE HERO */
+.profile-hero{background:#fff;border-bottom:1px solid var(--border);padding:0;}
+.hero-cover{height:140px;background:linear-gradient(135deg,#024CEE 0%,#49B7DF 100%);position:relative;overflow:hidden;}
+.hero-cover::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+.cover-edit-btn{position:absolute;top:12px;right:14px;display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.3);color:#fff;font-size:11.5px;font-weight:500;padding:5px 11px;border-radius:8px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.13s;}
+.cover-edit-btn:hover{background:rgba(255,255,255,0.3);}
+.hero-body{padding:0 24px 20px;position:relative;}
+.avatar-wrap{position:relative;display:inline-block;margin-top:-44px;}
+.avatar{width:88px;height:88px;border-radius:18px;background:var(--blue);border:4px solid #fff;display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;font-weight:700;box-shadow:0 4px 16px rgba(2,76,238,0.25);overflow:hidden;}
+.avatar img{width:100%;height:100%;object-fit:cover;}
+.avatar-edit{position:absolute;bottom:-3px;right:-3px;width:26px;height:26px;border-radius:50%;background:var(--blue);border:2px solid #fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 0.13s;}
+.avatar-edit:hover{transform:scale(1.1);}
+.hero-info{display:flex;align-items:flex-start;gap:16px;margin-top:12px;}
+.hero-text{flex:1;}
+.hero-name-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.hero-name{font-size:20px;font-weight:700;color:var(--text);}
+.verified-badge{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:20px;background:rgba(5,150,105,0.10);color:#059669;border:1px solid rgba(5,150,105,0.2);}
+.provider-type-badge{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--bs);color:var(--blue);border:1px solid rgba(2,76,238,0.15);}
+.hero-meta{display:flex;align-items:center;gap:14px;margin-top:5px;flex-wrap:wrap;}
+.hero-meta-item{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted);}
+.hero-rating{display:flex;align-items:center;gap:3px;font-size:12.5px;font-weight:600;color:var(--text);}
+.star{color:#F59E0B;}
+.hero-stats{display:flex;gap:20px;flex-shrink:0;}
+.hero-stat{text-align:center;}
+.hero-stat-v{font-size:20px;font-weight:700;color:var(--text);}
+.hero-stat-l{font-size:10.5px;color:var(--muted);margin-top:1px;}
+.hero-actions{display:flex;gap:7px;flex-shrink:0;align-self:flex-start;margin-top:2px;}
+.hero-btn{display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:9px;font-size:12.5px;font-weight:500;border:1px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.13s;}
+.hero-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--bs);}
+.hero-btn.primary{background:var(--blue);color:#fff;border-color:var(--blue);}
+.hero-btn.primary:hover{opacity:0.88;}
+
+/* BADGES ROW */
+.badges-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
+.badge-pill{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;padding:4px 10px;border-radius:20px;border:1px solid;}
+.bp-green{background:rgba(5,150,105,0.08);color:#059669;border-color:rgba(5,150,105,0.25);}
+.bp-blue{background:var(--bs);color:var(--blue);border-color:rgba(2,76,238,0.2);}
+.bp-sky{background:rgba(73,183,223,0.10);color:#0284C7;border-color:rgba(73,183,223,0.3);}
+.bp-warn{background:rgba(217,119,6,0.08);color:#D97706;border-color:rgba(217,119,6,0.25);}
+
+/* TABS */
+.profile-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);background:#fff;padding:0 24px;}
+.ptab{font-size:13px;font-weight:500;padding:13px 16px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all 0.13s;white-space:nowrap;}
+.ptab:hover{color:var(--text);}
+.ptab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600;}
+
+/* BODY GRID */
+.profile-body{display:grid;grid-template-columns:1fr 320px;gap:16px;padding:20px 24px;align-items:start;}
+
+/* CARD */
+.card{background:#fff;border:1px solid var(--border);border-radius:13px;padding:18px 20px;margin-bottom:16px;}
+.card:last-child{margin-bottom:0;}
+.card-header{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+.card-title{font-size:13.5px;font-weight:600;flex:1;}
+.card-action{font-size:11.5px;color:var(--blue);font-weight:500;cursor:pointer;padding:4px 10px;border-radius:7px;background:var(--bs);border:none;font-family:'Outfit',sans-serif;transition:background 0.13s;}
+.card-action:hover{background:var(--bm);}
+
+/* FORM */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.form-field{display:flex;flex-direction:column;gap:5px;}
+.form-field.full{grid-column:1/-1;}
+.form-field label{font-size:11.5px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:4px;}
+.req{color:var(--red);font-size:10px;}
+.form-field input,.form-field select,.form-field textarea{padding:9px 12px;border:1px solid var(--border);border-radius:9px;font-size:12.5px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;background:#fff;transition:border-color 0.13s;}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(2,76,238,0.06);}
+.form-field textarea{resize:vertical;min-height:90px;}
+.char-count{font-size:10px;color:var(--muted);text-align:right;margin-top:2px;}
+.form-hint{font-size:11px;color:var(--muted);margin-top:3px;}
+.input-prefix{position:relative;}
+.input-prefix .prefix-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:12px;pointer-events:none;}
+.input-prefix input{padding-left:32px;}
+
+/* CATEGORY TAGS */
+.tag-select{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.tag-opt{font-size:11.5px;font-weight:500;padding:5px 11px;border-radius:20px;border:1px solid var(--border);cursor:pointer;color:var(--muted);background:#fff;transition:all 0.13s;user-select:none;}
+.tag-opt:hover{border-color:var(--blue);color:var(--blue);}
+.tag-opt.sel{background:var(--blue);color:#fff;border-color:var(--blue);}
+
+/* SOCIAL LINKS */
+.social-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);}
+.social-row:last-child{border-bottom:none;}
+.social-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
+.social-label{font-size:12px;font-weight:500;color:var(--text);width:80px;flex-shrink:0;}
+.social-input{flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;}
+.social-input:focus{border-color:var(--blue);}
+
+/* AVAILABILITY */
+.avail-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:12px;}
+.day-btn{padding:8px 4px;border-radius:8px;border:1px solid var(--border);background:#fff;text-align:center;cursor:pointer;transition:all 0.13s;font-family:'Outfit',sans-serif;}
+.day-btn:hover{border-color:var(--blue);}
+.day-btn.on{background:var(--blue);border-color:var(--blue);color:#fff;}
+.day-btn .day-name{font-size:10px;font-weight:600;display:block;}
+.day-btn .day-check{font-size:11px;margin-top:2px;}
+.time-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.time-label{font-size:11.5px;color:var(--muted);width:56px;flex-shrink:0;}
+.time-sel{flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;background:#fff;}
+.time-sel:focus{border-color:var(--blue);}
+
+/* STATS SIDEBAR */
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:13px;padding:16px 18px;margin-bottom:14px;}
+.stat-card:last-child{margin-bottom:0;}
+.sc-title{font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px;}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
+.stat-row:last-child{border-bottom:none;}
+.stat-label{color:var(--muted);}
+.stat-val{font-weight:600;color:var(--text);}
+
+/* COMPLETION WIDGET */
+.comp-widget{background:linear-gradient(135deg,#024CEE,#49B7DF);border-radius:13px;padding:16px 18px;margin-bottom:14px;color:#fff;}
+.comp-title{font-size:12px;font-weight:700;opacity:0.9;margin-bottom:4px;}
+.comp-pct{font-size:28px;font-weight:700;line-height:1;margin-bottom:8px;}
+.comp-bar-wrap{height:5px;background:rgba(255,255,255,0.25);border-radius:5px;overflow:hidden;margin-bottom:12px;}
+.comp-bar-fill{height:5px;border-radius:5px;background:#fff;}
+.comp-items{display:flex;flex-direction:column;gap:5px;}
+.comp-item{display:flex;align-items:center;gap:7px;font-size:11.5px;opacity:0.9;}
+.comp-dot{width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.comp-dot.done{background:rgba(255,255,255,0.9);border-color:#fff;}
+.comp-dot.done svg{color:var(--blue);}
+.comp-cta{display:block;width:100%;margin-top:12px;padding:8px;border-radius:9px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.35);color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;text-align:center;transition:background 0.13s;}
+.comp-cta:hover{background:rgba(255,255,255,0.3);}
+
+/* VIEWS / SAVE BTN */
+.save-bar{display:flex;align-items:center;gap:8px;padding:14px 20px;border-top:1px solid var(--border);position:sticky;bottom:0;background:#fff;z-index:10;}
+.save-info{font-size:11.5px;color:var(--muted);flex:1;}
+.save-btn{padding:9px 22px;border-radius:9px;background:var(--blue);color:#fff;font-size:13px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.13s;}
+.save-btn:hover{opacity:0.88;}
+.discard-btn{padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.13s;}
+.discard-btn:hover{border-color:var(--red);color:var(--red);}
+
+/* PHOTO UPLOAD */
+.photo-upload{border:2px dashed var(--border);border-radius:11px;padding:18px;text-align:center;cursor:pointer;transition:all 0.13s;background:var(--light);position:relative;overflow:hidden;}
+.photo-upload:hover{border-color:var(--blue);background:var(--bs);}
+.photo-upload input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.pu-icon{font-size:24px;margin-bottom:6px;}
+.pu-title{font-size:12.5px;font-weight:600;color:var(--blue);}
+.pu-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* DARK PATTERN NUDGE */
+.nudge-bar{background:linear-gradient(90deg,rgba(220,38,38,0.06),rgba(220,38,38,0.02));border:1px solid rgba(220,38,38,0.15);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.nudge-icon{width:30px;height:30px;border-radius:8px;background:rgba(220,38,38,0.10);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.nudge-text{flex:1;font-size:12px;color:var(--red);font-weight:500;line-height:1.4;}
+.nudge-cta{font-size:11.5px;font-weight:600;color:var(--red);cursor:pointer;white-space:nowrap;text-decoration:underline;}
+
+/* SNACK */
+.snackbar{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--text);color:#fff;font-size:12.5px;font-weight:500;padding:10px 18px;border-radius:10px;z-index:999;transition:transform 0.25s ease;white-space:nowrap;pointer-events:none;}
+.snackbar.show{transform:translateX(-50%) translateY(0);}
+
+/* UNSAVED INDICATOR */
+.unsaved-dot{width:7px;height:7px;border-radius:50%;background:var(--warn);display:none;flex-shrink:0;}
+.unsaved-dot.show{display:block;}
+
+/* REVIEW CARD */
+.review-item{padding:12px 0;border-bottom:1px solid var(--border);}
+.review-item:last-child{border-bottom:none;}
+.review-top{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.rev-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;}
+.rev-name{font-size:12.5px;font-weight:500;flex:1;}
+.rev-date{font-size:10.5px;color:var(--muted);}
+.rev-stars{display:flex;gap:1px;font-size:12px;color:#F59E0B;}
+.rev-text{font-size:12px;color:var(--muted);line-height:1.5;margin-top:4px;}
+.rev-reply{margin-top:8px;background:var(--light);border-radius:8px;padding:8px 10px;font-size:11.5px;color:var(--text);line-height:1.5;border-left:2px solid var(--blue);}
+
+/* RESPONSIVE */
+@media(max-width:1024px){.profile-body{grid-template-columns:1fr;}.hero-stats{display:none;}}
+@media(max-width:768px){
+  .sidebar{position:fixed;left:-220px;z-index:100;transition:left 0.25s;}
+  .sidebar.open{left:0;}
+  .ham{display:flex!important;}
+  .content{padding:0;}
+  .profile-body{padding:16px;}
+  .topbar{padding:0 16px;}
+  .form-row{grid-template-columns:1fr;}
+  .hero-actions{display:none;}
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{animation:fadeUp 0.3s ease both;}
+
+/* READ-ONLY FIELD STYLES */
+.ro-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;}
+.ro-field{display:flex;flex-direction:column;gap:3px;padding:10px 12px;background:var(--light);border-radius:9px;border:1px solid var(--border);}
+.ro-label{font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
+.ro-value{font-size:13px;font-weight:500;color:var(--text);}
+.ro-social-item{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--border);}
+.ro-social-item:last-child{border-bottom:none;}
+.ro-social-label{font-size:12px;font-weight:500;color:var(--text);width:80px;flex-shrink:0;}
+.ro-social-val{font-size:12px;color:var(--blue);}
+.ro-empty{color:var(--muted)!important;font-style:italic;}
+
+/* SECTION HIDDEN */
+.tab-section{display:none;}
+.tab-section.active{display:block;}
+/* ── HELP PANEL ── */
+.help-overlay{position:fixed;inset:0;background:rgba(10,15,30,0.3);z-index:400;opacity:0;pointer-events:none;transition:opacity 0.25s;backdrop-filter:blur(2px);}
+.help-overlay.open{opacity:1;pointer-events:all;}
+.help-panel{position:fixed;top:0;right:0;height:100vh;width:380px;background:#fff;z-index:401;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);box-shadow:-12px 0 40px rgba(2,76,238,0.10);border-left:1px solid var(--border);}
+.help-panel.open{transform:translateX(0);}
+.hp-head{padding:18px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.hp-icon{width:34px;height:34px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--blue);}
+.hp-title{font-size:14px;font-weight:700;color:var(--text);flex:1;}
+.hp-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all 0.13s;}
+.hp-close:hover{border-color:var(--blue);color:var(--blue);}
+.hp-body{flex:1;overflow-y:auto;padding:20px 18px;}
+.hp-intro{font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:22px;}
+.hp-section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted);margin-bottom:12px;}
+.hp-flow{display:flex;flex-direction:column;gap:0;margin-bottom:24px;}
+.hp-step{display:flex;gap:14px;padding-bottom:18px;position:relative;}
+.hp-step:last-child{padding-bottom:0;}
+.hp-step:not(:last-child)::before{content:'';position:absolute;left:17px;top:36px;bottom:0;width:2px;background:var(--border);}
+.hp-step-num{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700;color:#fff;background:var(--blue);z-index:1;}
+.hp-step-body{flex:1;padding-top:5px;}
+.hp-step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.hp-step-desc{font-size:12px;color:var(--muted);line-height:1.55;}
+.hp-step-tag{display:inline-flex;align-items:center;gap:3px;margin-top:5px;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:5px;}
+.hp-glossary{display:flex;flex-direction:column;gap:7px;margin-bottom:24px;}
+.hp-gl-row{display:flex;align-items:flex-start;gap:10px;padding:9px 11px;border-radius:9px;border:1px solid var(--border);}
+.hp-gl-badge{flex-shrink:0;margin-top:1px;}
+.hp-gl-text{font-size:12px;color:var(--muted);line-height:1.5;}
+.hp-gl-text strong{color:var(--text);font-weight:600;}
+.hp-tips{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+.hp-tip{display:flex;gap:10px;padding:10px 12px;border-radius:9px;background:var(--light);border:1px solid var(--border);}
+.hp-tip-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+.hp-tip-text{font-size:12px;color:var(--muted);line-height:1.5;}
+.hp-tip-text strong{color:var(--text);}
+.hp-footer{padding:14px 18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.hp-dismiss{font-size:12px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:5px;transition:color 0.13s;}
+.hp-dismiss:hover{color:#DC2626;}
+.hp-docs-link{font-size:12px;font-weight:600;color:var(--blue);cursor:pointer;display:flex;align-items:center;gap:4px;text-decoration:none;}
+.hp-docs-link:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="snackbar" id="snackbar"></div>
+<div class="mob-overlay" id="overlay" onclick="closeSidebar()"></div>
+<div class="help-overlay" id="helpOverlay" onclick="toggleHelp()"></div>
+<div class="help-panel" id="helpPanel">
+  <div class="hp-head">
+    <div class="hp-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+    <div class="hp-title">My Profile Guide</div>
+    <div class="hp-close" onclick="toggleHelp()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+  </div>
+  <div class="hp-body">
+    <p class="hp-intro">Your profile is what clients see before they order. A complete, professional profile builds trust and converts visitors into paying clients.</p>
+    <div class="hp-section">What to fill in</div>
+    <div class="hp-tips">
+      <div class="hp-tip"><div class="hp-tip-icon">📸</div><div class="hp-tip-text"><strong>Profile photo.</strong> Use a clear, professional headshot. Providers with photos receive significantly more orders.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">✍️</div><div class="hp-tip-text"><strong>Bio.</strong> Write 2–3 sentences about your expertise, background, and why clients should choose you. Keep it specific.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">🗣️</div><div class="hp-tip-text"><strong>Languages.</strong> List all languages you can work in — this expands your potential client base across Germany.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">🎓</div><div class="hp-tip-text"><strong>Qualifications.</strong> Add relevant certifications or education — clients value verified expertise especially for legal and financial services.</div></div>
+    </div>
+    <div class="hp-section">Pro tips</div>
+    <div class="hp-tips">
+      <div class="hp-tip"><div class="hp-tip-icon">⭐</div><div class="hp-tip-text"><strong>Complete = more visible.</strong> Fully completed profiles rank higher in search. Fill every field you can.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">🔄</div><div class="hp-tip-text"><strong>Keep it fresh.</strong> Update your bio and specialities as your skills grow — stale profiles lose rankings over time.</div></div>
+    </div>
+  </div>
+  <div class="hp-footer" style="justify-content:flex-end;">
+    <a class="hp-docs-link" href="guide.html">Full Documentation <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+  </div>
+</div>
+
+<div class="shell">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo-area">
+    <div class="ga-mark"><div class="ga-flag"><div class="ga-flag-b"></div><div class="ga-flag-r"></div><div class="ga-flag-g"></div></div></div>
+    <div class="ga-logo-text"><div class="ga-name">Germany Assists</div><div class="ga-sub">Provider Portal</div></div>
+    <div class="collapse-btn" onclick="toggleCollapse()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></div>
+  </div>
+  <nav class="nav">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item" onclick="window.location.href='Dashborad.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="nav-text">Dashboard</span></div>
+    <div class="nav-item" onclick="window.location.href='Message.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="nav-text">Messages</span><span class="nb nb-red">5</span></div>
+    <div class="nav-item" onclick="window.location.href='notifications.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg><span class="nav-text">Notifications</span><span class="nb nb-red">3</span></div>
+    <div class="nav-label" style="margin-top:6px;">Work</div>
+    <div class="nav-item" onclick="window.location.href='orders.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><span class="nav-text">Orders</span><span class="nb nb-blue">14</span></div>
+    <div class="nav-item" onclick="window.location.href='services.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span class="nav-text">My Services</span></div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="nav-text">Clients</span></div>
+    <div class="nav-label" style="margin-top:6px;">Finance</div>
+    <div class="nav-item" onclick="window.location.href='Finance.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg><span class="nav-text">Finance</span></div>
+    <div class="nav-label" style="margin-top:6px;">Account</div>
+    <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="nav-text">Profile</span></div>
+    <div class="nav-item" onclick="window.location.href='verification_centre.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="nav-text">Verification Centre</span><span class="nb nb-sky">!</span></div>
+    <div class="nav-item" onclick="window.location.href='settings.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span class="nav-text">Settings</span></div>
+    <div class="nav-label" style="margin-top:6px;">Help</div>
+    <div class="nav-item" onclick="window.location.href='guide.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      <span class="nav-text">Guide</span>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sp-profile">
+      <div class="s-av">GA</div>
+      <div><div class="sp-nm">Germany Assists</div><div class="sp-rl">Service Provider</div></div>
+      <div class="pf-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="ham" onclick="toggleSidebar()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
+    <span class="page-title">My Profile</span>
+    <div class="unsaved-dot" id="unsavedDot"></div>
+    <div style="font-size:11.5px;color:var(--warn);font-weight:500;display:none;" id="unsavedLabel">Unsaved changes</div>
+    <div class="ti-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><div class="n-dot" style="background:#E53E3E;"></div></div>
+    <div class="ti-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><div class="n-dot" style="background:var(--blue);"></div></div>
+    <div class="ti-btn" id="helpBtn" title="Help & Guide" onclick="toggleHelp()" style="color:var(--blue);border-color:rgba(2,76,238,0.2);background:var(--bs);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg></div>
+    <div class="ti-btn" style="border-radius:50%;background:var(--blue);border:none;"><span style="color:#fff;font-size:10px;font-weight:700;">GA</span></div>
+  </div>
+
+  <div class="content">
+
+    <!-- HERO -->
+    <div class="profile-hero">
+      <div class="hero-cover">
+        <button class="cover-edit-btn" onclick="showSnack('Cover photo editor coming soon')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          Edit Cover
+        </button>
+      </div>
+      <div class="hero-body">
+        <div class="hero-info">
+          <div class="avatar-wrap">
+            <div class="avatar">GA
+              <div class="avatar-edit" onclick="document.getElementById('avatarInput').click()">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </div>
+            </div>
+            <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="handleAvatarChange(this)">
+          </div>
+          <div class="hero-text">
+            <div class="hero-name-row">
+              <div class="hero-name">Germany Assists</div>
+              <div class="verified-badge">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Verified
+              </div>
+              <div class="provider-type-badge">Freelancer</div>
+            </div>
+            <div class="hero-meta">
+              <div class="hero-meta-item">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Berlin, Germany
+              </div>
+              <div class="hero-meta-item">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Member since Jan 2025
+              </div>
+              <div class="hero-rating">
+                <span class="star">★</span> 4.8 <span style="font-weight:400;color:var(--muted);font-size:11.5px;">(47 reviews)</span>
+              </div>
+            </div>
+            <div class="badges-row">
+              <div class="badge-pill bp-green">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Certified Teacher
+              </div>
+              <div class="badge-pill bp-blue">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Certified Translator
+              </div>
+              <div class="badge-pill bp-sky">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                German Market Expert
+              </div>
+              <div class="badge-pill bp-warn">⏳ Sworn Translator — Pending</div>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <button class="hero-btn" onclick="window.open('#','_blank')">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+              Preview Profile
+            </button>
+            <button class="hero-btn primary" id="shareProfileBtn" onclick="shareProfile()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Share Profile
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="profile-tabs">
+      <div class="ptab active" onclick="switchTab(this,'general')">General</div>
+      <div class="ptab" onclick="switchTab(this,'professional')">Professional</div>
+      <div class="ptab" onclick="switchTab(this,'availability')">Availability</div>
+      <div class="ptab" onclick="switchTab(this,'reviews')">Reviews <span style="font-size:11px;background:var(--bs);color:var(--blue);padding:1px 6px;border-radius:10px;margin-left:3px;">47</span></div>
+    </div>
+
+    <!-- BODY -->
+    <div class="profile-body">
+
+      <!-- LEFT: MAIN CONTENT -->
+      <div>
+
+        <!-- DARK PATTERN: URGENT NUDGE -->
+        <div class="nudge-bar" id="urgentNudge">
+          <div class="nudge-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="nudge-text">Your <strong>National ID has expired</strong> — services may be paused in 3 days if not updated. Upload now to stay active.</div>
+          <div class="nudge-cta" onclick="showSnack('Redirecting to Verification Centre…')">Fix Now →</div>
+        </div>
+
+        <!-- GENERAL TAB -->
+        <div class="tab-section active" id="tab-general">
+          <!-- BASIC INFO -->
+          <div class="card" id="basicInfoCard">
+            <div class="card-header">
+              <div style="width:32px;height:32px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+              </div>
+              <div class="card-title">Basic Information</div>
+              <button class="card-action" id="basicInfoEditBtn" onclick="toggleCardEdit('basicInfo')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;vertical-align:-1px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
+              </button>
+            </div>
+
+            <!-- READ-ONLY VIEW -->
+            <div id="basicInfoView">
+              <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;padding:14px;background:var(--light);border-radius:11px;border:1px solid var(--border);">
+                <div style="width:64px;height:64px;border-radius:14px;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:700;flex-shrink:0;" id="bigAvatarView">GA</div>
+                <div>
+                  <div style="font-size:12.5px;font-weight:600;margin-bottom:3px;">Profile Photo / Logo</div>
+                  <div style="font-size:11px;color:var(--muted);">Square ratio (1:1) · JPG, PNG · Max 5MB</div>
+                </div>
+              </div>
+              <div class="ro-grid">
+                <div class="ro-field"><div class="ro-label">Full Legal Name</div><div class="ro-value">Germany Assists</div></div>
+                <div class="ro-field"><div class="ro-label">Display Name</div><div class="ro-value">Germany Assists</div></div>
+                <div class="ro-field"><div class="ro-label">Email Address</div><div class="ro-value">hello@germanyassists.de</div></div>
+                <div class="ro-field"><div class="ro-label">Phone Number</div><div class="ro-value">+49 151 0000 0000</div></div>
+                <div class="ro-field"><div class="ro-label">Provider Type</div><div class="ro-value">Freelancer</div></div>
+                <div class="ro-field"><div class="ro-label">Country of Residence</div><div class="ro-value">🇩🇪 Germany</div></div>
+                <div class="ro-field"><div class="ro-label">City</div><div class="ro-value">Berlin</div></div>
+                <div class="ro-field"><div class="ro-label">Website</div><div class="ro-value" style="color:var(--blue);">—</div></div>
+                <div class="ro-field" style="grid-column:1/-1;"><div class="ro-label">Bio</div><div class="ro-value" style="line-height:1.6;">Professional German language teacher and certified translator based in Berlin. Helping individuals and businesses navigate German language requirements, document translations, and cultural integration. Over 8 years of experience with 200+ satisfied clients.</div></div>
+              </div>
+            </div>
+
+            <!-- EDIT VIEW (hidden by default) -->
+            <div id="basicInfoEdit" style="display:none;">
+              <!-- AVATAR UPLOAD -->
+              <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;padding:14px;background:var(--light);border-radius:11px;border:1px solid var(--border);">
+                <div style="width:64px;height:64px;border-radius:14px;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:700;flex-shrink:0;overflow:hidden;" id="bigAvatar">GA</div>
+                <div style="flex:1;">
+                  <div style="font-size:12.5px;font-weight:600;margin-bottom:3px;">Profile Photo / Logo</div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Square ratio (1:1) · JPG, PNG · Max 5MB · Min 400×400px</div>
+                  <div style="display:flex;gap:6px;">
+                    <button class="hero-btn" style="font-size:11.5px;padding:5px 12px;" onclick="document.getElementById('avatarInput').click()">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                      Upload Photo
+                    </button>
+                    <button class="hero-btn" style="font-size:11.5px;padding:5px 12px;color:var(--red);" onclick="showSnack('Photo removed')">Remove</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <label>Full Legal Name <span class="req">*</span></label>
+                  <input type="text" value="Germany Assists" oninput="markDirty()">
+                </div>
+                <div class="form-field">
+                  <label>Display Name <span class="req">*</span></label>
+                  <input type="text" value="Germany Assists" oninput="markDirty()">
+                  <div class="form-hint">Shown publicly on your profile.</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-field">
+                  <label>Email Address <span class="req">*</span></label>
+                  <input type="email" value="hello@germanyassists.de" oninput="markDirty()">
+                </div>
+                <div class="form-field">
+                  <label>Phone Number <span class="req">*</span></label>
+                  <input type="tel" value="+49 151 0000 0000" oninput="markDirty()">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-field">
+                  <label>Provider Type</label>
+                  <select onchange="markDirty()">
+                    <option selected>Freelancer</option>
+                    <option>Office / Organization</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label>Country of Residence</label>
+                  <select onchange="markDirty()">
+                    <option>🇩🇪 Germany</option>
+                    <option>🇪🇬 Egypt</option>
+                    <option>🇲🇦 Morocco</option>
+                    <option>🇸🇾 Syria</option>
+                    <option>🇯🇴 Jordan</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-field">
+                  <label>City</label>
+                  <input type="text" value="Berlin" oninput="markDirty()">
+                </div>
+                <div class="form-field">
+                  <label>Website</label>
+                  <div class="input-prefix">
+                    <span class="prefix-icon">🌐</span>
+                    <input type="url" placeholder="https://yourwebsite.com" oninput="markDirty()">
+                  </div>
+                </div>
+              </div>
+              <div class="form-row" style="grid-template-columns:1fr;">
+                <div class="form-field full">
+                  <label>Bio <span class="req">*</span></label>
+                  <textarea id="bioInput" oninput="updateBioCount();markDirty();" maxlength="600">Professional German language teacher and certified translator based in Berlin. Helping individuals and businesses navigate German language requirements, document translations, and cultural integration. Over 8 years of experience with 200+ satisfied clients.</textarea>
+                  <div class="char-count"><span id="bioCount">280</span>/600 characters</div>
+                </div>
+              </div>
+
+              <!-- CARD EDIT ACTIONS -->
+              <div style="display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+                <button onclick="cancelCardEdit('basicInfo')" style="flex:1;padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.13s;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Cancel</button>
+                <button onclick="saveCardEdit('basicInfo')" style="flex:2;padding:9px 16px;border-radius:9px;background:#059669;color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:opacity 0.13s;display:flex;align-items:center;justify-content:center;gap:5px;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SOCIAL LINKS -->
+          <div class="card">
+            <div class="card-header">
+              <div style="width:32px;height:32px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              </div>
+              <div class="card-title">Social & Online Presence</div>
+              <button class="card-action" id="socialEditBtn" onclick="toggleCardEdit('social')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;vertical-align:-1px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
+              </button>
+            </div>
+
+            <!-- READ-ONLY -->
+            <div id="socialView">
+              <div class="ro-social-item"><div class="social-icon" style="background:#E8F5FE;">💼</div><div class="ro-social-label">LinkedIn</div><div class="ro-social-val ro-empty">Not added</div></div>
+              <div class="ro-social-item"><div class="social-icon" style="background:#E8F5FE;">🐦</div><div class="ro-social-label">Twitter / X</div><div class="ro-social-val ro-empty">Not added</div></div>
+              <div class="ro-social-item"><div class="social-icon" style="background:#FFF0F5;">📷</div><div class="ro-social-label">Instagram</div><div class="ro-social-val ro-empty">Not added</div></div>
+              <div class="ro-social-item"><div class="social-icon" style="background:#F0FFF4;">📺</div><div class="ro-social-label">YouTube</div><div class="ro-social-val ro-empty">Not added</div></div>
+            </div>
+
+            <!-- EDIT VIEW -->
+            <div id="socialEdit" style="display:none;">
+              <div class="social-row">
+                <div class="social-icon" style="background:#E8F5FE;">💼</div>
+                <div class="social-label">LinkedIn</div>
+                <input class="social-input" type="url" placeholder="linkedin.com/in/yourprofile" oninput="markDirty()">
+              </div>
+              <div class="social-row">
+                <div class="social-icon" style="background:#E8F5FE;">🐦</div>
+                <div class="social-label">Twitter / X</div>
+                <input class="social-input" type="url" placeholder="x.com/yourhandle" oninput="markDirty()">
+              </div>
+              <div class="social-row">
+                <div class="social-icon" style="background:#FFF0F5;">📷</div>
+                <div class="social-label">Instagram</div>
+                <input class="social-input" type="url" placeholder="instagram.com/yourhandle" oninput="markDirty()">
+              </div>
+              <div class="social-row">
+                <div class="social-icon" style="background:#F0FFF4;">📺</div>
+                <div class="social-label">YouTube</div>
+                <input class="social-input" type="url" placeholder="youtube.com/@channel" oninput="markDirty()">
+              </div>
+              <div style="display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+                <button onclick="cancelCardEdit('social')" style="flex:1;padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Cancel</button>
+                <button onclick="saveCardEdit('social')" style="flex:2;padding:9px 16px;border-radius:9px;background:#059669;color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROFESSIONAL TAB -->
+        <div class="tab-section" id="tab-professional">
+          <div class="card">
+            <div class="card-header">
+              <div style="width:32px;height:32px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <div class="card-title">Categories & Expertise</div>
+              <button class="card-action" id="catsEditBtn" onclick="toggleCardEdit('cats')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;vertical-align:-1px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
+              </button>
+            </div>
+            <!-- READ-ONLY -->
+            <div id="catsView">
+              <div class="ro-field" style="margin-bottom:10px;background:var(--light);border-radius:9px;border:1px solid var(--border);padding:10px 12px;">
+                <div class="ro-label" style="margin-bottom:6px;">Main Categories</div>
+                <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                  <span class="badge-pill bp-blue">German Language</span>
+                  <span class="badge-pill bp-blue">Translation Services</span>
+                </div>
+              </div>
+              <div class="ro-field" style="background:var(--light);border-radius:9px;border:1px solid var(--border);padding:10px 12px;">
+                <div class="ro-label" style="margin-bottom:6px;">Sub-Categories</div>
+                <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                  <span class="badge-pill bp-sky">A1–B2 Courses</span>
+                  <span class="badge-pill bp-sky">Intensive Programs</span>
+                  <span class="badge-pill bp-sky">Legal Translation</span>
+                  <span class="badge-pill bp-sky">Document Translation</span>
+                </div>
+              </div>
+            </div>
+            <!-- EDIT VIEW -->
+            <div id="catsEdit" style="display:none;">
+              <div class="form-field" style="margin-bottom:14px;">
+                <label>Main Categories <span class="req">*</span></label>
+                <div class="form-hint" style="margin-bottom:8px;">Select all categories that apply to your services.</div>
+                <div class="tag-select">
+                  <div class="tag-opt sel" onclick="toggleTag(this)">German Language</div>
+                  <div class="tag-opt" onclick="toggleTag(this)">Career Coaching</div>
+                  <div class="tag-opt sel" onclick="toggleTag(this)">Translation Services</div>
+                  <div class="tag-opt" onclick="toggleTag(this)">Recruitment</div>
+                  <div class="tag-opt" onclick="toggleTag(this)">Visa & Immigration</div>
+                  <div class="tag-opt" onclick="toggleTag(this)">Certificate Recognition</div>
+                  <div class="tag-opt" onclick="toggleTag(this)">University Services</div>
+                  <div class="tag-opt" onclick="toggleTag(this)">Relocation Services</div>
+                </div>
+              </div>
+              <div class="form-field">
+                <label>Sub-Categories</label>
+                <div class="tag-select">
+                  <div class="tag-opt sel" onclick="toggleTag(this)">A1–B2 Courses</div>
+                  <div class="tag-opt sel" onclick="toggleTag(this)">Intensive Programs</div>
+                  <div class="tag-opt" onclick="toggleTag(this)">Exam Preparation</div>
+                  <div class="tag-opt" onclick="toggleTag(this)">Business German</div>
+                  <div class="tag-opt sel" onclick="toggleTag(this)">Legal Translation</div>
+                  <div class="tag-opt sel" onclick="toggleTag(this)">Document Translation</div>
+                  <div class="tag-opt" onclick="toggleTag(this)">Sworn Translation</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+                <button onclick="cancelCardEdit('cats')" style="flex:1;padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Cancel</button>
+                <button onclick="saveCardEdit('cats')" style="flex:2;padding:9px 16px;border-radius:9px;background:#059669;color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save Changes</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div style="width:32px;height:32px;border-radius:9px;background:rgba(5,150,105,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+              </div>
+              <div class="card-title">Professional Credentials</div>
+              <button class="card-action" id="credsEditBtn" onclick="toggleCardEdit('creds')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;vertical-align:-1px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
+              </button>
+            </div>
+            <!-- READ-ONLY -->
+            <div id="credsView">
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(5,150,105,0.04);border:1px solid rgba(5,150,105,0.15);border-radius:9px;">
+                  <div>
+                    <div style="font-size:12.5px;font-weight:600;">Teaching Certificate</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">teaching_cert_goethe.pdf · Uploaded 3 Apr 2026</div>
+                  </div>
+                  <div class="badge-pill bp-green" style="font-size:9.5px;">✓ Verified</div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(217,119,6,0.04);border:1px solid rgba(217,119,6,0.18);border-radius:9px;">
+                  <div>
+                    <div style="font-size:12.5px;font-weight:600;">Sworn Translator Certificate</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">No document uploaded yet</div>
+                  </div>
+                  <div class="badge-pill bp-warn" style="font-size:9.5px;">⏳ Pending</div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--light);border:1px solid var(--border);border-radius:9px;">
+                  <div>
+                    <div style="font-size:12.5px;font-weight:600;">University Degree (Germanistics)</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">No document uploaded yet</div>
+                  </div>
+                  <div style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:#f1f5f9;color:var(--muted);border:1px solid var(--border);">Not uploaded</div>
+                </div>
+              </div>
+            </div>
+            <!-- EDIT VIEW -->
+            <div id="credsEdit" style="display:none;">
+              <div class="form-hint" style="margin-bottom:12px;">Upload documents to earn verified badges</div>
+              <div style="border:1px solid rgba(5,150,105,0.2);border-radius:11px;padding:14px;margin-bottom:10px;background:rgba(5,150,105,0.02);">
+                <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
+                  <div style="flex:1;"><div style="font-size:12.5px;font-weight:600;">Teaching Certificate</div><div style="font-size:11px;color:var(--muted);">Goethe / TELC / TestDaF — earns "Certified Teacher" badge</div></div>
+                  <div class="badge-pill bp-green" style="font-size:9.5px;">✓ Verified</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f1f5f9;border-radius:8px;font-size:11.5px;color:var(--muted);">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  teaching_cert_goethe.pdf · Uploaded 3 Apr 2026
+                  <button style="margin-left:auto;font-size:11px;color:var(--blue);background:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;">Replace</button>
+                </div>
+              </div>
+              <div style="border:1px solid rgba(217,119,6,0.2);border-radius:11px;padding:14px;margin-bottom:10px;background:rgba(217,119,6,0.02);">
+                <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
+                  <div style="flex:1;"><div style="font-size:12.5px;font-weight:600;">Sworn Translator Certificate</div><div style="font-size:11px;color:var(--muted);">Court Appointment (Bestallungsurkunde) + Official Stamp</div></div>
+                  <div class="badge-pill bp-warn" style="font-size:9.5px;">⏳ Pending</div>
+                </div>
+                <div class="photo-upload" style="padding:12px;margin-top:0;"><input type="file" accept=".pdf,.jpg,.jpeg,.png"><div class="pu-icon">📋</div><div class="pu-title">Upload Bestallungsurkunde</div><div class="pu-sub">PDF · Max 5MB</div></div>
+              </div>
+              <div style="border:1px solid var(--border);border-radius:11px;padding:14px;">
+                <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
+                  <div style="flex:1;"><div style="font-size:12.5px;font-weight:600;">University Degree (Germanistics)</div><div style="font-size:11px;color:var(--muted);">Earns "Expert Teacher" badge</div></div>
+                  <div style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:#f1f5f9;color:var(--muted);border:1px solid var(--border);">Not uploaded</div>
+                </div>
+                <div class="photo-upload" style="padding:12px;"><input type="file" accept=".pdf,.jpg,.jpeg,.png"><div class="pu-icon">🎓</div><div class="pu-title">Upload Degree Certificate</div><div class="pu-sub">PDF / JPG / PNG · Max 5MB</div></div>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+                <button onclick="cancelCardEdit('creds')" style="flex:1;padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Cancel</button>
+                <button onclick="saveCardEdit('creds')" style="flex:2;padding:9px 16px;border-radius:9px;background:#059669;color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save Changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AVAILABILITY TAB -->
+        <div class="tab-section" id="tab-availability">
+          <div class="card">
+            <div class="card-header">
+              <div style="width:32px;height:32px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+              <div class="card-title">Weekly Availability</div>
+              <button class="card-action" id="availEditBtn" onclick="toggleCardEdit('avail')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;vertical-align:-1px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
+              </button>
+            </div>
+            <!-- READ-ONLY -->
+            <div id="availView">
+              <div class="ro-grid" style="margin-bottom:10px;">
+                <div class="ro-field"><div class="ro-label">Active Days</div><div class="ro-value">Mon, Tue, Wed, Thu</div></div>
+                <div class="ro-field"><div class="ro-label">Hours</div><div class="ro-value">10:00 – 18:00</div></div>
+                <div class="ro-field" style="grid-column:1/-1;"><div class="ro-label">Timezone</div><div class="ro-value">Europe/Berlin (UTC+2)</div></div>
+              </div>
+            </div>
+            <!-- EDIT VIEW -->
+            <div id="availEdit" style="display:none;">
+              <div style="font-size:11.5px;color:var(--muted);margin-bottom:8px;">Click days to toggle on/off</div>
+              <div class="avail-grid">
+                <div class="day-btn on" onclick="toggleDay(this)"><span class="day-name">Mon</span><span class="day-check">✓</span></div>
+                <div class="day-btn on" onclick="toggleDay(this)"><span class="day-name">Tue</span><span class="day-check">✓</span></div>
+                <div class="day-btn on" onclick="toggleDay(this)"><span class="day-name">Wed</span><span class="day-check">✓</span></div>
+                <div class="day-btn on" onclick="toggleDay(this)"><span class="day-name">Thu</span><span class="day-check">✓</span></div>
+                <div class="day-btn" onclick="toggleDay(this)"><span class="day-name">Fri</span><span class="day-check">–</span></div>
+                <div class="day-btn" onclick="toggleDay(this)"><span class="day-name">Sat</span><span class="day-check">–</span></div>
+                <div class="day-btn" onclick="toggleDay(this)"><span class="day-name">Sun</span><span class="day-check">–</span></div>
+              </div>
+              <div class="time-row"><div class="time-label">From</div><select class="time-sel"><option>08:00</option><option>09:00</option><option selected>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option></select></div>
+              <div class="time-row"><div class="time-label">To</div><select class="time-sel"><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option selected>18:00</option><option>19:00</option><option>20:00</option><option>21:00</option><option>22:00</option></select></div>
+              <div style="margin-top:12px;padding:10px 12px;background:var(--light);border-radius:8px;border:1px solid var(--border);">
+                <div style="font-size:11.5px;font-weight:600;margin-bottom:5px;color:var(--text);">Timezone</div>
+                <select style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;background:#fff;">
+                  <option selected>Europe/Berlin (UTC+2)</option><option>Africa/Cairo (UTC+3)</option><option>Asia/Amman (UTC+3)</option><option>Europe/London (UTC+1)</option>
+                </select>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+                <button onclick="cancelCardEdit('avail')" style="flex:1;padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Cancel</button>
+                <button onclick="saveCardEdit('avail')" style="flex:2;padding:9px 16px;border-radius:9px;background:#059669;color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save Changes</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div style="width:32px;height:32px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div class="card-title">Response & Delivery Settings</div>
+              <button class="card-action" id="deliveryEditBtn" onclick="toggleCardEdit('delivery')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;vertical-align:-1px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
+              </button>
+            </div>
+            <!-- READ-ONLY -->
+            <div id="deliveryView">
+              <div class="ro-grid">
+                <div class="ro-field"><div class="ro-label">Response Time</div><div class="ro-value">Within 24 hours</div></div>
+                <div class="ro-field"><div class="ro-label">Max Active Orders</div><div class="ro-value">10</div></div>
+                <div class="ro-field" style="grid-column:1/-1;"><div class="ro-label">Delivery Modes</div><div class="ro-value">💻 Online · 🏢 In-Person</div></div>
+              </div>
+            </div>
+            <!-- EDIT VIEW -->
+            <div id="deliveryEdit" style="display:none;">
+              <div class="form-row">
+                <div class="form-field"><label>Typical Response Time</label><select><option>Within 1 hour</option><option selected>Within 24 hours</option><option>Within 48 hours</option><option>Within 1 week</option></select></div>
+                <div class="form-field"><label>Max Active Orders</label><input type="number" value="10" min="1" max="50"><div class="form-hint">Prevents over-booking automatically.</div></div>
+              </div>
+              <div class="form-field">
+                <label>Delivery Modes</label>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
+                  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;"><input type="checkbox" checked style="accent-color:var(--blue);"> 💻 Online</label>
+                  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;"><input type="checkbox" checked style="accent-color:var(--blue);"> 🏢 In-Person</label>
+                  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;"><input type="checkbox" style="accent-color:var(--blue);"> 🔀 Hybrid</label>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+                <button onclick="cancelCardEdit('delivery')" style="flex:1;padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Cancel</button>
+                <button onclick="saveCardEdit('delivery')" style="flex:2;padding:9px 16px;border-radius:9px;background:#059669;color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save Changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- REVIEWS TAB -->
+        <div class="tab-section" id="tab-reviews">
+          <!-- Rating Summary -->
+          <div class="card" style="padding:18px 20px;">
+            <div style="display:flex;align-items:center;gap:24px;margin-bottom:16px;flex-wrap:wrap;">
+              <div style="text-align:center;">
+                <div style="font-size:48px;font-weight:800;color:var(--text);line-height:1;">4.8</div>
+                <div style="display:flex;gap:2px;justify-content:center;font-size:18px;color:#F59E0B;margin:4px 0;">★★★★★</div>
+                <div style="font-size:11.5px;color:var(--muted);">47 reviews</div>
+              </div>
+              <div style="flex:1;min-width:160px;">
+                <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">
+                  <div style="font-size:11.5px;color:var(--muted);width:14px;">5★</div>
+                  <div style="flex:1;height:6px;background:#f1f5f9;border-radius:4px;overflow:hidden;"><div style="width:78%;height:6px;background:#F59E0B;border-radius:4px;"></div></div>
+                  <div style="font-size:11px;color:var(--muted);width:24px;text-align:right;">78%</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">
+                  <div style="font-size:11.5px;color:var(--muted);width:14px;">4★</div>
+                  <div style="flex:1;height:6px;background:#f1f5f9;border-radius:4px;overflow:hidden;"><div style="width:14%;height:6px;background:#F59E0B;border-radius:4px;"></div></div>
+                  <div style="font-size:11px;color:var(--muted);width:24px;text-align:right;">14%</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">
+                  <div style="font-size:11.5px;color:var(--muted);width:14px;">3★</div>
+                  <div style="flex:1;height:6px;background:#f1f5f9;border-radius:4px;overflow:hidden;"><div style="width:5%;height:6px;background:#F59E0B;border-radius:4px;"></div></div>
+                  <div style="font-size:11px;color:var(--muted);width:24px;text-align:right;">5%</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">
+                  <div style="font-size:11.5px;color:var(--muted);width:14px;">2★</div>
+                  <div style="flex:1;height:6px;background:#f1f5f9;border-radius:4px;overflow:hidden;"><div style="width:2%;height:6px;background:#F59E0B;border-radius:4px;"></div></div>
+                  <div style="font-size:11px;color:var(--muted);width:24px;text-align:right;">2%</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">
+                  <div style="font-size:11.5px;color:var(--muted);width:14px;">1★</div>
+                  <div style="flex:1;height:6px;background:#f1f5f9;border-radius:4px;overflow:hidden;"><div style="width:1%;height:6px;background:#F59E0B;border-radius:4px;"></div></div>
+                  <div style="font-size:11px;color:var(--muted);width:24px;text-align:right;">1%</div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="font-size:11.5px;color:var(--muted);">Response rate</div>
+                <div style="font-size:22px;font-weight:700;color:#059669;">98%</div>
+                <div style="font-size:11.5px;color:var(--muted);">Avg response</div>
+                <div style="font-size:15px;font-weight:600;color:var(--text);">&lt;2 hrs</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review Items -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Recent Reviews</div>
+              <button class="card-action">View All</button>
+            </div>
+            <div class="review-item">
+              <div class="review-top">
+                <div class="rev-av" style="background:rgba(2,76,238,0.1);color:var(--blue);">AH</div>
+                <div class="rev-name">Ahmed Suleiman</div>
+                <div class="rev-stars">★★★★★</div>
+                <div class="rev-date">02 Apr 2026</div>
+              </div>
+              <div style="font-size:10.5px;color:var(--muted);margin-bottom:4px;">German A1 Course</div>
+              <div class="rev-text">Excellent teaching style! Patient, clear explanations and always available for questions. I passed my A1 exam after just 10 sessions. Highly recommended.</div>
+              <div class="rev-reply">
+                <strong style="color:var(--blue);">Germany Assists replied:</strong> Thank you Ahmed! It was a pleasure working with you. Best of luck in your A2 journey!
+              </div>
+            </div>
+            <div class="review-item">
+              <div class="review-top">
+                <div class="rev-av" style="background:rgba(5,150,105,0.1);color:#059669;">MK</div>
+                <div class="rev-name">Maria Kovacs</div>
+                <div class="rev-stars">★★★★★</div>
+                <div class="rev-date">30 Mar 2026</div>
+              </div>
+              <div style="font-size:10.5px;color:var(--muted);margin-bottom:4px;">Doc Translation</div>
+              <div class="rev-text">Fast, accurate, and professional. My documents were translated perfectly and delivered within 24 hours. Will definitely use again.</div>
+            </div>
+            <div class="review-item">
+              <div class="review-top">
+                <div class="rev-av" style="background:rgba(73,183,223,0.12);color:#0284C7;">LB</div>
+                <div class="rev-name">Lena Braun</div>
+                <div class="rev-stars">★★★★★</div>
+                <div class="rev-date">20 Mar 2026</div>
+              </div>
+              <div style="font-size:10.5px;color:var(--muted);margin-bottom:4px;">German B2 Workshop</div>
+              <div class="rev-text">The workshop was incredibly well-structured. Perfect balance of grammar, conversation and exam tips. I felt very prepared afterwards.</div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- RIGHT: SIDEBAR -->
+      <div>
+
+        <!-- COMPLETION WIDGET -->
+        <div class="comp-widget">
+          <div class="comp-title">Profile Completion</div>
+          <div class="comp-pct">70%</div>
+          <div class="comp-bar-wrap"><div class="comp-bar-fill" style="width:70%;"></div></div>
+          <div class="comp-items">
+            <div class="comp-item"><div class="comp-dot done"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Basic info & bio</div>
+            <div class="comp-item"><div class="comp-dot done"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Profile photo uploaded</div>
+            <div class="comp-item"><div class="comp-dot done"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>Teaching certificate verified</div>
+            <div class="comp-item"><div class="comp-dot"></div><span style="opacity:0.8;">Availability schedule</span></div>
+            <div class="comp-item"><div class="comp-dot"></div><span style="opacity:0.8;">National ID (expired)</span></div>
+          </div>
+          <button class="comp-cta" onclick="showSnack('Complete your profile to unlock all features')">Complete Profile →</button>
+        </div>
+
+        <!-- HERO STATS CARD -->
+        <div class="stat-card" style="margin-bottom:14px;">
+          <div class="sc-title">Performance Overview</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="padding:10px 12px;background:var(--light);border-radius:9px;border:1px solid var(--border);text-align:center;">
+              <div style="font-size:20px;font-weight:700;color:var(--text);">65</div>
+              <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">Total Orders</div>
+            </div>
+            <div style="padding:10px 12px;background:var(--light);border-radius:9px;border:1px solid var(--border);text-align:center;">
+              <div style="font-size:20px;font-weight:700;color:var(--text);">€4.2k</div>
+              <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">Revenue</div>
+            </div>
+            <div style="padding:10px 12px;background:var(--light);border-radius:9px;border:1px solid var(--border);text-align:center;">
+              <div style="font-size:20px;font-weight:700;color:var(--text);">€1,190</div>
+              <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">This Month</div>
+            </div>
+            <div style="padding:10px 12px;background:var(--light);border-radius:9px;border:1px solid var(--border);text-align:center;">
+              <div style="font-size:20px;font-weight:700;color:var(--text);">4.2%</div>
+              <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">Conversion</div>
+            </div>
+            <div style="padding:10px 12px;background:rgba(5,150,105,0.06);border-radius:9px;border:1px solid rgba(5,150,105,0.18);text-align:center;grid-column:1/-1;">
+              <div style="font-size:20px;font-weight:700;color:#059669;">98%</div>
+              <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">Response Rate</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUICK TIPS (Dark Pattern: social proof nudge) -->
+        <div class="stat-card">
+          <div class="sc-title" style="color:var(--blue);">💡 Boost Your Profile</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="padding:10px 12px;border-radius:9px;background:var(--light);border:1px solid var(--border);">
+              <div style="font-size:12px;font-weight:600;margin-bottom:3px;">Add your LinkedIn</div>
+              <div style="font-size:11px;color:var(--muted);line-height:1.5;">Profiles with social links get <strong style="color:var(--blue);">2.3× more inquiries</strong>.</div>
+            </div>
+            <div style="padding:10px 12px;border-radius:9px;background:rgba(5,150,105,0.04);border:1px solid rgba(5,150,105,0.15);">
+              <div style="font-size:12px;font-weight:600;margin-bottom:3px;color:#059669;">🏅 Earn Sworn Translator badge</div>
+              <div style="font-size:11px;color:var(--muted);line-height:1.5;">Only <strong style="color:#059669;">12 verified sworn translators</strong> on the platform. High demand!</div>
+            </div>
+            <div style="padding:10px 12px;border-radius:9px;background:rgba(217,119,6,0.05);border:1px solid rgba(217,119,6,0.2);">
+              <div style="font-size:12px;font-weight:600;margin-bottom:3px;color:#D97706;">⚡ 3 clients viewed you today</div>
+              <div style="font-size:11px;color:var(--muted);line-height:1.5;">Set your availability to convert profile visits into bookings.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PUBLIC PROFILE LINK -->
+        <div class="stat-card">
+          <div class="sc-title">Public Profile URL</div>
+          <div style="display:flex;align-items:center;gap:7px;padding:8px 10px;background:var(--light);border-radius:8px;border:1px solid var(--border);margin-bottom:8px;">
+            <div style="font-size:11.5px;color:var(--blue);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">germanyassists.de/provider/ga</div>
+            <button style="padding:4px 9px;border-radius:6px;background:var(--blue);color:#fff;border:none;font-size:11px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;" onclick="showSnack('Link copied to clipboard!')">Copy</button>
+          </div>
+          <button class="hero-btn" style="width:100%;justify-content:center;font-size:12px;" onclick="showSnack('Opening public profile preview…')">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+            Preview Public Profile
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+
+
+  </div>
+</main>
+</div>
+
+<script>
+function toggleCardEdit(cardId) {
+  const view = document.getElementById(cardId + 'View');
+  const edit = document.getElementById(cardId + 'Edit');
+  const btn = document.getElementById(cardId + 'EditBtn');
+  view.style.display = 'none';
+  edit.style.display = 'block';
+  btn.style.display = 'none';
+  edit.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function cancelCardEdit(cardId) {
+  const view = document.getElementById(cardId + 'View');
+  const edit = document.getElementById(cardId + 'Edit');
+  const btn = document.getElementById(cardId + 'EditBtn');
+  view.style.display = 'block';
+  edit.style.display = 'none';
+  btn.style.display = '';
+}
+
+function saveCardEdit(cardId) {
+  const view = document.getElementById(cardId + 'View');
+  const edit = document.getElementById(cardId + 'Edit');
+  const btn = document.getElementById(cardId + 'EditBtn');
+  view.style.display = 'block';
+  edit.style.display = 'none';
+  btn.style.display = '';
+  showSnack('Changes saved successfully ✓');
+}
+
+function shareProfile() {
+  if (navigator.share) {
+    navigator.share({title:'Germany Assists — Provider Profile', url: window.location.href});
+  } else {
+    navigator.clipboard.writeText(window.location.href).then(() => showSnack('Profile link copied to clipboard!'));
+  }
+}
+
+let isDirty = false;
+let editMode = false;
+
+function enterEditMode() {
+  editMode = true;
+  document.getElementById('saveBar').style.display = 'flex';
+  document.getElementById('unsavedDot').classList.add('show');
+  document.getElementById('unsavedLabel').style.display = 'block';
+  isDirty = true;
+  showSnack('Edit mode — make your changes and save');
+}
+
+function markDirty() {
+  if (!editMode) { enterEditMode(); }
+  if (!isDirty) {
+    isDirty = true;
+    document.getElementById('unsavedDot').classList.add('show');
+    document.getElementById('unsavedLabel').style.display = 'block';
+    document.getElementById('saveBar').style.display = 'flex';
+  }
+}
+
+function saveAll() {
+  isDirty = false;
+  editMode = false;
+  document.getElementById('unsavedDot').classList.remove('show');
+  document.getElementById('unsavedLabel').style.display = 'none';
+  document.getElementById('saveBar').style.display = 'none';
+  showSnack('Profile saved successfully ✓');
+}
+
+function discardChanges() {
+  isDirty = false;
+  editMode = false;
+  document.getElementById('unsavedDot').classList.remove('show');
+  document.getElementById('unsavedLabel').style.display = 'none';
+  document.getElementById('saveBar').style.display = 'none';
+  showSnack('Changes discarded');
+}
+
+function switchTab(el, id) {
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  const sec = document.getElementById('tab-' + id);
+  if (sec) sec.classList.add('active');
+}
+
+function toggleTag(el) {
+  el.classList.toggle('sel');
+  markDirty();
+}
+
+function toggleDay(el) {
+  const on = el.classList.toggle('on');
+  el.querySelector('.day-check').textContent = on ? '✓' : '–';
+  markDirty();
+}
+
+function toggle2FA(el) {
+  const knob = el.querySelector('div');
+  const on = el.dataset.on !== 'true';
+  el.dataset.on = on;
+  el.style.background = on ? 'var(--blue)' : '#e5e7eb';
+  knob.style.transform = on ? 'translateX(18px)' : '';
+  el.previousElementSibling.textContent = on ? 'On' : 'Off';
+  showSnack(on ? '2FA enabled — check your phone' : '2FA disabled');
+}
+
+function updateBioCount() {
+  const ta = document.getElementById('bioInput');
+  document.getElementById('bioCount').textContent = ta.value.length;
+}
+
+function handleAvatarChange(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  if (file.size > 5 * 1024 * 1024) { showSnack('File too large. Max 5MB.'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.querySelector('.avatar').style.background = 'transparent';
+    document.querySelector('.avatar').innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:14px;">`;
+    document.getElementById('bigAvatar').innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;">`;
+  };
+  reader.readAsDataURL(file);
+  markDirty();
+}
+
+function toggleCollapse() {
+  const s = document.getElementById('sidebar');
+  s.classList.toggle('collapsed');
+  const svg = s.querySelector('.collapse-btn svg');
+  svg.innerHTML = s.classList.contains('collapsed') ? '<polyline points="9 18 15 12 9 6"/>' : '<polyline points="15 18 9 12 15 6"/>';
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+function showSnack(msg) {
+  const s = document.getElementById('snackbar');
+  s.textContent = msg;
+  s.classList.add('show');
+  clearTimeout(s._t);
+  s._t = setTimeout(() => s.classList.remove('show'), 2800);
+}
+
+// Init bio count
+updateBioCount();
+
+// Warn on leave if unsaved
+window.addEventListener('beforeunload', e => {
+  if (isDirty) { e.preventDefault(); e.returnValue = ''; }
+});
+function toggleHelp(){
+  const panel=document.getElementById('helpPanel');
+  const overlay=document.getElementById('helpOverlay');
+  const btn=document.getElementById('helpBtn');
+  const isOpen=panel.classList.toggle('open');
+  overlay.classList.toggle('open',isOpen);
+  btn.style.background=isOpen?'var(--blue)':'var(--bs)';
+  btn.style.color=isOpen?'#fff':'var(--blue)';
+}
+function dismissHelp(){
+  try{localStorage.setItem('ga_profile_help_dismissed','1');}catch(e){}
+  toggleHelp();
+  document.getElementById('helpBtn').style.display='none';
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  try{if(!localStorage.getItem('ga_profile_help_dismissed'))setTimeout(()=>toggleHelp(),600);}catch(e){}
+});
+</script>
+</body>
+</html>
