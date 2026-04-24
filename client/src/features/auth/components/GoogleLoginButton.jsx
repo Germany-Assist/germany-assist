@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useAuth } from "../../contexts/AuthContext";
-import { GOOGLE_CLIENT_ID } from "../../config/api";
+import { useAuth } from "../../../contexts/AuthContext";
+import { GOOGLE_CLIENT_ID } from "../../../config/api";
 
-export default function GoogleLoginButton() {
+export default function GoogleLoginButton({ authStyle }) {
   const { googleLogin } = useAuth();
 
   // Called when Google returns the ID token
@@ -38,9 +38,5 @@ export default function GoogleLoginButton() {
     window.google.accounts.id.disableAutoSelect();
   }, []);
 
-  return (
-    <div className="w-full">
-      <div id="googleBtn" className="w-full flex justify-center" />
-    </div>
-  );
+  return <div id="googleBtn" className={authStyle} />;
 }
