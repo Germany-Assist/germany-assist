@@ -30,7 +30,7 @@ export default function GoogleLoginButton({ authStyle }) {
       {
         theme: "outline",
         size: "large",
-        width: "100%",
+        width: 200,
       },
     );
 

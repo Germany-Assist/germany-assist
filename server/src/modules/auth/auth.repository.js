@@ -4,9 +4,14 @@ import db from "../../database/index.js";
 const createToken = async (tokenData, t) => {
   return await db.Token.create(tokenData, { transaction: t });
 };
-const retrieveToken = async (hashedToken, t) => {
+const retrieveToken = async (hashedToken, userEmail, t) => {
   const token = await db.Token.findOne({
     where: { token: hashedToken },
+    include: {
+      model: db.User,
+      where: { email: userEmail },
+      required: true,
+    },
     transaction: t,
   });
   return token;

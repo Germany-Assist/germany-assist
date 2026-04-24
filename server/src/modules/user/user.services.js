@@ -15,25 +15,46 @@ import userRepository from "./user.repository.js";
 export const registerClient = async (body) => {
   const t = await sequelize.transaction();
   try {
-    const { firstName, lastName, email, dob, image } = body;
+    const {
+      firstName,
+      lastName,
+      email,
+      dob,
+      image,
+      phone,
+      country,
+      countryOfResidence,
+    } = body;
     const password = bcryptUtil.hashPassword(body.password);
-    const user = await userRepository.createUser(
-      {
-        firstName,
-        lastName,
-        email,
-        password,
-        dob,
-        image,
-        isVerified: false,
-        UserRole: {
-          role: "client",
-          relatedType: "client",
-          relatedId: null,
-        },
+    const userData = {
+      firstName,
+      lastName,
+      email,
+      password,
+      dob,
+      image,
+      isVerified: false,
+      UserRole: {
+        role: "client",
+        relatedType: "client",
+        relatedId: null,
       },
-      t,
-    );
+      UserProfile: {
+        country: country,
+        countryOfResidence: countryOfResidence,
+        phoneNumber: phone,
+      },
+    };
+    const userExists = await userRepository.getUserByEmail(email);
+    if (userExists) {
+      throw new AppError(
+        409,
+        "User already exists",
+        false,
+        "Email already in use",
+      );
+    }
+    const user = await userRepository.createUser(userData, t);
     await permissionServices.initPermissions(user.id, roleTemplates.client, t);
     const { accessToken, refreshToken } = jwtUtils.generateTokens(user);
     const sanitizedUser = await userMapper.sanitizeUser(user);

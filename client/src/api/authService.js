@@ -11,7 +11,7 @@ export const refreshTokenRequest = async () => {
   const res = await api.post(
     "/auth/refresh-token",
     {},
-    { skipAuthRefresh: true }
+    { skipAuthRefresh: true },
   );
   return res.data.accessToken;
 };
@@ -28,4 +28,13 @@ export const googleLoginRequest = async (credential) => {
 };
 export const logoutRequest = async () => {
   await api.get("/auth/logout");
+};
+
+export const verifyAccountConfirmResponse = async ({ token, email }) => {
+  const res = await api.post(`/auth/verifyAccount`, { token, email });
+  return res.data;
+};
+export const resendVerificationEmail = async (email) => {
+  const res = await api.post(`/auth/resendVerificationEmail`, { email });
+  return res.data;
 };

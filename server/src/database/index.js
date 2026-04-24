@@ -30,7 +30,7 @@ import AuditLog from "./models/auditLog.js";
 import Subcategory from "./models/subcategory.js";
 import ServiceProviderCategory from "./models/service_provider_category.js";
 import VerificationRequest from "./models/verificationRequest.js";
-
+import UserProfile from "./models/userProfile.js";
 export const defineConstrains = () => {
   if (sequelize.associationsDefined) return;
   sequelize.associationsDefined = true;
@@ -53,6 +53,9 @@ export const defineConstrains = () => {
 
   //token
   Token.belongsTo(User, { foreignKey: "userId" });
+
+  //userProfile
+  UserProfile.belongsTo(User, { foreignKey: "userId" });
 
   //comment
   Comment.belongsTo(Post, {
@@ -142,7 +145,7 @@ export const defineConstrains = () => {
   User.hasMany(Dispute, { foreignKey: "userId" });
   User.hasMany(Notification, { foreignKey: "userId" });
   User.hasMany(Comment, { foreignKey: "userId", as: "comments" });
-
+  User.hasOne(UserProfile, { foreignKey: "userId" });
   User.belongsToMany(Permission, {
     through: UserPermission,
     as: "userToPermission",
@@ -300,6 +303,7 @@ const db = {
   Permission,
   UserPermission,
   UserRole,
+  UserProfile,
   Employer,
   Timeline,
   Variant,

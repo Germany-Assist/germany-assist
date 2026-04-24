@@ -21,7 +21,12 @@ import emailQueue from "../../jobs/queues/email.queue.js";
 import db from "../../database/index.js";
 import { TOKENS_CONSTANTS } from "../../configs/constants.js";
 const client = new OAuth2Client(googleOAuthConfig.clientId);
-
+const generateNumericCode = (length = 5) => {
+  return Math.floor(
+    Math.pow(10, length - 1) +
+      Math.random() * (Math.pow(10, length) - Math.pow(10, length - 1)),
+  ).toString();
+};
 const generateToken = (x = 32) => crypto.randomBytes(x).toString("hex");
 const hashToken = (token) =>
   crypto.createHash("sha256").update(token).digest("hex");
@@ -80,10 +85,54 @@ export async function googleAuth(body) {
   }
 }
 
+export async function resendVerificationEmail(userEmail) {
+  try {
+    // return;
+    const token = generateNumericCode(5);
+    const tokenHash = hashToken(token);
+    const user = await userRepository.getUserByEmail(userEmail);
+    if (!user)
+      throw new AppError(404, "User not found", true, "User not found");
+    if (user.isVerified)
+      throw new AppError(
+        400,
+        "User is already verified",
+        true,
+        "User is already verified",
+      );
+    const userId = user.id;
+    await authRepository.invalidateTokens(
+      userId,
+      TOKENS_CONSTANTS.EMAIL_VERIFICATION,
+      t,
+    );
+    const databaseToken = {
+      token: tokenHash,
+      userId: userId,
+      oneTime: true,
+      isValid: true,
+      type: TOKENS_CONSTANTS.EMAIL_VERIFICATION,
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    };
+    await authRepository.createToken(databaseToken, t);
+    const link = `${APP_DOMAIN}/api/auth/verifyAccount?token=${encodeURIComponent(
+      token,
+    )}`;
+    const html = verificationEmailTemplate(link);
+    await emailQueue.add("sendEmail", {
+      to: userEmail,
+      subject: "Verification Email",
+      html,
+    });
+  } catch (error) {
+    errorLogger(error);
+    throw error;
+  }
+}
 export async function sendVerificationEmail(userEmail, userId, t) {
   try {
     // return;
-    const token = generateToken();
+    const token = generateNumericCode(5);
     const tokenHash = hashToken(token);
     await authRepository.invalidateTokens(
       userId,
@@ -114,11 +163,11 @@ export async function sendVerificationEmail(userEmail, userId, t) {
   }
 }
 
-export async function verifyAccountConfirm(token) {
+export async function verifyAccountConfirm(token, email) {
   const t = await sequelize.transaction();
   try {
     const hashedToken = hashToken(token);
-    const dbToken = await authRepository.retrieveToken(hashedToken, t);
+    const dbToken = await authRepository.retrieveToken(hashedToken, email, t);
     if (!dbToken)
       throw new AppError(
         404,
@@ -223,7 +272,7 @@ export async function passwordReset(email) {
     t,
   );
   try {
-    const token = generateToken(4);
+    const token = generateNumericCode(5);
     const tokenHash = hashToken(token);
     const databaseToken = {
       token: tokenHash,

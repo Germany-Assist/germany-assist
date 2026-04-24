@@ -5,6 +5,13 @@ import RoleSelection from "../components/RoleSelection";
 import BasicInfoForm from "../components/BasicInfoForm";
 import AdditionalInfoForm from "../components/AdditionalInfoForm";
 import EmailVerification from "../components/EmailVerification";
+import {
+  signUpRequest,
+  verifyAccountConfirmResponse,
+  resendVerificationEmail,
+} from "../../../api/authService";
+import { getErrorMessage } from "../../../api/errorMessages";
+import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -13,7 +20,8 @@ const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [skipAdditional, setSkipAdditional] = useState(false);
-
+  const [data, setData] = useState({});
+  const navigate = useNavigate();
   const handleStep1Complete = ({ role: r, subRole: sr }) => {
     setRole(r);
     setSubRole(sr);
@@ -22,23 +30,60 @@ const SignupPage = () => {
 
   const handleStep2Complete = (data) => {
     setEmail(data.email);
+    setData(data);
     setCurrentStep(3);
   };
-
-  const handleStep3Complete = () => {
-    setCurrentStep(4);
+  const handleRegisterClient = async (data) => {
+    try {
+      await signUpRequest(data);
+      return true;
+    } catch (error) {
+      setError(getErrorMessage(error));
+      return false;
+    }
+  };
+  const handleEmailVerification = async (code) => {
+    try {
+      await verifyAccountConfirmResponse({ token: code, email });
+      return true;
+    } catch (error) {
+      setError(getErrorMessage(error));
+      return false;
+    }
+  };
+  const handleResendVerificationEmail = async () => {
+    try {
+      await resendVerificationEmail({ email });
+      return true;
+    } catch (error) {
+      setError(getErrorMessage(error));
+      return false;
+    }
+  };
+  const handleStep3Complete = async (extraData) => {
+    const newData = { ...data, ...extraData };
+    setData(newData);
+    if (!role && !subRole) {
+      const res = await handleRegisterClient(newData);
+      if (res) {
+        setError(null);
+        setCurrentStep(4);
+      }
+    }
   };
 
   const handleStep3Skip = () => {
-    setSkipAdditional(true);
-    setCurrentStep(4);
+    // setSkipAdditional(true);
+    // setCurrentStep(4);
   };
 
-  const handleVerify = (code) => {
-    if (code === "12345") {
-      alert("Account created successfully!");
+  const handleVerify = async (code) => {
+    const res = await handleEmailVerification(code);
+    if (res) {
+      setError(null);
+      navigate("/");
     } else {
-      setError("Invalid verification code. Use 12345 for demo.");
+      setError("Invalid verification code. Please try again.");
     }
   };
 
@@ -50,64 +95,49 @@ const SignupPage = () => {
   return (
     <div className="min-h-screen bg-white text-[#111827] font-[Outfit,sans-serif]">
       <SignupHeader />
-      
+
       <div className="flex min-h-[calc(100vh-65px)]">
         <SignupSidebar currentStep={currentStep} />
-        
+
         <div className="flex-1 flex flex-col items-center px-5 py-9 overflow-y-auto">
           {currentStep === 1 && (
-            <RoleSelection 
-              role={role} 
-              subRole={subRole} 
-              onRoleChange={setRole} 
-              onSubRoleChange={setSubRole} 
-              onContinue={handleStep1Complete} 
+            <RoleSelection
+              role={role}
+              subRole={subRole}
+              onRoleChange={setRole}
+              onSubRoleChange={setSubRole}
+              onContinue={handleStep1Complete}
             />
           )}
-          
+
           {currentStep === 2 && (
-            <BasicInfoForm 
-              role={role} 
-              subRole={subRole} 
-              onBack={handleBack} 
+            <BasicInfoForm
+              role={role}
+              subRole={subRole}
+              onBack={handleBack}
               onContinue={handleStep2Complete}
               error={error}
               setError={setError}
             />
           )}
-          
+
           {currentStep === 3 && !skipAdditional && (
-            <AdditionalInfoForm 
-              role={role} 
-              subRole={subRole} 
-              onBack={handleBack} 
+            <AdditionalInfoForm
+              role={role}
+              subRole={subRole}
+              onBack={handleBack}
               onContinue={handleStep3Complete}
               onSkip={handleStep3Skip}
+              setError={setError}
+              error={error}
             />
           )}
-          
-          {currentStep === 3 && skipAdditional && (
-            <div className="w-full max-w-[560px]">
-              <button onClick={handleBack} className="flex items-center gap-1.5 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-4.5">← Back</button>
-              <div className="text-xl font-bold text-[#111827] mb-1">Almost there! 🎉</div>
-              <div className="text-sm text-[#6B7280] mb-4.5">Your basic account is ready. Would you like to add location and documents now?</div>
-              <div className="border border-[#E5E7EB] rounded-xl p-5.5 mb-4.5 text-center">
-                <div className="text-3xl mb-2.5">📋</div>
-                <div className="text-base font-semibold text-[#111827] mb-1.25">Add Profile Details</div>
-                <div className="text-sm text-[#6B7280] mb-4 leading-relaxed">Adding your location and documents helps verify your account faster. It only takes 2 minutes.</div>
-                <div className="flex flex-col gap-2">
-                  <button onClick={() => { setSkipAdditional(false); setCurrentStep(3); }} className="w-full py-2.75 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc]">Yes, add details →</button>
-                  <button onClick={handleStep3Skip} className="w-full py-2.75 rounded-xl border border-[#E5E7EB] text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7]">Skip for now — verify my email</button>
-                </div>
-              </div>
-            </div>
-          )}
-          
+
           {currentStep === 4 && (
-            <EmailVerification 
+            <EmailVerification
               email={email}
               onVerify={handleVerify}
-              onResend={() => alert("Code resent!")}
+              onResend={() => handleResendVerificationEmail()}
               onBack={handleBack}
               error={error}
               setError={setError}

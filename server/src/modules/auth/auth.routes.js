@@ -14,7 +14,12 @@ import { auth } from "google-auth-library";
 const authRouter = express.Router();
 
 authRouter.post("/google", authController.googleAuthController);
-authRouter.get("/verifyAccount", authController.verifyAccount);
+authRouter.post("/verifyAccount", authController.verifyAccountByDigits);
+authRouter.post(
+  "/resendVerificationEmail",
+  authController.resendVerificationEmail,
+);
+
 //user and pass
 authRouter.post(
   "/login",

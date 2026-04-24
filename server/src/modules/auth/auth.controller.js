@@ -18,12 +18,39 @@ async function googleAuthController(req, res, next) {
   }
 }
 
-export async function verifyAccount(req, res, next) {
+// export async function verifyAccount(req, res, next) {
+//   try {
+//     const token = req.query.token;
+//     const success = await authServices.verifyAccountConfirm(token);
+//     if (!success) return res.redirect(`${FRONTEND_URL}/verified?status=error`);
+//     res.redirect(`${FRONTEND_URL}/verified?status=success`);
+//   } catch (error) {
+//     next(error);
+//   }
+// }
+export async function verifyAccountByDigits(req, res, next) {
   try {
-    const token = req.query.token;
-    const success = await authServices.verifyAccountConfirm(token);
-    if (!success) return res.redirect(`${FRONTEND_URL}/verified?status=error`);
-    res.redirect(`${FRONTEND_URL}/verified?status=success`);
+    const token = req.body.token;
+    const email = req.body.email;
+    const success = await authServices.verifyAccountConfirm(token, email);
+    if (!success)
+      return res
+        .status(400)
+        .json({ success: false, message: "Account already verified" });
+    res.status(200).json({ success: true, message: "Account verified" });
+  } catch (error) {
+    next(error);
+  }
+}
+export async function resendVerificationEmail(req, res, next) {
+  try {
+    const email = req.body.email;
+    const success = await authServices.resendVerificationEmail(email);
+    if (!success)
+      return res
+        .status(400)
+        .json({ success: false, message: "Ops, something went wrong" });
+    res.status(200).json({ success: true, message: "Email sent" });
   } catch (error) {
     next(error);
   }
@@ -114,7 +141,8 @@ export async function passwordResetConfirm(req, res, next) {
 const authController = {
   googleAuthController,
   getUserProfile,
-  verifyAccount,
+  verifyAccountByDigits,
+  resendVerificationEmail,
   login,
   loginToken,
   verifyUserManual,

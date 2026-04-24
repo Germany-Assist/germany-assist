@@ -8,6 +8,7 @@ export const createUser = async (userData, t) => {
     include: [
       { model: db.UserRole },
       { model: db.Asset, as: "profilePicture" },
+      { model: db.UserProfile },
     ],
   });
   return user;
@@ -57,11 +58,11 @@ const getUserByEmail = async (email, t) => {
     include: [
       { model: db.UserRole },
       { model: db.Asset, as: "profilePicture", required: false },
+      { model: db.UserProfile },
     ],
     transaction: t,
   });
 };
-
 export const updateUser = async (id, updates) => {
   const user = await db.User.findByPk(id);
   if (!user)
