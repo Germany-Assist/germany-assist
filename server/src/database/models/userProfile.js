@@ -14,7 +14,7 @@ UserProfile.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    country: {
+    nationality: {
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -29,6 +29,10 @@ UserProfile.init(
     dob: {
       type: DataTypes.DATE,
       allowNull: true,
+    },
+    displayName: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
   },
   {

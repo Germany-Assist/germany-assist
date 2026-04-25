@@ -41,7 +41,7 @@ const SignupPage = () => {
       }
       if (result) {
         setError(null);
-        setCurrentStep(3);
+        // setCurrentStep(3);
       }
     } catch (err) {
       setError(getErrorMessage(err));

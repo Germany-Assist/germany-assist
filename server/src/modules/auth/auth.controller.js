@@ -106,7 +106,7 @@ export async function refreshUserToken(req, res, next) {
       throw new AppError(401, "missing cookie", true, "missing cookie");
     }
     const accessToken = await authServices.refreshUserToken(refreshToken);
-    res.send({ accessToken });
+    res.send(refreshToken);
   } catch (error) {
     next(error);
   }

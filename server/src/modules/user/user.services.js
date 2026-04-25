@@ -5,6 +5,7 @@ import AssetService from "../../services/assts.services.js";
 import authUtil from "../../utils/authorize.util.js";
 import bcryptUtil from "../../utils/bcrypt.util.js";
 import { AppError } from "../../utils/error.class.js";
+import hashIdUtil from "../../utils/hashId.util.js";
 import { errorLogger } from "../../utils/loggers.js";
 import AssetRepository from "../assets/assets.repository.js";
 import authServices from "../auth/auth.service.js";
@@ -13,7 +14,8 @@ import userDomain from "./user.domain.js";
 import userMapper from "./user.mapper.js";
 import userRepository from "./user.repository.js";
 
-export const registerClient = async (body) => {
+const getFile = (files, field) => files?.[field]?.[0] || null;
+export const registerClient = async (body, files) => {
   const t = await sequelize.transaction();
   try {
     const {
@@ -23,8 +25,9 @@ export const registerClient = async (body) => {
       dob,
       image,
       phone,
-      country,
+      nationality,
       countryOfResidence,
+      displayName,
     } = body;
     const password = bcryptUtil.hashPassword(body.password);
     const userData = {
@@ -33,7 +36,6 @@ export const registerClient = async (body) => {
       email,
       password,
       dob,
-      image,
       isVerified: false,
       UserRole: {
         role: "client",
@@ -41,11 +43,14 @@ export const registerClient = async (body) => {
         relatedId: null,
       },
       UserProfile: {
-        country: country,
+        nationality: nationality,
         countryOfResidence: countryOfResidence,
         phoneNumber: phone,
+        displayName: displayName,
       },
     };
+    const profileImage = getFile(files, "profileImage");
+    const idDocument = getFile(files, "idDocument");
     const userExists = await userRepository.getUserByEmail(email);
     if (userExists) {
       throw new AppError(
@@ -59,6 +64,30 @@ export const registerClient = async (body) => {
     await permissionServices.initPermissions(user.id, roleTemplates.client, t);
     const { accessToken, refreshToken } = jwtUtils.generateTokens(user);
     const sanitizedUser = await userMapper.sanitizeUser(user);
+    if (profileImage) {
+      await AssetService.upload({
+        type: "userImage",
+        files: [profileImage],
+        auth: user,
+        params: { id: hashIdUtil.hashIdEncode(user.id) },
+        transaction: t,
+      });
+    }
+
+    // if (idDocument) {
+    //   await AssetService.upload({
+    //     type:
+    //       idDocument.mimetype === "application/pdf"
+    //         ? "verificationDocument"
+    //         : "verificationImage",
+    //     files: [idDocument],
+    //     auth: user,
+    //     params: { id: hashIdUtil.hashIdEncode(user.id) },
+    //     transaction: t,
+    //   });
+
+    // }
+
     await t.commit();
     await authServices.sendVerificationEmail(email, user.id);
     return {

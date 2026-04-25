@@ -20,7 +20,6 @@ import ProviderTimeline from "./pages/ProviderTimelinePage.jsx";
 function App() {
   const { profile } = useProfile();
   const role = profile?.role;
-
   return (
     <ErrorBoundary>
       <Routes>
