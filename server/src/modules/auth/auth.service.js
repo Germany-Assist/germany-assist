@@ -32,9 +32,7 @@ const hashToken = (token) =>
   crypto.createHash("sha256").update(token).digest("hex");
 
 export async function googleAuth(body) {
-  const t = await sequelize.transaction();
   const { credential } = body;
-  let status = 200;
   try {
     const ticket = await client.verifyIdToken({
       idToken: credential,
@@ -43,44 +41,25 @@ export async function googleAuth(body) {
     const payload = ticket.getPayload();
     const email = payload.email;
     let user = await userRepository.getUserByEmail(email);
-    if (!user) {
-      status = 201;
-      user = await userRepository.createUser(
-        {
-          email: payload.email,
-          firstName: payload.given_name || null,
-          lastName: payload.family_name || null,
-          profilePicture: {
-            name: uuid(),
-            mediaType: "image",
-            isLocal: false,
-            url: payload.picture,
-            size: 0,
-            confirmed: true,
-            thumb: false,
-          },
-          isVerified: true,
-          googleId: payload.sub,
-          UserRole: {
-            role: "client",
-            relatedType: "client",
-            relatedId: null,
-          },
-        },
-        t,
-      );
-      await permissionServices.initPermissions(
-        user.id,
-        roleTemplates.client,
-        t,
-      );
+    if (user) {
+      return {
+        success: false,
+        message: "User already exists",
+      };
     }
-    const { accessToken, refreshToken } = jwtUtils.generateTokens(user);
-    const sanitizedUser = await userMapper.sanitizeUser(user);
-    await t.commit();
-    return { accessToken, user: sanitizedUser, refreshToken, status };
+    if (!user) {
+      return {
+        success: true,
+        message: "registration",
+        email: payload.email,
+        firstName: payload.given_name || null,
+        lastName: payload.family_name || null,
+        profilePicture: {
+          url: payload.picture,
+        },
+      };
+    }
   } catch (error) {
-    await t.rollback();
     throw error;
   }
 }

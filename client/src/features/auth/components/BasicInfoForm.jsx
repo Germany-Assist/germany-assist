@@ -22,15 +22,31 @@ const BasicInfoForm = ({
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
-
+  const [companyName, setCompanyName] = useState("");
+  const handleGoogleResponse = (response) => {
+    if (response.firstName) {
+      handleFirstNameChange(response.firstName);
+    }
+    if (response.lastName) {
+      handleLastNameChange(response.lastName);
+    }
+    if (response.email) {
+      setEmail(response.email);
+    }
+    if (response.phone) {
+      setPhone(response.phone);
+    }
+    if (response.country) {
+      setCountry(response.country);
+    }
+  };
   const validateName = (name) => {
     // Pattern: Letters, spaces, hyphens, and apostrophes only
     const regex = /^[a-zA-Z\s'-]*$/;
     return regex.test(name);
   };
 
-  const handleFirstNameChange = (e) => {
-    const value = e.target.value;
+  const handleFirstNameChange = (value) => {
     if (validateName(value)) {
       setFirstName(value);
       setError(""); // Clear error if they fix the typo
@@ -41,8 +57,7 @@ const BasicInfoForm = ({
       );
     }
   };
-  const handleLastNameChange = (e) => {
-    const value = e.target.value;
+  const handleLastNameChange = (value) => {
     if (validateName(value)) {
       setLastName(value);
       setError(""); // Clear error if they fix the typo
@@ -102,6 +117,10 @@ const BasicInfoForm = ({
       setError("You must agree to the Terms of Service.");
       return;
     }
+    if (role === "provider" && subRole === "office" && !companyName) {
+      setError("Please enter your company name.");
+      return;
+    }
     setError("");
     onContinue({
       firstName,
@@ -143,14 +162,16 @@ const BasicInfoForm = ({
       )}
 
       <div className="flex w-full justify-left pt-3 pb-3">
-        <GoogleLoginButton authStyle={"flex items-center justify-left"} />
+        <GoogleLoginButton
+          authStyle={"flex items-center justify-left"}
+          handleGoogleResponse={handleGoogleResponse}
+        />
       </div>
 
       <div className="mb-5">
         <div className="text-xs font-semibold text-[#6B7280] uppercase tracking-wider pb-2 border-b border-[#E5E7EB] mb-3 flex items-center gap-1.5">
           Basic Information <span className="text-red-600">* Required</span>
         </div>
-
         {/* 1. NAME GRID */}
         <div className="grid grid-cols-2 gap-4 mb-2.5">
           <div>
@@ -160,7 +181,7 @@ const BasicInfoForm = ({
             <input
               type="text"
               value={firstName}
-              onChange={(e) => handleFirstNameChange(e)}
+              onChange={(e) => handleFirstNameChange(e.target.value)}
               placeholder="Ahmed"
               className={inputBaseStyle}
             />
@@ -172,13 +193,12 @@ const BasicInfoForm = ({
             <input
               type="text"
               value={lastName}
-              onChange={(e) => handleLastNameChange(e)}
+              onChange={(e) => handleLastNameChange(e.target.value)}
               placeholder="Mohamed"
               className={inputBaseStyle}
             />
           </div>
         </div>
-
         {/* 2. COUNTRY */}
         <div className="mb-2.5">
           <label className="block text-sm font-medium text-[#111827] mb-1">
@@ -206,7 +226,6 @@ const BasicInfoForm = ({
             ))}
           </select>
         </div>
-
         {/* 3. DISPLAY NAME */}
         <div className="mb-2.5">
           <label className="block text-sm font-medium text-[#111827] mb-1">
@@ -223,7 +242,23 @@ const BasicInfoForm = ({
             This name will be shown publicly on your profile.
           </p>
         </div>
-
+        {role === "provider" && subRole === "office" && (
+          <div className="mb-2.5">
+            <label className="block text-sm font-medium text-[#111827] mb-1">
+              Office Name <span className="text-red-600">*</span>
+            </label>
+            <input
+              type="text"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              placeholder="Office Name this needs to match any legal document you provide"
+              className={inputBaseStyle}
+            />
+            <p className="text-[11px] text-[#6B7280] mt-1 ml-1">
+              This name will be shown publicly on your profile.
+            </p>
+          </div>
+        )}
         {/* 4. EMAIL & PHONE */}
         <div className="mb-2.5">
           <label className="block text-sm font-medium text-[#111827] mb-1">
@@ -235,9 +270,9 @@ const BasicInfoForm = ({
             onChange={(e) => setEmail(e.target.value)}
             placeholder="your@email.com"
             className={inputBaseStyle}
+            required
           />
         </div>
-
         <div className="mb-2.5">
           <label className="block text-sm font-medium text-[#111827] mb-1">
             Phone Number <span className="text-red-600">*</span>
@@ -250,7 +285,6 @@ const BasicInfoForm = ({
             className={inputBaseStyle}
           />
         </div>
-
         {/* 5. PASSWORD */}
         <div className="mb-2.5">
           <label className="block text-sm font-medium text-[#111827] mb-1">
@@ -283,7 +317,6 @@ const BasicInfoForm = ({
             </div>
           )}
         </div>
-
         {/* 6. CONFIRM PASSWORD */}
         <div className="mb-2.5">
           <label className="block text-sm font-medium text-[#111827] mb-1">

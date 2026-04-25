@@ -18,7 +18,6 @@ const AdditionalInfoForm = ({
     proofRes: null,
     bizReg: null,
   });
-
   // Generic update function
   const updateField = (key, value) => {
     setFormData((prev) => ({

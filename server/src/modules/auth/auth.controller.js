@@ -7,17 +7,24 @@ import { sequelize } from "../../configs/database.js";
 
 async function googleAuthController(req, res, next) {
   try {
-    const result = await authServices.googleAuth(req.body);
-    const { refreshToken, accessToken, user, status } = result;
-    res
-      .cookie("refreshToken", refreshToken, authDomain.cookieOptions)
-      .status(status)
-      .json({ accessToken, user });
+    const user = await authServices.googleAuth(req.body);
+    res.status(200).json(user);
   } catch (error) {
     next(error);
   }
 }
-
+// async function googleAuthController(req, res, next) {
+//   try {
+//     const result = await authServices.googleAuth(req.body);
+//     const { refreshToken, accessToken, user, status } = result;
+//     res
+//       .cookie("refreshToken", refreshToken, authDomain.cookieOptions)
+//       .status(status)
+//       .json({ accessToken, user });
+//   } catch (error) {
+//     next(error);
+//   }
+// }
 // export async function verifyAccount(req, res, next) {
 //   try {
 //     const token = req.query.token;

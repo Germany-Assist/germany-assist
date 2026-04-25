@@ -22,9 +22,7 @@ const SignupPage = () => {
   const [skipAdditional, setSkipAdditional] = useState(false);
   const [data, setData] = useState({});
   const navigate = useNavigate();
-  const handleStep1Complete = ({ role: r, subRole: sr }) => {
-    setRole(r);
-    setSubRole(sr);
+  const handleStep1Complete = () => {
     setCurrentStep(2);
   };
 
@@ -120,7 +118,6 @@ const SignupPage = () => {
               setError={setError}
             />
           )}
-
           {currentStep === 3 && !skipAdditional && (
             <AdditionalInfoForm
               role={role}
