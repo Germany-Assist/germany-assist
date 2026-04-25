@@ -15,12 +15,13 @@ export const refreshTokenRequest = async () => {
   );
   return res.data.accessToken;
 };
-export const signUpRequest = async (data) => {
+
+export const signUpClient = async (data) => {
   const res = await api.post("/user/", data);
   return res.data;
 };
 
-export const signUpProvider = async (data) => {
+export const signUpFreelancer = async (data) => {
   const res = await api.post("/provider/signup", data);
   return res.data;
 };

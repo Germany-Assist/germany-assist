@@ -5,8 +5,8 @@ import RoleSelection from "../components/RoleSelection";
 import BasicInfoForm from "../components/BasicInfoForm";
 import EmailVerification from "../components/EmailVerification";
 import {
-  signUpRequest,
-  signUpProvider,
+  signUpClient,
+  signUpFreelancer,
   signUpCompany,
   verifyAccountConfirmResponse,
   resendVerificationEmail,
@@ -20,25 +20,24 @@ const SignupPage = () => {
   const [subRole, setSubRole] = useState(null);
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-  const [data, setData] = useState({});
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigate = useNavigate();
 
   const handleStep1Complete = () => setCurrentStep(2);
 
-  const handleStep2Complete = async (extraData) => {
-    const newData = { ...data, ...extraData };
-    setData(newData);
+  const handleStep2Complete = async (data) => {
+    data.append("role", role);
+    data.append("subRole", subRole);
     try {
       let result;
       if (role === "provider") {
         result =
           subRole === "company"
-            ? await signUpCompany(newData)
-            : await signUpProvider(newData);
+            ? await signUpCompany(data)
+            : await signUpFreelancer(data);
       } else {
-        result = await signUpRequest(newData);
+        result = await signUpClient(data);
       }
       if (result) {
         setError(null);
@@ -60,7 +59,16 @@ const SignupPage = () => {
       setError("Invalid verification code. Please try again.");
     }
   };
-
+  const handleResendVerificationEmail = async () => {
+    try {
+      const res = await resendVerificationEmail(email);
+      if (res) {
+        setError(null);
+      }
+    } catch (err) {
+      setError("Failed to resend verification email. Please try again.");
+    }
+  };
   const handleBack = () => {
     setError("");
     if (currentStep > 1) setCurrentStep(currentStep - 1);
@@ -143,3 +151,4 @@ const SignupPage = () => {
     </div>
   );
 };
+export default SignupPage;

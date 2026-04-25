@@ -1,6 +1,12 @@
 import React from "react";
 
-const ProfileImageUpload = ({ file, onUpload }) => {
+const ProfileImageUpload = ({ file, onUpload, onRemove }) => {
+  const handleRemove = () => {
+    if (onRemove) {
+      onRemove();
+    }
+  };
+
   return (
     <div>
       <label className="block text-sm font-medium text-[#111827] mb-1">
@@ -24,9 +30,18 @@ const ProfileImageUpload = ({ file, onUpload }) => {
               alt="Preview"
               className="w-20 h-20 rounded-xl object-cover mb-2"
             />
-            <span className="text-xs text-emerald-600 font-medium">
-              ✓ {file.name}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-emerald-600 font-medium">
+                ✓ {file.name}
+              </span>
+              <button
+                type="button"
+                onClick={handleRemove}
+                className="text-xs text-red-500 hover:text-red-700"
+              >
+                ✕
+              </button>
+            </div>
           </div>
         ) : (
           <div>

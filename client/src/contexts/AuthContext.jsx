@@ -12,7 +12,7 @@ import {
   loginRequest,
   refreshTokenRequest,
   logoutRequest,
-  signUpRequest,
+  signUpClient,
   googleLoginRequest,
 } from "../api/authService";
 import { useNavigate } from "react-router-dom";
@@ -105,7 +105,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signUp = async (data) => {
-    const { user, accessToken } = await signUpRequest(data);
+    const { user, accessToken } = await signUpClient(data);
     setUser(user);
     setAccessToken(accessToken);
     scheduleRefresh(accessToken);

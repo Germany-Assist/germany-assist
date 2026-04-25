@@ -16,14 +16,14 @@ const initialFormData = {
   phone: "",
   password: "",
   confirmPassword: "",
-  country: "",
+  nationality: "",
   countryOfResidence: "",
-  orgName: "",
+  companyName: "",
   profileImage: null,
   bio: "",
-  idDoc: null,
-  proofRes: null,
-  bizReg: null,
+  idDocument: null,
+  proofOfResidence: null,
+  businessRegistration: null,
 };
 
 const initialErrors = {
@@ -34,9 +34,10 @@ const initialErrors = {
   phone: "",
   password: "",
   confirmPassword: "",
-  country: "",
+  nationality: "",
   countryOfResidence: "",
-  orgName: "",
+  companyName: "",
+  bio: "",
   general: "",
 };
 
@@ -53,6 +54,20 @@ const validateEmail = (email) => {
 const validatePhone = (phone) => {
   const regex = /^\+?[\d\s-]{10,}$/;
   return regex.test(phone.replace(/\s/g, ""));
+};
+
+const createFormData = (data) => {
+  const formData = new FormData();
+  Object.keys(data).forEach((key) => {
+    const value = data[key];
+    if (value instanceof File) {
+      formData.append(key, value);
+    } else if (value !== null && value !== undefined && value !== "") {
+      formData.append(key, value);
+    }
+  });
+  console.log(formData.values());
+  return formData;
 };
 
 const BasicInfoForm = ({
@@ -89,7 +104,7 @@ const BasicInfoForm = ({
     if (response.lastName) updateField("lastName", response.lastName);
     if (response.email) updateField("email", response.email);
     if (response.phone) updateField("phone", response.phone);
-    if (response.country) updateField("country", response.country);
+    if (response.nationality) updateField("nationality", response.nationality);
   };
 
   useEffect(() => {
@@ -113,7 +128,8 @@ const BasicInfoForm = ({
       newErrors.firstName = "First name is required";
       isValid = false;
     } else if (!validateName(formData.firstName)) {
-      newErrors.firstName = "Only letters, spaces, hyphens, and apostrophes allowed";
+      newErrors.firstName =
+        "Only letters, spaces, hyphens, and apostrophes allowed";
       isValid = false;
     }
 
@@ -121,7 +137,8 @@ const BasicInfoForm = ({
       newErrors.lastName = "Last name is required";
       isValid = false;
     } else if (!validateName(formData.lastName)) {
-      newErrors.lastName = "Only letters, spaces, hyphens, and apostrophes allowed";
+      newErrors.lastName =
+        "Only letters, spaces, hyphens, and apostrophes allowed";
       isValid = false;
     }
 
@@ -146,8 +163,8 @@ const BasicInfoForm = ({
       isValid = false;
     }
 
-    if (!formData.country) {
-      newErrors.country = "Please select your country";
+    if (!formData.nationality) {
+      newErrors.nationality = "Please select your nationality";
       isValid = false;
     }
 
@@ -156,8 +173,12 @@ const BasicInfoForm = ({
       isValid = false;
     }
 
-    if (role === "provider" && subRole === "company" && !formData.orgName.trim()) {
-      newErrors.orgName = "Company name is required";
+    if (
+      role === "provider" &&
+      subRole === "company" &&
+      !formData.companyName.trim()
+    ) {
+      newErrors.companyName = "Company name is required";
       isValid = false;
     }
 
@@ -190,26 +211,26 @@ const BasicInfoForm = ({
     if (!validateForm()) {
       return;
     }
-
     setError("");
-    onContinue({
+    const data = {
       firstName: formData.firstName,
       lastName: formData.lastName,
       displayName: formData.displayName,
-      country: formData.country,
+      nationality: formData.country,
       email: formData.email,
       phone: formData.phone,
       password: formData.password,
       countryOfResidence: formData.countryOfResidence,
-      orgName: formData.orgName,
+      companyName: formData.companyName,
       profileImage: formData.profileImage,
       bio: formData.bio,
-      idDoc: formData.idDoc,
-      proofRes: formData.proofRes,
-      bizReg: formData.bizReg,
-    });
+      idDocument: formData.idDocument,
+      proofOfResidence: formData.proofOfResidence,
+      businessRegistration: formData.businessRegistration,
+    };
+    const formDataPayload = createFormData(data);
+    onContinue(formDataPayload);
   };
-
   return (
     <div className="w-full max-w-[560px] text-left px-4 sm:px-0">
       <button
@@ -298,12 +319,12 @@ const BasicInfoForm = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormSelect
               label="Nationality"
-              value={formData.country}
-              onChange={(value) => updateField("country", value)}
+              value={formData.nationality}
+              onChange={(value) => updateField("nationality", value)}
               options={countries}
-              placeholder="Select your country"
+              placeholder="Select your nationality"
               required
-              error={errors.country}
+              error={errors.nationality}
               inputBaseStyle={inputBaseStyle}
               isLoading={isLoadingCountries}
             />
@@ -321,10 +342,14 @@ const BasicInfoForm = ({
             />
           </div>
         </div>
-
+        {role === "provider" ? (
+          <SectionHeader icon="🏢" title="Company Name" />
+        ) : (
+          <SectionHeader icon="🏢" title="Display Name" />
+        )}
         <div className="mb-2.5">
           <FormInput
-            label="Display Name"
+            label={role === "provider" ? `Company Name` : `Display Name`}
             value={formData.displayName}
             onChange={(value) => updateField("displayName", value)}
             placeholder="How you'll appear"
@@ -337,19 +362,31 @@ const BasicInfoForm = ({
           </p>
         </div>
 
-        {role === "provider" && subRole === "company" && (
-          <div className="mb-6">
-            <SectionHeader icon="🏢" title="Organization" />
-
-            <FormInput
-              label="Organization / Company Name"
-              value={formData.orgName}
-              onChange={(value) => updateField("orgName", value)}
-              placeholder="Official registered name"
-              required
-              error={errors.orgName}
-              inputBaseStyle={inputBaseStyle}
-            />
+        {role === "provider" && (
+          <div className="mb-2.5">
+            <SectionHeader icon="📝" title="About You" />
+            <div>
+              <label className="block text-sm font-medium text-[#111827] mb-1">
+                Bio{" "}
+                <span className="text-[#6B7280] font-normal text-xs">
+                  — Optional
+                </span>
+              </label>
+              <textarea
+                value={formData.bio}
+                onChange={(e) => updateField("bio", e.target.value)}
+                placeholder="Tell clients about yourself, your expertise, and what services you offer..."
+                rows={4}
+                className={`${inputBaseStyle} resize-none ${
+                  errors.bio
+                    ? "border-red-500 focus:border-red-500"
+                    : "border-[#E5E7EB] focus:border-[#024CEE]"
+                }`}
+              />
+              <p className="text-[11px] text-[#6B7280] mt-1 ml-1">
+                {formData.bio.length}/500 characters
+              </p>
+            </div>
           </div>
         )}
 
@@ -378,7 +415,9 @@ const BasicInfoForm = ({
               required
               error={errors.confirmPassword}
               showPassword={showConfirmPassword}
-              onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)}
+              onTogglePassword={() =>
+                setShowConfirmPassword(!showConfirmPassword)
+              }
               inputBaseStyle={inputBaseStyle}
             />
             {formData.confirmPassword && (
@@ -410,12 +449,14 @@ const BasicInfoForm = ({
 
           <FileUpload
             icon="🪪"
-            title="Passport or National ID"
-            subtitle="Required for all providers to publish services on the platform."
+            title="Passport or National ID "
+            subtitle="Required for all members to fully use the platform."
             badge
             badgeText="Optional"
-            file={formData.idDoc}
-            onUpload={(file) => updateField("idDoc", file)}
+            file={formData.idDocument}
+            fieldName="idDocumentument"
+            onUpload={(file) => updateField("idDocument", file)}
+            onRemove={() => updateField("idDocument", null)}
             accept=".pdf,.jpg,.jpeg,.png"
           />
 
@@ -427,8 +468,10 @@ const BasicInfoForm = ({
                 subtitle="Document proving your business address."
                 badge
                 badgeText="Optional"
-                file={formData.proofRes}
-                onUpload={(file) => updateField("proofRes", file)}
+                file={formData.proofOfResidence}
+                fieldName="proofOfResidence"
+                onUpload={(file) => updateField("proofOfResidence", file)}
+                onRemove={() => updateField("proofOfResidence", null)}
                 accept=".pdf,.jpg,.jpeg,.png"
               />
 
@@ -438,8 +481,10 @@ const BasicInfoForm = ({
                 subtitle="Upload your official company registration document (PDF)."
                 badge
                 badgeText="Optional"
-                file={formData.bizReg}
-                onUpload={(file) => updateField("bizReg", file)}
+                file={formData.businessRegistration}
+                fieldName="businessRegistration"
+                onUpload={(file) => updateField("businessRegistration", file)}
+                onRemove={() => updateField("businessRegistration", null)}
                 accept=".pdf"
               />
             </>
