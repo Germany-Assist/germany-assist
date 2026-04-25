@@ -104,20 +104,21 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
 .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
 
 /* SERVICE CARD */
-.svc-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all 0.18s;cursor:pointer;position:relative;}
-.svc-card:hover{box-shadow:0 6px 24px rgba(2,76,238,0.10);transform:translateY(-2px);}
-.svc-card.inactive{opacity:0.75;}
-.svc-card-body{padding:16px 16px 12px;}
-.svc-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;}
-.svc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.svc-card{background:#fff;border:2px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.22s cubic-bezier(0.4,0,0.2,1);cursor:pointer;position:relative;display:flex;flex-direction:column;}
+.svc-card:hover{box-shadow:0 12px 36px rgba(2,76,238,0.13);transform:translateY(-3px);}
+.svc-card:hover .svc-photo{transform:scale(1.04);}
+.svc-card.inactive{opacity:0.72;}
+.svc-card-body{padding:14px 15px 13px;background:#fff;flex:1;display:flex;flex-direction:column;}
+.svc-top{display:flex;align-items:center;gap:10px;margin-bottom:11px;}
+.svc-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1.5px solid rgba(0,0,0,0.06);}
 .svc-head{flex:1;min-width:0;}
-.svc-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.svc-type{font-size:10.5px;color:var(--muted);font-weight:500;}
+.svc-name{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.2px;}
+.svc-type{font-size:10px;color:var(--muted);font-weight:500;}
 .svc-status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
-.svc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px;}
-.svc-stat{background:var(--light);border-radius:8px;padding:8px 10px;}
-.svc-stat-v{font-size:15px;font-weight:700;color:var(--text);line-height:1;}
-.svc-stat-l{font-size:9.5px;color:var(--muted);margin-top:2px;}
+.svc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:11px;}
+.svc-stat{background:var(--light);border:1px solid var(--border);border-radius:9px;padding:8px 9px;text-align:center;}
+.svc-stat-v{font-size:14px;font-weight:700;color:var(--text);line-height:1;}
+.svc-stat-l{font-size:9px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.04em;font-weight:500;}
 .svc-price-row{display:flex;align-items:center;gap:6px;margin-bottom:10px;}
 .svc-price{font-size:18px;font-weight:700;color:var(--blue);}
 .svc-price-per{font-size:11px;color:var(--muted);}
@@ -125,17 +126,17 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
 .star{font-size:12px;color:#F59E0B;}
 .star-val{font-size:11.5px;font-weight:600;color:var(--text);}
 .star-cnt{font-size:11px;color:var(--muted);}
-.svc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
-.svc-tag{font-size:10.5px;font-weight:500;padding:2px 8px;border-radius:5px;background:var(--light);color:var(--muted);}
-.svc-footer{display:flex;align-items:center;gap:6px;border-top:1px solid var(--border);padding-top:10px;}
-.svc-action-btn{flex:1;padding:6px;border-radius:8px;font-size:11.5px;font-weight:500;font-family:'Outfit',sans-serif;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--muted);transition:all 0.13s;text-align:center;}
+.svc-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;}
+.svc-tag{font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px;background:var(--light);color:var(--muted);border:1px solid var(--border);}
+.svc-footer{display:flex;align-items:center;gap:6px;border-top:1px solid var(--border);padding-top:11px;margin-top:auto;}
+.svc-action-btn{flex:1;padding:7px 6px;border-radius:9px;font-size:11.5px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--muted);transition:all 0.15s;text-align:center;}
 .svc-action-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--bs);}
-.svc-action-btn.primary{background:var(--blue);color:#fff;border-color:var(--blue);}
-.svc-action-btn.primary:hover{opacity:0.88;}
-.svc-action-btn.danger{color:#DC2626;border-color:rgba(220,38,38,0.2);}
-.svc-action-btn.danger:hover{background:rgba(220,38,38,0.05);}
-.svc-menu-btn{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all 0.13s;flex-shrink:0;}
-.svc-menu-btn:hover{border-color:var(--blue);color:var(--blue);}
+.svc-action-btn.primary{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 2px 8px rgba(2,76,238,0.25);}
+.svc-action-btn.primary:hover{opacity:0.88;box-shadow:0 4px 14px rgba(2,76,238,0.32);}
+.svc-action-btn.danger{color:#DC2626;border-color:rgba(220,38,38,0.25);background:#fff;}
+.svc-action-btn.danger:hover{background:rgba(220,38,38,0.05);border-color:#DC2626;}
+.svc-menu-btn{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all 0.13s;flex-shrink:0;}
+.svc-menu-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--bs);}
 
 /* BADGE */
 .badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px;}
@@ -174,10 +175,11 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
 .form-divider{height:1px;background:var(--border);margin:18px 0;}
 
 /* SERVICE PHOTO */
-.svc-photo{width:100%;height:130px;object-fit:cover;display:block;}
+.svc-photo{width:100%;height:148px;object-fit:cover;display:block;transition:transform 0.35s ease;}
 .svc-photo-wrap{position:relative;overflow:hidden;}
-.svc-photo-wrap .svc-type-badge{position:absolute;top:9px;left:9px;font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:0.04em;text-transform:uppercase;backdrop-filter:blur(6px);}
-.svc-photo-wrap .svc-status-badge{position:absolute;top:9px;right:9px;font-size:9.5px;font-weight:600;padding:3px 8px;border-radius:20px;display:flex;align-items:center;gap:4px;backdrop-filter:blur(6px);}
+.svc-photo-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom, transparent 45%, rgba(10,15,30,0.45) 100%);pointer-events:none;}
+.svc-photo-wrap .svc-type-badge{position:absolute;top:10px;left:10px;font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:0.04em;text-transform:uppercase;backdrop-filter:blur(8px);z-index:1;}
+.svc-photo-wrap .svc-status-badge{position:absolute;top:10px;right:10px;font-size:9.5px;font-weight:600;padding:3px 9px;border-radius:20px;display:flex;align-items:center;gap:4px;backdrop-filter:blur(8px);z-index:1;}
 /* type colors — Course:red, Service:blue, Workshop:orange */
 .type-course{background:rgba(220,38,38,0.82);color:#fff;}
 .type-service{background:rgba(2,76,238,0.82);color:#fff;}
@@ -407,6 +409,19 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
         </div>
       </div>
     </div>
+    <div class="svc-fd-sec">
+      <div class="svc-fd-sec-lbl">Approved Date</div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+          <div style="font-size:11px;color:var(--muted);font-weight:500;">From</div>
+          <input id="fdDateFrom" type="date" style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;background:#fff;">
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+          <div style="font-size:11px;color:var(--muted);font-weight:500;">To</div>
+          <input id="fdDateTo" type="date" style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;background:#fff;">
+        </div>
+      </div>
+    </div>
   </div>
   <div class="svc-fd-foot">
     <button class="svc-fd-reset" onclick="resetSvcFilter()">Reset</button>
@@ -527,123 +542,76 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
     <!-- KPI -->
     <div class="kpi-strip">
       <div class="kc primary">
-        <div class="kl">Total Revenue</div>
-        <div class="kv">€4,180</div>
-        <div class="ks"><span style="background:rgba(255,255,255,0.18);color:#fff;font-size:10px;font-weight:600;padding:2px 6px;border-radius:5px;">▲ +18%</span> this month</div>
+        <div class="kl">Total Services</div>
+        <div class="kv">5</div>
+        <div class="ks"><span style="background:rgba(255,255,255,0.18);color:#fff;font-size:10px;font-weight:600;padding:2px 6px;border-radius:5px;">All listings</span></div>
       </div>
-      <div class="kc">
-        <div class="kl">Active Services</div>
-        <div class="kv">4</div>
-        <div class="ks"><span class="chip cup">All live</span></div>
-      </div>
-      <div class="kc">
-        <div class="kl">Total Orders</div>
-        <div class="kv">65</div>
-        <div class="ks"><span class="chip cup">▲ +8</span> this month</div>
-      </div>
-      <div class="kc">
-        <div class="kl">Avg. Rating</div>
-        <div class="kv">4.8★</div>
-        <div class="ks"><span class="chip csky">Across 47 reviews</span></div>
+      <div class="kc" style="border-color:rgba(5,150,105,0.25);background:rgba(5,150,105,0.03);">
+        <div class="kl" style="color:#059669;display:flex;align-items:center;gap:4px;">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg>
+          Active
+        </div>
+        <div class="kv" style="color:#059669;">3</div>
+        <div class="ks" style="color:#059669;opacity:0.8;">Live &amp; accepting orders</div>
       </div>
       <div class="kc" style="border-color:rgba(217,119,6,0.25);background:rgba(217,119,6,0.03);">
         <div class="kl" style="color:#D97706;display:flex;align-items:center;gap:4px;">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
-          Pending Review
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+          Pending
         </div>
-        <div class="kv" style="color:#D97706;">0</div>
-        <div class="ks" style="color:#D97706;opacity:0.7;">Awaiting admin audit</div>
+        <div class="kv" style="color:#D97706;">1</div>
+        <div class="ks" style="color:#D97706;opacity:0.7;">Awaiting admin review</div>
+      </div>
+      <div class="kc" style="border-color:rgba(107,114,128,0.2);background:rgba(107,114,128,0.02);">
+        <div class="kl" style="color:#6b7280;display:flex;align-items:center;gap:4px;">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Drafted
+        </div>
+        <div class="kv" style="color:#6b7280;">1</div>
+        <div class="ks" style="color:#6b7280;opacity:0.8;">Not yet published</div>
+      </div>
+      <div class="kc" style="border-color:rgba(220,38,38,0.25);background:rgba(220,38,38,0.03);">
+        <div class="kl" style="color:#DC2626;display:flex;align-items:center;gap:4px;">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+          Paused
+        </div>
+        <div class="kv" style="color:#DC2626;">1</div>
+        <div class="ks" style="color:#DC2626;opacity:0.8;">Temporarily inactive</div>
       </div>
     </div>
 
-    <!-- PROFILE & VERIFICATION COMPLETION -->
-    <div class="completion-nudge">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
-        <!-- LEFT: Profile -->
-        <div style="padding-right:18px;border-right:1px solid var(--border);">
-          <div class="cn-header" style="margin-bottom:8px;">
-            <div style="width:28px;height:28px;border-radius:8px;background:rgba(2,76,238,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-            </div>
-            <span class="cn-title">Profile Completion</span>
-            <span class="cn-pct">70%</span>
-          </div>
-          <div class="cn-bar-wrap"><div class="cn-bar-fill" style="width:70%;background:linear-gradient(90deg,var(--blue),var(--sky));"></div></div>
-          <div style="display:flex;flex-direction:column;gap:5px;margin-top:9px;">
-            <div style="display:flex;align-items:center;gap:7px;font-size:11.5px;color:#059669;">
-              <div style="width:14px;height:14px;border-radius:50%;background:#059669;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-              Business name &amp; description
-            </div>
-            <div style="display:flex;align-items:center;gap:7px;font-size:11.5px;color:#059669;">
-              <div style="width:14px;height:14px;border-radius:50%;background:#059669;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-              Contact details &amp; location
-            </div>
-            <div style="display:flex;align-items:center;gap:7px;font-size:11.5px;color:#059669;">
-              <div style="width:14px;height:14px;border-radius:50%;background:#059669;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-              Profile photo uploaded
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:7px;font-size:11.5px;color:var(--muted);">
-              <div style="display:flex;align-items:center;gap:7px;">
-                <div style="width:14px;height:14px;border-radius:50%;border:1.5px solid #e5e7eb;background:#f1f5f9;flex-shrink:0;"></div>
-                Availability schedule
-              </div>
-              <span style="font-size:10.5px;color:var(--blue);font-weight:600;cursor:pointer;">Set up →</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:7px;font-size:11.5px;color:var(--muted);">
-              <div style="display:flex;align-items:center;gap:7px;">
-                <div style="width:14px;height:14px;border-radius:50%;border:1.5px solid #e5e7eb;background:#f1f5f9;flex-shrink:0;"></div>
-                Bank / payout info
-              </div>
-              <span style="font-size:10.5px;color:var(--blue);font-weight:600;cursor:pointer;">Add →</span>
-            </div>
-          </div>
+    <!-- WARNINGS: Profile & Verification -->
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(2,76,238,0.04);border:1px solid rgba(2,76,238,0.18);border-radius:12px;">
+        <div style="width:32px;height:32px;border-radius:9px;background:rgba(2,76,238,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
         </div>
-        <!-- RIGHT: Verification Centre -->
-        <div style="padding-left:18px;">
-          <div class="cn-header" style="margin-bottom:8px;">
-            <div style="width:28px;height:28px;border-radius:8px;background:rgba(217,119,6,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-            </div>
-            <span class="cn-title">Verification Centre</span>
-            <span class="cn-pct" style="color:#D97706;">50%</span>
-          </div>
-          <div class="cn-bar-wrap"><div class="cn-bar-fill" style="width:50%;background:linear-gradient(90deg,#D97706,#F59E0B);"></div></div>
-          <div style="display:flex;flex-direction:column;gap:5px;margin-top:9px;">
-            <div style="display:flex;align-items:center;gap:7px;font-size:11.5px;color:#059669;">
-              <div style="width:14px;height:14px;border-radius:50%;background:#059669;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-              Email verified
-            </div>
-            <div style="display:flex;align-items:center;gap:7px;font-size:11.5px;color:#059669;">
-              <div style="width:14px;height:14px;border-radius:50%;background:#059669;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
-              Teaching certificate approved
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:7px;font-size:11.5px;">
-              <div style="display:flex;align-items:center;gap:7px;color:#DC2626;">
-                <div style="width:14px;height:14px;border-radius:50%;background:rgba(220,38,38,0.12);border:1.5px solid #DC2626;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
-                National ID — expired
-              </div>
-              <span style="font-size:10.5px;color:#DC2626;font-weight:600;cursor:pointer;">Upload →</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:7px;font-size:11.5px;color:var(--muted);">
-              <div style="display:flex;align-items:center;gap:7px;">
-                <div style="width:14px;height:14px;border-radius:50%;border:1.5px solid #e5e7eb;background:#f1f5f9;flex-shrink:0;"></div>
-                Criminal background check
-              </div>
-              <span style="font-size:10.5px;color:var(--blue);font-weight:600;cursor:pointer;">Start →</span>
-            </div>
-          </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:1px;">Profile incomplete (70%)</div>
+          <div style="font-size:11.5px;color:var(--muted);">Your profile is missing availability schedule and payout info — complete it to unlock publishing.</div>
         </div>
+        <button onclick="window.location.href='profile.html'" style="white-space:nowrap;padding:7px 14px;border-radius:8px;background:var(--blue);color:#fff;font-size:12px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;flex-shrink:0;">Go to Profile</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(220,38,38,0.03);border:1px solid rgba(220,38,38,0.2);border-radius:12px;">
+        <div style="width:32px;height:32px;border-radius:9px;background:rgba(220,38,38,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:12.5px;font-weight:600;color:#DC2626;margin-bottom:1px;">Verification action required</div>
+          <div style="font-size:11.5px;color:var(--muted);">Your National ID has expired and criminal background check is pending — services may be suspended.</div>
+        </div>
+        <button onclick="window.location.href='verification_centre.html'" style="white-space:nowrap;padding:7px 14px;border-radius:8px;background:#DC2626;color:#fff;font-size:12px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;flex-shrink:0;">Verify Now</button>
       </div>
     </div>
 
     <!-- FILTERS -->
     <div class="filters-row">
       <div class="filter-tabs">
-        <button class="ftab active" onclick="setFilter(this,'all')">All <span style="opacity:0.55;font-size:10px;">(5)</span></button>
-        <button class="ftab" onclick="setFilter(this,'active')">Active</button>
-        <button class="ftab" onclick="setFilter(this,'pending_review')">Pending Review</button>
-        <button class="ftab" onclick="setFilter(this,'paused')">Paused</button>
-        <button class="ftab" onclick="setFilter(this,'draft')">Drafts</button>
+        <button class="ftab active" onclick="setFilter(this,'all')">All <span style="opacity:0.55;font-size:10px;" id="cnt-all">(5)</span></button>
+        <button class="ftab" onclick="setFilter(this,'active')">Active <span style="opacity:0.55;font-size:10px;" id="cnt-active">(3)</span></button>
+        <button class="ftab" onclick="setFilter(this,'pending_review')">Pending <span style="opacity:0.55;font-size:10px;" id="cnt-pending">(1)</span></button>
+        <button class="ftab" onclick="setFilter(this,'draft')">Drafts <span style="opacity:0.55;font-size:10px;" id="cnt-draft">(1)</span></button>
+        <button class="ftab" onclick="setFilter(this,'paused')">Paused <span style="opacity:0.55;font-size:10px;" id="cnt-paused">(0)</span></button>
       </div>
       <div class="search-wrap">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -706,6 +674,7 @@ const SERVICES = [
     desc:'Comprehensive A1 German course for complete beginners.',
     maxSlots:10, currentSlots:8,
     icon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
+    approvedDate:'2024-09-01',
   },
   {
     id:3, name:'Doc Translation', type:'Service', category:'service',
@@ -720,6 +689,7 @@ const SERVICES = [
     desc:'Professional document translation from/to German.',
     maxSlots:20, currentSlots:6,
     icon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+    approvedDate:'2024-08-20',
   },
   {
     id:4, name:'German B2 Workshop', type:'Workshop', category:'workshop',
@@ -734,6 +704,7 @@ const SERVICES = [
     desc:'Intensive B2 level preparation for DSD certification.',
     maxSlots:8, currentSlots:5,
     icon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    approvedDate: null,
   },
   {
     id:5, name:'Integration Workshop', type:'Workshop', category:'workshop',
@@ -748,6 +719,7 @@ const SERVICES = [
     desc:'Cultural integration and daily life workshop for newcomers to Germany.',
     maxSlots:15, currentSlots:9,
     icon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>',
+    approvedDate:'2024-10-05',
   },
   {
     id:6, name:'German A2 Course', type:'Course', category:'course',
@@ -762,18 +734,45 @@ const SERVICES = [
     desc:'A2 level German course for students who completed A1.',
     maxSlots:10, currentSlots:0,
     icon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
+    approvedDate:'2024-09-01',
+    approvedDate: null,
+  },
+  {
+    id:7, name:'Visa Consulting', type:'Service', category:'service',
+    status:'paused', statusLabel:'Paused',
+    color:'#024CEE', iconBg:'rgba(2,76,238,0.08)', iconColor:'#024CEE',
+    typeClass:'type-service',
+    photo:'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=600&q=80',
+    price:250, priceUnit:'/ consultation',
+    rating:4.6, reviews:9, orders:9, revenue:2250, views:310,
+    deliveryType:'onetime',
+    tags:['Visa','Legal','Consulting'],
+    desc:'Expert visa consulting for work and residence permits in Germany.',
+    maxSlots:5, currentSlots:0,
+    icon:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>',
+    approvedDate:'2024-11-15',
   },
 ];
 
 let activeFilter = 'all';
 let activeView = 'grid';
 let searchQuery = '';
+let fType='all', fDelivery='all', fStatus_f='all';
 
 function getFiltered() {
+  const min=parseFloat(document.getElementById('fdPriceMin')?.value||0)||0;
+  const max=parseFloat(document.getElementById('fdPriceMax')?.value||0)||Infinity;
+  const dateFrom=document.getElementById('fdDateFrom')?.value||'';
+  const dateTo=document.getElementById('fdDateTo')?.value||'';
   return SERVICES.filter(s => {
     const fOk = activeFilter === 'all' || s.status === activeFilter;
     const sOk = !searchQuery || s.name.toLowerCase().includes(searchQuery) || s.type.toLowerCase().includes(searchQuery);
-    return fOk && sOk;
+    const ftOk = fType==='all' || s.category===fType;
+    const fdOk = fDelivery==='all' || s.deliveryType===fDelivery;
+    const fsOk = fStatus_f==='all' || s.status===fStatus_f;
+    const priceOk = s.price>=min && s.price<=max;
+    const dateOk = (!dateFrom||!s.approvedDate||(s.approvedDate>=dateFrom)) && (!dateTo||!s.approvedDate||(s.approvedDate<=dateTo));
+    return fOk && sOk && ftOk && fdOk && fsOk && priceOk && dateOk;
   });
 }
 
@@ -783,7 +782,7 @@ function renderGrid() {
     const isPendingReview = s.status === 'pending_review';
     const isDraft = s.status === 'draft';
     const isActive = s.status === 'active';
-    const statusBg = isActive ? 'rgba(5,150,105,0.82)' : isPendingReview ? 'rgba(217,119,6,0.85)' : 'rgba(107,114,128,0.75)';
+    const statusBg = isActive ? 'rgba(5,150,105,0.82)' : isPendingReview ? 'rgba(217,119,6,0.85)' : s.status==='paused' ? 'rgba(220,38,38,0.85)' : 'rgba(107,114,128,0.75)';
     const slotPct = s.maxSlots ? Math.round((s.currentSlots / s.maxSlots) * 100) : 0;
     const slotBar = !isDraft ? `
       <div style="margin-bottom:10px;">
@@ -794,17 +793,34 @@ function renderGrid() {
           <div style="height:3.5px;border-radius:4px;background:${s.color};width:${slotPct}%;"></div>
         </div>
       </div>` : '';
+    const categoryIcons = {
+      course: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>',
+      service: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>',
+      workshop: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    };
+    const catIcon = categoryIcons[s.category] || '';
+    // Badges: featured (high rating+orders), top seller, new
+    const badges = [];
+    if(s.rating >= 4.8 && s.orders >= 15) badges.push({label:'⭐ Top Rated', bg:'rgba(245,158,11,0.12)', color:'#D97706'});
+    if(s.orders >= 20) badges.push({label:'🔥 Best Seller', bg:'rgba(220,38,38,0.10)', color:'#DC2626'});
+    if(s.approvedDate && new Date(s.approvedDate) > new Date('2024-10-01')) badges.push({label:'✨ New', bg:'rgba(2,76,238,0.09)', color:'var(--blue)'});
+    if(s.status==='paused') badges.push({label:'⏸ Paused', bg:'rgba(245,158,11,0.10)', color:'#F59E0B'});
+    const badgeHtml = badges.length ? `<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:9px;">${badges.map(b=>`<span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;background:${b.bg};color:${b.color};">${b.label}</span>`).join('')}</div>` : '';
     const deliveryLabel = s.deliveryType === 'timeline' ? '📅 Timeline' : '💳 One-Time';
     const deliveryColor = s.deliveryType === 'timeline' ? 'rgba(2,76,238,0.08)' : 'rgba(5,150,105,0.08)';
     const deliveryTextColor = s.deliveryType === 'timeline' ? 'var(--blue)' : '#059669';
     const photoFilter = isDraft ? 'filter:grayscale(50%) brightness(0.88);' : isPendingReview ? 'filter:brightness(0.95);' : '';
     const pendingOverlay = isPendingReview ? `<div style="position:absolute;inset:0;background:rgba(217,119,6,0.10);display:flex;align-items:flex-end;padding:8px;"><div style="background:rgba(255,255,255,0.93);border-radius:7px;padding:4px 9px;font-size:10px;font-weight:700;color:#D97706;">⏳ Under Admin Review</div></div>` : '';
     const draftOverlay = isDraft ? `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(10,15,30,0.25);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>` : '';
+    const cardBorder = isActive ? 'rgba(5,150,105,0.4)' : isPendingReview ? 'rgba(217,119,6,0.4)' : isDraft ? 'rgba(107,114,128,0.3)' : s.status==='paused' ? 'rgba(220,38,38,0.4)' : 'var(--border)';
     return `
-    <div class="svc-card ${(isDraft||s.status==='paused') ? 'inactive' : ''}" data-status="${s.status}" data-name="${s.name.toLowerCase()}" data-category="${s.category}" data-delivery="${s.deliveryType}" onclick="${isDraft ? 'openLockModal()' : `window.location.href='view_service.html?id=${s.id}'`}">
+    <div class="svc-card ${(isDraft||s.status==='paused') ? 'inactive' : ''}" data-status="${s.status}" data-name="${s.name.toLowerCase()}" data-category="${s.category}" data-delivery="${s.deliveryType}" style="border-color:${cardBorder};" onclick="${isDraft ? 'openLockModal()' : `window.location.href='view_service.html?id=${s.id}'`}">
       <div class="svc-photo-wrap">
         <img class="svc-photo" src="${s.photo}" alt="${s.name}" style="${photoFilter}" loading="lazy">
-        <div class="svc-type-badge ${s.typeClass}">${s.type}</div>
+        <div class="svc-type-badge ${s.typeClass}" style="display:flex;align-items:center;gap:4px;">
+          ${ s.category==='course' ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>' : s.category==='workshop' ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' : '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>' }
+          ${s.type}
+        </div>
         <div class="svc-status-badge" style="background:${statusBg};color:#fff;">
           <div style="width:5px;height:5px;border-radius:50%;background:#fff;opacity:0.9;"></div>
           ${s.statusLabel}
@@ -816,13 +832,17 @@ function renderGrid() {
           <div class="svc-icon" style="background:${s.iconBg};color:${s.iconColor};">${s.icon}</div>
           <div class="svc-head">
             <div class="svc-name" title="${s.name}">${s.name}</div>
-            <div class="svc-type" style="color:${s.color};">${s.type}</div>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:2px;">
+              <div class="svc-type" style="color:${s.color};display:flex;align-items:center;gap:3px;">${catIcon}${s.type}</div>
+              ${s.rating ? `<span style="font-size:10px;color:var(--muted);">·</span><span style="font-size:10.5px;font-weight:600;color:#F59E0B;">★ ${s.rating}</span><span style="font-size:10px;color:var(--muted);">(${s.reviews})</span>` : ''}
+            </div>
           </div>
         </div>
+        ${badgeHtml}
         ${!isDraft ? `
         <div class="svc-stats">
           <div class="svc-stat">
-            <div class="svc-stat-v" style="color:${s.color};">€${s.revenue.toLocaleString()}</div>
+            <div class="svc-stat-v">€${s.revenue.toLocaleString()}</div>
             <div class="svc-stat-l">Revenue</div>
           </div>
           <div class="svc-stat">
@@ -833,22 +853,20 @@ function renderGrid() {
             <div class="svc-stat-v">${s.views.toLocaleString()}</div>
             <div class="svc-stat-l">Views</div>
           </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-          <span style="font-size:12px;font-weight:600;color:#F59E0B;">${s.rating ? s.rating+'★' : '—'}</span>
-          <span style="font-size:11px;color:var(--muted);">${s.reviews} reviews</span>
-        </div>` : `<div style="font-size:12px;color:var(--muted);padding:6px 0 8px;display:flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Locked — complete profile to publish</div>`}
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
-          <div class="svc-price" style="color:${s.color};">€${s.price}</div>
-          <div class="svc-price-per">${s.priceUnit}</div>
-          <div style="margin-left:auto;font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;background:${deliveryColor};color:${deliveryTextColor};">${deliveryLabel}</div>
+        </div>` : `<div style="font-size:11.5px;color:var(--muted);padding:8px 10px;background:var(--light);border-radius:8px;margin-bottom:11px;display:flex;align-items:center;gap:6px;border:1px solid var(--border);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Complete your profile to publish</div>`}
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div style="display:flex;align-items:baseline;gap:4px;">
+            <div class="svc-price">€${s.price}</div>
+            <div class="svc-price-per">${s.priceUnit}</div>
+          </div>
+          <div style="font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;background:${deliveryColor};color:${deliveryTextColor};">${deliveryLabel}</div>
         </div>
         ${slotBar}
         <div class="svc-tags">${s.tags.map(t=>`<div class="svc-tag">${t}</div>`).join('')}</div>
-        ${isPendingReview ? `<div style="font-size:11px;color:#D97706;background:rgba(217,119,6,0.07);border:1px solid rgba(217,119,6,0.2);border-radius:7px;padding:6px 10px;margin-bottom:8px;">⏳ Awaiting GA admin approval</div>` : ''}
+        ${isPendingReview ? `<div style="font-size:11px;color:#D97706;background:rgba(217,119,6,0.06);border:1px solid rgba(217,119,6,0.18);border-radius:8px;padding:7px 10px;margin-bottom:10px;display:flex;align-items:center;gap:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg> Awaiting admin approval</div>` : ''}
         <div class="svc-footer">
           ${isDraft ?
-            `<button class="svc-action-btn primary" style="background:${PROFILE_PCT>=100?'var(--blue)':'#9CA3AF'};border-color:${PROFILE_PCT>=100?'var(--blue)':'#9CA3AF'};" onclick="event.stopPropagation();${PROFILE_PCT>=100?`publishService(${s.id})`:'openLockModal()'}">
+            `<button class="svc-action-btn primary" style="background:${PROFILE_PCT>=100?'var(--blue)':'#9CA3AF'};border-color:${PROFILE_PCT>=100?'var(--blue)':'#9CA3AF'};box-shadow:none;" onclick="event.stopPropagation();${PROFILE_PCT>=100?`publishService(${s.id})`:'openLockModal()'}">
               ${PROFILE_PCT>=100?'Publish':'🔒 Incomplete'}
             </button>
             <button class="svc-action-btn" onclick="event.stopPropagation();openEditDrawer(${s.id})">Edit</button>` :
@@ -915,6 +933,24 @@ function renderList() {
 function render() {
   renderGrid();
   renderList();
+  updateCounts();
+}
+
+function updateCounts() {
+  const cnt = s => SERVICES.filter(x => x.status===s).length;
+  const el = id => document.getElementById(id);
+  if(el('cnt-all')) el('cnt-all').textContent = `(${SERVICES.length})`;
+  if(el('cnt-active')) el('cnt-active').textContent = `(${cnt('active')})`;
+  if(el('cnt-pending')) el('cnt-pending').textContent = `(${cnt('pending_review')})`;
+  if(el('cnt-draft')) el('cnt-draft').textContent = `(${cnt('draft')})`;
+  if(el('cnt-paused')) el('cnt-paused').textContent = `(${cnt('paused')})`;
+  // KPI cards (order: Total, Active, Pending, Draft, Paused)
+  const kpis = document.querySelectorAll('.kpi-strip .kv');
+  if(kpis[0]) kpis[0].textContent = SERVICES.length;
+  if(kpis[1]) kpis[1].textContent = cnt('active');
+  if(kpis[2]) kpis[2].textContent = cnt('pending_review');
+  if(kpis[3]) kpis[3].textContent = cnt('draft');
+  if(kpis[4]) kpis[4].textContent = cnt('paused');
 }
 
 function setFilter(el, f) {
@@ -978,7 +1014,6 @@ function publishService(id) {
 }
 
 // FILTER DRAWER
-let fType='all', fDelivery='all', fStatus_f='all';
 function openSvcFilterDrawer(){
   document.getElementById('svcFdOverlay').classList.add('open');
   document.getElementById('svcFd').classList.add('open');
@@ -995,7 +1030,9 @@ function selFStatus(chip){document.querySelectorAll('.svc-fd-chip[data-fstatus]'
 function applySvcFilter(){
   const min=document.getElementById('fdPriceMin').value;
   const max=document.getElementById('fdPriceMax').value;
-  const count=[fType!=='all',fDelivery!=='all',fStatus_f!=='all',!!(min||max)].filter(Boolean).length;
+  const dateFrom=document.getElementById('fdDateFrom').value;
+  const dateTo=document.getElementById('fdDateTo').value;
+  const count=[fType!=='all',fDelivery!=='all',fStatus_f!=='all',!!(min||max),!!(dateFrom||dateTo)].filter(Boolean).length;
   const badge=document.getElementById('svcFilterBadge');
   badge.textContent=count; badge.classList.toggle('show',count>0);
   document.getElementById('svcFilterBtn').classList.toggle('active',count>0);
@@ -1012,6 +1049,7 @@ function resetSvcFilter(){
   document.querySelector('.svc-fd-chip[data-fstatus="all"]').classList.add('sel');
   document.querySelectorAll('.svc-fd-chip[data-fstatus]:not([data-fstatus="all"])').forEach(c=>c.classList.remove('sel'));
   document.getElementById('fdPriceMin').value='';document.getElementById('fdPriceMax').value='';
+  document.getElementById('fdDateFrom').value='';document.getElementById('fdDateTo').value='';
   document.getElementById('svcFilterBadge').classList.remove('show');
   document.getElementById('svcFilterBtn').classList.remove('active');
   render();

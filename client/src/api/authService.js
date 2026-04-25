@@ -17,7 +17,17 @@ export const refreshTokenRequest = async () => {
 };
 export const signUpRequest = async (data) => {
   const res = await api.post("/user/", data);
-  return res.data; // { user, accessToken }
+  return res.data;
+};
+
+export const signUpProvider = async (data) => {
+  const res = await api.post("/provider/signup", data);
+  return res.data;
+};
+
+export const signUpCompany = async (data) => {
+  const res = await api.post("/company/signup", data);
+  return res.data;
 };
 
 export const googleLoginRequest = async (credential) => {

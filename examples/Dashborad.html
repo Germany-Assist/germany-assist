@@ -201,6 +201,55 @@ tbody td{padding:10px 10px;border-bottom:1px solid var(--border);vertical-align:
 /* BOTTOM GRID */
 .bot-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}
 
+/* ORDERS TABLE (from orders page) */
+.filter-tabs{display:flex;background:var(--light);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.ftab{font-size:11.5px;padding:6px 12px;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--muted);background:transparent;border:none;transition:all 0.13s;white-space:nowrap;}
+.ftab.active{background:var(--blue);color:#fff;font-weight:500;}
+.ftab:hover:not(.active){background:var(--bs);color:var(--blue);}
+.search-wrap{position:relative;flex:1;min-width:150px;max-width:240px;}
+.search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+.search-input{width:100%;padding:6px 10px 6px 30px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;background:#fff;}
+.search-input:focus{border-color:var(--blue);}
+.filter-btn{display:flex;align-items:center;gap:5px;padding:6px 11px;border-radius:8px;background:#fff;color:var(--muted);border:1px solid var(--border);font-size:12px;font-weight:500;font-family:'Outfit',sans-serif;cursor:pointer;position:relative;transition:all 0.13s;white-space:nowrap;}
+.filter-btn:hover,.filter-btn.active{border-color:var(--blue);color:var(--blue);background:var(--bs);}
+.filter-badge{position:absolute;top:-5px;right:-5px;width:16px;height:16px;border-radius:50%;background:var(--blue);color:#fff;font-size:8px;font-weight:700;display:none;align-items:center;justify-content:center;border:2px solid #fff;}
+.filter-badge.show{display:flex;}
+.t-act{font-size:11.5px;font-weight:500;cursor:pointer;}
+.t-act.blue{color:var(--blue);}.t-act.red{color:#DC2626;}.t-act.green{color:#059669;}
+tbody tr.new-order{background:rgba(217,119,6,0.045);}
+tbody tr.new-order:hover{background:rgba(217,119,6,0.08);}
+.new-tag{font-size:9px;font-weight:700;color:#D97706;background:rgba(217,119,6,0.12);border:1px solid rgba(217,119,6,0.25);padding:1px 5px;border-radius:4px;margin-left:5px;letter-spacing:0.04em;vertical-align:middle;}
+.pagination{display:flex;align-items:center;justify-content:space-between;padding-top:14px;font-size:12px;color:var(--muted);}
+.pag-btns{display:flex;gap:4px;}
+.pag-btn{padding:5px 10px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:11.5px;font-family:'Outfit',sans-serif;color:var(--muted);transition:all 0.13s;}
+.pag-btn:hover{border-color:var(--blue);color:var(--blue);}
+.pag-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.fd-overlay{position:fixed;inset:0;background:rgba(10,15,30,0.35);z-index:300;opacity:0;pointer-events:none;transition:opacity 0.25s ease;backdrop-filter:blur(2px);}
+.fd-overlay.open{opacity:1;pointer-events:all;}
+.filter-drawer{position:fixed;top:0;right:0;height:100vh;width:310px;background:#fff;z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);box-shadow:-8px 0 40px rgba(2,76,238,0.12);border-left:1px solid var(--border);}
+.filter-drawer.open{transform:translateX(0);}
+.fd-head{display:flex;align-items:center;padding:18px 18px 14px;border-bottom:1px solid var(--border);gap:10px;}
+.fd-title{font-size:14px;font-weight:700;flex:1;display:flex;align-items:center;gap:6px;}
+.fd-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all 0.13s;}
+.fd-close:hover{border-color:var(--blue);color:var(--blue);}
+.fd-body{flex:1;overflow-y:auto;padding:18px;}
+.fd-section{margin-bottom:22px;}
+.fd-section-lbl{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.fd-chip-group{display:flex;flex-wrap:wrap;gap:7px;}
+.fd-chip{font-size:12px;font-weight:500;padding:6px 13px;border-radius:20px;border:1px solid var(--border);cursor:pointer;color:var(--muted);background:#fff;transition:all 0.13s;font-family:'Outfit',sans-serif;}
+.fd-chip:hover{border-color:var(--blue);color:var(--blue);}
+.fd-chip.sel{background:var(--blue);color:#fff;border-color:var(--blue);}
+.fd-date-row{display:flex;gap:8px;}
+.fd-date-group{flex:1;display:flex;flex-direction:column;gap:5px;}
+.fd-date-label{font-size:11px;color:var(--muted);font-weight:500;}
+.fd-date-input{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;background:#fff;cursor:pointer;}
+.fd-date-input:focus{border-color:var(--blue);}
+.fd-footer{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:8px;}
+.fd-apply{flex:1;padding:10px;border-radius:9px;background:var(--blue);color:#fff;font-size:13px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;}
+.fd-apply:hover{background:#013cc0;}
+.fd-reset{padding:10px 14px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;}
+.fd-reset:hover{border-color:var(--blue);color:var(--blue);}
+
 /* RESPONSIVE */
 @media(max-width:1100px){
   .kpi-grid{grid-template-columns:1fr 1fr 1fr;}
@@ -512,52 +561,103 @@ tbody td{padding:10px 10px;border-bottom:1px solid var(--border);vertical-align:
       </div>
     </div>
 
-    <!-- BIG ORDERS TABLE -->
-    <div class="card">
-      <div class="ch">
-        <div class="ct">All Orders</div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <div style="position:relative;">
-            <svg style="position:absolute;left:8px;top:50%;transform:translateY(-50%);color:var(--muted);" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input style="padding:5px 10px 5px 26px;border:1px solid var(--border);border-radius:7px;font-size:12px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;width:180px;" placeholder="Search client or service…"/>
+    <!-- FILTER DRAWER -->
+    <div class="fd-overlay" id="fdOverlay" onclick="closeFilterDrawer()"></div>
+    <div class="filter-drawer" id="filterDrawer">
+      <div class="fd-head">
+        <div class="fd-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>Filter Orders</div>
+        <div class="fd-close" onclick="closeFilterDrawer()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      </div>
+      <div class="fd-body">
+        <div class="fd-section">
+          <div class="fd-section-lbl">Status</div>
+          <div class="fd-chip-group">
+            <div class="fd-chip sel" data-status="all" onclick="selStatus(this)">All</div>
+            <div class="fd-chip" data-status="active" onclick="selStatus(this)">Active</div>
+            <div class="fd-chip" data-status="pending" onclick="selStatus(this)">Pending</div>
+            <div class="fd-chip" data-status="completed" onclick="selStatus(this)">Completed</div>
+            <div class="fd-chip" data-status="disputed" onclick="selStatus(this)">Disputed</div>
+            <div class="fd-chip" data-status="late" onclick="selStatus(this)">Late</div>
           </div>
-          <div class="ca">Export →</div>
+        </div>
+        <div class="fd-section">
+          <div class="fd-section-lbl">Service Type</div>
+          <div class="fd-chip-group">
+            <div class="fd-chip sel" data-type="all" onclick="selType(this)">All</div>
+            <div class="fd-chip" data-type="course" onclick="selType(this)">Course</div>
+            <div class="fd-chip" data-type="consulting" onclick="selType(this)">Consulting</div>
+            <div class="fd-chip" data-type="workshop" onclick="selType(this)">Workshop</div>
+            <div class="fd-chip" data-type="support" onclick="selType(this)">Support</div>
+          </div>
+        </div>
+        <div class="fd-section">
+          <div class="fd-section-lbl">Date Range</div>
+          <div class="fd-date-row">
+            <div class="fd-date-group"><div class="fd-date-label">From</div><input class="fd-date-input" type="date" id="fdDateFrom"></div>
+            <div class="fd-date-group"><div class="fd-date-label">To</div><input class="fd-date-input" type="date" id="fdDateTo"></div>
+          </div>
+        </div>
+        <div class="fd-section">
+          <div class="fd-section-lbl">Amount Range</div>
+          <div class="fd-date-row">
+            <div class="fd-date-group"><div class="fd-date-label">Min (€)</div><input class="fd-date-input" type="number" id="fdAmtMin" placeholder="0" min="0"></div>
+            <div class="fd-date-group"><div class="fd-date-label">Max (€)</div><input class="fd-date-input" type="number" id="fdAmtMax" placeholder="Any" min="0"></div>
+          </div>
         </div>
       </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
-        <div class="ctab active" onclick="setFilter(this)">All</div>
-        <div class="ctab" onclick="setFilter(this)">Active</div>
-        <div class="ctab" onclick="setFilter(this)">Pending</div>
-        <div class="ctab" onclick="setFilter(this)">Delivered</div>
-        <div class="ctab" onclick="setFilter(this)">Completed</div>
-        <div class="ctab" onclick="setFilter(this)">Disputed</div>
-        <div class="ctab" onclick="setFilter(this)">Cancelled</div>
+      <div class="fd-footer">
+        <button class="fd-reset" onclick="resetFilters()">Reset all</button>
+        <button class="fd-apply" onclick="applyDrawerFilters()">Apply Filters</button>
+      </div>
+    </div>
+
+    <!-- ALL ORDERS TABLE -->
+    <div class="card" style="padding-bottom:14px;padding-top:14px;">
+      <div class="ch" style="gap:10px;flex-wrap:nowrap;overflow-x:auto;">
+        <div class="filter-tabs" style="flex-shrink:0;">
+          <button class="ftab active" onclick="setTab(this,'all')">All <span style="opacity:0.55;font-size:10px;">(65)</span></button>
+          <button class="ftab" onclick="setTab(this,'active')">Active <span style="opacity:0.55;font-size:10px;">(18)</span></button>
+          <button class="ftab" onclick="setTab(this,'pending')">Pending <span style="opacity:0.55;font-size:10px;">(6)</span></button>
+          <button class="ftab" onclick="setTab(this,'completed')">Completed <span style="opacity:0.55;font-size:10px;">(38)</span></button>
+          <button class="ftab" onclick="setTab(this,'disputed')">Disputed <span style="opacity:0.55;font-size:10px;">(3)</span></button>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;margin-left:auto;flex-shrink:0;">
+          <div class="search-wrap" style="max-width:200px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="search-input" type="text" placeholder="Search orders…" oninput="filterTable(this.value)">
+          </div>
+          <button class="filter-btn" id="filterBtn" onclick="openFilterDrawer()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+            Filter
+            <span class="filter-badge" id="filterBadge"></span>
+          </button>
+          <button class="filter-btn" onclick="exportOrders()" title="Export CSV">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Export
+          </button>
+        </div>
       </div>
       <div class="big-table-wrap">
         <table>
-          <thead>
-            <tr>
-              <th>Service</th><th>Client</th><th>Order ID</th><th>Date</th><th>Deadline</th><th>Net Amount</th><th>Status</th><th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td><div class="t-svc">German A1 Course</div><div class="t-sub">Course · 12 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Ahmed Suleiman</div><div class="t-id">#CLT-0041</div></td><td><div class="t-id">#ORD-8812</div></td><td><div style="font-size:12px;">02 Apr 2026</div></td><td><div style="font-size:12px;color:#059669;">15 Apr</div></td><td><div style="font-weight:600;color:var(--blue);">€180</div></td><td><span class="badge b-done"><span class="bd"></span>Completed</span></td><td><div style="font-size:11.5px;color:var(--blue);cursor:pointer;font-weight:500;">View</div></td></tr>
-            <tr><td><div class="t-svc">Doc Translation</div><div class="t-sub">Service · 4 pages</div></td><td><div style="font-weight:500;font-size:12.5px;">Maria Kovacs</div><div class="t-id">#CLT-0089</div></td><td><div class="t-id">#ORD-8801</div></td><td><div style="font-size:12px;">01 Apr 2026</div></td><td><div style="font-size:12px;color:#D97706;">08 Apr</div></td><td><div style="font-weight:600;color:var(--blue);">€95</div></td><td><span class="badge b-act"><span class="bd"></span>Active</span></td><td><div style="font-size:11.5px;color:var(--blue);cursor:pointer;font-weight:500;">View</div></td></tr>
-            <tr><td><div class="t-svc">German B2 Workshop</div><div class="t-sub">Workshop · 1 day</div></td><td><div style="font-weight:500;font-size:12.5px;">Lena Braun</div><div class="t-id">#CLT-0112</div></td><td><div class="t-id">#ORD-8795</div></td><td><div style="font-size:12px;">28 Mar 2026</div></td><td><div style="font-size:12px;color:#059669;">20 Apr</div></td><td><div style="font-weight:600;color:var(--blue);">€220</div></td><td><span class="badge b-del"><span class="bd"></span>Delivered</span></td><td><div style="font-size:11.5px;color:var(--blue);cursor:pointer;font-weight:500;">View</div></td></tr>
-            <tr><td><div class="t-svc">Visa Consulting</div><div class="t-sub">Service · 2 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Khalid Farouk</div><div class="t-id">#CLT-0067</div></td><td><div class="t-id">#ORD-8780</div></td><td><div style="font-size:12px;">26 Mar 2026</div></td><td><div style="font-size:12px;color:#DC2626;">Overdue</div></td><td><div style="font-weight:600;color:#DC2626;">€150</div></td><td><span class="badge b-dis"><span class="bd"></span>Disputed</span></td><td><div style="font-size:11.5px;color:#DC2626;cursor:pointer;font-weight:500;">Resolve</div></td></tr>
-            <tr><td><div class="t-svc">German A2 Course</div><div class="t-sub">Course · 8 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Sophie Müller</div><div class="t-id">#CLT-0033</div></td><td><div class="t-id">#ORD-8770</div></td><td><div style="font-size:12px;">24 Mar 2026</div></td><td><div style="font-size:12px;color:#D97706;">10 Apr</div></td><td><div style="font-weight:600;color:var(--muted);">€160</div></td><td><span class="badge b-pen"><span class="bd"></span>Pending</span></td><td><div style="font-size:11.5px;color:var(--blue);cursor:pointer;font-weight:500;">Approve</div></td></tr>
-            <tr><td><div class="t-svc">Integration Workshop</div><div class="t-sub">Workshop · Half day</div></td><td><div style="font-weight:500;font-size:12.5px;">Yasmine Ali</div><div class="t-id">#CLT-0055</div></td><td><div class="t-id">#ORD-8763</div></td><td><div style="font-size:12px;">22 Mar 2026</div></td><td><div style="font-size:12px;color:#059669;">30 Apr</div></td><td><div style="font-weight:600;color:var(--blue);">€130</div></td><td><span class="badge b-done"><span class="bd"></span>Completed</span></td><td><div style="font-size:11.5px;color:var(--blue);cursor:pointer;font-weight:500;">View</div></td></tr>
-            <tr><td><div class="t-svc">German A1 Course</div><div class="t-sub">Course · 12 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Rami Al-Harbi</div><div class="t-id">#CLT-0071</div></td><td><div class="t-id">#ORD-8755</div></td><td><div style="font-size:12px;">20 Mar 2026</div></td><td><div style="font-size:12px;color:#D97706;">12 Apr</div></td><td><div style="font-weight:600;color:var(--muted);">€180</div></td><td><span class="badge b-pen"><span class="bd"></span>Pending</span></td><td><div style="font-size:11.5px;color:var(--blue);cursor:pointer;font-weight:500;">Approve</div></td></tr>
-            <tr><td><div class="t-svc">B1 Workshop</div><div class="t-sub">Workshop · 2 days</div></td><td><div style="font-weight:500;font-size:12.5px;">Hans Weber</div><div class="t-id">#CLT-0088</div></td><td><div class="t-id">#ORD-8749</div></td><td><div style="font-size:12px;">18 Mar 2026</div></td><td><div style="font-size:12px;color:#DC2626;">Overdue</div></td><td><div style="font-weight:600;color:var(--blue);">€200</div></td><td><span class="badge b-lat"><span class="bd"></span>Late</span></td><td><div style="font-size:11.5px;color:#DC2626;cursor:pointer;font-weight:500;">Act Now</div></td></tr>
+          <thead><tr>
+            <th>Service</th><th>Client</th><th>Order ID</th><th>Date</th><th>Due</th><th>Amount</th><th>Status</th><th>Action</th>
+          </tr></thead>
+          <tbody id="ordersBody">
+            <tr><td><div class="t-svc">Visa Consulting</div><div class="t-sub">Consulting · 3 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Mohammed Al-Rashidi</div><div class="t-id">#CLT-0041</div></td><td><div class="t-id">#ORD-8812</div></td><td><div style="font-size:12px;">01 Apr 2026</div></td><td><div style="font-size:12px;color:#059669;">15 Apr</div></td><td><div style="font-weight:600;color:var(--blue);">€220</div></td><td><span class="badge b-act"><span class="bd"></span>Active</span></td><td><div class="t-act blue">Manage</div></td></tr>
+            <tr><td><div class="t-svc">Job Search Support</div><div class="t-sub">Support · 5 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Layla Hassan</div><div class="t-id">#CLT-0029</div></td><td><div class="t-id">#ORD-8808</div></td><td><div style="font-size:12px;">30 Mar 2026</div></td><td><div style="font-size:12px;color:#059669;">20 Apr</div></td><td><div style="font-weight:600;color:var(--blue);">€175</div></td><td><span class="badge b-act"><span class="bd"></span>Active</span></td><td><div class="t-act blue">Manage</div></td></tr>
+            <tr><td><div class="t-svc">Integration Workshop</div><div class="t-sub">Workshop · Half day</div></td><td><div style="font-weight:500;font-size:12.5px;">Ahmed Karimi</div><div class="t-id">#CLT-0015</div></td><td><div class="t-id">#ORD-8800</div></td><td><div style="font-size:12px;">28 Mar 2026</div></td><td><div style="font-size:12px;color:#059669;">Done</div></td><td><div style="font-weight:600;color:var(--blue);">€130</div></td><td><span class="badge b-done"><span class="bd"></span>Completed</span></td><td><div class="t-act green">View</div></td></tr>
+            <tr><td><div class="t-svc">German B1 Course</div><div class="t-sub">Course · 10 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Nora Bergmann</div><div class="t-id">#CLT-0052</div></td><td><div class="t-id">#ORD-8795</div></td><td><div style="font-size:12px;">27 Mar 2026</div></td><td><div style="font-size:12px;color:#059669;">30 Apr</div></td><td><div style="font-weight:600;color:var(--blue);">€240</div></td><td><span class="badge b-act"><span class="bd"></span>Active</span></td><td><div class="t-act blue">Manage</div></td></tr>
+            <tr><td><div class="t-svc">Visa Consulting</div><div class="t-sub">Service · 2 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Khalid Farouk</div><div class="t-id">#CLT-0067</div></td><td><div class="t-id">#ORD-8780</div></td><td><div style="font-size:12px;">26 Mar 2026</div></td><td><div style="font-size:12px;color:#DC2626;">Overdue</div></td><td><div style="font-weight:600;color:#DC2626;">€150</div></td><td><span class="badge b-dis"><span class="bd"></span>Disputed</span></td><td><div class="t-act red">Resolve</div></td></tr>
+            <tr class="new-order"><td><div class="t-svc">German A2 Course<span class="new-tag">NEW</span></div><div class="t-sub">Course · 8 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Sophie Müller</div><div class="t-id">#CLT-0033</div></td><td><div class="t-id">#ORD-8770</div></td><td><div style="font-size:12px;">24 Mar 2026</div></td><td><div style="font-size:12px;color:#D97706;">10 Apr</div></td><td><div style="font-weight:600;color:var(--muted);">€160</div></td><td><span class="badge b-pen"><span class="bd"></span>Pending</span></td><td><div class="t-act blue">Review</div></td></tr>
+            <tr><td><div class="t-svc">Integration Workshop</div><div class="t-sub">Workshop · Half day</div></td><td><div style="font-weight:500;font-size:12.5px;">Yasmine Ali</div><div class="t-id">#CLT-0055</div></td><td><div class="t-id">#ORD-8763</div></td><td><div style="font-size:12px;">22 Mar 2026</div></td><td><div style="font-size:12px;color:#059669;">Done</div></td><td><div style="font-weight:600;color:var(--blue);">€130</div></td><td><span class="badge b-done"><span class="bd"></span>Completed</span></td><td><div class="t-act green">View</div></td></tr>
+            <tr class="new-order"><td><div class="t-svc">German A1 Course<span class="new-tag">NEW</span></div><div class="t-sub">Course · 12 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Rami Al-Harbi</div><div class="t-id">#CLT-0071</div></td><td><div class="t-id">#ORD-8755</div></td><td><div style="font-size:12px;">20 Mar 2026</div></td><td><div style="font-size:12px;color:#D97706;">12 Apr</div></td><td><div style="font-weight:600;color:var(--muted);">€180</div></td><td><span class="badge b-pen"><span class="bd"></span>Pending</span></td><td><div class="t-act blue">Review</div></td></tr>
+            <tr><td><div class="t-svc">B1 Workshop</div><div class="t-sub">Workshop · 2 days</div></td><td><div style="font-weight:500;font-size:12.5px;">Hans Weber</div><div class="t-id">#CLT-0088</div></td><td><div class="t-id">#ORD-8749</div></td><td><div style="font-size:12px;">18 Mar 2026</div></td><td><div style="font-size:12px;color:#DC2626;">Overdue</div></td><td><div style="font-weight:600;color:var(--blue);">€200</div></td><td><span class="badge b-lat"><span class="bd"></span>Late</span></td><td><div class="t-act red">Act Now</div></td></tr>
           </tbody>
         </table>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;font-size:12px;color:var(--muted);">
-        <span>Showing 8 of 65 orders</span>
-        <div style="display:flex;gap:5px;">
-          <button style="padding:5px 10px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:11.5px;font-family:'Outfit',sans-serif;color:var(--muted);">← Prev</button>
-          <button style="padding:5px 10px;border:1px solid var(--blue);border-radius:7px;background:var(--blue);cursor:pointer;font-size:11.5px;font-family:'Outfit',sans-serif;color:#fff;">Next →</button>
-        </div>
+      <div class="pagination">
+        <span>Showing 9 of 65 orders</span>
+        <div class="pag-btns"><button class="pag-btn">← Prev</button><button class="pag-btn active">1</button><button class="pag-btn">2</button><button class="pag-btn">3</button><button class="pag-btn">Next →</button></div>
       </div>
     </div>
 
@@ -633,9 +733,92 @@ function setPeriod(el){
   el.classList.add('active');
 }
 
-function setFilter(el){
-  document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('active'));
+function setTab(el,f){
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
+  document.querySelectorAll('#ordersBody tr').forEach(r=>{
+    if(f==='all'){r.style.display='';}
+    else{const txt=r.querySelector('.badge').textContent.toLowerCase();r.style.display=txt.includes(f)?'':'none';}
+  });
+}
+
+function filterTable(v){
+  document.querySelectorAll('#ordersBody tr').forEach(r=>{
+    r.style.display=r.textContent.toLowerCase().includes(v.toLowerCase())?'':'none';
+  });
+}
+
+let fStatus='all', fType='all', fDateFrom='', fDateTo='', fAmtMin='', fAmtMax='';
+
+function openFilterDrawer(){
+  document.getElementById('fdOverlay').classList.add('open');
+  document.getElementById('filterDrawer').classList.add('open');
+  document.getElementById('filterBtn').classList.add('active');
+}
+function closeFilterDrawer(){
+  document.getElementById('fdOverlay').classList.remove('open');
+  document.getElementById('filterDrawer').classList.remove('open');
+  document.getElementById('filterBtn').classList.remove('active');
+}
+function selStatus(chip){
+  document.querySelectorAll('.fd-chip[data-status]').forEach(c=>c.classList.remove('sel'));
+  chip.classList.add('sel');
+  fStatus=chip.dataset.status;
+}
+function selType(chip){
+  document.querySelectorAll('.fd-chip[data-type]').forEach(c=>c.classList.remove('sel'));
+  chip.classList.add('sel');
+  fType=chip.dataset.type;
+}
+function applyDrawerFilters(){
+  fDateFrom=document.getElementById('fdDateFrom').value;
+  fDateTo=document.getElementById('fdDateTo').value;
+  fAmtMin=document.getElementById('fdAmtMin').value;
+  fAmtMax=document.getElementById('fdAmtMax').value;
+  document.querySelectorAll('#ordersBody tr').forEach(r=>{
+    const statusTxt=r.querySelector('.badge')?r.querySelector('.badge').textContent.toLowerCase():'';
+    const typeTxt=r.cells[0]?r.cells[0].textContent.toLowerCase():'';
+    const amtTxt=r.cells[5]?r.cells[5].textContent.replace(/[^0-9]/g,''):'';
+    const amt=parseInt(amtTxt)||0;
+    const stOk=fStatus==='all'||statusTxt.includes(fStatus);
+    const tyOk=fType==='all'||typeTxt.includes(fType);
+    const mnOk=!fAmtMin||amt>=parseInt(fAmtMin);
+    const mxOk=!fAmtMax||amt<=parseInt(fAmtMax);
+    r.style.display=(stOk&&tyOk&&mnOk&&mxOk)?'':'none';
+  });
+  const count=[fStatus!=='all',fType!=='all',!!fDateFrom||!!fDateTo,!!fAmtMin||!!fAmtMax].filter(Boolean).length;
+  const badge=document.getElementById('filterBadge');
+  badge.textContent=count;
+  badge.classList.toggle('show',count>0);
+  document.getElementById('filterBtn').classList.toggle('active',count>0);
+  closeFilterDrawer();
+}
+function resetFilters(){
+  fStatus='all'; fType='all'; fDateFrom=''; fDateTo=''; fAmtMin=''; fAmtMax='';
+  document.querySelectorAll('.fd-chip[data-status]').forEach(c=>c.classList.remove('sel'));
+  document.querySelector('.fd-chip[data-status="all"]').classList.add('sel');
+  document.querySelectorAll('.fd-chip[data-type]').forEach(c=>c.classList.remove('sel'));
+  document.querySelector('.fd-chip[data-type="all"]').classList.add('sel');
+  document.getElementById('fdDateFrom').value='';
+  document.getElementById('fdDateTo').value='';
+  document.getElementById('fdAmtMin').value='';
+  document.getElementById('fdAmtMax').value='';
+  document.querySelectorAll('#ordersBody tr').forEach(r=>r.style.display='');
+  document.getElementById('filterBadge').classList.remove('show');
+  document.getElementById('filterBtn').classList.remove('active');
+  closeFilterDrawer();
+}
+function exportOrders(){
+  const rows=[['Service','Client','Order ID','Date','Due','Amount','Status']];
+  document.querySelectorAll('#ordersBody tr').forEach(r=>{
+    if(r.style.display==='none') return;
+    rows.push([r.cells[0].textContent.trim(),r.cells[1].textContent.trim(),r.cells[2].textContent.trim(),r.cells[3].textContent.trim(),r.cells[4].textContent.trim(),r.cells[5].textContent.trim(),r.cells[6].textContent.trim()]);
+  });
+  const csv=rows.map(r=>r.map(c=>'"'+c.replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='orders.csv';
+  a.click();
 }
 
 function toggleCollapse(){

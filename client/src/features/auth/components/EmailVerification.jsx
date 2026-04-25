@@ -26,7 +26,7 @@ const EmailVerification = ({ email, onVerify, onResend, error, setError }) => {
   const isComplete = code.every((d) => d);
 
   return (
-    <div className="w-full max-w-[560px]">
+    <div className="w-full max-w-[560px] px-4 sm:px-0">
       {error && (
         <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-sm mb-3.5">
           <span>⚠</span>

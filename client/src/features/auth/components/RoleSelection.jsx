@@ -112,7 +112,7 @@ const RoleSelection = ({
       desc: "I work independently as an individual professional — solo consultant, teacher, or coach.",
     },
     {
-      id: "office",
+      id: "company",
       icon: "🏛️",
       title: "Office / Organization",
       desc: "I represent a registered company, language school, agency, or organization with staff.",
@@ -126,7 +126,7 @@ const RoleSelection = ({
   };
 
   return (
-    <div className="w-full max-w-[560px] text-left">
+    <div className="w-full max-w-[560px] text-left px-4 sm:px-0">
       <GuideModal
         isOpen={guideModalState.isOpen}
         data={guideModalState.data}

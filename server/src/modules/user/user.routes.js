@@ -9,6 +9,7 @@ const userRouter = Router();
 //creation
 userRouter.post(
   "/",
+  multerUpload.single("image"),
   createUserValidators,
   validateExpress,
   userControllers.createClientController,

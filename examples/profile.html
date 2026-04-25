@@ -456,7 +456,6 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
     <div class="profile-tabs">
       <div class="ptab active" onclick="switchTab(this,'general')">General</div>
       <div class="ptab" onclick="switchTab(this,'professional')">Professional</div>
-      <div class="ptab" onclick="switchTab(this,'availability')">Availability</div>
       <div class="ptab" onclick="switchTab(this,'reviews')">Reviews <span style="font-size:11px;background:var(--bs);color:var(--blue);padding:1px 6px;border-radius:10px;margin-left:3px;">47</span></div>
     </div>
 
@@ -484,9 +483,15 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
               </div>
               <div class="card-title">Basic Information</div>
-              <button class="card-action" id="basicInfoEditBtn" onclick="toggleCardEdit('basicInfo')">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;vertical-align:-1px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
-              </button>
+              <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+                <div style="display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:500;color:var(--warn);background:rgba(217,119,6,0.08);border:1px solid rgba(217,119,6,0.2);padding:3px 8px;border-radius:20px;">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                  Admin approval required
+                </div>
+                <button class="card-action" id="basicInfoEditBtn" onclick="toggleCardEdit('basicInfo')">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;vertical-align:-1px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Request Change
+                </button>
+              </div>
             </div>
 
             <!-- READ-ONLY VIEW -->
@@ -506,13 +511,21 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
                 <div class="ro-field"><div class="ro-label">Provider Type</div><div class="ro-value">Freelancer</div></div>
                 <div class="ro-field"><div class="ro-label">Country of Residence</div><div class="ro-value">🇩🇪 Germany</div></div>
                 <div class="ro-field"><div class="ro-label">City</div><div class="ro-value">Berlin</div></div>
-                <div class="ro-field"><div class="ro-label">Website</div><div class="ro-value" style="color:var(--blue);">—</div></div>
-                <div class="ro-field" style="grid-column:1/-1;"><div class="ro-label">Bio</div><div class="ro-value" style="line-height:1.6;">Professional German language teacher and certified translator based in Berlin. Helping individuals and businesses navigate German language requirements, document translations, and cultural integration. Over 8 years of experience with 200+ satisfied clients.</div></div>
               </div>
             </div>
 
             <!-- EDIT VIEW (hidden by default) -->
             <div id="basicInfoEdit" style="display:none;">
+              <!-- ADMIN REQUEST NOTICE -->
+              <div style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;margin-bottom:16px;background:rgba(217,119,6,0.06);border:1px solid rgba(217,119,6,0.22);border-radius:10px;">
+                <div style="flex-shrink:0;margin-top:1px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <div style="flex:1;">
+                  <div style="font-size:12px;font-weight:600;color:#D97706;margin-bottom:2px;">Changes require admin approval</div>
+                  <div style="font-size:11.5px;color:var(--muted);line-height:1.5;">Basic information changes are reviewed by the Germany Assists team before being applied. You'll be notified via email once approved (usually within 24 hours).</div>
+                </div>
+              </div>
               <!-- AVATAR UPLOAD -->
               <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;padding:14px;background:var(--light);border-radius:11px;border:1px solid var(--border);">
                 <div style="width:64px;height:64px;border-radius:14px;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:700;flex-shrink:0;overflow:hidden;" id="bigAvatar">GA</div>
@@ -574,28 +587,81 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
                   <label>City</label>
                   <input type="text" value="Berlin" oninput="markDirty()">
                 </div>
-                <div class="form-field">
-                  <label>Website</label>
-                  <div class="input-prefix">
-                    <span class="prefix-icon">🌐</span>
-                    <input type="url" placeholder="https://yourwebsite.com" oninput="markDirty()">
-                  </div>
-                </div>
-              </div>
-              <div class="form-row" style="grid-template-columns:1fr;">
-                <div class="form-field full">
-                  <label>Bio <span class="req">*</span></label>
-                  <textarea id="bioInput" oninput="updateBioCount();markDirty();" maxlength="600">Professional German language teacher and certified translator based in Berlin. Helping individuals and businesses navigate German language requirements, document translations, and cultural integration. Over 8 years of experience with 200+ satisfied clients.</textarea>
-                  <div class="char-count"><span id="bioCount">280</span>/600 characters</div>
-                </div>
               </div>
 
               <!-- CARD EDIT ACTIONS -->
               <div style="display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
                 <button onclick="cancelCardEdit('basicInfo')" style="flex:1;padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.13s;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Cancel</button>
-                <button onclick="saveCardEdit('basicInfo')" style="flex:2;padding:9px 16px;border-radius:9px;background:#059669;color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:opacity 0.13s;display:flex;align-items:center;justify-content:center;gap:5px;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save Changes
+                <button onclick="submitBasicInfoRequest()" style="flex:2;padding:9px 16px;border-radius:9px;background:#D97706;color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:opacity 0.13s;display:flex;align-items:center;justify-content:center;gap:5px;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>Submit Change Request
                 </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- BIO CARD -->
+          <div class="card">
+            <div class="card-header">
+              <div style="width:32px;height:32px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><line x1="16" y1="2" x2="16" y2="8"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="13" y2="18"/></svg>
+              </div>
+              <div class="card-title">Bio</div>
+              <button class="card-action" id="bioEditBtn" onclick="toggleCardEdit('bio')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;vertical-align:-1px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
+              </button>
+            </div>
+            <div id="bioView">
+              <div class="ro-field" style="background:var(--light);">
+                <div class="ro-label" style="margin-bottom:4px;">About You</div>
+                <div class="ro-value" style="line-height:1.7;font-size:13px;">Professional German language teacher and certified translator based in Berlin. Helping individuals and businesses navigate German language requirements, document translations, and cultural integration. Over 8 years of experience with 200+ satisfied clients.</div>
+              </div>
+            </div>
+            <div id="bioEdit" style="display:none;">
+              <div class="form-field">
+                <label>Bio <span class="req">*</span></label>
+                <div class="form-hint" style="margin-bottom:6px;">Write 2–3 sentences about your expertise and why clients should choose you.</div>
+                <textarea id="bioInput" oninput="updateBioCount();markDirty();" maxlength="600" style="min-height:110px;">Professional German language teacher and certified translator based in Berlin. Helping individuals and businesses navigate German language requirements, document translations, and cultural integration. Over 8 years of experience with 200+ satisfied clients.</textarea>
+                <div class="char-count"><span id="bioCount">280</span>/600 characters</div>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+                <button onclick="cancelCardEdit('bio')" style="flex:1;padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Cancel</button>
+                <button onclick="saveCardEdit('bio')" style="flex:2;padding:9px 16px;border-radius:9px;background:#059669;color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save Changes</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TIMEZONE CARD -->
+          <div class="card">
+            <div class="card-header">
+              <div style="width:32px;height:32px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div class="card-title">Timezone</div>
+              <button class="card-action" id="tzEditBtn" onclick="toggleCardEdit('tz')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;vertical-align:-1px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
+              </button>
+            </div>
+            <div id="tzView">
+              <div class="ro-grid">
+                <div class="ro-field"><div class="ro-label">Your Timezone</div><div class="ro-value">Europe/Berlin (UTC+2)</div></div>
+                <div class="ro-field"><div class="ro-label">Local Time Now</div><div class="ro-value" id="tzLocalTime">—</div></div>
+              </div>
+            </div>
+            <div id="tzEdit" style="display:none;">
+              <div class="form-field">
+                <label>Timezone</label>
+                <div class="form-hint" style="margin-bottom:6px;">Used to display your availability to clients in their local time.</div>
+                <select onchange="markDirty()" style="padding:9px 12px;border:1px solid var(--border);border-radius:9px;font-size:12.5px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;background:#fff;width:100%;">
+                  <option selected>Europe/Berlin (UTC+2)</option>
+                  <option>Africa/Cairo (UTC+3)</option>
+                  <option>Asia/Amman (UTC+3)</option>
+                  <option>Europe/London (UTC+1)</option>
+                  <option>America/New_York (UTC-4)</option>
+                </select>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+                <button onclick="cancelCardEdit('tz')" style="flex:1;padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Cancel</button>
+                <button onclick="saveCardEdit('tz')" style="flex:2;padding:9px 16px;border-radius:9px;background:#059669;color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save Changes</button>
               </div>
             </div>
           </div>
@@ -659,61 +725,41 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
               <div style="width:32px;height:32px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
               </div>
-              <div class="card-title">Categories & Expertise</div>
-              <button class="card-action" id="catsEditBtn" onclick="toggleCardEdit('cats')">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;vertical-align:-1px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
+              <div class="card-title">Categories & Badges</div>
+              <button class="card-action" onclick="window.location.href='verification_centre.html'" style="display:flex;align-items:center;gap:4px;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                Manage in Verification Centre
               </button>
             </div>
-            <!-- READ-ONLY -->
-            <div id="catsView">
-              <div class="ro-field" style="margin-bottom:10px;background:var(--light);border-radius:9px;border:1px solid var(--border);padding:10px 12px;">
-                <div class="ro-label" style="margin-bottom:6px;">Main Categories</div>
-                <div style="display:flex;flex-wrap:wrap;gap:5px;">
-                  <span class="badge-pill bp-blue">German Language</span>
-                  <span class="badge-pill bp-blue">Translation Services</span>
-                </div>
+            <div style="display:flex;align-items:flex-start;gap:9px;padding:10px 13px;margin-bottom:14px;background:var(--bs);border:1px solid rgba(2,76,238,0.12);border-radius:9px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span style="font-size:11.5px;color:var(--muted);line-height:1.5;">Categories and badges are assigned based on your verified credentials. To add or update them, visit the <strong style="color:var(--blue);cursor:pointer;" onclick="window.location.href='verification_centre.html'">Verification Centre</strong>.</span>
+            </div>
+            <div style="margin-bottom:12px;">
+              <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Categories</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <span class="badge-pill bp-blue">German Language</span>
+                <span class="badge-pill bp-blue">Translation Services</span>
+                <span class="badge-pill" style="background:#f1f5f9;color:var(--muted);border-color:var(--border);">Career Coaching</span>
+                <span class="badge-pill" style="background:#f1f5f9;color:var(--muted);border-color:var(--border);">Recruitment</span>
+                <span class="badge-pill" style="background:#f1f5f9;color:var(--muted);border-color:var(--border);">Visa & Immigration</span>
+                <span class="badge-pill" style="background:#f1f5f9;color:var(--muted);border-color:var(--border);">Certificate Recognition</span>
+                <span class="badge-pill" style="background:#f1f5f9;color:var(--muted);border-color:var(--border);">University Services</span>
+                <span class="badge-pill" style="background:#f1f5f9;color:var(--muted);border-color:var(--border);">Relocation Services</span>
               </div>
-              <div class="ro-field" style="background:var(--light);border-radius:9px;border:1px solid var(--border);padding:10px 12px;">
-                <div class="ro-label" style="margin-bottom:6px;">Sub-Categories</div>
-                <div style="display:flex;flex-wrap:wrap;gap:5px;">
-                  <span class="badge-pill bp-sky">A1–B2 Courses</span>
-                  <span class="badge-pill bp-sky">Intensive Programs</span>
-                  <span class="badge-pill bp-sky">Legal Translation</span>
-                  <span class="badge-pill bp-sky">Document Translation</span>
-                </div>
+              <div style="font-size:10.5px;color:var(--muted);margin-top:8px;display:flex;align-items:center;gap:5px;">
+                <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--blue);"></span>Earned &nbsp;·&nbsp;
+                <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#e5e7eb;border:1px solid var(--border);"></span>Not yet earned
               </div>
             </div>
-            <!-- EDIT VIEW -->
-            <div id="catsEdit" style="display:none;">
-              <div class="form-field" style="margin-bottom:14px;">
-                <label>Main Categories <span class="req">*</span></label>
-                <div class="form-hint" style="margin-bottom:8px;">Select all categories that apply to your services.</div>
-                <div class="tag-select">
-                  <div class="tag-opt sel" onclick="toggleTag(this)">German Language</div>
-                  <div class="tag-opt" onclick="toggleTag(this)">Career Coaching</div>
-                  <div class="tag-opt sel" onclick="toggleTag(this)">Translation Services</div>
-                  <div class="tag-opt" onclick="toggleTag(this)">Recruitment</div>
-                  <div class="tag-opt" onclick="toggleTag(this)">Visa & Immigration</div>
-                  <div class="tag-opt" onclick="toggleTag(this)">Certificate Recognition</div>
-                  <div class="tag-opt" onclick="toggleTag(this)">University Services</div>
-                  <div class="tag-opt" onclick="toggleTag(this)">Relocation Services</div>
-                </div>
-              </div>
-              <div class="form-field">
-                <label>Sub-Categories</label>
-                <div class="tag-select">
-                  <div class="tag-opt sel" onclick="toggleTag(this)">A1–B2 Courses</div>
-                  <div class="tag-opt sel" onclick="toggleTag(this)">Intensive Programs</div>
-                  <div class="tag-opt" onclick="toggleTag(this)">Exam Preparation</div>
-                  <div class="tag-opt" onclick="toggleTag(this)">Business German</div>
-                  <div class="tag-opt sel" onclick="toggleTag(this)">Legal Translation</div>
-                  <div class="tag-opt sel" onclick="toggleTag(this)">Document Translation</div>
-                  <div class="tag-opt" onclick="toggleTag(this)">Sworn Translation</div>
-                </div>
-              </div>
-              <div style="display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
-                <button onclick="cancelCardEdit('cats')" style="flex:1;padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Cancel</button>
-                <button onclick="saveCardEdit('cats')" style="flex:2;padding:9px 16px;border-radius:9px;background:#059669;color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save Changes</button>
+            <div style="padding-top:12px;border-top:1px solid var(--border);">
+              <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Earned Badges</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <span class="badge-pill bp-green"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Certified Teacher</span>
+                <span class="badge-pill bp-green"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Certified Translator</span>
+                <span class="badge-pill bp-sky"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>A1–B2 Courses</span>
+                <span class="badge-pill bp-sky"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Document Translation</span>
+                <span class="badge-pill bp-warn">⏳ Sworn Translator — Pending</span>
               </div>
             </div>
           </div>
@@ -724,161 +770,60 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
               </div>
               <div class="card-title">Professional Credentials</div>
-              <button class="card-action" id="credsEditBtn" onclick="toggleCardEdit('creds')">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;vertical-align:-1px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
+              <button class="card-action" onclick="window.location.href='verification_centre.html'" style="display:flex;align-items:center;gap:4px;background:rgba(5,150,105,0.08);color:#059669;border:none;" onmouseover="this.style.background='rgba(5,150,105,0.15)'" onmouseout="this.style.background='rgba(5,150,105,0.08)'">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                Go to Verification Centre
               </button>
             </div>
-            <!-- READ-ONLY -->
-            <div id="credsView">
-              <div style="display:flex;flex-direction:column;gap:8px;">
-                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(5,150,105,0.04);border:1px solid rgba(5,150,105,0.15);border-radius:9px;">
-                  <div>
-                    <div style="font-size:12.5px;font-weight:600;">Teaching Certificate</div>
-                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">teaching_cert_goethe.pdf · Uploaded 3 Apr 2026</div>
-                  </div>
-                  <div class="badge-pill bp-green" style="font-size:9.5px;">✓ Verified</div>
-                </div>
-                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(217,119,6,0.04);border:1px solid rgba(217,119,6,0.18);border-radius:9px;">
-                  <div>
-                    <div style="font-size:12.5px;font-weight:600;">Sworn Translator Certificate</div>
-                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">No document uploaded yet</div>
-                  </div>
-                  <div class="badge-pill bp-warn" style="font-size:9.5px;">⏳ Pending</div>
-                </div>
-                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--light);border:1px solid var(--border);border-radius:9px;">
-                  <div>
-                    <div style="font-size:12.5px;font-weight:600;">University Degree (Germanistics)</div>
-                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">No document uploaded yet</div>
-                  </div>
-                  <div style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:#f1f5f9;color:var(--muted);border:1px solid var(--border);">Not uploaded</div>
-                </div>
-              </div>
+            <div style="display:flex;align-items:flex-start;gap:9px;padding:10px 13px;margin-bottom:14px;background:rgba(5,150,105,0.04);border:1px solid rgba(5,150,105,0.15);border-radius:9px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span style="font-size:11.5px;color:var(--muted);line-height:1.5;">Credentials are managed and verified by the Germany Assists team. Upload or update documents in the <strong style="color:#059669;cursor:pointer;" onclick="window.location.href='verification_centre.html'">Verification Centre</strong>.</span>
             </div>
-            <!-- EDIT VIEW -->
-            <div id="credsEdit" style="display:none;">
-              <div class="form-hint" style="margin-bottom:12px;">Upload documents to earn verified badges</div>
-              <div style="border:1px solid rgba(5,150,105,0.2);border-radius:11px;padding:14px;margin-bottom:10px;background:rgba(5,150,105,0.02);">
-                <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
-                  <div style="flex:1;"><div style="font-size:12.5px;font-weight:600;">Teaching Certificate</div><div style="font-size:11px;color:var(--muted);">Goethe / TELC / TestDaF — earns "Certified Teacher" badge</div></div>
-                  <div class="badge-pill bp-green" style="font-size:9.5px;">✓ Verified</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(5,150,105,0.04);border:1px solid rgba(5,150,105,0.15);border-radius:9px;">
+                <div>
+                  <div style="font-size:12.5px;font-weight:600;">Teaching Certificate</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">teaching_cert_goethe.pdf · Uploaded 3 Apr 2026</div>
                 </div>
-                <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f1f5f9;border-radius:8px;font-size:11.5px;color:var(--muted);">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                  teaching_cert_goethe.pdf · Uploaded 3 Apr 2026
-                  <button style="margin-left:auto;font-size:11px;color:var(--blue);background:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;">Replace</button>
+                <div class="badge-pill bp-green" style="font-size:9.5px;">✓ Verified</div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(217,119,6,0.04);border:1px solid rgba(217,119,6,0.18);border-radius:9px;">
+                <div>
+                  <div style="font-size:12.5px;font-weight:600;">Sworn Translator Certificate</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">No document uploaded yet</div>
                 </div>
+                <div class="badge-pill bp-warn" style="font-size:9.5px;">⏳ Pending</div>
               </div>
-              <div style="border:1px solid rgba(217,119,6,0.2);border-radius:11px;padding:14px;margin-bottom:10px;background:rgba(217,119,6,0.02);">
-                <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
-                  <div style="flex:1;"><div style="font-size:12.5px;font-weight:600;">Sworn Translator Certificate</div><div style="font-size:11px;color:var(--muted);">Court Appointment (Bestallungsurkunde) + Official Stamp</div></div>
-                  <div class="badge-pill bp-warn" style="font-size:9.5px;">⏳ Pending</div>
-                </div>
-                <div class="photo-upload" style="padding:12px;margin-top:0;"><input type="file" accept=".pdf,.jpg,.jpeg,.png"><div class="pu-icon">📋</div><div class="pu-title">Upload Bestallungsurkunde</div><div class="pu-sub">PDF · Max 5MB</div></div>
-              </div>
-              <div style="border:1px solid var(--border);border-radius:11px;padding:14px;">
-                <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
-                  <div style="flex:1;"><div style="font-size:12.5px;font-weight:600;">University Degree (Germanistics)</div><div style="font-size:11px;color:var(--muted);">Earns "Expert Teacher" badge</div></div>
-                  <div style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:#f1f5f9;color:var(--muted);border:1px solid var(--border);">Not uploaded</div>
-                </div>
-                <div class="photo-upload" style="padding:12px;"><input type="file" accept=".pdf,.jpg,.jpeg,.png"><div class="pu-icon">🎓</div><div class="pu-title">Upload Degree Certificate</div><div class="pu-sub">PDF / JPG / PNG · Max 5MB</div></div>
-              </div>
-              <div style="display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
-                <button onclick="cancelCardEdit('creds')" style="flex:1;padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Cancel</button>
-                <button onclick="saveCardEdit('creds')" style="flex:2;padding:9px 16px;border-radius:9px;background:#059669;color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save Changes</button>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <!-- AVAILABILITY TAB -->
-        <div class="tab-section" id="tab-availability">
-          <div class="card">
-            <div class="card-header">
-              <div style="width:32px;height:32px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              </div>
-              <div class="card-title">Weekly Availability</div>
-              <button class="card-action" id="availEditBtn" onclick="toggleCardEdit('avail')">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;vertical-align:-1px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
-              </button>
             </div>
-            <!-- READ-ONLY -->
-            <div id="availView">
-              <div class="ro-grid" style="margin-bottom:10px;">
-                <div class="ro-field"><div class="ro-label">Active Days</div><div class="ro-value">Mon, Tue, Wed, Thu</div></div>
-                <div class="ro-field"><div class="ro-label">Hours</div><div class="ro-value">10:00 – 18:00</div></div>
-                <div class="ro-field" style="grid-column:1/-1;"><div class="ro-label">Timezone</div><div class="ro-value">Europe/Berlin (UTC+2)</div></div>
-              </div>
-            </div>
-            <!-- EDIT VIEW -->
-            <div id="availEdit" style="display:none;">
-              <div style="font-size:11.5px;color:var(--muted);margin-bottom:8px;">Click days to toggle on/off</div>
-              <div class="avail-grid">
-                <div class="day-btn on" onclick="toggleDay(this)"><span class="day-name">Mon</span><span class="day-check">✓</span></div>
-                <div class="day-btn on" onclick="toggleDay(this)"><span class="day-name">Tue</span><span class="day-check">✓</span></div>
-                <div class="day-btn on" onclick="toggleDay(this)"><span class="day-name">Wed</span><span class="day-check">✓</span></div>
-                <div class="day-btn on" onclick="toggleDay(this)"><span class="day-name">Thu</span><span class="day-check">✓</span></div>
-                <div class="day-btn" onclick="toggleDay(this)"><span class="day-name">Fri</span><span class="day-check">–</span></div>
-                <div class="day-btn" onclick="toggleDay(this)"><span class="day-name">Sat</span><span class="day-check">–</span></div>
-                <div class="day-btn" onclick="toggleDay(this)"><span class="day-name">Sun</span><span class="day-check">–</span></div>
-              </div>
-              <div class="time-row"><div class="time-label">From</div><select class="time-sel"><option>08:00</option><option>09:00</option><option selected>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option></select></div>
-              <div class="time-row"><div class="time-label">To</div><select class="time-sel"><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option selected>18:00</option><option>19:00</option><option>20:00</option><option>21:00</option><option>22:00</option></select></div>
-              <div style="margin-top:12px;padding:10px 12px;background:var(--light);border-radius:8px;border:1px solid var(--border);">
-                <div style="font-size:11.5px;font-weight:600;margin-bottom:5px;color:var(--text);">Timezone</div>
-                <select style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;background:#fff;">
-                  <option selected>Europe/Berlin (UTC+2)</option><option>Africa/Cairo (UTC+3)</option><option>Asia/Amman (UTC+3)</option><option>Europe/London (UTC+1)</option>
-                </select>
-              </div>
-              <div style="display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
-                <button onclick="cancelCardEdit('avail')" style="flex:1;padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Cancel</button>
-                <button onclick="saveCardEdit('avail')" style="flex:2;padding:9px 16px;border-radius:9px;background:#059669;color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save Changes</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <div style="width:32px;height:32px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              </div>
-              <div class="card-title">Response & Delivery Settings</div>
-              <button class="card-action" id="deliveryEditBtn" onclick="toggleCardEdit('delivery')">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;vertical-align:-1px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit
-              </button>
-            </div>
-            <!-- READ-ONLY -->
-            <div id="deliveryView">
-              <div class="ro-grid">
-                <div class="ro-field"><div class="ro-label">Response Time</div><div class="ro-value">Within 24 hours</div></div>
-                <div class="ro-field"><div class="ro-label">Max Active Orders</div><div class="ro-value">10</div></div>
-                <div class="ro-field" style="grid-column:1/-1;"><div class="ro-label">Delivery Modes</div><div class="ro-value">💻 Online · 🏢 In-Person</div></div>
-              </div>
-            </div>
-            <!-- EDIT VIEW -->
-            <div id="deliveryEdit" style="display:none;">
-              <div class="form-row">
-                <div class="form-field"><label>Typical Response Time</label><select><option>Within 1 hour</option><option selected>Within 24 hours</option><option>Within 48 hours</option><option>Within 1 week</option></select></div>
-                <div class="form-field"><label>Max Active Orders</label><input type="number" value="10" min="1" max="50"><div class="form-hint">Prevents over-booking automatically.</div></div>
-              </div>
-              <div class="form-field">
-                <label>Delivery Modes</label>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
-                  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;"><input type="checkbox" checked style="accent-color:var(--blue);"> 💻 Online</label>
-                  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;"><input type="checkbox" checked style="accent-color:var(--blue);"> 🏢 In-Person</label>
-                  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;"><input type="checkbox" style="accent-color:var(--blue);"> 🔀 Hybrid</label>
-                </div>
-              </div>
-              <div style="display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
-                <button onclick="cancelCardEdit('delivery')" style="flex:1;padding:9px 16px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Cancel</button>
-                <button onclick="saveCardEdit('delivery')" style="flex:2;padding:9px 16px;border-radius:9px;background:#059669;color:#fff;font-size:12.5px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Save Changes</button>
-              </div>
-            </div>
+            <button onclick="window.location.href='verification_centre.html'" style="width:100%;margin-top:14px;padding:9px;border-radius:9px;border:1px solid rgba(5,150,105,0.25);background:rgba(5,150,105,0.05);color:#059669;font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.13s;" onmouseover="this.style.background='rgba(5,150,105,0.12)'" onmouseout="this.style.background='rgba(5,150,105,0.05)'">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              Upload or Update Documents in Verification Centre
+            </button>
           </div>
         </div>
 
         <!-- REVIEWS TAB -->
         <div class="tab-section" id="tab-reviews">
+
+          <!-- REVIEW FILTER -->
+          <div class="card" style="padding:14px 18px;margin-bottom:0;">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <div style="font-size:12px;font-weight:600;color:var(--text);flex-shrink:0;">Filter by:</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;flex:1;" id="reviewFilterTags">
+                <div class="tag-opt sel" onclick="setReviewFilter(this,'all')" data-filter="all">All Reviews</div>
+                <div class="tag-opt" onclick="setReviewFilter(this,'german')" data-filter="german">German Language</div>
+                <div class="tag-opt" onclick="setReviewFilter(this,'translation')" data-filter="translation">Translation Services</div>
+                <div class="tag-opt" onclick="setReviewFilter(this,'a1')" data-filter="a1">A1 Course</div>
+                <div class="tag-opt" onclick="setReviewFilter(this,'b2')" data-filter="b2">B2 Workshop</div>
+              </div>
+            </div>
+            <div id="reviewFilterNote" style="margin-top:10px;display:flex;align-items:center;gap:6px;padding:8px 11px;background:var(--light);border-radius:8px;border:1px solid var(--border);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span style="font-size:11.5px;color:var(--muted);">Showing <strong style="color:var(--text);">all 47 reviews</strong> across all services and categories.</span>
+            </div>
+          </div>
+
           <!-- Rating Summary -->
           <div class="card" style="padding:18px 20px;">
             <div style="display:flex;align-items:center;gap:24px;margin-bottom:16px;flex-wrap:wrap;">
@@ -986,32 +931,7 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
           <button class="comp-cta" onclick="showSnack('Complete your profile to unlock all features')">Complete Profile →</button>
         </div>
 
-        <!-- HERO STATS CARD -->
-        <div class="stat-card" style="margin-bottom:14px;">
-          <div class="sc-title">Performance Overview</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-            <div style="padding:10px 12px;background:var(--light);border-radius:9px;border:1px solid var(--border);text-align:center;">
-              <div style="font-size:20px;font-weight:700;color:var(--text);">65</div>
-              <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">Total Orders</div>
-            </div>
-            <div style="padding:10px 12px;background:var(--light);border-radius:9px;border:1px solid var(--border);text-align:center;">
-              <div style="font-size:20px;font-weight:700;color:var(--text);">€4.2k</div>
-              <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">Revenue</div>
-            </div>
-            <div style="padding:10px 12px;background:var(--light);border-radius:9px;border:1px solid var(--border);text-align:center;">
-              <div style="font-size:20px;font-weight:700;color:var(--text);">€1,190</div>
-              <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">This Month</div>
-            </div>
-            <div style="padding:10px 12px;background:var(--light);border-radius:9px;border:1px solid var(--border);text-align:center;">
-              <div style="font-size:20px;font-weight:700;color:var(--text);">4.2%</div>
-              <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">Conversion</div>
-            </div>
-            <div style="padding:10px 12px;background:rgba(5,150,105,0.06);border-radius:9px;border:1px solid rgba(5,150,105,0.18);text-align:center;grid-column:1/-1;">
-              <div style="font-size:20px;font-weight:700;color:#059669;">98%</div>
-              <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">Response Rate</div>
-            </div>
-          </div>
-        </div>
+
 
         <!-- QUICK TIPS (Dark Pattern: social proof nudge) -->
         <div class="stat-card">
@@ -1082,6 +1002,27 @@ function saveCardEdit(cardId) {
   edit.style.display = 'none';
   btn.style.display = '';
   showSnack('Changes saved successfully ✓');
+}
+
+function submitBasicInfoRequest() {
+  cancelCardEdit('basicInfo');
+  showSnack('Change request submitted — pending admin approval ✓');
+}
+
+function setReviewFilter(el, filter) {
+  document.querySelectorAll('#reviewFilterTags .tag-opt').forEach(t => t.classList.remove('sel'));
+  el.classList.add('sel');
+  const note = document.getElementById('reviewFilterNote');
+  if (filter === 'all') {
+    note.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:11.5px;color:var(--muted);">Showing <strong style="color:var(--text);">all 47 reviews</strong> across all services and categories.</span>';
+    note.style.background = 'var(--light)';
+    note.style.borderColor = 'var(--border)';
+  } else {
+    const label = el.textContent.trim();
+    note.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg><span style="font-size:11.5px;color:var(--muted);">Filtered by <strong style="color:var(--blue);">' + label + '</strong>. Showing matching reviews only.</span>';
+    note.style.background = 'var(--bs)';
+    note.style.borderColor = 'rgba(2,76,238,0.15)';
+  }
 }
 
 function shareProfile() {
@@ -1207,6 +1148,12 @@ function showSnack(msg) {
 
 // Init bio count
 updateBioCount();
+
+// Show local time in timezone card
+(function(){
+  const el = document.getElementById('tzLocalTime');
+  if(el) el.textContent = new Date().toLocaleTimeString('en-DE',{timeZone:'Europe/Berlin',hour:'2-digit',minute:'2-digit'}) + ' (Berlin)';
+})();
 
 // Warn on leave if unsaved
 window.addEventListener('beforeunload', e => {

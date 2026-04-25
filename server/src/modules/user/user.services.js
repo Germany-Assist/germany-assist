@@ -5,6 +5,7 @@ import AssetService from "../../services/assts.services.js";
 import authUtil from "../../utils/authorize.util.js";
 import bcryptUtil from "../../utils/bcrypt.util.js";
 import { AppError } from "../../utils/error.class.js";
+import { errorLogger } from "../../utils/loggers.js";
 import AssetRepository from "../assets/assets.repository.js";
 import authServices from "../auth/auth.service.js";
 import permissionServices from "../permission/permission.services.js";
@@ -209,7 +210,7 @@ export const updateImage = async (auth, file) => {
     });
     await t.commit();
   } catch (error) {
-    console.log(error);
+    errorLogger(error);
     await t.rollback();
   }
 

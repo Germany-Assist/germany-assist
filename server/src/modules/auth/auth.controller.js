@@ -13,6 +13,8 @@ async function googleAuthController(req, res, next) {
     next(error);
   }
 }
+
+// TODO needs to be deleted or updated
 // async function googleAuthController(req, res, next) {
 //   try {
 //     const result = await authServices.googleAuth(req.body);
