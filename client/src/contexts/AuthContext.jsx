@@ -40,10 +40,10 @@ export const AuthProvider = ({ children }) => {
   // 2. Token Refresh Logic
   const refreshAccessToken = useCallback(async () => {
     try {
-      const newToken = await refreshTokenRequest();
-      setAccessToken(newToken);
-      scheduleRefresh(newToken);
-      return newToken;
+      const { accessToken } = await refreshTokenRequest();
+      setAccessToken(accessToken);
+      scheduleRefresh(accessToken);
+      return accessToken;
     } catch (err) {
       clearAuthState();
       throw err;
@@ -97,7 +97,6 @@ export const AuthProvider = ({ children }) => {
 
   // 6. Auth Actions
   const login = async (credentials) => {
-    console.log("login", credentials);
     const { user, accessToken } = await loginRequest(credentials);
     setUser(user);
     setAccessToken(accessToken);
@@ -141,7 +140,6 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) throw new Error("useAuth must be used within AuthProvider");

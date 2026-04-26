@@ -13,7 +13,7 @@ export const refreshTokenRequest = async () => {
     {},
     { skipAuthRefresh: true },
   );
-  return res.data.accessToken;
+  return res.data;
 };
 
 export const signUpClient = async (data) => {
