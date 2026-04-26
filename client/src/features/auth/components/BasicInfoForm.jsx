@@ -66,7 +66,6 @@ const createFormData = (data) => {
       formData.append(key, value);
     }
   });
-  console.log(formData.values());
   return formData;
 };
 
@@ -100,6 +99,10 @@ const BasicInfoForm = ({
   };
 
   const handleGoogleResponse = (response) => {
+    if (!response.success) {
+      setError(response.message);
+      return;
+    }
     if (response.firstName) updateField("firstName", response.firstName);
     if (response.lastName) updateField("lastName", response.lastName);
     if (response.email) updateField("email", response.email);

@@ -5,28 +5,29 @@ import authUtil from "../../utils/authorize.util.js";
 import authDomain from "./auth.domain.js";
 import { sequelize } from "../../configs/database.js";
 
-async function googleAuthController(req, res, next) {
+async function googleAuthRetrieveInfo(req, res, next) {
   try {
-    const user = await authServices.googleAuth(req.body);
+    const user = await authServices.googleAuthRetrieveInfo(req.body);
     res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+}
+async function googleAuthSignin(req, res, next) {
+  try {
+    const result = await authServices.googleAuthSignin(req.body);
+    const { refreshToken, accessToken, user, status } = result;
+    res
+      .cookie("refreshToken", refreshToken, authDomain.cookieOptions)
+      .status(status)
+      .json({ accessToken, user });
   } catch (error) {
     next(error);
   }
 }
 
 // TODO needs to be deleted or updated
-// async function googleAuthController(req, res, next) {
-//   try {
-//     const result = await authServices.googleAuth(req.body);
-//     const { refreshToken, accessToken, user, status } = result;
-//     res
-//       .cookie("refreshToken", refreshToken, authDomain.cookieOptions)
-//       .status(status)
-//       .json({ accessToken, user });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
+
 // export async function verifyAccount(req, res, next) {
 //   try {
 //     const token = req.query.token;
@@ -148,7 +149,8 @@ export async function passwordResetConfirm(req, res, next) {
   }
 }
 const authController = {
-  googleAuthController,
+  googleAuthRetrieveInfo,
+  googleAuthSignin,
   getUserProfile,
   verifyAccountByDigits,
   resendVerificationEmail,

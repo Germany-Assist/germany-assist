@@ -101,7 +101,7 @@ export const AuthProvider = ({ children }) => {
     setUser(user);
     setAccessToken(accessToken);
     scheduleRefresh(accessToken);
-    return { user, accessToken };
+    navigate("/");
   };
 
   const signUp = async (data) => {

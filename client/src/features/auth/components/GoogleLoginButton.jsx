@@ -1,19 +1,25 @@
 import { useEffect } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import { GOOGLE_CLIENT_ID } from "../../../config/api";
-import { googleLoginRequest } from "../../../api/authService";
+import { googleRetrieveInfo } from "../../../api/authService";
 
-export default function GoogleLoginButton({ authStyle, handleGoogleResponse }) {
-  // const { googleLogin } = useAuth();
+export default function GoogleLoginButton({
+  authStyle,
+  handleGoogleResponse,
+  signin = false,
+}) {
+  const { googleLogin } = useAuth();
   const googleRegistration = async (idToken) => {
-    const user = await googleLoginRequest(idToken);
+    const user = await googleRetrieveInfo(idToken);
     return user;
   };
   // Called when Google returns the ID token
   const handleCredentialResponse = async (response) => {
     try {
-      const resp = await googleRegistration(response.credential);
-      if (resp.message === "registration") {
+      if (signin) {
+        await googleLogin(response.credential);
+      } else {
+        const resp = await googleRegistration(response.credential);
         return handleGoogleResponse(resp);
       }
     } catch (err) {

@@ -32,7 +32,13 @@ export const signUpCompany = async (data) => {
 };
 
 export const googleLoginRequest = async (credential) => {
-  const res = await api.post("/auth/google", {
+  const res = await api.post("/auth/google/signin", {
+    credential,
+  });
+  return res.data; // { user, accessToken }
+};
+export const googleRetrieveInfo = async (credential) => {
+  const res = await api.post("/auth/google/retrieveInfo", {
     credential,
   });
   return res.data; // { user, accessToken }

@@ -31,7 +31,7 @@ const generateToken = (x = 32) => crypto.randomBytes(x).toString("hex");
 const hashToken = (token) =>
   crypto.createHash("sha256").update(token).digest("hex");
 
-export async function googleAuth(body) {
+export async function googleAuthRetrieveInfo(body) {
   const { credential } = body;
   try {
     const ticket = await client.verifyIdToken({
@@ -63,7 +63,30 @@ export async function googleAuth(body) {
     throw error;
   }
 }
-
+export async function googleAuthSignin(body) {
+  const t = await sequelize.transaction();
+  const { credential } = body;
+  let status = 200;
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: googleOAuthConfig.clientId,
+    });
+    const payload = ticket.getPayload();
+    const email = payload.email;
+    let user = await userRepository.getUserByEmail(email);
+    if (!user) {
+      throw new AppError(404, "User not found", true, "User not found");
+    }
+    const { accessToken, refreshToken } = jwtUtils.generateTokens(user);
+    const sanitizedUser = await userMapper.sanitizeUser(user);
+    await t.commit();
+    return { accessToken, user: sanitizedUser, refreshToken, status };
+  } catch (error) {
+    await t.rollback();
+    throw error;
+  }
+}
 export async function resendVerificationEmail(userEmail) {
   try {
     // return;
@@ -325,7 +348,8 @@ export async function passwordResetConfirm({ token, password }) {
 
 const authServices = {
   sendVerificationEmail,
-  googleAuth,
+  googleAuthRetrieveInfo,
+  googleAuthSignin,
   loginUser,
   loginToken,
   refreshUserToken,
