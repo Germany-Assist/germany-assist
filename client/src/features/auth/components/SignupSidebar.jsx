@@ -8,7 +8,6 @@ const SignupSidebar = ({ currentStep }) => {
   ];
 
   return (
-    // Removed hardcoded w-[280px], bg, and border so it inherits from the parent wrapper
     <div className="flex flex-col text-left h-full w-full  ">
       <div className="text-base font-bold text-[#111827] mb-1.5 ">
         Create your account

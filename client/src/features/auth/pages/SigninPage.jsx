@@ -8,7 +8,9 @@ const SigninPage = () => {
     <div className="min-h-screen bg-white text-[#111827] font-[Outfit,sans-serif]">
       <SigninHeader />
       <div className="flex h-[calc(100vh-65px)] overflow-hidden">
-        <SigninLeftPanel />
+        <div className="hidden md:flex">
+          <SigninLeftPanel />
+        </div>
         <SigninRightPanel />
       </div>
     </div>

@@ -97,6 +97,7 @@ export const AuthProvider = ({ children }) => {
 
   // 6. Auth Actions
   const login = async (credentials) => {
+    console.log("login", credentials);
     const { user, accessToken } = await loginRequest(credentials);
     setUser(user);
     setAccessToken(accessToken);
