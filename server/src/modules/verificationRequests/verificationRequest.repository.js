@@ -10,7 +10,18 @@ async function createRequest(data, t) {
 async function getAllProvider(serviceProviderId, filters = {}) {
   return db.VerificationRequest.findAll({
     where: { ...filters, serviceProviderId },
-    include: [{ model: db.Asset, attributes: ["mediaType", "url"] }],
+    include: [
+      {
+        model: db.VerificationRequestAsset,
+        as: "verificationRequestAssets",
+        include: [
+          {
+            model: db.Asset,
+            attributes: ["mediaType", "url"],
+          },
+        ],
+      },
+    ],
     order: [["updatedAt", "DESC"]],
   });
 }
@@ -25,7 +36,18 @@ async function countRequests(filters = {}) {
 async function getAllAdmin({ limit, offset, filters }) {
   return db.VerificationRequest.findAll({
     where: filters,
-    include: [{ model: db.Asset, attributes: ["mediaType", "url"] }],
+    include: [
+      {
+        model: db.VerificationRequestAsset,
+        as: "verificationRequestAssets",
+        include: [
+          {
+            model: db.Asset,
+            attributes: ["mediaType", "url"],
+          },
+        ],
+      },
+    ],
     order: [["updatedAt", "DESC"]],
     limit,
     offset,

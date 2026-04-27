@@ -66,11 +66,11 @@ export const registerClient = async (body, files) => {
     const { accessToken, refreshToken } = jwtUtils.generateTokens(user);
     const sanitizedUser = await userMapper.sanitizeUser(user);
     if (profileImage) {
-      await AssetService.upload({
-        type: "userImage",
+      await AssetService.uploadAsset({
         files: [profileImage],
-        auth: user,
-        params: { id: hashIdUtil.hashIdEncode(user.id) },
+        ownerId: user.id,
+        typeKey: "userImage",
+        userId: user.id,
         transaction: t,
       });
     }
@@ -83,14 +83,11 @@ export const registerClient = async (body, files) => {
         type: "identity",
         t,
       });
-      await AssetService.upload({
-        type:
-          idDocument.mimetype === "application/pdf"
-            ? "verificationDocument"
-            : "verificationImage",
+      await AssetService.uploadAsset({
         files: [idDocument],
-        auth: user,
-        params: { id: hashIdUtil.hashIdEncode(request.id) },
+        ownerId: request.id,
+        typeKey: idDocument.mimetype === "application/pdf" ? "verificationDocument" : "verificationImage",
+        userId: user.id,
         transaction: t,
       });
     }
@@ -237,11 +234,11 @@ export const updateImage = async (auth, file) => {
     if (profileImageIds) {
       await AssetRepository.markAsUnconfirmed(profileImageIds, t);
     }
-    await AssetService.upload({
-      type: "userImage",
+    await AssetService.uploadAsset({
       files: [file],
-      auth,
-      params: { id: auth.id },
+      ownerId: auth.id,
+      typeKey: "userImage",
+      userId: auth.id,
       transaction: t,
     });
     await t.commit();

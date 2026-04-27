@@ -51,17 +51,20 @@ async function createProvider({ auth, files, providerId, t, relatedId, type }) {
     verificationRequest,
     t,
   );
-  await Promise.all(
+
+  // Upload assets using new AssetService
+  const uploadResults = await Promise.all(
     Object.values(files).map((i) =>
-      AssetService.upload({
-        type: i[0].fieldname,
+      AssetService.uploadAsset({
         files: [i[0]],
-        auth,
-        params: { id: hashIdUtil.hashIdEncode(request.id) },
+        ownerId: request.id,
+        typeKey: i[0].fieldname,
+        userId: auth.id,
         transaction: t,
       }),
     ),
   );
+
   return { message: "Create request service " };
 }
 async function getAllProvider(providerId) {
@@ -93,17 +96,20 @@ async function updateProvider({ auth, files, providerId, relatedId, type, t }) {
     { status: "pending" },
     t,
   );
+
+  // Upload assets using new AssetService
   await Promise.all(
     Object.values(files).map((i) =>
-      AssetService.upload({
-        type: i[0].fieldname,
+      AssetService.uploadAsset({
         files: [i[0]],
-        auth,
-        params: { id: hashIdUtil.hashIdEncode(request.id) },
+        ownerId: request.id,
+        typeKey: i[0].fieldname,
+        userId: auth.id,
         transaction: t,
       }),
     ),
   );
+
   return { message: "Create request service - not implemented" };
 }
 

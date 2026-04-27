@@ -1,168 +1,251 @@
 import { v4 as uuid } from "uuid";
 import path from "node:path";
 import sharpUtil from "../utils/sharp.util.js";
-import hashIdUtil from "../utils/hashId.util.js";
 import { AppError } from "../utils/error.class.js";
 import AssetRepository from "../modules/assets/assets.repository.js";
+
 /**
- * Centralized AssetService.
- * Can be called from any service (PostService, UserService, SPService, etc.)
- * Handles:
- * 1. Validation
- * 2. Formatting (image/video/document)
- * 3. Upload to S3
- * 4. Persist metadata
- * 5. Generate signed URLs
+ * ============================================================================
+ * AssetService - Centralized Asset Upload Service
+ * ============================================================================
+ *
+ * This service provides a unified interface for uploading files to S3 and
+ * creating asset records with junction table entries.
+ *
+ * HOW IT WORKS:
+ * - Each asset type (defined in asset-types table) has an 'ownerType' field
+ * - ownerType determines which junction table to use for counting limits
+ *   and creating associations:
+ *
+ *   | ownerType           | Junction Table        | Count Method            |
+ *   |---------------------|-----------------------|-------------------------|
+ *   | user                | user_assets           | countUserAssets()      |
+ *   | service             | service_assets        | countServiceAssets()   |
+ *   | post                | post_assets           | countPostAssets()      |
+ *   | verificationRequest | verification_request_ | countVerificationAssets|
+ *
+ * USAGE:
+ *   const result = await AssetService.uploadAsset({
+ *     files: [file1, file2],
+ *     ownerId: 123,              // userId, serviceId, postId, or verificationRequestId
+ *     typeKey: "userImage",     // from assetTypes table (determines constraints + junction)
+ *     userId: 1,                // the user uploading (for Asset.userId field)
+ *     transaction: t
+ *   });
+ *
+ * HOW TO ADD NEW ASSET TYPES:
+ *   1. Add entry to asset_types table/seed with appropriate ownerType
+ *   2. If new ownerType (e.g., "order"), add corresponding count/insert methods:
+ *      - countOrderAssets(ownerId, transaction)
+ *      - addToOrder(orderId, assetIds, transaction)
+ *   3. Add case in getJunctionMethods() below
+ *
+ * EXAMPLES:
+ *   // User uploads profile image
+ *   await AssetService.uploadAsset({
+ *     files: [file],
+ *     ownerId: userId,
+ *     typeKey: "userImage",
+ *     userId: authUserId,
+ *     transaction: t
+ *   });
+ *
+ *   // Service provider uploads service image
+ *   await AssetService.uploadAsset({
+ *     files: [file],
+ *     ownerId: serviceId,
+ *     typeKey: "serviceProfileImage",
+ *     userId: authUserId,
+ *     transaction: t
+ *   });
+ *
+ *   // User uploads verification documents
+ *   await AssetService.uploadAsset({
+ *     files: [file],
+ *     ownerId: verificationRequestId,
+ *     typeKey: "verificationDocument",
+ *     userId: authUserId,
+ *     transaction: t
+ *   });
+ *
+ *   // User uploads post attachments
+ *   await AssetService.uploadAsset({
+ *     files: [file],
+ *     ownerId: postId,
+ *     typeKey: "postAttachmentsImage",
+ *     userId: authUserId,
+ *     transaction: t
+ *   });
+ * ============================================================================
  */
+
 class AssetService {
   /**
-   * Upload files
-   * @param {Object} options
-   * @param {string} options.type - asset type - type should fall in one of the many options provided in the constraints (asset-types)table
-   * @param {Array} options.files - array of files { buffer, originalname, mimetype }
-   * @param {Object} options.auth - authenticated user info
-   * @param {Object} options.params - additional params (postId, serviceId) in case of profile image etc - its useless
-   * @param {Object} options.transaction - optional DB transaction
-   * @returns array of uploaded files with signed URLs for display
+   * Main upload method - handles all asset types
+   * @param {Object} params
+   * @param {Array} params.files - array of file objects { buffer, originalname, mimetype }
+   * @param {number} params.ownerId - the ID of the owner (userId, serviceId, postId, verificationRequestId)
+   * @param {string} params.typeKey - asset type key (e.g., "userImage", "serviceProfileImage")
+   * @param {number} params.userId - the user uploading (stored in Asset.userId)
+   * @param {Object} params.transaction - DB transaction
+   * @returns {Object} { urls: [...], assets: [...] }
    */
-
-  static async upload({ type, files, auth, params, transaction }) {
+  static async uploadAsset({ files, ownerId, typeKey, userId, transaction }) {
     if (!transaction) throw new AppError(400, "Transaction is required");
     if (!files || files.length === 0) {
       throw new AppError(400, "No files provided");
     }
 
-    // 1️⃣ Extract constraints (limits, media type, base key, thumb)
-    const constraints = await AssetRepository.extractConstrains(type);
-
-    // 2️⃣ Build search filters (for limits and ownership)
-    const searchFilters = this.formatSearchFilters(
-      type,
-      auth,
-      params,
-      constraints,
-    );
-    // 3️⃣ Validate files against count & size
-    await this.validateFiles(
-      type,
-      files,
-      searchFilters,
-      constraints,
-      transaction,
-    );
-
-    // 4️⃣ Format files depending on media type
-    let filesToUpload;
-    switch (constraints.mediaType) {
-      case "image":
-        filesToUpload = await this.formatImages(files, type, constraints);
-        break;
-      case "video":
-        filesToUpload = this.formatVideos(files, type, constraints);
-        break;
-      case "document":
-        filesToUpload = this.formatDocuments(files, type, constraints);
-        break;
-      default:
-        throw new AppError(500, "Invalid media type");
-    }
-
-    // 5️⃣ Upload to S3
-    await AssetRepository.uploadToS3(filesToUpload);
-
-    // 6️⃣ Persist metadata in DB
-    const assets = this.formatForAssets(
-      filesToUpload,
-      auth,
-      searchFilters,
-      constraints.mediaType,
-    );
-    await AssetRepository.saveAssets(assets, transaction);
-
-    // 7️⃣ Generate signed URLs
-    const publicUrls = await AssetRepository.generateSignedUrls(filesToUpload);
-    return publicUrls;
-  }
-
-  // ------------------- Helper functions -------------------
-
-  // Build filters for DB queries
-  static formatSearchFilters(type, auth, params, constraints) {
-    const filters = { key: type };
+    // 1️⃣ Get constraints from AssetTypes table
+    const constraints = await AssetRepository.extractConstrains(typeKey);
     const ownerType = constraints.ownerType;
 
-    switch (ownerType) {
-      case "serviceProvider":
-        if (!auth.relatedId) throw new AppError(500, "Invalid upload attempt");
-        filters.serviceProviderId = auth.relatedId;
-        break;
-      case "service":
-        if (!auth.relatedId) throw new AppError(500, "Invalid upload attempt");
-        filters.serviceId = hashIdUtil.hashIdDecode(params.id);
-        filters.serviceProviderId = auth.relatedId;
-        break;
-      case "post":
-        if (!auth.relatedId) throw new AppError(500, "Invalid upload attempt");
-        filters.postId = hashIdUtil.hashIdDecode(params.id);
-        filters.serviceProviderId = auth.relatedId;
-        break;
-      case "verificationRequest":
-        if (!auth.relatedId) throw new AppError(500, "Invalid upload attempt");
-        filters.verificationRequestId = hashIdUtil.hashIdDecode(params.id);
-        filters.serviceProviderId = auth.relatedId;
-        break;
-      case "user":
-        filters.userId = auth.id;
-        break;
-      default:
-        throw new AppError(500, "Invalid owner type");
-    }
+    // 2️⃣ Get junction methods based on ownerType
+    const junctionMethods = this.getJunctionMethods(ownerType);
 
-    return filters;
-  }
-
-  // Validate file sizes and upload limits
-  static async validateFiles(
-    type,
-    files,
-    searchFilters,
-    constraints,
-    transaction,
-  ) {
-    const totalFiles = files.length;
-    const currentCount = await AssetRepository.countAssets(
-      searchFilters,
+    // 3️⃣ Validate file count (check existing assets in junction table)
+    await this.validateFileCount(
+      files.length,
+      ownerId,
+      constraints,
+      junctionMethods,
       transaction,
     );
-    if (
-      constraints.limit !== "*" &&
-      currentCount + totalFiles > constraints.limit
-    ) {
+
+    // 4️⃣ Validate file sizes
+    this.validateFileSizes(files, constraints);
+
+    // 5️⃣ Format files for S3 based on media type
+    const filesToUpload = await this.formatFiles(files, typeKey, constraints);
+
+    // 6️⃣ Upload to S3
+    await AssetRepository.uploadToS3(filesToUpload);
+
+    // 7️⃣ Create Asset records
+    const assetRecords = this.formatAssetRecords(filesToUpload, userId);
+    const createdAssets = await AssetRepository.saveAssets(assetRecords, transaction);
+
+    // 8️⃣ Create junction table records
+    const assetIds = createdAssets.map((a) => a.id);
+    await junctionMethods.insert(ownerId, assetIds, transaction);
+
+    // 9️⃣ Generate signed URLs
+    const publicUrls = await AssetRepository.generateSignedUrls(filesToUpload);
+
+    return { urls: publicUrls, assets: createdAssets };
+  }
+
+  // ------------------- Junction Table Methods Mapping -------------------
+
+  /**
+   * Returns count and insert methods based on ownerType
+   * To add new ownerType support:
+   *   1. Add new case below
+   *   2. Add corresponding methods to AssetRepository
+   */
+  static getJunctionMethods(ownerType) {
+    const methods = {
+      user: {
+        count: (ownerId, transaction) =>
+          AssetRepository.countUserAssets(ownerId, transaction),
+        insert: (ownerId, assetIds, transaction) =>
+          AssetRepository.addToUser(ownerId, assetIds, transaction),
+      },
+      service: {
+        count: (ownerId, transaction) =>
+          AssetRepository.countServiceAssets(ownerId, transaction),
+        insert: (ownerId, assetIds, transaction) =>
+          AssetRepository.addToService(ownerId, assetIds, transaction),
+      },
+      post: {
+        count: (ownerId, transaction) =>
+          AssetRepository.countPostAssets(ownerId, transaction),
+        insert: (ownerId, assetIds, transaction) =>
+          AssetRepository.addToPost(ownerId, assetIds, transaction),
+      },
+      verificationRequest: {
+        count: (ownerId, transaction) =>
+          AssetRepository.countVerificationAssets(ownerId, transaction),
+        insert: (ownerId, assetIds, transaction) =>
+          AssetRepository.addToVerificationRequest(ownerId, assetIds, transaction),
+      },
+    };
+
+    if (!methods[ownerType]) {
       throw new AppError(
-        400,
-        `Upload limit exceeded (${constraints.limit}) for ${type}`,
+        500,
+        `Unsupported ownerType: ${ownerType}. Add support in getJunctionMethods()`,
       );
     }
 
+    return methods[ownerType];
+  }
+
+  // ------------------- Validation Helpers -------------------
+
+  static async validateFileCount(
+    totalFiles,
+    ownerId,
+    constraints,
+    junctionMethods,
+    transaction,
+  ) {
+    // Skip limit check if limit is "*" (unlimited)
+    if (constraints.limit === "*") return;
+
+    const currentCount = await junctionMethods.count(ownerId, transaction);
+
+    if (currentCount + totalFiles > constraints.limit) {
+      throw new AppError(
+        400,
+        `Upload limit exceeded (${constraints.limit}) for this asset type`,
+      );
+    }
+  }
+
+  static validateFileSizes(files, constraints) {
+    // Skip size check if size is "*" (unlimited)
+    if (constraints.size === "*") return;
+
     for (const file of files) {
-      if (constraints.size !== "*" && file.buffer.length > constraints.size) {
-        throw new AppError(413, `File size exceeds allowed limit for ${type}`);
+      if (file.buffer.length > constraints.size) {
+        throw new AppError(
+          413,
+          `File size exceeds allowed limit (${constraints.size} bytes)`,
+        );
       }
     }
   }
 
-  static async formatImages(files, type, constrains) {
-    const basekey = constrains.basekey;
-    const thumb = constrains.thumb;
+  // ------------------- Format Helpers -------------------
+
+  static async formatFiles(files, typeKey, constraints) {
+    switch (constraints.mediaType) {
+      case "image":
+        return this.formatImages(files, typeKey, constraints);
+      case "video":
+        return this.formatVideos(files, typeKey, constraints);
+      case "document":
+        return this.formatDocuments(files, typeKey, constraints);
+      default:
+        throw new AppError(500, `Invalid media type: ${constraints.mediaType}`);
+    }
+  }
+
+  static async formatImages(files, typeKey, constraints) {
+    const basekey = constraints.basekey;
+    const thumb = constraints.thumb;
     const images = [];
+
     for (const file of files) {
       const id = uuid();
       const imageKey = `${basekey}/${id}.webp`;
       const imageBuffer = await sharpUtil.imageResizeS3(file, 400, 400);
+
       images.push({
         key: imageKey,
         buffer: imageBuffer,
-        type,
+        type: typeKey,
         thumb: false,
         id,
         size: imageBuffer.length,
@@ -176,7 +259,7 @@ class AssetService {
         images.push({
           key: thumbKey,
           buffer: thumbBuffer,
-          type,
+          type: typeKey,
           thumb: true,
           id,
           size: thumbBuffer.length,
@@ -188,8 +271,7 @@ class AssetService {
     return images;
   }
 
-  // Format videos
-  static formatVideos(files, type, constraints) {
+  static formatVideos(files, typeKey, constraints) {
     const baseKey = constraints.basekey;
     return files.map((file) => {
       const id = uuid();
@@ -197,7 +279,7 @@ class AssetService {
       return {
         key: `${baseKey}/${id}${ext}`,
         buffer: file.buffer,
-        type,
+        type: typeKey,
         thumb: false,
         id,
         size: file.buffer.length,
@@ -205,8 +287,7 @@ class AssetService {
     });
   }
 
-  // Format documents
-  static formatDocuments(files, type, constraints) {
+  static formatDocuments(files, typeKey, constraints) {
     const baseKey = constraints.basekey;
     return files.map((file) => {
       const id = uuid();
@@ -214,7 +295,7 @@ class AssetService {
       return {
         key: `${baseKey}/${id}${ext}`,
         buffer: file.buffer,
-        type,
+        type: typeKey,
         thumb: false,
         id,
         size: file.buffer.length,
@@ -222,17 +303,12 @@ class AssetService {
     });
   }
 
-  // Format for DB storage
-  static formatForAssets(files, auth, searchFilters, mediaType) {
-    return files.map((file) => ({
+  static formatAssetRecords(filesToUpload, userId) {
+    return filesToUpload.map((file) => ({
       name: file.id,
       size: file.size,
-      mediaType,
-      serviceProviderId: auth.relatedId ?? null,
-      serviceId: searchFilters.serviceId ?? null,
-      postId: searchFilters.postId ?? null,
-      verificationRequestId: searchFilters.verificationRequestId ?? null,
-      userId: auth.id,
+      mediaType: file.contentType?.split("/")[0] || "image",
+      userId,
       key: file.type,
       thumb: file.thumb,
       url: file.key,
