@@ -38,6 +38,7 @@ const initialErrors = {
   countryOfResidence: "",
   companyName: "",
   bio: "",
+  terms: "",
   general: "",
 };
 
@@ -202,7 +203,7 @@ const BasicInfoForm = ({
     }
 
     if (!agreedToTerms) {
-      newErrors.general = "You must agree to the Terms of Service";
+      newErrors.terms = "You must agree to the Terms and Privacy Policy";
       isValid = false;
     }
 
@@ -499,7 +500,7 @@ const BasicInfoForm = ({
           onUpload={(file) => updateField("profileImage", file)}
         />
 
-        <TermsCheckbox checked={agreedToTerms} onChange={setAgreedToTerms} />
+        <TermsCheckbox checked={agreedToTerms} onChange={(value) => { setAgreedToTerms(value); if (errors.terms) setErrors((prev) => ({ ...prev, terms: "" })); }} error={errors.terms} />
       </div>
 
       <button
