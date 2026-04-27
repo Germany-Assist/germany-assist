@@ -7,14 +7,11 @@ class ServiceProvider extends Model {}
 ServiceProvider.init(
   {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: uuidv4,
       unique: true,
       primaryKey: true,
-      validate: {
-        isUUID: { args: 4, msg: "ID must be a valid UUIDv4" },
-      },
+      autoIncrement: true,
     },
     name: {
       type: DataTypes.STRING(200),
@@ -99,6 +96,16 @@ ServiceProvider.init(
         max: { args: [5], msg: "Rating cannot be greater than 5" },
       },
     },
+    type: {
+      type: DataTypes.ENUM("freelancer", "company"),
+      allowNull: false,
+      validate: {
+        isIn: {
+          args: [["freelancer", "company"]],
+          msg: "Type must be 'freelancer' or 'company'",
+        },
+      },
+    },
     totalReviews: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -110,6 +117,7 @@ ServiceProvider.init(
     },
     owner: {
       type: DataTypes.VIRTUAL,
+
       get() {
         return this.id;
       },
@@ -118,7 +126,7 @@ ServiceProvider.init(
   {
     sequelize,
     paranoid: true,
-  }
+  },
 );
 
 export default ServiceProvider;

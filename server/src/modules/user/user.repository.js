@@ -5,11 +5,7 @@ import { AppError } from "../../utils/error.class.js";
 export const createUser = async (userData, t) => {
   const user = await db.User.create(userData, {
     transaction: t,
-    include: [
-      { model: db.UserRole },
-      { model: db.Asset, as: "profilePicture" },
-      { model: db.UserProfile },
-    ],
+    include: [{ model: db.UserRole }, { model: db.UserProfile }],
   });
   return user;
 };

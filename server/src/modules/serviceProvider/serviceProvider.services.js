@@ -8,6 +8,284 @@ import authServices from "../auth/auth.service.js";
 import userDomain from "../user/user.domain.js";
 import permissionServices from "../permission/permission.services.js";
 import { roleTemplates } from "../../database/templates.js";
+import jwtUtils from "../../middlewares/jwt.middleware.js";
+import userMapper from "../user/user.mapper.js";
+import AssetService from "../../services/assts.services.js";
+import verificationRequestRepository from "../verificationRequests/verificationRequest.repository.js";
+import { PROVIDER_TYPES } from "../../configs/constants.js";
+
+const getFile = (files, field) => files?.[field]?.[0] || null;
+
+export const registerFreelancer = async (body, files) => {
+  const t = await sequelize.transaction();
+  try {
+    const {
+      firstName,
+      lastName,
+      displayName,
+      email,
+      phone,
+      password,
+      nationality,
+      countryOfResidence,
+      bio,
+    } = body;
+
+    const userExists = await userRepository.getUserByEmail(email);
+    if (userExists) {
+      throw new AppError(
+        409,
+        "User already exists",
+        false,
+        "Email already in use",
+      );
+    }
+
+    const spData = {
+      name: displayName,
+      about: bio || "",
+      description: bio || "",
+      phoneNumber: phone,
+      email,
+      type: PROVIDER_TYPES.freelancer, //"freelancer",
+    };
+
+    const sp = await serviceProviderRepository.createServiceProvider(spData, t);
+    const hashedPassword = bcryptUtil.hashPassword(password);
+    const domain = userDomain.setRoleAndType("serviceProvider");
+    const { rootRole, rootRelatedType } = domain;
+
+    const user = await userRepository.createUser(
+      {
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+        isVerified: false,
+        UserRole: {
+          role: rootRole,
+          relatedType: rootRelatedType,
+          relatedId: sp.id,
+        },
+        UserProfile: {
+          nationality,
+          countryOfResidence,
+          phoneNumber: phone,
+          displayName,
+        },
+      },
+      t,
+    );
+    await permissionServices.initPermissions(
+      user.id,
+      roleTemplates[rootRole],
+      t,
+    );
+
+    const profileImage = getFile(files, "profileImage");
+    if (profileImage) {
+      await AssetService.uploadAsset({
+        files: [profileImage],
+        ownerId: user.id,
+        typeKey: "userImage",
+        userId: user.id,
+        transaction: t,
+      });
+    }
+
+    const idDocument = getFile(files, "idDocument");
+    if (idDocument) {
+      const request = await verificationRequestRepository.createProvider({
+        auth: user,
+        userId: user.id,
+        relatedId: sp.id,
+        type: "identity",
+        t,
+      });
+      await AssetService.uploadAsset({
+        files: [idDocument],
+        ownerId: request.id,
+        typeKey:
+          idDocument.mimetype === "application/pdf"
+            ? "verificationDocument"
+            : "verificationImage",
+        userId: user.id,
+        transaction: t,
+      });
+    }
+
+    const { accessToken, refreshToken } = jwtUtils.generateTokens(user);
+    const sanitizedUser = await userMapper.sanitizeUser(user);
+
+    await t.commit();
+    await authServices.sendVerificationEmail(email, user.id);
+
+    return {
+      user: sanitizedUser,
+      accessToken,
+      refreshToken,
+    };
+  } catch (error) {
+    await t.rollback();
+    throw error;
+  }
+};
+
+export const registerCompany = async (body, files) => {
+  const t = await sequelize.transaction();
+  try {
+    const {
+      firstName,
+      lastName,
+      displayName,
+      companyName,
+      email,
+      phone,
+      password,
+      nationality,
+      countryOfResidence,
+      bio,
+    } = body;
+
+    const userExists = await userRepository.getUserByEmail(email);
+    if (userExists) {
+      throw new AppError(
+        409,
+        "User already exists",
+        false,
+        "Email already in use",
+      );
+    }
+
+    const spData = {
+      name: companyName,
+      about: bio || "",
+      description: bio || "",
+      phoneNumber: phone,
+      email,
+      type: PROVIDER_TYPES.company, //"company",
+    };
+    const sp = await serviceProviderRepository.createServiceProvider(spData, t);
+
+    const hashedPassword = bcryptUtil.hashPassword(password);
+    const domain = userDomain.setRoleAndType("serviceProvider");
+    const { rootRole, rootRelatedType } = domain;
+
+    const user = await userRepository.createUser(
+      {
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+        isVerified: false,
+        UserRole: {
+          role: rootRole,
+          relatedType: rootRelatedType,
+          relatedId: sp.id,
+        },
+        UserProfile: {
+          nationality,
+          countryOfResidence,
+          phoneNumber: phone,
+          displayName,
+        },
+      },
+      t,
+    );
+
+    await permissionServices.initPermissions(
+      user.id,
+      roleTemplates[rootRole],
+      t,
+    );
+
+    const profileImage = getFile(files, "profileImage");
+    if (profileImage) {
+      await AssetService.uploadAsset({
+        files: [profileImage],
+        ownerId: user.id,
+        typeKey: "userImage",
+        userId: user.id,
+        transaction: t,
+      });
+    }
+
+    const idDocument = getFile(files, "idDocument");
+    if (idDocument) {
+      const request = await verificationRequestRepository.createProvider({
+        auth: user,
+        userId: user.id,
+        relatedId: sp.id,
+        type: "identity",
+        t,
+      });
+      await AssetService.uploadAsset({
+        files: [idDocument],
+        ownerId: request.id,
+        typeKey:
+          idDocument.mimetype === "application/pdf"
+            ? "verificationDocument"
+            : "verificationImage",
+        userId: user.id,
+        transaction: t,
+      });
+    }
+
+    const proofOfResidence = getFile(files, "proofOfResidence");
+    if (proofOfResidence) {
+      const request = await verificationRequestRepository.createProvider({
+        auth: user,
+        userId: user.id,
+        relatedId: sp.id,
+        type: "proofOfResidence",
+        t,
+      });
+      await AssetService.uploadAsset({
+        files: [proofOfResidence],
+        ownerId: request.id,
+        typeKey:
+          proofOfResidence.mimetype === "application/pdf"
+            ? "verificationDocument"
+            : "verificationImage",
+        userId: user.id,
+        transaction: t,
+      });
+    }
+
+    const businessRegistration = getFile(files, "businessRegistration");
+    if (businessRegistration) {
+      const request = await verificationRequestRepository.createProvider({
+        auth: user,
+        userId: user.id,
+        relatedId: sp.id,
+        type: "businessRegistration",
+        t,
+      });
+      await AssetService.uploadAsset({
+        files: [businessRegistration],
+        ownerId: request.id,
+        typeKey: "verificationDocument",
+        userId: user.id,
+        transaction: t,
+      });
+    }
+
+    const { accessToken, refreshToken } = jwtUtils.generateTokens(user);
+    const sanitizedUser = await userMapper.sanitizeUser(user);
+
+    await t.commit();
+    await authServices.sendVerificationEmail(email, user.id);
+
+    return {
+      user: sanitizedUser,
+      accessToken,
+      refreshToken,
+    };
+  } catch (error) {
+    await t.rollback();
+    throw error;
+  }
+};
 
 export const createServiceProvider = async (profileData) => {
   const t = await sequelize.transaction();
@@ -15,7 +293,7 @@ export const createServiceProvider = async (profileData) => {
     // first create sp
     const sp = await serviceProviderRepository.createServiceProvider(
       profileData,
-      t
+      t,
     );
     let password = bcryptUtil.hashPassword(profileData.password);
     // then set the domain
@@ -34,12 +312,12 @@ export const createServiceProvider = async (profileData) => {
           relatedId: sp.id,
         },
       },
-      t
+      t,
     );
     await permissionServices.initPermissions(
       user.id,
       roleTemplates[rootRole],
-      t
+      t,
     );
     await authServices.sendVerificationEmail(profileData.email, user.id, t);
     await t.commit();
@@ -100,7 +378,7 @@ export const getServiceProviderById = async (id) => {
       404,
       "Service Provider not found",
       true,
-      "Service Provider not found"
+      "Service Provider not found",
     );
   profile.increment("views");
   await profile.save();
@@ -123,7 +401,7 @@ export const deleteServiceProvider = async (id) => {
       404,
       "Service Provider not found",
       true,
-      "Service Provider not found"
+      "Service Provider not found",
     );
   await profile.destroy();
   return { id, message: "Service Provider deleted" };
@@ -138,14 +416,14 @@ export const restoreServiceProvider = async (id) => {
       404,
       "Service Provider not found",
       true,
-      "Service Provider not found"
+      "Service Provider not found",
     );
   if (!profile.deletedAt)
     throw new AppError(
       400,
       "Service Provider is not deleted",
       true,
-      "Service Provider is not deleted"
+      "Service Provider is not deleted",
     );
   await profile.restore();
   return profile;
@@ -176,6 +454,8 @@ const serviceProviderService = {
   deleteServiceProvider,
   restoreServiceProvider,
   updateServiceProviderRating,
+  registerFreelancer,
+  registerCompany,
 };
 
 export default serviceProviderService;

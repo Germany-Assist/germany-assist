@@ -12,7 +12,7 @@ UserRole.init(
     },
     userId: { type: DataTypes.INTEGER, allowNull: false },
     relatedId: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     relatedType: {
@@ -21,7 +21,7 @@ UserRole.init(
         "ServiceProvider",
         "client",
         "admin",
-        "super_admin"
+        "super_admin",
       ),
       allowNull: true,
     },
@@ -33,7 +33,7 @@ UserRole.init(
         "employer_rep",
         "client",
         "admin",
-        "super_admin"
+        "super_admin",
       ),
       allowNull: false,
     },
@@ -41,5 +41,5 @@ UserRole.init(
   {
     sequelize,
     modelName: "UserRole",
-  }
+  },
 );

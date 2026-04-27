@@ -76,7 +76,7 @@ export const registerClient = async (body, files) => {
     }
 
     if (idDocument) {
-      const request = await verificationRequestRepository.createProvider({
+      const request = await verificationRequestRepository.createRequest({
         auth: user,
         userId: user.id,
         relatedId: user.id,
@@ -86,7 +86,10 @@ export const registerClient = async (body, files) => {
       await AssetService.uploadAsset({
         files: [idDocument],
         ownerId: request.id,
-        typeKey: idDocument.mimetype === "application/pdf" ? "verificationDocument" : "verificationImage",
+        typeKey:
+          idDocument.mimetype === "application/pdf"
+            ? "verificationDocument"
+            : "verificationImage",
         userId: user.id,
         transaction: t,
       });

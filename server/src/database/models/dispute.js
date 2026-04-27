@@ -15,7 +15,7 @@ Dispute.init(
       allowNull: false,
     },
     serviceProviderId: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     orderId: {

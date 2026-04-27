@@ -28,7 +28,7 @@ import { Op } from "sequelize";
 import Dispute from "./models/dispute.js";
 import AuditLog from "./models/auditLog.js";
 import Subcategory from "./models/subcategory.js";
-import ServiceProviderCategory from "./models/service_provider_category.js";
+
 import VerificationRequest from "./models/verificationRequest.js";
 import UserProfile from "./models/userProfile.js";
 import PostAsset from "./models/post_asset.js";
@@ -45,6 +45,8 @@ export const defineConstrains = () => {
   VerificationRequest.belongsTo(ServiceProvider, {
     foreignKey: "serviceProviderId",
   });
+  VerificationRequest.belongsTo(User, { foreignKey: "userId" });
+  User.hasMany(VerificationRequest, { foreignKey: "userId" });
   VerificationRequest.hasMany(VerificationRequestAsset, {
     foreignKey: "verificationRequestId",
     as: "verificationRequestAssets",
@@ -182,7 +184,10 @@ export const defineConstrains = () => {
   //service
   Service.hasMany(Order, { foreignKey: "serviceId" });
   Service.belongsTo(User, { foreignKey: "userId" });
-  Service.hasMany(ServiceAsset, { foreignKey: "serviceId", as: "serviceAssets" });
+  Service.hasMany(ServiceAsset, {
+    foreignKey: "serviceId",
+    as: "serviceAssets",
+  });
   ServiceAsset.belongsTo(Service, { foreignKey: "serviceId" });
   Service.hasMany(Review, { foreignKey: "serviceId" });
   Service.hasMany(Favorite, { foreignKey: "serviceId" });
@@ -227,7 +232,10 @@ export const defineConstrains = () => {
   Asset.hasMany(UserAsset, { foreignKey: "assetId", as: "userAssets" });
   UserAsset.belongsTo(Asset, { foreignKey: "assetId" });
 
-  Asset.hasMany(VerificationRequestAsset, { foreignKey: "assetId", as: "verificationRequestAssets" });
+  Asset.hasMany(VerificationRequestAsset, {
+    foreignKey: "assetId",
+    as: "verificationRequestAssets",
+  });
   VerificationRequestAsset.belongsTo(Asset, { foreignKey: "assetId" });
 
   //assetTypes
@@ -250,16 +258,7 @@ export const defineConstrains = () => {
     as: "roles",
   });
   //category - serviceProvider
-  Category.belongsToMany(ServiceProvider, {
-    through: ServiceProviderCategory,
-    foreignKey: "categoryId",
-    otherKey: "serviceProviderId",
-  });
-  ServiceProvider.belongsToMany(Category, {
-    through: ServiceProviderCategory,
-    foreignKey: "serviceProviderId",
-    otherKey: "categoryId",
-  });
+
   ServiceProvider.hasMany(Notification, { foreignKey: "serviceProviderId" });
 
   //category
@@ -324,7 +323,7 @@ const db = {
   Post,
   Category,
   Subcategory,
-  ServiceProviderCategory,
+
   ServiceProvider,
   Service,
   Order,

@@ -22,12 +22,12 @@ export const signUpClient = async (data) => {
 };
 
 export const signUpFreelancer = async (data) => {
-  const res = await api.post("/provider/signup", data);
+  const res = await api.post("/serviceProvider/freelancer/signup", data);
   return res.data;
 };
 
 export const signUpCompany = async (data) => {
-  const res = await api.post("/company/signup", data);
+  const res = await api.post("/serviceProvider/company/signup", data);
   return res.data;
 };
 

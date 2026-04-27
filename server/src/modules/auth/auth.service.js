@@ -142,7 +142,7 @@ export async function sendVerificationEmail(userEmail, userId, t) {
       t,
     );
     const databaseToken = {
-      token: tokenHash,
+      token: tokenHash.trim(),
       userId: userId,
       oneTime: true,
       isValid: true,
@@ -349,6 +349,7 @@ export async function passwordResetConfirm({ token, password }) {
 const authServices = {
   sendVerificationEmail,
   googleAuthRetrieveInfo,
+  resendVerificationEmail,
   googleAuthSignin,
   loginUser,
   loginToken,

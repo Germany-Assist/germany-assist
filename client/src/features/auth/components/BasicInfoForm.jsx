@@ -100,6 +100,7 @@ const BasicInfoForm = ({
   };
 
   const handleGoogleResponse = (response) => {
+    setError(null);
     if (!response.success) {
       setError(response.message);
       return;
@@ -108,7 +109,6 @@ const BasicInfoForm = ({
     if (response.lastName) updateField("lastName", response.lastName);
     if (response.email) updateField("email", response.email);
     if (response.phone) updateField("phone", response.phone);
-    if (response.nationality) updateField("nationality", response.nationality);
   };
 
   useEffect(() => {
@@ -220,7 +220,7 @@ const BasicInfoForm = ({
       firstName: formData.firstName,
       lastName: formData.lastName,
       displayName: formData.displayName,
-      nationality: formData.country,
+      nationality: formData.nationality,
       email: formData.email,
       phone: formData.phone,
       password: formData.password,
@@ -247,7 +247,7 @@ const BasicInfoForm = ({
       <div className="text-xl font-bold text-[#111827] mb-1">
         {role === "provider"
           ? subRole === "company"
-            ? "Office Account"
+            ? "Company Account"
             : "Freelancer Account"
           : "Individual Account"}
       </div>
@@ -346,14 +346,18 @@ const BasicInfoForm = ({
             />
           </div>
         </div>
-        {role === "provider" ? (
+        {role === "provider" && subRole === "company" ? (
           <SectionHeader icon="🏢" title="Company Name" />
         ) : (
           <SectionHeader icon="🏢" title="Display Name" />
         )}
         <div className="mb-2.5">
           <FormInput
-            label={role === "provider" ? `Company Name` : `Display Name`}
+            label={
+              role === "provider" && subRole === "company"
+                ? `Company Name`
+                : `Display Name`
+            }
             value={formData.displayName}
             onChange={(value) => updateField("displayName", value)}
             placeholder="How you'll appear"
@@ -500,7 +504,14 @@ const BasicInfoForm = ({
           onUpload={(file) => updateField("profileImage", file)}
         />
 
-        <TermsCheckbox checked={agreedToTerms} onChange={(value) => { setAgreedToTerms(value); if (errors.terms) setErrors((prev) => ({ ...prev, terms: "" })); }} error={errors.terms} />
+        <TermsCheckbox
+          checked={agreedToTerms}
+          onChange={(value) => {
+            setAgreedToTerms(value);
+            if (errors.terms) setErrors((prev) => ({ ...prev, terms: "" }));
+          }}
+          error={errors.terms}
+        />
       </div>
 
       <button

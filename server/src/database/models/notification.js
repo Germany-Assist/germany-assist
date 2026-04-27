@@ -16,7 +16,7 @@ Notification.init(
       allowNull: true,
     },
     serviceProviderId: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     isAdmin: {

@@ -114,7 +114,7 @@ const RoleSelection = ({
     {
       id: "company",
       icon: "🏛️",
-      title: "Office / Organization",
+      title: "Company / Organization",
       desc: "I represent a registered company, language school, agency, or organization with staff.",
     },
   ];

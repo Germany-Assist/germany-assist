@@ -41,10 +41,11 @@ Service.init(
       },
     },
     serviceProviderId: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        isUUID: { args: 4, msg: "Service Provider ID must be a valid UUIDv4" },
+        isInt: { msg: "ServiceProviderId must be an integer" },
+        min: { args: [1], msg: "ServiceProviderId must be greater than 0" },
       },
     },
     views: {

@@ -28,7 +28,7 @@ Order.init(
       allowNull: false,
     },
     serviceId: { type: DataTypes.INTEGER, allowNull: false },
-    serviceProviderId: { type: DataTypes.UUID, allowNull: false },
+    serviceProviderId: { type: DataTypes.INTEGER, allowNull: false },
     stripePaymentIntentId: { type: DataTypes.STRING, unique: true },
     currency: { type: DataTypes.STRING, defaultValue: "usd" },
     amount: { type: DataTypes.FLOAT, allowNull: false },

@@ -2,7 +2,37 @@ import serviceProviderServices from "./serviceProvider.services.js";
 import { AppError } from "../../utils/error.class.js";
 import authUtils from "../../utils/authorize.util.js";
 import hashIdUtil from "../../utils/hashId.util.js";
-import { register } from "node:module";
+import authDomain from "../auth/auth.domain.js";
+
+export async function signupFreelancer(req, res, next) {
+  try {
+    const result = await serviceProviderServices.registerFreelancer(
+      req.body,
+      req.files,
+    );
+    res
+      .cookie("refreshToken", result.refreshToken, authDomain.cookieOptions)
+      .status(201)
+      .json({ accessToken: result.accessToken, user: result.user });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function signupCompany(req, res, next) {
+  try {
+    const result = await serviceProviderServices.registerCompany(
+      req.body,
+      req.files,
+    );
+    res
+      .cookie("refreshToken", result.refreshToken, authDomain.cookieOptions)
+      .status(201)
+      .json({ accessToken: result.accessToken, user: result.user });
+  } catch (error) {
+    next(error);
+  }
+}
 
 export async function createServiceProvider(req, res, next) {
   try {
@@ -121,5 +151,7 @@ const serviceProviderController = {
   getServiceProviderById,
   getAllServiceProvider,
   createServiceProvider,
+  signupFreelancer,
+  signupCompany,
 };
 export default serviceProviderController;

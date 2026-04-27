@@ -29,6 +29,7 @@ const SignupPage = () => {
   const handleStep2Complete = async (data) => {
     data.append("role", role);
     data.append("subRole", subRole);
+    setEmail(data.get("email"));
     try {
       let result;
       if (role === "provider") {
@@ -41,7 +42,7 @@ const SignupPage = () => {
       }
       if (result) {
         setError(null);
-        // setCurrentStep(3);
+        setCurrentStep(3);
       }
     } catch (err) {
       setError(getErrorMessage(err));
