@@ -127,7 +127,6 @@ const BasicInfoForm = ({
   const validateForm = () => {
     const newErrors = { ...initialErrors };
     let isValid = true;
-
     if (!formData.firstName.trim()) {
       newErrors.firstName = "First name is required";
       isValid = false;
@@ -146,7 +145,7 @@ const BasicInfoForm = ({
       isValid = false;
     }
 
-    if (!formData.displayName.trim()) {
+    if (!formData.displayName.trim() && subRole !== "company") {
       newErrors.displayName = "Display name is required";
       isValid = false;
     }
@@ -177,11 +176,8 @@ const BasicInfoForm = ({
       isValid = false;
     }
 
-    if (
-      role === "provider" &&
-      subRole === "company" &&
-      !formData.companyName.trim()
-    ) {
+    if (subRole === "company" && !formData.companyName.trim()) {
+      console.log(formData.companyName);
       newErrors.companyName = "Company name is required";
       isValid = false;
     }
@@ -233,6 +229,7 @@ const BasicInfoForm = ({
       businessRegistration: formData.businessRegistration,
     };
     const formDataPayload = createFormData(data);
+
     onContinue(formDataPayload);
   };
   return (
@@ -358,8 +355,14 @@ const BasicInfoForm = ({
                 ? `Company Name`
                 : `Display Name`
             }
-            value={formData.displayName}
-            onChange={(value) => updateField("displayName", value)}
+            value={
+              formData[subRole === "company" ? "companyName" : "displayName"]
+            }
+            onChange={(value) => {
+              const field =
+                subRole === "company" ? "companyName" : "displayName";
+              updateField(field, value);
+            }}
             placeholder="How you'll appear"
             required
             error={errors.displayName}

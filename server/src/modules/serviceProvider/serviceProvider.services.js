@@ -165,8 +165,8 @@ export const registerCompany = async (body, files) => {
       email,
       type: PROVIDER_TYPES.company, //"company",
     };
-    const sp = await serviceProviderRepository.createServiceProvider(spData, t);
 
+    const sp = await serviceProviderRepository.createServiceProvider(spData, t);
     const hashedPassword = bcryptUtil.hashPassword(password);
     const domain = userDomain.setRoleAndType("serviceProvider");
     const { rootRole, rootRelatedType } = domain;
