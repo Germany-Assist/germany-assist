@@ -76,13 +76,15 @@ export const registerClient = async (body, files) => {
     }
 
     if (idDocument) {
-      const request = await verificationRequestRepository.createRequest({
-        auth: user,
-        userId: user.id,
-        relatedId: user.id,
-        type: "identity",
+      const request = await verificationRequestRepository.createRequest(
+        {
+          auth: user,
+          userId: user.id,
+          relatedId: user.id,
+          type: "identity",
+        },
         t,
-      });
+      );
       await AssetService.uploadAsset({
         files: [idDocument],
         ownerId: request.id,

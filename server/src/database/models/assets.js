@@ -73,6 +73,10 @@ Asset.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
+    label: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
     owner: {
       type: DataTypes.VIRTUAL,

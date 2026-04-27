@@ -97,20 +97,52 @@ class AssetRepository {
 
   // ------------------- Count Methods for Junction Tables -------------------
 
-  static async countUserAssets(userId, transaction) {
-    return db.UserAsset.count({ where: { userId }, transaction });
+  static async countUserAssets(userId, typeKey, transaction) {
+    return db.UserAsset.count({
+      include: [{
+        model: db.Asset,
+        where: { key: typeKey },
+        attributes: [],
+      }],
+      where: { userId },
+      transaction,
+    });
   }
 
-  static async countServiceAssets(serviceId, transaction) {
-    return db.ServiceAsset.count({ where: { serviceId }, transaction });
+  static async countServiceAssets(serviceId, typeKey, transaction) {
+    return db.ServiceAsset.count({
+      include: [{
+        model: db.Asset,
+        where: { key: typeKey },
+        attributes: [],
+      }],
+      where: { serviceId },
+      transaction,
+    });
   }
 
-  static async countPostAssets(postId, transaction) {
-    return db.PostAsset.count({ where: { postId }, transaction });
+  static async countPostAssets(postId, typeKey, transaction) {
+    return db.PostAsset.count({
+      include: [{
+        model: db.Asset,
+        where: { key: typeKey },
+        attributes: [],
+      }],
+      where: { postId },
+      transaction,
+    });
   }
 
-  static async countVerificationAssets(verificationRequestId, transaction) {
-    return db.VerificationRequestAsset.count({ where: { verificationRequestId }, transaction });
+  static async countVerificationAssets(verificationRequestId, typeKey, transaction) {
+    return db.VerificationRequestAsset.count({
+      include: [{
+        model: db.Asset,
+        where: { key: typeKey },
+        attributes: [],
+      }],
+      where: { verificationRequestId },
+      transaction,
+    });
   }
 }
 

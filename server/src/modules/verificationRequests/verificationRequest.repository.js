@@ -65,6 +65,7 @@ async function updateAdmin(requestId, updates, t) {
 const verificationRequestRepository = {
   createProvider,
   countRequests,
+  createRequest,
   getAllProvider,
   getAllAdmin,
   updateAdmin,

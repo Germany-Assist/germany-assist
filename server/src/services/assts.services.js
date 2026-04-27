@@ -24,19 +24,29 @@ import AssetRepository from "../modules/assets/assets.repository.js";
  *   | post                | post_assets           | countPostAssets()      |
  *   | verificationRequest | verification_request_ | countVerificationAssets|
  *
+ * LIMIT TRACKING:
+ * - Limits are checked PER typeKey, not across all assets
+ * - Count queries join with assets table to filter by the 'key' column
+ * - User can have separate limits for userImage (e.g., 1) AND userBanner (e.g., 1)
+ *
+ * LABEL:
+ * - Optional string to group files uploaded in the same request
+ * - Useful for tracking files that share the same typeKey
+ *
  * USAGE:
  *   const result = await AssetService.uploadAsset({
  *     files: [file1, file2],
  *     ownerId: 123,              // userId, serviceId, postId, or verificationRequestId
  *     typeKey: "userImage",     // from assetTypes table (determines constraints + junction)
  *     userId: 1,                // the user uploading (for Asset.userId field)
+ *     label: "batch-123",       // optional label to group files
  *     transaction: t
  *   });
  *
  * HOW TO ADD NEW ASSET TYPES:
  *   1. Add entry to asset_types table/seed with appropriate ownerType
  *   2. If new ownerType (e.g., "order"), add corresponding count/insert methods:
- *      - countOrderAssets(ownerId, transaction)
+ *      - countOrderAssets(ownerId, typeKey, transaction)
  *      - addToOrder(orderId, assetIds, transaction)
  *   3. Add case in getJunctionMethods() below
  *
@@ -47,6 +57,25 @@ import AssetRepository from "../modules/assets/assets.repository.js";
  *     ownerId: userId,
  *     typeKey: "userImage",
  *     userId: authUserId,
+ *     transaction: t
+ *   });
+ *
+ *   // User uploads banner (separate limit from profile image)
+ *   await AssetService.uploadAsset({
+ *     files: [file],
+ *     ownerId: userId,
+ *     typeKey: "userBanner",
+ *     userId: authUserId,
+ *     transaction: t
+ *   });
+ *
+ *   // User uploads multiple images with label for tracking
+ *   await AssetService.uploadAsset({
+ *     files: [file1, file2, file3],
+ *     ownerId: userId,
+ *     typeKey: "postAttachmentsImage",
+ *     userId: authUserId,
+ *     label: "post-creation-batch",
  *     transaction: t
  *   });
  *
@@ -87,10 +116,11 @@ class AssetService {
    * @param {number} params.ownerId - the ID of the owner (userId, serviceId, postId, verificationRequestId)
    * @param {string} params.typeKey - asset type key (e.g., "userImage", "serviceProfileImage")
    * @param {number} params.userId - the user uploading (stored in Asset.userId)
+   * @param {string} [params.label] - optional label to group files in same request
    * @param {Object} params.transaction - DB transaction
    * @returns {Object} { urls: [...], assets: [...] }
    */
-  static async uploadAsset({ files, ownerId, typeKey, userId, transaction }) {
+  static async uploadAsset({ files, ownerId, typeKey, userId, label, transaction }) {
     if (!transaction) throw new AppError(400, "Transaction is required");
     if (!files || files.length === 0) {
       throw new AppError(400, "No files provided");
@@ -107,6 +137,7 @@ class AssetService {
     await this.validateFileCount(
       files.length,
       ownerId,
+      typeKey,
       constraints,
       junctionMethods,
       transaction,
@@ -122,7 +153,7 @@ class AssetService {
     await AssetRepository.uploadToS3(filesToUpload);
 
     // 7️⃣ Create Asset records
-    const assetRecords = this.formatAssetRecords(filesToUpload, userId);
+    const assetRecords = this.formatAssetRecords(filesToUpload, userId, label);
     const createdAssets = await AssetRepository.saveAssets(assetRecords, transaction);
 
     // 8️⃣ Create junction table records
@@ -146,26 +177,26 @@ class AssetService {
   static getJunctionMethods(ownerType) {
     const methods = {
       user: {
-        count: (ownerId, transaction) =>
-          AssetRepository.countUserAssets(ownerId, transaction),
+        count: (ownerId, typeKey, transaction) =>
+          AssetRepository.countUserAssets(ownerId, typeKey, transaction),
         insert: (ownerId, assetIds, transaction) =>
           AssetRepository.addToUser(ownerId, assetIds, transaction),
       },
       service: {
-        count: (ownerId, transaction) =>
-          AssetRepository.countServiceAssets(ownerId, transaction),
+        count: (ownerId, typeKey, transaction) =>
+          AssetRepository.countServiceAssets(ownerId, typeKey, transaction),
         insert: (ownerId, assetIds, transaction) =>
           AssetRepository.addToService(ownerId, assetIds, transaction),
       },
       post: {
-        count: (ownerId, transaction) =>
-          AssetRepository.countPostAssets(ownerId, transaction),
+        count: (ownerId, typeKey, transaction) =>
+          AssetRepository.countPostAssets(ownerId, typeKey, transaction),
         insert: (ownerId, assetIds, transaction) =>
           AssetRepository.addToPost(ownerId, assetIds, transaction),
       },
       verificationRequest: {
-        count: (ownerId, transaction) =>
-          AssetRepository.countVerificationAssets(ownerId, transaction),
+        count: (ownerId, typeKey, transaction) =>
+          AssetRepository.countVerificationAssets(ownerId, typeKey, transaction),
         insert: (ownerId, assetIds, transaction) =>
           AssetRepository.addToVerificationRequest(ownerId, assetIds, transaction),
       },
@@ -186,6 +217,7 @@ class AssetService {
   static async validateFileCount(
     totalFiles,
     ownerId,
+    typeKey,
     constraints,
     junctionMethods,
     transaction,
@@ -193,7 +225,7 @@ class AssetService {
     // Skip limit check if limit is "*" (unlimited)
     if (constraints.limit === "*") return;
 
-    const currentCount = await junctionMethods.count(ownerId, transaction);
+    const currentCount = await junctionMethods.count(ownerId, typeKey, transaction);
 
     if (currentCount + totalFiles > constraints.limit) {
       throw new AppError(
@@ -303,7 +335,7 @@ class AssetService {
     });
   }
 
-  static formatAssetRecords(filesToUpload, userId) {
+  static formatAssetRecords(filesToUpload, userId, label) {
     return filesToUpload.map((file) => ({
       name: file.id,
       size: file.size,
@@ -313,6 +345,7 @@ class AssetService {
       thumb: file.thumb,
       url: file.key,
       confirmed: true,
+      label,
     }));
   }
 }

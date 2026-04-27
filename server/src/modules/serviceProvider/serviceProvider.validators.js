@@ -44,10 +44,7 @@ export const createFreelancerValidator = [
     .isLength({ min: 8 })
     .withMessage("Password must be at least 8 characters"),
 
-  body("nationality")
-    .trim()
-    .notEmpty()
-    .withMessage("Nationality is required"),
+  body("nationality").trim().notEmpty().withMessage("Nationality is required"),
 
   body("countryOfResidence")
     .trim()
@@ -75,13 +72,6 @@ export const createCompanyValidator = [
     .withMessage("Last name is required")
     .isLength({ min: 1, max: 100 })
     .withMessage("Last name must be between 1 and 100 characters"),
-
-  body("displayName")
-    .trim()
-    .notEmpty()
-    .withMessage("Display name is required")
-    .isLength({ min: 3, max: 100 })
-    .withMessage("Display name must be between 3 and 100 characters"),
 
   body("companyName")
     .trim()
@@ -112,10 +102,7 @@ export const createCompanyValidator = [
     .isLength({ min: 8 })
     .withMessage("Password must be at least 8 characters"),
 
-  body("nationality")
-    .trim()
-    .notEmpty()
-    .withMessage("Nationality is required"),
+  body("nationality").trim().notEmpty().withMessage("Nationality is required"),
 
   body("countryOfResidence")
     .trim()

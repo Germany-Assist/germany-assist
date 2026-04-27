@@ -95,13 +95,15 @@ export const registerFreelancer = async (body, files) => {
 
     const idDocument = getFile(files, "idDocument");
     if (idDocument) {
-      const request = await verificationRequestRepository.createProvider({
-        auth: user,
-        userId: user.id,
-        relatedId: sp.id,
-        type: "identity",
+      const request = await verificationRequestRepository.createProvider(
+        {
+          auth: user,
+          userId: user.id,
+          relatedId: sp.id,
+          type: "identity",
+        },
         t,
-      });
+      );
       await AssetService.uploadAsset({
         files: [idDocument],
         ownerId: request.id,
@@ -109,6 +111,7 @@ export const registerFreelancer = async (body, files) => {
           idDocument.mimetype === "application/pdf"
             ? "verificationDocument"
             : "verificationImage",
+        label: "Identity Document",
         userId: user.id,
         transaction: t,
       });
@@ -187,7 +190,7 @@ export const registerCompany = async (body, files) => {
           nationality,
           countryOfResidence,
           phoneNumber: phone,
-          displayName,
+          displayName: companyName, //since we are using company name as display name,
         },
       },
       t,
@@ -209,65 +212,58 @@ export const registerCompany = async (body, files) => {
         transaction: t,
       });
     }
-
     const idDocument = getFile(files, "idDocument");
-    if (idDocument) {
-      const request = await verificationRequestRepository.createProvider({
-        auth: user,
-        userId: user.id,
-        relatedId: sp.id,
-        type: "identity",
-        t,
-      });
-      await AssetService.uploadAsset({
-        files: [idDocument],
-        ownerId: request.id,
-        typeKey:
-          idDocument.mimetype === "application/pdf"
-            ? "verificationDocument"
-            : "verificationImage",
-        userId: user.id,
-        transaction: t,
-      });
-    }
-
     const proofOfResidence = getFile(files, "proofOfResidence");
-    if (proofOfResidence) {
-      const request = await verificationRequestRepository.createProvider({
-        auth: user,
-        userId: user.id,
-        relatedId: sp.id,
-        type: "proofOfResidence",
-        t,
-      });
-      await AssetService.uploadAsset({
-        files: [proofOfResidence],
-        ownerId: request.id,
-        typeKey:
-          proofOfResidence.mimetype === "application/pdf"
-            ? "verificationDocument"
-            : "verificationImage",
-        userId: user.id,
-        transaction: t,
-      });
-    }
-
     const businessRegistration = getFile(files, "businessRegistration");
-    if (businessRegistration) {
-      const request = await verificationRequestRepository.createProvider({
-        auth: user,
-        userId: user.id,
-        relatedId: sp.id,
-        type: "businessRegistration",
+    if (idDocument || proofOfResidence || businessRegistration) {
+      const request = await verificationRequestRepository.createProvider(
+        {
+          auth: user,
+          userId: user.id,
+          relatedId: sp.id,
+          type: "identity",
+        },
         t,
-      });
-      await AssetService.uploadAsset({
-        files: [businessRegistration],
-        ownerId: request.id,
-        typeKey: "verificationDocument",
-        userId: user.id,
-        transaction: t,
-      });
+      );
+      if (idDocument) {
+        await AssetService.uploadAsset({
+          files: [idDocument],
+          ownerId: request.id,
+          typeKey:
+            idDocument.mimetype === "application/pdf"
+              ? "verificationDocument"
+              : "verificationImage",
+          userId: user.id,
+          label: "Identity Document",
+          transaction: t,
+        });
+      }
+      if (proofOfResidence) {
+        await AssetService.uploadAsset({
+          files: [proofOfResidence],
+          ownerId: request.id,
+          typeKey:
+            proofOfResidence.mimetype === "application/pdf"
+              ? "verificationDocument"
+              : "verificationImage",
+          userId: user.id,
+          label: "proofOfResidence",
+          transaction: t,
+        });
+      }
+      if (businessRegistration) {
+        await AssetService.uploadAsset({
+          files: [businessRegistration],
+          ownerId: request.id,
+          typeKey:
+            businessRegistration.mimetype === "application/pdf"
+              ? "verificationDocument"
+              : "verificationImage",
+          userId: user.id,
+          label: "businessRegistration",
+          transaction: t,
+        });
+      }
     }
 
     const { accessToken, refreshToken } = jwtUtils.generateTokens(user);
