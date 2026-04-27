@@ -3,6 +3,9 @@ import db from "../../database/index.js";
 async function createProvider(data, t) {
   return db.VerificationRequest.create(data, { transaction: t });
 }
+async function createRequest(data, t) {
+  return db.VerificationRequest.create(data, { transaction: t });
+}
 
 async function getAllProvider(serviceProviderId, filters = {}) {
   return db.VerificationRequest.findAll({

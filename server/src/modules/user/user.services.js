@@ -10,6 +10,7 @@ import { errorLogger } from "../../utils/loggers.js";
 import AssetRepository from "../assets/assets.repository.js";
 import authServices from "../auth/auth.service.js";
 import permissionServices from "../permission/permission.services.js";
+import verificationRequestRepository from "../verificationRequests/verificationRequest.repository.js";
 import userDomain from "./user.domain.js";
 import userMapper from "./user.mapper.js";
 import userRepository from "./user.repository.js";
@@ -74,19 +75,25 @@ export const registerClient = async (body, files) => {
       });
     }
 
-    // if (idDocument) {
-    //   await AssetService.upload({
-    //     type:
-    //       idDocument.mimetype === "application/pdf"
-    //         ? "verificationDocument"
-    //         : "verificationImage",
-    //     files: [idDocument],
-    //     auth: user,
-    //     params: { id: hashIdUtil.hashIdEncode(user.id) },
-    //     transaction: t,
-    //   });
-
-    // }
+    if (idDocument) {
+      const request = await verificationRequestRepository.createProvider({
+        auth: user,
+        userId: user.id,
+        relatedId: user.id,
+        type: "identity",
+        t,
+      });
+      await AssetService.upload({
+        type:
+          idDocument.mimetype === "application/pdf"
+            ? "verificationDocument"
+            : "verificationImage",
+        files: [idDocument],
+        auth: user,
+        params: { id: hashIdUtil.hashIdEncode(request.id) },
+        transaction: t,
+      });
+    }
 
     await t.commit();
     await authServices.sendVerificationEmail(email, user.id);

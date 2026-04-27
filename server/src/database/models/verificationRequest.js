@@ -10,9 +10,16 @@ VerificationRequest.init(
       primaryKey: true,
       autoIncrement: true,
     },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        isInt: { msg: "User must be an integer" },
+      },
+    },
     serviceProviderId: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: true,
       validate: {
         isUUID: { args: 4, msg: "Service Provider must be a valid UUIDv4" },
       },

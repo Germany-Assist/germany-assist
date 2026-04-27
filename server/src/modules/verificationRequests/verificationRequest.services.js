@@ -11,7 +11,6 @@ import verificationRequestRepository from "./verificationRequest.repository.js";
 async function createProvider({ auth, files, providerId, t, relatedId, type }) {
   const exist = await verificationRequestRepository.getAllProvider(providerId);
   const unhashedRelatedId = hashIdUtil.hashIdDecode(relatedId);
-
   if (
     exist &&
     exist.length > 0 &&
@@ -63,7 +62,7 @@ async function createProvider({ auth, files, providerId, t, relatedId, type }) {
       }),
     ),
   );
-  return { message: "Create request service - not implemented" };
+  return { message: "Create request service " };
 }
 async function getAllProvider(providerId) {
   const requests =
