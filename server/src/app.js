@@ -25,12 +25,17 @@ app.use(cookieParser());
 
 app.use(
   helmet({
+    // 1. Disable HSTS (This forces HTTPS at the browser level)
+    strictTransportSecurity: false,
+
     crossOriginOpenerPolicy: false,
     crossOriginResourcePolicy: false,
     contentSecurityPolicy: {
       directives: {
-        defaultSrc: ["'self'"],
+        // 2. Disable the auto-upgrade to HTTPS
+        "upgrade-insecure-requests": null,
 
+        defaultSrc: ["'self'"],
         scriptSrc: [
           "'self'",
           "'unsafe-inline'",
@@ -39,7 +44,6 @@ app.use(
           "https://accounts.google.com",
           "https://apis.google.com",
         ],
-
         frameSrc: [
           "'self'",
           "https://js.stripe.com",
@@ -50,15 +54,15 @@ app.use(
           "'self'",
           "https://api.stripe.com",
           "https://accounts.google.com",
+          "https://restcountries.com",
         ],
-
         styleSrc: ["'self'", "'unsafe-inline'"],
-
         imgSrc: ["'self'", "data:", "https:"],
       },
     },
   }),
 );
+
 app.use(
   cors({
     origin: FRONTEND_URL,
