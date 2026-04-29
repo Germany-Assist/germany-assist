@@ -14,6 +14,6 @@ server/localstack/
 server/database/seeds/data/
 server/backup/
 server/.vscode/*
-
+server/public
 .DS_Store
 coverage/
