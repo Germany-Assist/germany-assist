@@ -9,11 +9,10 @@ import morganMiddleware from "./middlewares/morgan.middleware.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 import { AppError } from "./utils/error.class.js";
 import { FRONTEND_URL, NODE_ENV } from "./configs/serverConfig.js";
-import swaggerDocument from "./docs/swagger.js";
-import swaggerUi from "swagger-ui-express";
 import setupSwagger from "./docs/swagger.js";
 import path from "node:path";
 
+const isProd = NODE_ENV === "production";
 export const app = express();
 
 app.use((req, res, next) => {
@@ -21,14 +20,43 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/payments", paymentsRouter);
-app.use(cookieParser());
 app.use(express.json());
-/// TODO important to update upon production
+app.use(cookieParser());
+
 app.use(
   helmet({
     crossOriginOpenerPolicy: false,
     crossOriginResourcePolicy: false,
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+
+        scriptSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "'unsafe-eval'",
+          "https://js.stripe.com",
+          "https://accounts.google.com",
+          "https://apis.google.com",
+        ],
+
+        frameSrc: [
+          "'self'",
+          "https://js.stripe.com",
+          "https://hooks.stripe.com",
+          "https://accounts.google.com",
+        ],
+        connectSrc: [
+          "'self'",
+          "https://api.stripe.com",
+          "https://accounts.google.com",
+        ],
+
+        styleSrc: ["'self'", "'unsafe-inline'"],
+
+        imgSrc: ["'self'", "data:", "https:"],
+      },
+    },
   }),
 );
 app.use(
@@ -37,28 +65,35 @@ app.use(
     credentials: true,
   }),
 );
+
 app.set("trust proxy", 1);
 app.use(morganMiddleware);
 
-if (NODE_ENV !== "production") {
-  app.use(
-    "/__swagger-dev",
-    express.static(path.join(process.cwd(), "src/docs/swagger-dev")),
-  );
+app.use("/api", apiRouter);
+app.use("/payments", paymentsRouter);
+
+if (!isProd) {
   await setupSwagger(app);
 }
-app.use((req, res, next) => {
-  res.on("finish", () => {
-    if (req.files) req.files.length = 0;
-    if (req.file) req.file = undefined;
-  });
-  next();
+
+// if (isProd) {
+const clientPath = path.join(process.cwd(), "public");
+
+app.use(express.static(clientPath));
+
+// SPA fallback
+app.get(/.*/, (req, res) => {
+  if (req.path.startsWith("/api")) return res.status(404).end();
+  res.sendFile(path.join(clientPath, "index.html"));
 });
-app.use("/api", apiRouter);
+// }
+
 app.get("/health", (_, res) => res.sendStatus(200));
 
-app.use(() => {
-  throw new AppError(404, "bad route", true, "bad route");
+app.use((req, res, next) => {
+  next(new AppError(404, "bad route", true));
 });
 
 app.use(errorMiddleware);
+
+export default app;

@@ -13,7 +13,7 @@ server/logs/
 server/localstack/
 server/database/seeds/data/
 server/backup/
-
+server/public/
 server/.vscode/*
 .DS_Store
 coverage/
