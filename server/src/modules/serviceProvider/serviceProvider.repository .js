@@ -2,7 +2,8 @@ import db from "../../database/index.js";
 import { AppError } from "../../utils/error.class.js";
 
 export const createServiceProvider = async (profileData, t) => {
-  let { name, about, description, phoneNumber, image, email } = profileData;
+  let { name, about, description, phoneNumber, image, email, type } =
+    profileData;
   return await db.ServiceProvider.create(
     {
       name,
@@ -11,6 +12,7 @@ export const createServiceProvider = async (profileData, t) => {
       description,
       phoneNumber,
       image,
+      type,
     },
     { transaction: t },
   );

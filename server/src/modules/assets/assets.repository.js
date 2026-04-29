@@ -26,7 +26,7 @@ class AssetRepository {
   }
   // Save asset metadata to DB
   static async saveAssets(assets, transaction) {
-    return db.Asset.bulkCreate(assets, { transaction });
+    return db.Asset.bulkCreate(assets, { transaction, returning: true });
   }
 
   // Generate signed URLs
@@ -73,6 +73,76 @@ class AssetRepository {
       { confirmed: false },
       { where: { id: assetIds }, transaction },
     );
+  }
+
+  static async addToPost(postId, assetIds, transaction) {
+    const records = assetIds.map((assetId) => ({ postId, assetId }));
+    return db.PostAsset.bulkCreate(records, { transaction, ignoreDuplicates: true });
+  }
+
+  static async addToService(serviceId, assetIds, transaction) {
+    const records = assetIds.map((assetId) => ({ serviceId, assetId }));
+    return db.ServiceAsset.bulkCreate(records, { transaction, ignoreDuplicates: true });
+  }
+
+  static async addToUser(userId, assetIds, transaction) {
+    const records = assetIds.map((assetId) => ({ userId, assetId }));
+    return db.UserAsset.bulkCreate(records, { transaction, ignoreDuplicates: true });
+  }
+
+  static async addToVerificationRequest(verificationRequestId, assetIds, transaction) {
+    const records = assetIds.map((assetId) => ({ verificationRequestId, assetId }));
+    return db.VerificationRequestAsset.bulkCreate(records, { transaction, ignoreDuplicates: true });
+  }
+
+  // ------------------- Count Methods for Junction Tables -------------------
+
+  static async countUserAssets(userId, typeKey, transaction) {
+    return db.UserAsset.count({
+      include: [{
+        model: db.Asset,
+        where: { key: typeKey },
+        attributes: [],
+      }],
+      where: { userId },
+      transaction,
+    });
+  }
+
+  static async countServiceAssets(serviceId, typeKey, transaction) {
+    return db.ServiceAsset.count({
+      include: [{
+        model: db.Asset,
+        where: { key: typeKey },
+        attributes: [],
+      }],
+      where: { serviceId },
+      transaction,
+    });
+  }
+
+  static async countPostAssets(postId, typeKey, transaction) {
+    return db.PostAsset.count({
+      include: [{
+        model: db.Asset,
+        where: { key: typeKey },
+        attributes: [],
+      }],
+      where: { postId },
+      transaction,
+    });
+  }
+
+  static async countVerificationAssets(verificationRequestId, typeKey, transaction) {
+    return db.VerificationRequestAsset.count({
+      include: [{
+        model: db.Asset,
+        where: { key: typeKey },
+        attributes: [],
+      }],
+      where: { verificationRequestId },
+      transaction,
+    });
   }
 }
 

@@ -3,7 +3,6 @@ import AssetService from "../../services/assts.services.js";
 import { AppError } from "../../utils/error.class.js";
 import hashIdUtil from "../../utils/hashId.util.js";
 import serviceProviderRepository from "../serviceProvider/serviceProvider.repository .js";
-import providerCategoryRepository from "../serviceProviderCategory/serviceProviderCategory.repository.js";
 import verificationRequestMappers from "./verificationRequest.mapper.js";
 import verificationRequestRepository from "./verificationRequest.repository.js";
 
@@ -11,7 +10,6 @@ import verificationRequestRepository from "./verificationRequest.repository.js";
 async function createProvider({ auth, files, providerId, t, relatedId, type }) {
   const exist = await verificationRequestRepository.getAllProvider(providerId);
   const unhashedRelatedId = hashIdUtil.hashIdDecode(relatedId);
-
   if (
     exist &&
     exist.length > 0 &&
@@ -52,18 +50,21 @@ async function createProvider({ auth, files, providerId, t, relatedId, type }) {
     verificationRequest,
     t,
   );
-  await Promise.all(
+
+  // Upload assets using new AssetService
+  const uploadResults = await Promise.all(
     Object.values(files).map((i) =>
-      AssetService.upload({
-        type: i[0].fieldname,
+      AssetService.uploadAsset({
         files: [i[0]],
-        auth,
-        params: { id: hashIdUtil.hashIdEncode(request.id) },
+        ownerId: request.id,
+        typeKey: i[0].fieldname,
+        userId: auth.id,
         transaction: t,
       }),
     ),
   );
-  return { message: "Create request service - not implemented" };
+
+  return { message: "Create request service " };
 }
 async function getAllProvider(providerId) {
   const requests =
@@ -94,17 +95,20 @@ async function updateProvider({ auth, files, providerId, relatedId, type, t }) {
     { status: "pending" },
     t,
   );
+
+  // Upload assets using new AssetService
   await Promise.all(
     Object.values(files).map((i) =>
-      AssetService.upload({
-        type: i[0].fieldname,
+      AssetService.uploadAsset({
         files: [i[0]],
-        auth,
-        params: { id: hashIdUtil.hashIdEncode(request.id) },
+        ownerId: request.id,
+        typeKey: i[0].fieldname,
+        userId: auth.id,
         transaction: t,
       }),
     ),
   );
+
   return { message: "Create request service - not implemented" };
 }
 
@@ -139,20 +143,6 @@ async function updateAdmin(requestId, updates, t) {
     adminNote,
     status,
   });
-  if (update.type === "identity" && update.status === "approved")
-    await serviceProviderRepository.updateServiceProvider(
-      { isVerified: true },
-      update.serviceProviderId,
-      t,
-    );
-  if (update.type === "category" && update.status === "approved") {
-    await providerCategoryRepository.createNew(
-      update.relatedId,
-      update.serviceProviderId,
-      t,
-    );
-  }
-
   if (!update)
     throw new AppError(
       404,

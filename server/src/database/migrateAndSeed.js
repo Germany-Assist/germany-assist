@@ -43,7 +43,6 @@ export async function initDatabase(exit = true) {
           throw new Error("failed to define constrains");
         }
       }
-      console.log(DB_USERNAME, DB_PASSWORD, DB_NAME);
       await sequelize.sync({ alter: true });
       console.log("constrains are ready 👍");
       if (exit) {

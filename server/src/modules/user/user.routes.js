@@ -9,10 +9,15 @@ const userRouter = Router();
 //creation
 userRouter.post(
   "/",
+  multerUpload.fields([
+    { name: "profileImage", maxCount: 1 },
+    { name: "idDocument", maxCount: 1 },
+  ]),
   createUserValidators,
   validateExpress,
   userControllers.createClientController,
 );
+
 userRouter.post(
   "/admin",
   jwt.authenticateJwt,

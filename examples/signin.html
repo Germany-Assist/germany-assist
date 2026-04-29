@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Germany Assists — Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--blue:#024CEE;--sky:#49B7DF;--bl:#EBF1FD;--sl:#EAF7FC;--text:#111827;--muted:#6B7280;--border:#E5E7EB;--bg:#F9FAFB;--red:#DC2626;--green:#16A34A;}
+body{background:#fff;color:var(--text);font-family:'Outfit',sans-serif;height:100vh;overflow:hidden;}
+
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:1px solid var(--border);background:#fff;}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;}
+.logo-mark{width:36px;height:36px;background:var(--blue);border-radius:9px;display:flex;align-items:center;justify-content:center;}
+.logo-mark svg{width:20px;height:20px;}
+.logo-text{font-size:1rem;font-weight:700;color:var(--text);letter-spacing:-0.02em;}
+.logo-text span{color:var(--blue);}
+.signup-link{font-size:0.84rem;color:var(--muted);text-decoration:none;white-space:nowrap;}
+.signup-link b{color:var(--blue);font-weight:600;}
+
+/* LAYOUT */
+.layout{display:flex;height:calc(100vh - 65px);overflow:hidden;}
+
+/* LEFT PANEL */
+.left-panel{width:480px;flex-shrink:0;background:linear-gradient(160deg,#EBF4FF 0%,#C7E8FF 50%,#E0F3FF 100%);padding:40px 44px;display:flex;flex-direction:column;position:relative;overflow:hidden;border-right:1px solid #B8DEFF;}
+@media(max-width:900px){.left-panel{display:none;}}
+
+
+.lp-badge{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #B8DEFF;border-radius:20px;padding:5px 13px;font-size:0.73rem;font-weight:600;color:var(--blue);letter-spacing:0.04em;margin-bottom:18px;width:fit-content;box-shadow:0 2px 8px rgba(2,76,238,0.08);}
+.lp-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:#34D399;flex-shrink:0;}
+.lp-title{font-size:1.7rem;font-weight:800;color:#0a1a3a;letter-spacing:-0.03em;line-height:1.25;margin-bottom:8px;}
+.lp-title span{color:var(--blue);}
+.lp-sub{font-size:0.85rem;color:#4a6080;line-height:1.5;margin-bottom:18px;}
+
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:36px;}
+.stat-card{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:16px;}
+.stat-num{font-size:1.4rem;font-weight:800;color:#fff;letter-spacing:-0.02em;}
+.stat-label{font-size:0.71rem;color:rgba(255,255,255,0.55);margin-top:2px;}
+
+.trust-stack{display:flex;flex-direction:column;gap:11px;margin-top:auto;padding-top:28px;border-top:1px solid rgba(255,255,255,0.1);}
+.trust-row{display:flex;align-items:center;gap:10px;font-size:0.78rem;color:rgba(255,255,255,0.7);}
+.trust-icon{width:26px;height:26px;border-radius:7px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+
+/* RIGHT PANEL */
+.right-panel{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;background:#f8faff;position:relative;overflow:hidden;}
+#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+.form-card{position:relative;z-index:1;width:100%;max-width:420px;}
+
+.form-eyebrow{font-size:0.73rem;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;}
+.form-title{font-size:1.5rem;font-weight:800;color:var(--text);letter-spacing:-0.025em;margin-bottom:5px;}
+.form-sub{font-size:0.84rem;color:var(--muted);margin-bottom:16px;line-height:1.5;}
+
+/* SOCIAL */
+.social-row{display:flex;gap:9px;margin-bottom:12px;}
+.s-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-family:'Outfit',sans-serif;font-size:0.83rem;font-weight:500;color:var(--text);cursor:pointer;transition:all 0.2s;}
+.s-btn:hover{background:var(--bg);border-color:#93b4f7;transform:translateY(-1px);}
+
+.divider{display:flex;align-items:center;gap:12px;margin-bottom:12px;color:var(--muted);font-size:0.75rem;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* FIELDS */
+.field{margin-bottom:10px;}
+.field label{display:block;font-size:0.8rem;font-weight:500;color:var(--text);margin-bottom:5px;}
+.input-wrap{position:relative;}
+.input-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px;pointer-events:none;}
+.field input{width:100%;padding:11px 12px 11px 38px;border:1.5px solid var(--border);border-radius:10px;font-family:'Outfit',sans-serif;font-size:0.87rem;color:var(--text);background:#fff;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+.field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(2,76,238,0.07);}
+.field input::placeholder{color:#C4C9D4;}
+.field input.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(220,38,38,0.07);}
+.pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--muted);font-size:14px;user-select:none;padding:4px;}
+.err-msg{font-size:0.73rem;color:var(--red);margin-top:5px;display:flex;align-items:center;gap:4px;}
+
+/* ROW */
+.row-between{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.remember-row{display:flex;align-items:center;gap:8px;cursor:pointer;}
+.remember-row input{display:none;}
+.cb{width:16px;height:16px;border-radius:5px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;transition:all 0.2s;flex-shrink:0;}
+.remember-row input:checked~.cb{background:var(--blue);border-color:var(--blue);}
+.remember-label{font-size:0.79rem;color:var(--muted);}
+.forgot-link{font-size:0.79rem;color:var(--blue);text-decoration:none;font-weight:500;}
+.forgot-link:hover{text-decoration:underline;}
+
+/* BUTTON */
+.btn-primary{width:100%;padding:12.5px;border:none;border-radius:10px;background:var(--blue);color:#fff;font-family:'Outfit',sans-serif;font-size:0.92rem;font-weight:700;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 12px rgba(2,76,238,0.22);letter-spacing:0.01em;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-primary:hover:not(:disabled){background:#0341cc;transform:translateY(-1px);box-shadow:0 5px 20px rgba(2,76,238,0.3);}
+.btn-primary:disabled{opacity:0.4;cursor:not-allowed;}
+
+/* ALERT */
+.alert{display:none;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:10px;margin-bottom:14px;font-size:0.8rem;line-height:1.5;}
+.alert.error{background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;}
+.alert.error .alert-icon{color:#DC2626;font-size:15px;margin-top:1px;}
+.alert.show{display:flex;}
+
+/* FOOTER */
+.form-footer{text-align:center;margin-top:14px;font-size:0.8rem;color:var(--muted);}
+.form-footer a{color:var(--blue);font-weight:600;text-decoration:none;}
+.form-footer a:hover{text-decoration:underline;}
+
+.divider-sm{height:1px;background:var(--border);margin:20px 0;}
+
+.secure-note{display:flex;align-items:center;justify-content:center;gap:7px;font-size:0.73rem;color:var(--muted);}
+.secure-note span{font-size:13px;}
+
+/* LOADING SPINNER */
+@keyframes spin{to{transform:rotate(360deg);}}
+.spinner{width:18px;height:18px;border:2.5px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:spin 0.65s linear infinite;flex-shrink:0;}
+
+/* SHAKE */
+@keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-5px);}40%,80%{transform:translateX(5px);}}
+.shake{animation:shake 0.38s ease;}
+
+
+/* FEATURE HIGHLIGHTS */
+.features-list{display:flex;flex-direction:column;gap:6px;flex:1;margin-bottom:16px;}
+@keyframes featIn{from{opacity:0;transform:translateX(-16px);}to{opacity:1;transform:translateX(0);}}
+.feat-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:#fff;border:1px solid #C8E4FF;border-radius:14px;cursor:default;transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);position:relative;animation:featIn 0.5s cubic-bezier(0.22,1,0.36,1) both;box-shadow:0 2px 8px rgba(2,76,238,0.05);}
+.feat-item:hover{background:#EBF4FF;border-color:#7BBFFF;transform:translateX(5px);box-shadow:0 4px 16px rgba(2,76,238,0.1);}
+.feat-icon{font-size:22px;width:44px;height:44px;background:linear-gradient(135deg,#EBF4FF,#C7E8FF);border:1px solid #B8DEFF;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1);}
+.feat-item:hover .feat-icon{transform:scale(1.12);}
+.feat-body{flex:1;min-width:0;}
+.feat-title{font-size:0.86rem;font-weight:700;color:#0a1a3a;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.feat-desc{font-size:0.72rem;color:#5a7a9a;line-height:1.4;}
+.feat-tag{font-size:0.62rem;font-weight:700;padding:3px 8px;border-radius:20px;background:#EBF4FF;border:1px solid #7BBFFF;color:var(--blue);letter-spacing:0.04em;white-space:nowrap;flex-shrink:0;}
+
+
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-30px);}to{opacity:1;transform:translateX(0);}}
+@keyframes floatOrb{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-18px) scale(1.04);}}
+@keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(2,76,238,0.35);}70%{box-shadow:0 0 0 14px rgba(2,76,238,0);}100%{box-shadow:0 0 0 0 rgba(2,76,238,0);}}
+@keyframes gradientShift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+@keyframes countUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes borderGlow{0%,100%{border-color:var(--blue);box-shadow:0 0 0 3px rgba(2,76,238,0.07);}50%{border-color:var(--sky);box-shadow:0 0 0 4px rgba(73,183,223,0.12);}}
+
+/* Page load sequence */
+.form-card{animation:fadeUp 0.55s cubic-bezier(0.22,1,0.36,1) both;}
+.left-panel{animation:slideInLeft 0.6s cubic-bezier(0.22,1,0.36,1) both;}
+header{animation:fadeIn 0.4s ease both;}
+
+.form-eyebrow{animation:fadeUp 0.5s 0.1s cubic-bezier(0.22,1,0.36,1) both;}
+.form-title{animation:fadeUp 0.5s 0.18s cubic-bezier(0.22,1,0.36,1) both;}
+.form-sub{animation:fadeUp 0.5s 0.24s cubic-bezier(0.22,1,0.36,1) both;}
+.social-row{animation:fadeUp 0.5s 0.3s cubic-bezier(0.22,1,0.36,1) both;}
+.divider{animation:fadeUp 0.5s 0.34s cubic-bezier(0.22,1,0.36,1) both;}
+.field:nth-child(1){animation:fadeUp 0.5s 0.38s cubic-bezier(0.22,1,0.36,1) both;}
+.field:nth-child(2){animation:fadeUp 0.5s 0.43s cubic-bezier(0.22,1,0.36,1) both;}
+.row-between{animation:fadeUp 0.5s 0.47s cubic-bezier(0.22,1,0.36,1) both;}
+.btn-primary{animation:fadeUp 0.5s 0.51s cubic-bezier(0.22,1,0.36,1) both;}
+.form-footer{animation:fadeUp 0.5s 0.56s cubic-bezier(0.22,1,0.36,1) both;}
+
+/* Left panel stagger */
+.lp-badge{animation:fadeUp 0.6s 0.15s cubic-bezier(0.22,1,0.36,1) both;}
+.lp-title{animation:fadeUp 0.6s 0.25s cubic-bezier(0.22,1,0.36,1) both;}
+.lp-sub{animation:fadeUp 0.6s 0.33s cubic-bezier(0.22,1,0.36,1) both;}
+.stat-card:nth-child(1){animation:countUp 0.5s 0.4s both;}
+.stat-card:nth-child(2){animation:countUp 0.5s 0.48s both;}
+.stat-card:nth-child(3){animation:countUp 0.5s 0.56s both;}
+.stat-card:nth-child(4){animation:countUp 0.5s 0.64s both;}
+.trust-stack{animation:fadeUp 0.5s 0.75s both;}
+
+
+
+/* Focus glow animation on inputs */
+.field input:focus{animation:borderGlow 2s ease infinite;}
+
+/* Button ripple */
+.btn-primary{position:relative;overflow:hidden;}
+.btn-primary::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--x,50%) var(--y,50%),rgba(255,255,255,0.25) 0%,transparent 60%);opacity:0;transition:opacity 0.3s;}
+.btn-primary:hover::after{opacity:1;}
+
+/* Social button hover lift */
+.s-btn{transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);}
+.s-btn:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+
+/* Stat card hover */
+.stat-card{transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);}
+.stat-card:hover{background:rgba(255,255,255,0.14);transform:translateY(-2px);}
+
+/* Alert slide-in */
+@keyframes alertIn{from{opacity:0;transform:translateY(-8px);max-height:0;}to{opacity:1;transform:translateY(0);max-height:80px;}}
+.alert.show{animation:alertIn 0.3s cubic-bezier(0.22,1,0.36,1) both;}
+
+/* Live badge pulse */
+.lp-badge::before{background:#024CEE;animation:pulseRing 2.5s ease-out infinite;}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <span class="logo-text">Germany<span>Assists</span></span>
+  </a>
+  <a href="signup.html" class="signup-link">New here? <b>Create account →</b></a>
+</header>
+
+<div class="layout">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="lp-badge">Everything in one place</div>
+    <h1 class="lp-title">Everything you need<br>to <span>thrive in Germany</span></h1>
+    <p class="lp-sub">From visa consulting to language courses — Germany Assists connects you with the right services at the right time.</p>
+
+    <div class="features-list">
+      <div class="feat-item" style="animation-delay:0.35s">
+        <div class="feat-icon">🎓</div>
+        <div class="feat-body">
+          <div class="feat-title">German Language Courses</div>
+          <div class="feat-desc">A1 to C2 classes with certified providers near you</div>
+        </div>
+        <div class="feat-tag">Popular</div>
+      </div>
+      <div class="feat-item" style="animation-delay:0.45s">
+        <div class="feat-icon">🛂</div>
+        <div class="feat-body">
+          <div class="feat-title">Visa & Residency Consulting</div>
+          <div class="feat-desc">Expert guidance through every step of your application</div>
+        </div>
+      </div>
+      <div class="feat-item" style="animation-delay:0.55s">
+        <div class="feat-icon">💼</div>
+        <div class="feat-body">
+          <div class="feat-title">Job Search Support</div>
+          <div class="feat-desc">CV reviews, interview prep, and employer connections</div>
+        </div>
+      </div>
+      <div class="feat-item" style="animation-delay:0.65s">
+        <div class="feat-icon">🏠</div>
+        <div class="feat-body">
+          <div class="feat-title">Housing & Integration</div>
+          <div class="feat-desc">Find accommodation and settle into your new community</div>
+        </div>
+      </div>
+      <div class="feat-item" style="animation-delay:0.75s">
+        <div class="feat-icon">📋</div>
+        <div class="feat-body">
+          <div class="feat-title">Document & Registration Help</div>
+          <div class="feat-desc">Anmeldung, health insurance, bank accounts and more</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <canvas id="bgCanvas"></canvas>
+    <div class="form-card">
+      <div class="form-eyebrow">Welcome back</div>
+      <h2 class="form-title">Sign in to your account</h2>
+      <p class="form-sub">Thousands of people found their path in Germany. Yours starts here.</p>
+
+      <!-- SOCIAL -->
+      <div class="social-row">
+        <button class="s-btn" onclick="socialLogin('Google')">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Google
+        </button>
+        <button class="s-btn" onclick="socialLogin('Microsoft')">
+          <svg width="16" height="16" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
+          Microsoft
+        </button>
+      </div>
+
+      <div class="divider">or sign in with email</div>
+
+      <!-- ERROR ALERT -->
+      <div class="alert error" id="alertBox">
+        <span class="alert-icon">⚠</span>
+        <span id="alertMsg">Incorrect email or password. Please try again.</span>
+      </div>
+
+      <!-- FORM -->
+      <div class="field">
+        <label for="email">Email address</label>
+        <div class="input-wrap">
+          <span class="input-icon">✉</span>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="email" oninput="clearError()">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" oninput="clearError()" onkeydown="if(event.key==='Enter')handleSignIn()">
+          <span class="pw-eye" id="pwEye" onclick="togglePw()" title="Show/hide password">👁</span>
+        </div>
+      </div>
+
+      <div class="row-between">
+        <label class="remember-row">
+          <input type="checkbox" id="rememberMe" checked>
+          <div class="cb" id="cbVisual">✓</div>
+          <span class="remember-label">Remember me</span>
+        </label>
+        <a href="#" class="forgot-link" onclick="handleForgot(event)">Forgot password?</a>
+      </div>
+
+      <button class="btn-primary" id="signInBtn" onclick="handleSignIn()">
+        Sign In
+      </button>
+
+      <div class="form-footer">
+        Don't have an account? <a href="signup.html">Create one for free</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const cbInput = document.getElementById('rememberMe');
+  const cbVisual = document.getElementById('cbVisual');
+
+  cbInput.addEventListener('change', () => {
+    cbVisual.style.background = cbInput.checked ? 'var(--blue)' : '';
+    cbVisual.style.borderColor = cbInput.checked ? 'var(--blue)' : '';
+  });
+  // Init state
+  cbVisual.style.background = 'var(--blue)';
+  cbVisual.style.borderColor = 'var(--blue)';
+
+  function togglePw() {
+    const inp = document.getElementById('password');
+    const eye = document.getElementById('pwEye');
+    if (inp.type === 'password') { inp.type = 'text'; eye.textContent = '🙈'; }
+    else { inp.type = 'password'; eye.textContent = '👁'; }
+  }
+
+  function clearError() {
+    document.getElementById('alertBox').classList.remove('show');
+    document.getElementById('email').classList.remove('error');
+    document.getElementById('password').classList.remove('error');
+  }
+
+  function showError(msg) {
+    const box = document.getElementById('alertBox');
+    document.getElementById('alertMsg').textContent = msg;
+    box.classList.add('show');
+    const card = document.querySelector('.form-card');
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
+    document.getElementById('email').classList.add('error');
+    document.getElementById('password').classList.add('error');
+  }
+
+  function handleSignIn() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const btn = document.getElementById('signInBtn');
+
+    if (!email) { showError('Please enter your email address.'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('Please enter a valid email address.'); return; }
+    if (!password) { showError('Please enter your password.'); return; }
+
+    // Loading state
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Signing in…';
+
+    setTimeout(() => {
+      // Simulate failed auth for demo
+      btn.disabled = false;
+      btn.innerHTML = 'Sign In';
+      showError('Incorrect email or password. Please try again.');
+    }, 1600);
+  }
+
+  function socialLogin(provider) {
+    const btns = document.querySelectorAll('.s-btn');
+    btns.forEach(b => b.disabled = true);
+    setTimeout(() => btns.forEach(b => b.disabled = false), 1500);
+  }
+
+  // Ripple effect on sign-in button
+  document.getElementById('signInBtn').addEventListener('mousemove', function(e) {
+    const r = this.getBoundingClientRect();
+    this.style.setProperty('--x', ((e.clientX - r.left) / r.width * 100) + '%');
+    this.style.setProperty('--y', ((e.clientY - r.top) / r.height * 100) + '%');
+  });
+
+  // Animated stat counters
+  const targets = [{el: null, end: 2400, suffix:'+'}, {el: null, end: 98, suffix:'%'}, {el: null, end: 4.2, suffix:'M', prefix:'€'}, {el: null, end: 12, suffix:''}];
+  const nums = document.querySelectorAll('.stat-num');
+  nums.forEach((el, i) => {
+    targets[i].el = el;
+    const t = targets[i];
+    let start = null;
+    const dur = 1200;
+    const delay = 400 + i * 80;
+    setTimeout(() => {
+      function step(ts) {
+        if (!start) start = ts;
+        const p = Math.min((ts - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        const val = t.end * ease;
+        const disp = Number.isInteger(t.end) ? Math.floor(val) : val.toFixed(1);
+        el.textContent = (t.prefix||'') + disp + t.suffix;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }, delay);
+  });
+
+  function handleForgot(e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    if (email) {
+      alert(`Password reset instructions will be sent to:\n${email}`);
+    } else {
+      document.getElementById('email').focus();
+      showError('Enter your email above, then click Forgot password.');
+    }
+  }
+
+
+  // Germany Assists — combined background animation
+  (function(){
+    const canvas = document.getElementById('bgCanvas');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W, H, t = 0;
+
+    function resize(){ W = canvas.offsetWidth; H = canvas.offsetHeight; canvas.width = W; canvas.height = H; }
+    // --- 2. FALLING DOCUMENTS ---
+    const docs = Array.from({length:8}, (_, i) => ({
+      x: 8 + i*13 + Math.random()*6,
+      y: Math.random()*-120,
+      speed: Math.random()*0.04 + 0.025,
+      rot: (Math.random()-0.5)*0.3,
+      rotSpeed: (Math.random()-0.5)*0.008,
+      w: Math.random()*14+18,
+      alpha: Math.random()*0.12+0.06
+    }));
+
+    function drawFallingDocs(){
+      docs.forEach(d => {
+        d.y += d.speed;
+        d.rot += d.rotSpeed;
+        if(d.y > 115) { d.y = Math.random()*-30-10; }
+        const x = d.x/100*W;
+        const y = d.y/100*H;
+        const h = d.w * 1.3;
+        ctx.save();
+        ctx.globalAlpha = d.alpha;
+        ctx.translate(x, y);
+        ctx.rotate(d.rot);
+        // Doc body
+        ctx.fillStyle = 'rgba(2,76,238,0.25)';
+        ctx.strokeStyle = 'rgba(2,76,238,0.4)';
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.roundRect(-d.w/2, -h/2, d.w, h, 2);
+        ctx.fill(); ctx.stroke();
+        // Lines on doc
+        ctx.strokeStyle = 'rgba(2,76,238,0.5)';
+        ctx.lineWidth = 0.7;
+        for(let i=1; i<=3; i++){
+          const ly = -h/2 + (h/(4))*i;
+          ctx.beginPath();
+          ctx.moveTo(-d.w/2+3, ly);
+          ctx.lineTo(d.w/2-3, ly);
+          ctx.stroke();
+        }
+        ctx.restore();
+      });
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      t += 0.016;
+      drawFallingDocs();
+      requestAnimationFrame(draw);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+    requestAnimationFrame(draw);
+  })();
+
+</script>
+</body>
+</html>

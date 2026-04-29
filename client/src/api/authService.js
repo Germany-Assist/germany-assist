@@ -11,21 +11,47 @@ export const refreshTokenRequest = async () => {
   const res = await api.post(
     "/auth/refresh-token",
     {},
-    { skipAuthRefresh: true }
+    { skipAuthRefresh: true },
   );
-  return res.data.accessToken;
+  return res.data;
 };
-export const signUpRequest = async (data) => {
+
+export const signUpClient = async (data) => {
   const res = await api.post("/user/", data);
-  return res.data; // { user, accessToken }
+  return res.data;
+};
+
+export const signUpFreelancer = async (data) => {
+  const res = await api.post("/serviceProvider/freelancer/signup", data);
+  return res.data;
+};
+
+export const signUpCompany = async (data) => {
+  const res = await api.post("/serviceProvider/company/signup", data);
+  return res.data;
 };
 
 export const googleLoginRequest = async (credential) => {
-  const res = await api.post("/auth/google", {
+  const res = await api.post("/auth/google/signin", {
+    credential,
+  });
+  return res.data; // { user, accessToken }
+};
+export const googleRetrieveInfo = async (credential) => {
+  const res = await api.post("/auth/google/retrieveInfo", {
     credential,
   });
   return res.data; // { user, accessToken }
 };
 export const logoutRequest = async () => {
   await api.get("/auth/logout");
+};
+
+export const verifyAccountConfirmResponse = async ({ token, email }) => {
+  const res = await api.post(`/auth/verifyAccount`, { token, email });
+  return res.data;
+};
+export const resendVerificationEmail = async (email) => {
+  const res = await api.post(`/auth/resendVerificationEmail`, { email });
+  return res.data;
 };

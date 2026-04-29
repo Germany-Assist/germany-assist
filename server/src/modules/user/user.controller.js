@@ -4,7 +4,7 @@ import userServices from "./user.services.js";
 
 export async function createClientController(req, res, next) {
   try {
-    const result = await userServices.registerClient(req.body);
+    const result = await userServices.registerClient(req.body, req.files);
     res
       .cookie("refreshToken", result.refreshToken, authDomain.cookieOptions)
       .status(201)

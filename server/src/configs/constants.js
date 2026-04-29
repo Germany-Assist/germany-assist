@@ -77,3 +77,8 @@ export const SERVICE_ACTIONS = {
   PAUSE: "pause",
   RESUME: "resume",
 };
+
+export const PROVIDER_TYPES = {
+  freelancer: "freelancer",
+  company: "company",
+};

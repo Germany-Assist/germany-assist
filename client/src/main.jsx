@@ -38,11 +38,11 @@ createRoot(document.getElementById("root")).render(
             <SocketProvider>
               <NotificationProvider>
                 <BootstrapGate>
-                    <App />
+                  <App />
                 </BootstrapGate>
               </NotificationProvider>
             </SocketProvider>
-          </ProfileProvider>   
+          </ProfileProvider>
         </AuthProvider>
       </BrowserRouter>
     </MetaContextProvider>

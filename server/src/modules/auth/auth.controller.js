@@ -5,9 +5,17 @@ import authUtil from "../../utils/authorize.util.js";
 import authDomain from "./auth.domain.js";
 import { sequelize } from "../../configs/database.js";
 
-async function googleAuthController(req, res, next) {
+async function googleAuthRetrieveInfo(req, res, next) {
   try {
-    const result = await authServices.googleAuth(req.body);
+    const user = await authServices.googleAuthRetrieveInfo(req.body);
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+}
+async function googleAuthSignin(req, res, next) {
+  try {
+    const result = await authServices.googleAuthSignin(req.body);
     const { refreshToken, accessToken, user, status } = result;
     res
       .cookie("refreshToken", refreshToken, authDomain.cookieOptions)
@@ -18,12 +26,41 @@ async function googleAuthController(req, res, next) {
   }
 }
 
-export async function verifyAccount(req, res, next) {
+// TODO needs to be deleted or updated
+
+// export async function verifyAccount(req, res, next) {
+//   try {
+//     const token = req.query.token;
+//     const success = await authServices.verifyAccountConfirm(token);
+//     if (!success) return res.redirect(`${FRONTEND_URL}/verified?status=error`);
+//     res.redirect(`${FRONTEND_URL}/verified?status=success`);
+//   } catch (error) {
+//     next(error);
+//   }
+// }
+export async function verifyAccountByDigits(req, res, next) {
   try {
-    const token = req.query.token;
-    const success = await authServices.verifyAccountConfirm(token);
-    if (!success) return res.redirect(`${FRONTEND_URL}/verified?status=error`);
-    res.redirect(`${FRONTEND_URL}/verified?status=success`);
+    const token = req.body.token;
+    const email = req.body.email;
+    const success = await authServices.verifyAccountConfirm(token, email);
+    if (!success)
+      return res
+        .status(400)
+        .json({ success: false, message: "Account already verified" });
+    res.status(200).json({ success: true, message: "Account verified" });
+  } catch (error) {
+    next(error);
+  }
+}
+export async function resendVerificationEmail(req, res, next) {
+  try {
+    const email = req.body.email;
+    const success = await authServices.resendVerificationEmail(email);
+    if (!success)
+      return res
+        .status(400)
+        .json({ success: false, message: "Ops, something went wrong" });
+    res.status(200).json({ success: true, message: "Email sent" });
   } catch (error) {
     next(error);
   }
@@ -70,7 +107,7 @@ export async function refreshUserToken(req, res, next) {
       throw new AppError(401, "missing cookie", true, "missing cookie");
     }
     const accessToken = await authServices.refreshUserToken(refreshToken);
-    res.send({ accessToken });
+    res.send({ success: true, accessToken });
   } catch (error) {
     next(error);
   }
@@ -112,9 +149,11 @@ export async function passwordResetConfirm(req, res, next) {
   }
 }
 const authController = {
-  googleAuthController,
+  googleAuthRetrieveInfo,
+  googleAuthSignin,
   getUserProfile,
-  verifyAccount,
+  verifyAccountByDigits,
+  resendVerificationEmail,
   login,
   loginToken,
   verifyUserManual,

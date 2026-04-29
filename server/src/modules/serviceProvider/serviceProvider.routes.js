@@ -5,11 +5,38 @@ import { validateExpress } from "../../middlewares/expressValidator.js";
 import {
   createServiceProviderValidator,
   updateServiceProviderValidator,
+  createFreelancerValidator,
+  createCompanyValidator,
 } from "./serviceProvider.validators.js";
 import { idUUIDparamValidator } from "../../validators/general.validators.js";
+import multerUpload from "../../configs/multer.config.js";
 const serviceProviderRouter = express.Router();
 
 serviceProviderRouter.get("/", serviceProviderController.getAllServiceProvider);
+
+serviceProviderRouter.post(
+  "/freelancer/signup",
+  multerUpload.fields([
+    { name: "profileImage", maxCount: 1 },
+    { name: "idDocument", maxCount: 1 },
+  ]),
+  createFreelancerValidator,
+  validateExpress,
+  serviceProviderController.signupFreelancer,
+);
+
+serviceProviderRouter.post(
+  "/company/signup",
+  multerUpload.fields([
+    { name: "profileImage", maxCount: 1 },
+    { name: "idDocument", maxCount: 1 },
+    { name: "proofOfResidence", maxCount: 1 },
+    { name: "businessRegistration", maxCount: 1 },
+  ]),
+  createCompanyValidator,
+  validateExpress,
+  serviceProviderController.signupCompany,
+);
 
 serviceProviderRouter.get(
   "/:id",

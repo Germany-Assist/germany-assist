@@ -12,7 +12,7 @@ import {
   loginRequest,
   refreshTokenRequest,
   logoutRequest,
-  signUpRequest,
+  signUpClient,
   googleLoginRequest,
 } from "../api/authService";
 import { useNavigate } from "react-router-dom";
@@ -40,10 +40,10 @@ export const AuthProvider = ({ children }) => {
   // 2. Token Refresh Logic
   const refreshAccessToken = useCallback(async () => {
     try {
-      const newToken = await refreshTokenRequest();
-      setAccessToken(newToken);
-      scheduleRefresh(newToken);
-      return newToken;
+      const { accessToken } = await refreshTokenRequest();
+      setAccessToken(accessToken);
+      scheduleRefresh(accessToken);
+      return accessToken;
     } catch (err) {
       clearAuthState();
       throw err;
@@ -101,11 +101,11 @@ export const AuthProvider = ({ children }) => {
     setUser(user);
     setAccessToken(accessToken);
     scheduleRefresh(accessToken);
-    return { user, accessToken };
+    navigate("/");
   };
 
   const signUp = async (data) => {
-    const { user, accessToken } = await signUpRequest(data);
+    const { user, accessToken } = await signUpClient(data);
     setUser(user);
     setAccessToken(accessToken);
     scheduleRefresh(accessToken);
@@ -140,7 +140,6 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) throw new Error("useAuth must be used within AuthProvider");

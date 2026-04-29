@@ -35,35 +35,6 @@ Asset.init(
         isInt: { msg: "UserId must be an integer" },
       },
     },
-    serviceProviderId: {
-      type: DataTypes.UUID,
-      allowNull: true,
-      validate: {
-        isUUID: { args: 4, msg: "Service Provider must be a valid UUIDv4" },
-      },
-    },
-
-    serviceId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      validate: {
-        isInt: { msg: "ServiceId must be an integer" },
-      },
-    },
-    verificationRequestId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      validate: {
-        isInt: { msg: "requestId must be an integer" },
-      },
-    },
-    postId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      validate: {
-        isInt: { msg: "PostId must be an integer" },
-      },
-    },
     isLocal: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
@@ -102,15 +73,15 @@ Asset.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
+    label: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
     owner: {
       type: DataTypes.VIRTUAL,
       get() {
-        if (this.postId || this.serviceId || this.serviceProviderId) {
-          return this.serviceProviderId;
-        } else {
-          return this.userId;
-        }
+        return this.userId;
       },
     },
   },

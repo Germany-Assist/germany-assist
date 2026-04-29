@@ -5,38 +5,98 @@ import AssetService from "../../services/assts.services.js";
 import authUtil from "../../utils/authorize.util.js";
 import bcryptUtil from "../../utils/bcrypt.util.js";
 import { AppError } from "../../utils/error.class.js";
+import hashIdUtil from "../../utils/hashId.util.js";
+import { errorLogger } from "../../utils/loggers.js";
 import AssetRepository from "../assets/assets.repository.js";
 import authServices from "../auth/auth.service.js";
 import permissionServices from "../permission/permission.services.js";
+import verificationRequestRepository from "../verificationRequests/verificationRequest.repository.js";
 import userDomain from "./user.domain.js";
 import userMapper from "./user.mapper.js";
 import userRepository from "./user.repository.js";
 
-export const registerClient = async (body) => {
+const getFile = (files, field) => files?.[field]?.[0] || null;
+export const registerClient = async (body, files) => {
   const t = await sequelize.transaction();
   try {
-    const { firstName, lastName, email, dob, image } = body;
+    const {
+      firstName,
+      lastName,
+      email,
+      dob,
+      image,
+      phone,
+      nationality,
+      countryOfResidence,
+      displayName,
+    } = body;
     const password = bcryptUtil.hashPassword(body.password);
-    const user = await userRepository.createUser(
-      {
-        firstName,
-        lastName,
-        email,
-        password,
-        dob,
-        image,
-        isVerified: false,
-        UserRole: {
-          role: "client",
-          relatedType: "client",
-          relatedId: null,
-        },
+    const userData = {
+      firstName,
+      lastName,
+      email,
+      password,
+      dob,
+      isVerified: false,
+      UserRole: {
+        role: "client",
+        relatedType: "client",
+        relatedId: null,
       },
-      t,
-    );
+      UserProfile: {
+        nationality: nationality,
+        countryOfResidence: countryOfResidence,
+        phoneNumber: phone,
+        displayName: displayName,
+      },
+    };
+    const profileImage = getFile(files, "profileImage");
+    const idDocument = getFile(files, "idDocument");
+    const userExists = await userRepository.getUserByEmail(email);
+    if (userExists) {
+      throw new AppError(
+        409,
+        "User already exists",
+        false,
+        "Email already in use",
+      );
+    }
+    const user = await userRepository.createUser(userData, t);
     await permissionServices.initPermissions(user.id, roleTemplates.client, t);
     const { accessToken, refreshToken } = jwtUtils.generateTokens(user);
     const sanitizedUser = await userMapper.sanitizeUser(user);
+    if (profileImage) {
+      await AssetService.uploadAsset({
+        files: [profileImage],
+        ownerId: user.id,
+        typeKey: "userImage",
+        userId: user.id,
+        transaction: t,
+      });
+    }
+
+    if (idDocument) {
+      const request = await verificationRequestRepository.createRequest(
+        {
+          auth: user,
+          userId: user.id,
+          relatedId: user.id,
+          type: "identity",
+        },
+        t,
+      );
+      await AssetService.uploadAsset({
+        files: [idDocument],
+        ownerId: request.id,
+        typeKey:
+          idDocument.mimetype === "application/pdf"
+            ? "verificationDocument"
+            : "verificationImage",
+        userId: user.id,
+        transaction: t,
+      });
+    }
+
     await t.commit();
     await authServices.sendVerificationEmail(email, user.id);
     return {
@@ -179,16 +239,16 @@ export const updateImage = async (auth, file) => {
     if (profileImageIds) {
       await AssetRepository.markAsUnconfirmed(profileImageIds, t);
     }
-    await AssetService.upload({
-      type: "userImage",
+    await AssetService.uploadAsset({
       files: [file],
-      auth,
-      params: { id: auth.id },
+      ownerId: auth.id,
+      typeKey: "userImage",
+      userId: auth.id,
       transaction: t,
     });
     await t.commit();
   } catch (error) {
-    console.log(error);
+    errorLogger(error);
     await t.rollback();
   }
 

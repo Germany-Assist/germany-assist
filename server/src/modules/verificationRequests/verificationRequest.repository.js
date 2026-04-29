@@ -3,11 +3,25 @@ import db from "../../database/index.js";
 async function createProvider(data, t) {
   return db.VerificationRequest.create(data, { transaction: t });
 }
+async function createRequest(data, t) {
+  return db.VerificationRequest.create(data, { transaction: t });
+}
 
 async function getAllProvider(serviceProviderId, filters = {}) {
   return db.VerificationRequest.findAll({
     where: { ...filters, serviceProviderId },
-    include: [{ model: db.Asset, attributes: ["mediaType", "url"] }],
+    include: [
+      {
+        model: db.VerificationRequestAsset,
+        as: "verificationRequestAssets",
+        include: [
+          {
+            model: db.Asset,
+            attributes: ["mediaType", "url"],
+          },
+        ],
+      },
+    ],
     order: [["updatedAt", "DESC"]],
   });
 }
@@ -22,7 +36,18 @@ async function countRequests(filters = {}) {
 async function getAllAdmin({ limit, offset, filters }) {
   return db.VerificationRequest.findAll({
     where: filters,
-    include: [{ model: db.Asset, attributes: ["mediaType", "url"] }],
+    include: [
+      {
+        model: db.VerificationRequestAsset,
+        as: "verificationRequestAssets",
+        include: [
+          {
+            model: db.Asset,
+            attributes: ["mediaType", "url"],
+          },
+        ],
+      },
+    ],
     order: [["updatedAt", "DESC"]],
     limit,
     offset,
@@ -40,6 +65,7 @@ async function updateAdmin(requestId, updates, t) {
 const verificationRequestRepository = {
   createProvider,
   countRequests,
+  createRequest,
   getAllProvider,
   getAllAdmin,
   updateAdmin,

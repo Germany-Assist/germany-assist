@@ -6,11 +6,11 @@ export default defineConfig({
   plugins: [react(), svgr()],
   server: {
     proxy: {
-      "/backend": {
-        target: "http://staging.germany-assist.com",
-        changeOrigin: true,
-        ws: true,
-      },
+      "/api": "http://localhost:3000",
     },
+  },
+  build: {
+    outDir: path.resolve(__dirname, "../server/public"),
+    emptyOutDir: true,
   },
 });

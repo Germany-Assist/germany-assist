@@ -8,30 +8,24 @@ import {
   SEND_EMAILS,
 } from "../../configs/email.config.js";
 import { NODE_ENV } from "../../configs/serverConfig.js";
-
+import { Resend } from "resend";
+const resend = new Resend(process.env.RESEND_API_KEY);
 class EmailService {
-  constructor() {
-    this.transporter = nodemailer.createTransport({
-      host: EMAIL_HOST,
-      port: EMAIL_SMTP_PORT,
-      secure: false,
-      auth: {
-        user: EMAIL_USER,
-        pass: EMAIL_PASS,
-      },
-    });
-  }
+  constructor() {}
   async sendEmail({ to, subject, html, text }) {
     if (!SEND_EMAILS) return;
     try {
-      await this.transporter.sendMail({
-        from: `"Germany Assist" <${EMAIL_USER}>`,
-        to,
-        subject,
-        html,
-        text,
+      const { data, error } = await resend.emails.send({
+        from: "GERMANY-ASSIST <staging@germany-assist.com>",
+        to: [to],
+        subject: subject,
+        html: html,
       });
       infoLogger(`📧 Email sent to ${to} for ${subject}`);
+      if (error) {
+        infoLogger(`📧 Error sending email to ${to} for ${subject}`);
+        errorLogger(error);
+      }
     } catch (err) {
       errorLogger(err);
       if (NODE_ENV !== "production") throw err;

@@ -1,0 +1,47 @@
+name: Deploy Full Stack App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm install-all
+
+      - name: Build frontend
+        working-directory: ./client
+        env:
+          VITE_NODE_ENV: ${{vars.VITE_NODE_ENV}}
+          VITE_STRIPE_SK: ${{ secrets.VITE_STRIPE_SK }}
+          VITE_GOOGLE_CLIENT_ID: ${{ vars.VITE_GOOGLE_CLIENT_ID }}
+          VITE_SOCKET_ORIGIN: ${{ vars.VITE_SOCKET_ORIGIN }}
+          VITE_SOCKET_PATH: ${{ vars.VITE_SOCKET_PATH }}
+        run: npm run build
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ vars.SERVER_DOMAIN }}
+          username: deploy
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            cd /var/www/germany-assist-backend
+            git reset --hard
+            git pull origin main
+            npm install-all
+            # restart backend
+            pm2 reload ecosystem.config.cjs || pm2 start ecosystem.config.cjs

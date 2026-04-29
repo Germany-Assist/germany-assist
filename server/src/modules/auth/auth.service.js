@@ -21,12 +21,49 @@ import emailQueue from "../../jobs/queues/email.queue.js";
 import db from "../../database/index.js";
 import { TOKENS_CONSTANTS } from "../../configs/constants.js";
 const client = new OAuth2Client(googleOAuthConfig.clientId);
-
+const generateNumericCode = (length = 5) => {
+  return Math.floor(
+    Math.pow(10, length - 1) +
+      Math.random() * (Math.pow(10, length) - Math.pow(10, length - 1)),
+  ).toString();
+};
 const generateToken = (x = 32) => crypto.randomBytes(x).toString("hex");
 const hashToken = (token) =>
   crypto.createHash("sha256").update(token).digest("hex");
 
-export async function googleAuth(body) {
+export async function googleAuthRetrieveInfo(body) {
+  const { credential } = body;
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: googleOAuthConfig.clientId,
+    });
+    const payload = ticket.getPayload();
+    const email = payload.email;
+    let user = await userRepository.getUserByEmail(email);
+    if (user) {
+      return {
+        success: false,
+        message: "User already exists",
+      };
+    }
+    if (!user) {
+      return {
+        success: true,
+        message: "registration",
+        email: payload.email,
+        firstName: payload.given_name || null,
+        lastName: payload.family_name || null,
+        profilePicture: {
+          url: payload.picture,
+        },
+      };
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+export async function googleAuthSignin(body) {
   const t = await sequelize.transaction();
   const { credential } = body;
   let status = 200;
@@ -39,36 +76,7 @@ export async function googleAuth(body) {
     const email = payload.email;
     let user = await userRepository.getUserByEmail(email);
     if (!user) {
-      status = 201;
-      user = await userRepository.createUser(
-        {
-          email: payload.email,
-          firstName: payload.given_name || null,
-          lastName: payload.family_name || null,
-          profilePicture: {
-            name: uuid(),
-            mediaType: "image",
-            isLocal: false,
-            url: payload.picture,
-            size: 0,
-            confirmed: true,
-            thumb: false,
-          },
-          isVerified: true,
-          googleId: payload.sub,
-          UserRole: {
-            role: "client",
-            relatedType: "client",
-            relatedId: null,
-          },
-        },
-        t,
-      );
-      await permissionServices.initPermissions(
-        user.id,
-        roleTemplates.client,
-        t,
-      );
+      throw new AppError(404, "User not found", true, "User not found");
     }
     const { accessToken, refreshToken } = jwtUtils.generateTokens(user);
     const sanitizedUser = await userMapper.sanitizeUser(user);
@@ -79,12 +87,22 @@ export async function googleAuth(body) {
     throw error;
   }
 }
-
-export async function sendVerificationEmail(userEmail, userId, t) {
+export async function resendVerificationEmail(userEmail) {
   try {
     // return;
-    const token = generateToken();
+    const token = generateNumericCode(5);
     const tokenHash = hashToken(token);
+    const user = await userRepository.getUserByEmail(userEmail);
+    if (!user)
+      throw new AppError(404, "User not found", true, "User not found");
+    if (user.isVerified)
+      throw new AppError(
+        400,
+        "User is already verified",
+        true,
+        "User is already verified",
+      );
+    const userId = user.id;
     await authRepository.invalidateTokens(
       userId,
       TOKENS_CONSTANTS.EMAIL_VERIFICATION,
@@ -92,6 +110,39 @@ export async function sendVerificationEmail(userEmail, userId, t) {
     );
     const databaseToken = {
       token: tokenHash,
+      userId: userId,
+      oneTime: true,
+      isValid: true,
+      type: TOKENS_CONSTANTS.EMAIL_VERIFICATION,
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    };
+    await authRepository.createToken(databaseToken, t);
+    const link = `${APP_DOMAIN}/api/auth/verifyAccount?token=${encodeURIComponent(
+      token,
+    )}`;
+    const html = verificationEmailTemplate(link);
+    await emailQueue.add("sendEmail", {
+      to: userEmail,
+      subject: "Verification Email",
+      html,
+    });
+  } catch (error) {
+    errorLogger(error);
+    throw error;
+  }
+}
+export async function sendVerificationEmail(userEmail, userId, t) {
+  try {
+    // return;
+    const token = generateNumericCode(5);
+    const tokenHash = hashToken(token);
+    await authRepository.invalidateTokens(
+      userId,
+      TOKENS_CONSTANTS.EMAIL_VERIFICATION,
+      t,
+    );
+    const databaseToken = {
+      token: tokenHash.trim(),
       userId: userId,
       oneTime: true,
       isValid: true,
@@ -114,11 +165,11 @@ export async function sendVerificationEmail(userEmail, userId, t) {
   }
 }
 
-export async function verifyAccountConfirm(token) {
+export async function verifyAccountConfirm(token, email) {
   const t = await sequelize.transaction();
   try {
     const hashedToken = hashToken(token);
-    const dbToken = await authRepository.retrieveToken(hashedToken, t);
+    const dbToken = await authRepository.retrieveToken(hashedToken, email, t);
     if (!dbToken)
       throw new AppError(
         404,
@@ -223,7 +274,7 @@ export async function passwordReset(email) {
     t,
   );
   try {
-    const token = generateToken(4);
+    const token = generateNumericCode(5);
     const tokenHash = hashToken(token);
     const databaseToken = {
       token: tokenHash,
@@ -297,7 +348,9 @@ export async function passwordResetConfirm({ token, password }) {
 
 const authServices = {
   sendVerificationEmail,
-  googleAuth,
+  googleAuthRetrieveInfo,
+  resendVerificationEmail,
+  googleAuthSignin,
   loginUser,
   loginToken,
   refreshUserToken,

@@ -1,14 +1,27 @@
 import { useEffect } from "react";
-import { useAuth } from "../../contexts/AuthContext";
-import { GOOGLE_CLIENT_ID } from "../../config/api";
+import { useAuth } from "../../../contexts/AuthContext";
+import { GOOGLE_CLIENT_ID } from "../../../config/api";
+import { googleRetrieveInfo } from "../../../api/authService";
 
-export default function GoogleLoginButton() {
+export default function GoogleLoginButton({
+  authStyle,
+  handleGoogleResponse,
+  signin = false,
+}) {
   const { googleLogin } = useAuth();
-
+  const googleRegistration = async (idToken) => {
+    const user = await googleRetrieveInfo(idToken);
+    return user;
+  };
   // Called when Google returns the ID token
   const handleCredentialResponse = async (response) => {
     try {
-      await googleLogin(response.credential);
+      if (signin) {
+        await googleLogin(response.credential);
+      } else {
+        const resp = await googleRegistration(response.credential);
+        return handleGoogleResponse(resp);
+      }
     } catch (err) {
       console.error("Google login failed", err);
     }
@@ -30,7 +43,7 @@ export default function GoogleLoginButton() {
       {
         theme: "outline",
         size: "large",
-        width: "100%",
+        width: 200,
       },
     );
 
@@ -38,9 +51,5 @@ export default function GoogleLoginButton() {
     window.google.accounts.id.disableAutoSelect();
   }, []);
 
-  return (
-    <div className="w-full">
-      <div id="googleBtn" className="w-full flex justify-center" />
-    </div>
-  );
+  return <div id="googleBtn" className={authStyle} />;
 }

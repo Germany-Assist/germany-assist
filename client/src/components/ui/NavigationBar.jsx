@@ -8,25 +8,6 @@ import NotificationBell from "./NotificationBell";
 const NavigationBar = () => {
   const { profile } = useProfile();
   const location = useLocation();
-
-  // const [isDark, setIsDark] = useState(() => {
-  //   return (
-  //     localStorage.getItem("theme") === "dark" || !("theme" in localStorage)
-  //   );
-  // });
-
-  // useEffect(() => {
-  //   if (isDark) {
-  //     document.documentElement.classList.add("dark");
-  //     localStorage.setItem("theme", "dark");
-  //   } else {
-  //     document.documentElement.classList.remove("dark");
-  //     localStorage.setItem("theme", "light");
-  //   }
-  // }, [isDark]);
-
-  //testing
-
   const isActivePath = (path) => {
     if (path === "/") return location.pathname === "/";
     return location.pathname.startsWith(path);
@@ -91,11 +72,18 @@ const NavigationBar = () => {
                   />
                 </div>
               ) : (
-                <Link to="/auth">
-                  <button className="bg-accent text-black text-sm font-bold px-6 py-2 rounded-full transition-all hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] active:scale-95">
-                    Log In
-                  </button>
-                </Link>
+                <>
+                  <Link to="/signup">
+                    <button className="bg-accent text-black text-sm font-bold px-6 py-2 rounded-full transition-all hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] active:scale-95">
+                      sign up
+                    </button>
+                  </Link>
+                  <Link to="/signin">
+                    <button className="bg-accent text-black text-sm font-bold px-6 py-2 rounded-full transition-all hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] active:scale-95">
+                      Log In
+                    </button>
+                  </Link>
+                </>
               )}
 
               {/* Mobile Menu */}

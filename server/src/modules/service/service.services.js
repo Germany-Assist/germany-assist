@@ -167,12 +167,12 @@ async function createService(req, transaction) {
     groupedFiles[type].push(file);
   });
 
-  for (const [type, files] of Object.entries(groupedFiles)) {
-    await AssetService.upload({
-      type,
+  for (const [typeKey, files] of Object.entries(groupedFiles)) {
+    await AssetService.uploadAsset({
       files,
-      auth: req.auth,
-      params: { id: hashIdUtil.hashIdEncode(service.id) },
+      ownerId: service.id,
+      typeKey,
+      userId: req.auth.id,
       transaction,
     });
   }
@@ -485,12 +485,12 @@ async function updateService(serviceId, req, transaction) {
     groupedFiles[type].push(file);
   });
 
-  for (const [type, files] of Object.entries(groupedFiles)) {
-    await AssetService.upload({
-      type,
+  for (const [typeKey, files] of Object.entries(groupedFiles)) {
+    await AssetService.uploadAsset({
       files,
-      auth: req.auth,
-      params: { id: hashIdUtil.hashIdEncode(service.id) },
+      ownerId: service.id,
+      typeKey,
+      userId: req.auth.id,
       transaction,
     });
   }

@@ -1,0 +1,1192 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--blue:#024CEE;--sky:#49B7DF;--bs:rgba(2,76,238,0.07);--bm:rgba(2,76,238,0.13);--text:#0a0f1e;--muted:#6b7280;--light:#f7f9ff;--border:rgba(2,76,238,0.10);--w:#fff;}
+body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-height:100vh;}
+.shell{display:flex;min-height:100vh;}
+.sidebar{width:220px;background:var(--w);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;flex-shrink:0;transition:width 0.25s;overflow:hidden;}
+.sidebar.collapsed{width:56px;}
+.sidebar.collapsed .ga-logo-text,.sidebar.collapsed .nav-label,.sidebar.collapsed .nav-text,.sidebar.collapsed .nb,.sidebar.collapsed .sp-nm,.sidebar.collapsed .sp-rl,.sidebar.collapsed .pf-arrow{display:none;}
+.sidebar.collapsed .nav-item{justify-content:center;padding:9px 0;gap:0;}
+.sidebar.collapsed .logo-area{justify-content:center;padding:14px 0;gap:0;}
+.sidebar.collapsed .collapse-btn{margin-left:0;}
+.sidebar.collapsed .sp-profile{justify-content:center;padding:9px 0;gap:0;}
+.sidebar.collapsed .s-av{margin:0;}
+.sidebar.collapsed .ga-mark{margin:0 auto;}
+.collapse-btn{width:22px;height:22px;border-radius:6px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--muted);transition:background 0.13s;margin-left:auto;}
+.collapse-btn:hover{background:var(--bs);color:var(--blue);}
+.logo-area{padding:16px 14px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.ga-mark{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;border:1px solid var(--border);flex-shrink:0;}
+.ga-flag{display:flex;flex-direction:column;width:100%;height:100%;}
+.ga-flag-b{flex:1;background:#000;}.ga-flag-r{flex:1;background:#d60d2e;}.ga-flag-g{flex:1;background:#f6ce17;}
+.ga-logo-text{display:flex;flex-direction:column;}
+.ga-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.1;}
+.ga-sub{font-size:10px;color:var(--muted);}
+.nav{flex:1;padding:10px 8px;overflow-y:auto;overflow-x:hidden;}
+.nav-label{font-size:9.5px;font-weight:600;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;padding:8px 8px 3px;white-space:nowrap;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;font-size:13px;font-weight:400;color:var(--muted);cursor:pointer;transition:all 0.13s;margin-bottom:1px;white-space:nowrap;}
+.nav-item:hover{background:var(--bs);color:var(--blue);}
+.nav-item.active{background:var(--bs);color:var(--blue);font-weight:500;}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;}
+.nb{margin-left:auto;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;color:#fff;}
+.nb-red{background:#E53E3E;}.nb-blue{background:var(--blue);}.nb-sky{background:var(--sky);}
+.sidebar-footer{padding:10px 8px 14px;border-top:1px solid var(--border);}
+.sp-profile{display:flex;align-items:center;gap:9px;padding:9px;border-radius:9px;cursor:pointer;transition:background 0.13s;}
+.sp-profile:hover{background:var(--bs);}
+.s-av{width:32px;height:32px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0;}
+.sp-nm{font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;}
+.sp-rl{font-size:10.5px;color:var(--muted);white-space:nowrap;}
+.pf-arrow{margin-left:auto;color:var(--muted);}
+.main{flex:1;overflow:auto;background:#f7f9ff;min-width:0;}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:10px;height:52px;position:sticky;top:0;z-index:20;}
+.page-title{font-size:15px;font-weight:600;flex:1;}
+.ti-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;color:var(--muted);}
+.ti-btn:hover{background:var(--bs);color:var(--blue);}
+.n-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;border:1.5px solid #fff;background:#E53E3E;}
+.content{padding:20px 24px;}
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px;}
+.bd{width:5px;height:5px;border-radius:50%;}
+.b-done{background:rgba(5,150,105,0.10);color:#059669;}.b-done .bd{background:#059669;}
+.b-act{background:var(--bs);color:var(--blue);}.b-act .bd{background:var(--blue);}
+.b-pen{background:rgba(217,119,6,0.10);color:#D97706;}.b-pen .bd{background:#D97706;}
+.b-dis{background:rgba(220,38,38,0.10);color:#DC2626;}.b-dis .bd{background:#DC2626;}
+.b-lat{background:rgba(220,38,38,0.08);color:#DC2626;}.b-lat .bd{background:#DC2626;}
+.kpi-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-bottom:18px;}
+.kc{background:#fff;border:1px solid var(--border);border-radius:13px;padding:15px 17px;transition:transform 0.15s;}
+.kc:hover{transform:translateY(-1px);}
+.kc.primary{background:var(--blue);border-color:var(--blue);}
+.kl{font-size:10.5px;font-weight:500;color:var(--muted);margin-bottom:6px;}
+.kc.primary .kl{color:rgba(255,255,255,0.7);}
+.kv{font-size:22px;font-weight:700;letter-spacing:-0.5px;color:var(--text);line-height:1;}
+.kc.primary .kv{color:#fff;}
+.ks{font-size:11px;color:var(--muted);margin-top:4px;}
+.kc.primary .ks{color:rgba(255,255,255,0.65);}
+.chip{font-size:10.5px;font-weight:600;padding:2px 6px;border-radius:5px;}
+.cup{color:#059669;background:rgba(5,150,105,0.10);}
+.cwarn{color:#D97706;background:rgba(217,119,6,0.10);}
+.cdanger{color:#DC2626;background:rgba(220,38,38,0.10);}
+.card{background:#fff;border:1px solid var(--border);border-radius:13px;padding:16px 18px;margin-bottom:14px;}
+.ch{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.ct{font-size:13px;font-weight:600;flex:1;}
+.filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.filter-tabs{display:flex;background:var(--light);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.ftab{font-size:11.5px;padding:6px 12px;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--muted);background:transparent;border:none;transition:all 0.13s;white-space:nowrap;}
+.ftab.active{background:var(--blue);color:#fff;font-weight:500;}
+.ftab:hover:not(.active){background:var(--bs);color:var(--blue);}
+.search-wrap{position:relative;flex:1;min-width:150px;max-width:240px;}
+.search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+.search-input{width:100%;padding:6px 10px 6px 30px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;background:#fff;}
+.search-input:focus{border-color:var(--blue);}
+.filter-select{padding:6px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Outfit',sans-serif;color:var(--muted);background:#fff;cursor:pointer;outline:none;}
+.new-btn{display:none;}
+thead th.sortable{cursor:default;user-select:none;}
+.sort-arrow{display:none;}
+/* FILTER DRAWER — matches notifications pattern */
+.fd-overlay{position:fixed;inset:0;background:rgba(10,15,30,0.35);z-index:300;opacity:0;pointer-events:none;transition:opacity 0.25s ease;backdrop-filter:blur(2px);}
+.fd-overlay.open{opacity:1;pointer-events:all;}
+.filter-drawer{position:fixed;top:0;right:0;height:100vh;width:310px;background:#fff;z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);box-shadow:-8px 0 40px rgba(2,76,238,0.12);border-left:1px solid var(--border);}
+.filter-drawer.open{transform:translateX(0);}
+.fd-head{display:flex;align-items:center;padding:18px 18px 14px;border-bottom:1px solid var(--border);gap:10px;}
+.fd-title{font-size:14px;font-weight:700;flex:1;display:flex;align-items:center;gap:6px;}
+.fd-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all 0.13s;}
+.fd-close:hover{border-color:var(--blue);color:var(--blue);}
+.fd-body{flex:1;overflow-y:auto;padding:18px;}
+.fd-section{margin-bottom:22px;}
+.fd-section-lbl{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.fd-chip-group{display:flex;flex-wrap:wrap;gap:7px;}
+.fd-chip{font-size:12px;font-weight:500;padding:6px 13px;border-radius:20px;border:1px solid var(--border);cursor:pointer;color:var(--muted);background:#fff;transition:all 0.13s;font-family:'Outfit',sans-serif;}
+.fd-chip:hover{border-color:var(--blue);color:var(--blue);}
+.fd-chip.sel{background:var(--blue);color:#fff;border-color:var(--blue);}
+.fd-date-row{display:flex;gap:8px;}
+.fd-date-group{flex:1;display:flex;flex-direction:column;gap:5px;}
+.fd-date-label{font-size:11px;color:var(--muted);font-weight:500;}
+.fd-date-input{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;background:#fff;cursor:pointer;}
+.fd-date-input:focus{border-color:var(--blue);}
+.fd-footer{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:8px;}
+.fd-apply{flex:1;padding:10px;border-radius:9px;background:var(--blue);color:#fff;font-size:13px;font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.13s;}
+.fd-apply:hover{background:#013cc0;}
+.fd-reset{padding:10px 14px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.13s;}
+.fd-reset:hover{border-color:var(--blue);color:var(--blue);}
+/* active filter pills */
+.active-filters{display:none;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.active-filters.show{display:flex;}
+.af-pill{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:500;padding:4px 10px;border-radius:20px;background:var(--bs);color:var(--blue);border:1px solid rgba(2,76,238,0.18);}
+.af-pill button{background:none;border:none;cursor:pointer;color:var(--blue);font-size:14px;line-height:1;padding:0;}
+.af-clear-all{font-size:11px;color:var(--muted);cursor:pointer;padding:4px 8px;border-radius:6px;background:none;border:none;font-family:'Outfit',sans-serif;}
+.af-clear-all:hover{color:#DC2626;}
+/* filter button */
+.filter-btn{display:flex;align-items:center;gap:5px;padding:6px 11px;border-radius:8px;background:#fff;color:var(--muted);border:1px solid var(--border);font-size:12px;font-weight:500;font-family:'Outfit',sans-serif;cursor:pointer;position:relative;transition:all 0.13s;white-space:nowrap;}
+.filter-btn:hover,.filter-btn.active{border-color:var(--blue);color:var(--blue);background:var(--bs);}
+.filter-badge{position:absolute;top:-5px;right:-5px;width:16px;height:16px;border-radius:50%;background:var(--blue);color:#fff;font-size:8px;font-weight:700;display:none;align-items:center;justify-content:center;border:2px solid #fff;}
+.filter-badge.show{display:flex;}
+.big-table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+thead th{text-align:left;font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;padding:0 10px 9px;border-bottom:1px solid var(--border);}
+tbody tr{transition:background 0.1s;cursor:pointer;}
+/* ── ORDER DETAIL PAGE ── */
+.od-page{display:none;padding:20px 24px;animation:fadeUp 0.25s ease both;}
+.od-page.active{display:block;}
+.list-view{display:block;}
+.list-view.hidden{display:none;}
+/* back button — icon only */
+.od-back{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;border:1px solid var(--border);background:#fff;cursor:pointer;color:var(--muted);transition:all 0.15s;flex-shrink:0;}
+.od-back:hover{background:var(--bs);border-color:var(--blue);color:var(--blue);}
+/* 2-col layout */
+.od-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
+.od-left{display:flex;flex-direction:column;gap:14px;}
+.od-right{display:flex;flex-direction:column;gap:14px;position:sticky;top:72px;}
+/* rich service card */
+.od-svc-rich{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.od-svc-rich-thumb{height:90px;background:linear-gradient(135deg,var(--blue) 0%,var(--sky) 100%);display:flex;align-items:center;justify-content:center;position:relative;}
+.od-svc-type-badge{position:absolute;top:10px;left:12px;font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:6px;text-transform:uppercase;letter-spacing:0.05em;background:rgba(255,255,255,0.22);color:#fff;backdrop-filter:blur(4px);}
+.od-svc-rich-body{padding:16px 18px;}
+.od-svc-rich-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.od-svc-rich-title{font-size:14px;font-weight:700;color:var(--text);}
+.od-svc-rich-meta{font-size:11.5px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.od-svc-rich-meta span{display:flex;align-items:center;gap:3px;}
+.od-svc-desc{font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:12px;}
+.od-svc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+.od-svc-tag{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;background:var(--light);color:var(--muted);border:1px solid var(--border);}
+.od-svc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.od-svc-stat{background:var(--light);border-radius:9px;padding:9px 10px;text-align:center;}
+.od-svc-stat-val{font-size:15px;font-weight:700;color:var(--text);}
+.od-svc-stat-lbl{font-size:10px;color:var(--muted);margin-top:1px;}
+.od-svc-details-grid{display:flex;flex-direction:column;border-top:1px solid var(--border);padding-top:10px;gap:0;}
+.od-svc-drow{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.od-svc-drow:last-child{border-bottom:none;}
+.od-svc-dlbl{color:var(--muted);}
+.od-svc-dval{font-weight:500;color:var(--text);}
+.od-svc-btn{flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:8px;border:1px solid var(--border);font-size:12px;font-weight:500;font-family:'Outfit',sans-serif;color:var(--blue);background:#fff;cursor:pointer;transition:all 0.13s;text-decoration:none;}
+.od-svc-btn:hover{background:var(--bs);border-color:var(--blue);}
+@media(max-width:960px){.od-grid{grid-template-columns:1fr;}.od-right{position:static;}}
+.od-hero{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px 22px;}
+.od-hero-head{display:flex;align-items:flex-start;gap:14px;padding-bottom:16px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.od-icon{width:44px;height:44px;border-radius:12px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.od-hero-info{flex:1;min-width:0;}
+.od-title{font-size:15px;font-weight:700;color:var(--text);}
+.od-subtitle{font-size:11.5px;color:var(--muted);margin-top:2px;}
+/* info grid inside hero */
+.od-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.od-ig-item{display:flex;flex-direction:column;gap:3px;}
+.od-ig-label{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);}
+.od-ig-val{font-size:12.5px;font-weight:500;color:var(--text);}
+/* earnings highlight in hero */
+.od-earn-box{background:var(--bs);border-radius:10px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;margin-top:14px;}
+.od-earn-label{font-size:11px;color:var(--blue);font-weight:500;}
+.od-earn-val{font-size:18px;font-weight:700;color:var(--blue);}
+/* countdown chip */
+.od-countdown{display:inline-flex;align-items:center;gap:5px;background:rgba(217,119,6,0.10);color:#D97706;border-radius:7px;padding:4px 9px;font-size:11px;font-weight:600;}
+/* general card */
+.od-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px 20px;}
+.od-card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:14px;}
+/* timeline — per spec */
+.od-tl{display:flex;flex-direction:column;}
+.od-tl-item{display:flex;gap:12px;padding-bottom:16px;position:relative;}
+.od-tl-item:last-child{padding-bottom:0;}
+.od-tl-item:not(:last-child)::before{content:'';position:absolute;left:10px;top:22px;bottom:0;width:2px;background:var(--border);}
+.od-tl-item.done:not(:last-child)::before{background:var(--blue);}
+.od-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid var(--border);background:#fff;z-index:1;}
+.od-dot.done{background:var(--blue);border-color:var(--blue);}
+.od-dot.curr{background:#fff;border-color:var(--blue);}
+.od-dot.warn{background:#fff;border-color:#D97706;}
+.od-dot.danger{background:#fff;border-color:#DC2626;}
+.od-dot svg{width:10px;height:10px;color:#fff;}
+.od-dot.curr svg{color:var(--blue);}
+.od-dot.warn svg{color:#D97706;}
+.od-dot.danger svg{color:#DC2626;}
+.od-dot.pend svg{color:var(--muted);}
+.od-tl-content{flex:1;padding-top:1px;}
+.od-tl-label{font-size:12.5px;font-weight:600;}
+.od-tl-desc{font-size:11px;color:var(--muted);margin-top:1px;line-height:1.4;}
+.od-tl-action{display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:4px 10px;border-radius:7px;font-size:11px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;border:1px solid;transition:all 0.13s;}
+.od-tl-action.green{background:rgba(5,150,105,0.07);color:#059669;border-color:rgba(5,150,105,0.22);}
+.od-tl-action.green:hover{background:rgba(5,150,105,0.13);}
+.od-tl-action.red{background:rgba(220,38,38,0.07);color:#DC2626;border-color:rgba(220,38,38,0.2);}
+.od-tl-action.red:hover{background:rgba(220,38,38,0.12);}
+.od-tl-action.blue{background:var(--bs);color:var(--blue);border-color:rgba(2,76,238,0.2);}
+.od-tl-action.blue:hover{background:var(--bm);}
+/* payment status badge */
+.ps-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;}
+.ps-escrow{background:rgba(2,76,238,0.08);color:var(--blue);}
+.ps-paid{background:rgba(5,150,105,0.10);color:#059669;}
+.ps-awaiting{background:rgba(217,119,6,0.10);color:#D97706;}
+.ps-disputed{background:rgba(220,38,38,0.10);color:#DC2626;}
+/* docs */
+.doc-list{display:flex;flex-direction:column;gap:8px;}
+.doc-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all 0.13s;}
+.doc-item:hover{border-color:rgba(2,76,238,0.22);background:var(--light);}
+.doc-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.doc-info{flex:1;}
+.doc-name{font-size:12.5px;font-weight:500;}
+.doc-meta{font-size:11px;color:var(--muted);margin-top:1px;}
+.doc-dl{width:26px;height:26px;border-radius:7px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all 0.13s;}
+.doc-item:hover .doc-dl{border-color:var(--blue);color:var(--blue);}
+/* CHAT — Message.html style */
+
+.od-chat-header{background:#fff;border-bottom:1px solid var(--border);padding:0 16px;height:52px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.od-ch-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;background:rgba(73,183,223,0.18);color:#0284C7;}
+.od-ch-info{flex:1;}
+.od-ch-name{font-size:13px;font-weight:600;}
+.od-ch-sub{font-size:11px;color:var(--muted);}
+.od-ch-actions{display:flex;gap:5px;}
+.od-ch-btn{height:28px;padding:0 10px;border:1px solid var(--border);border-radius:7px;background:#fff;font-size:11px;font-family:'Outfit',sans-serif;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:4px;transition:all 0.13s;}
+.od-ch-btn:hover{border-color:var(--blue);color:var(--blue);}
+.od-chat-body{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:12px;background:#f7f9ff;}
+.od-msg-row{display:flex;gap:8px;align-items:flex-end;}
+.od-msg-row.mine{flex-direction:row-reverse;}
+.od-bubble-wrap{display:flex;flex-direction:column;gap:3px;max-width:70%;}
+.od-msg-row.mine .od-bubble-wrap{align-items:flex-end;}
+.od-bubble{padding:9px 13px;border-radius:14px;font-size:12.5px;line-height:1.5;color:var(--text);background:#fff;border:1px solid var(--border);border-bottom-left-radius:4px;}
+.od-msg-row.mine .od-bubble{background:var(--blue);color:#fff;border:none;border-bottom-right-radius:4px;border-bottom-left-radius:14px;}
+.od-bubble-time{font-size:10px;color:var(--muted);padding:0 3px;}
+.od-msg-row.mine .od-bubble-time{text-align:right;}
+.od-mini-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0;margin-bottom:2px;background:rgba(73,183,223,0.18);color:#0284C7;}
+.od-mini-av.me{background:var(--blue);color:#fff;}
+.od-chat-input-bar{background:#fff;border-top:1px solid var(--border);padding:10px 14px;flex-shrink:0;}
+.od-input-toolbar{display:flex;gap:5px;margin-bottom:7px;}
+.od-tool-btn{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all 0.13s;}
+.od-tool-btn:hover{border-color:var(--blue);color:var(--blue);}
+.od-input-row{display:flex;align-items:flex-end;gap:8px;}
+.od-msg-textarea{flex:1;padding:9px 13px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:'Outfit',sans-serif;color:var(--text);resize:none;outline:none;min-height:40px;max-height:100px;line-height:1.5;transition:border-color 0.13s;}
+.od-msg-textarea:focus{border-color:var(--blue);}
+.od-send-btn{width:38px;height:38px;border-radius:10px;background:var(--blue);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;transition:transform 0.1s;}
+.od-send-btn:hover{transform:scale(1.05);}
+.od-send-btn:active{transform:scale(0.96);}
+/* actions bar */
+.od-actions-bar{display:flex;gap:8px;padding-top:14px;border-top:1px solid var(--border);margin-top:4px;}
+.od-act-btn{flex:1;padding:10px;border-radius:10px;font-size:13px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;border:1px solid;transition:all 0.13s;}
+.od-act-btn.accept{background:rgba(5,150,105,0.07);color:#059669;border-color:rgba(5,150,105,0.22);}
+.od-act-btn.accept:hover{background:rgba(5,150,105,0.14);}
+.od-act-btn.reject{background:rgba(220,38,38,0.06);color:#DC2626;border-color:rgba(220,38,38,0.2);}
+.od-act-btn.reject:hover{background:rgba(220,38,38,0.12);}
+/* chat sticky */
+.od-chat-page{display:flex;flex-direction:column;height:calc(100vh - 90px);background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+tbody tr:hover{background:var(--light);}
+tbody td{padding:10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+.t-svc{font-weight:500;font-size:12.5px;}
+.t-sub{font-size:11px;color:var(--muted);}
+.t-id{font-size:11px;color:var(--muted);}
+.t-act{font-size:11.5px;font-weight:500;cursor:pointer;}
+.t-act.blue{color:var(--blue);}.t-act.red{color:#DC2626;}.t-act.green{color:#059669;}
+tbody tr.new-order{background:rgba(217,119,6,0.045);border-left:3px solid #D97706;}
+tbody tr.new-order td:first-child{padding-left:7px;}
+tbody tr.new-order:hover{background:rgba(217,119,6,0.08);}
+.new-tag{font-size:9px;font-weight:700;color:#D97706;background:rgba(217,119,6,0.12);border:1px solid rgba(217,119,6,0.25);padding:1px 5px;border-radius:4px;margin-left:5px;letter-spacing:0.04em;vertical-align:middle;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 2px rgba(74,222,128,0.4);}50%{box-shadow:0 0 0 5px rgba(74,222,128,0);}}
+.pagination{display:flex;align-items:center;justify-content:space-between;padding-top:14px;font-size:12px;color:var(--muted);}
+.pag-btns{display:flex;gap:4px;}
+.pag-btn{padding:5px 10px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:11.5px;font-family:'Outfit',sans-serif;color:var(--muted);transition:all 0.13s;}
+.pag-btn:hover{border-color:var(--blue);color:var(--blue);}
+.pag-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.pa-list{display:flex;flex-direction:column;gap:8px;}
+.pa-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:#fff;transition:all 0.13s;}
+.pa-row:hover{border-color:rgba(2,76,238,0.2);background:var(--light);}
+.pa-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pa-info{flex:1;}
+.pa-name{font-size:12.5px;font-weight:500;}
+.pa-meta{font-size:11px;color:var(--muted);}
+.pa-amount{font-size:13px;font-weight:700;margin-right:8px;}
+.pa-actions{display:flex;gap:5px;}
+.pa-btn{padding:5px 10px;border-radius:7px;font-size:11px;font-weight:500;font-family:'Outfit',sans-serif;cursor:pointer;border:1px solid;transition:all 0.13s;}
+.pa-btn.approve{background:rgba(5,150,105,0.07);color:#059669;border-color:rgba(5,150,105,0.2);}
+.pa-btn.approve:hover{background:rgba(5,150,105,0.14);}
+.pa-btn.decline{background:rgba(220,38,38,0.06);color:#DC2626;border-color:rgba(220,38,38,0.18);}
+.pa-btn.decline:hover{background:rgba(220,38,38,0.12);}
+.pa-btn.view{background:#fff;color:var(--muted);border-color:var(--border);}
+.pa-btn.view:hover{border-color:var(--blue);color:var(--blue);background:var(--bs);}
+.pa-extra{display:none;flex-direction:column;gap:8px;margin-top:0;}
+.pa-extra.open{display:flex;}
+.pa-viewall{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;padding:8px;border:1px dashed rgba(2,76,238,0.2);border-radius:9px;font-size:12px;font-weight:500;color:var(--blue);cursor:pointer;background:transparent;font-family:'Outfit',sans-serif;transition:all 0.13s;width:100%;}
+.pa-viewall:hover{background:var(--bs);}
+.pa-viewall svg{transition:transform 0.2s;}
+.pa-viewall.open svg{transform:rotate(180deg);}
+@media(max-width:900px){.kpi-strip{grid-template-columns:1fr 1fr 1fr;}}
+@media(max-width:768px){
+  .sidebar{position:fixed;left:-220px;z-index:100;transition:left 0.25s;}
+  .sidebar.open{left:0;}
+  .kpi-strip{grid-template-columns:1fr 1fr;}
+  .content{padding:14px 16px;}
+  .topbar{padding:0 16px;}
+  .ham{display:flex!important;}
+  .drawer{width:100%;right:-100%;}
+}
+.ham{display:none;width:32px;height:32px;border:1px solid var(--border);border-radius:8px;background:#fff;align-items:center;justify-content:center;cursor:pointer;margin-right:4px;}
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:99;}
+.mob-overlay.show{display:block;}
+/* ── HELP PANEL ── */
+.help-overlay{position:fixed;inset:0;background:rgba(10,15,30,0.3);z-index:400;opacity:0;pointer-events:none;transition:opacity 0.25s;backdrop-filter:blur(2px);}
+.help-overlay.open{opacity:1;pointer-events:all;}
+.help-panel{position:fixed;top:0;right:0;height:100vh;width:380px;background:#fff;z-index:401;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);box-shadow:-12px 0 40px rgba(2,76,238,0.10);border-left:1px solid var(--border);}
+.help-panel.open{transform:translateX(0);}
+.hp-head{padding:18px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.hp-icon{width:34px;height:34px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--blue);}
+.hp-title{font-size:14px;font-weight:700;color:var(--text);flex:1;}
+.hp-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all 0.13s;}
+.hp-close:hover{border-color:var(--blue);color:var(--blue);}
+.hp-body{flex:1;overflow-y:auto;padding:20px 18px;}
+/* intro blurb */
+.hp-intro{font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:22px;}
+/* section label */
+.hp-section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted);margin-bottom:12px;}
+/* flow steps */
+.hp-flow{display:flex;flex-direction:column;gap:0;margin-bottom:24px;}
+.hp-step{display:flex;gap:14px;padding-bottom:18px;position:relative;}
+.hp-step:last-child{padding-bottom:0;}
+.hp-step:not(:last-child)::before{content:'';position:absolute;left:17px;top:36px;bottom:0;width:2px;background:var(--border);}
+.hp-step-num{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700;color:#fff;background:var(--blue);z-index:1;}
+.hp-step-body{flex:1;padding-top:5px;}
+.hp-step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.hp-step-desc{font-size:12px;color:var(--muted);line-height:1.55;}
+.hp-step-tag{display:inline-flex;align-items:center;gap:3px;margin-top:5px;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:5px;}
+/* status glossary */
+.hp-glossary{display:flex;flex-direction:column;gap:7px;margin-bottom:24px;}
+.hp-gl-row{display:flex;align-items:flex-start;gap:10px;padding:9px 11px;border-radius:9px;border:1px solid var(--border);}
+.hp-gl-badge{flex-shrink:0;margin-top:1px;}
+.hp-gl-text{font-size:12px;color:var(--muted);line-height:1.5;}
+.hp-gl-text strong{color:var(--text);font-weight:600;}
+/* tips */
+.hp-tips{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+.hp-tip{display:flex;gap:10px;padding:10px 12px;border-radius:9px;background:var(--light);border:1px solid var(--border);}
+.hp-tip-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+.hp-tip-text{font-size:12px;color:var(--muted);line-height:1.5;}
+.hp-tip-text strong{color:var(--text);}
+.hp-footer{padding:14px 18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.hp-dismiss{font-size:12px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:5px;transition:color 0.13s;}
+.hp-dismiss:hover{color:#DC2626;}
+.hp-docs-link{font-size:12px;font-weight:600;color:var(--blue);cursor:pointer;display:flex;align-items:center;gap:4px;text-decoration:none;}
+.hp-docs-link:hover{text-decoration:underline;}
+.kc{animation:fadeUp 0.35s ease both;}
+.kc:nth-child(1){animation-delay:0.04s}.kc:nth-child(2){animation-delay:0.08s}.kc:nth-child(3){animation-delay:0.12s}.kc:nth-child(4){animation-delay:0.16s}.kc:nth-child(5){animation-delay:0.20s}
+</style>
+
+<div class="mob-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- HELP PANEL -->
+<div class="help-overlay" id="helpOverlay" onclick="toggleHelp()"></div>
+<div class="help-panel" id="helpPanel">
+  <div class="hp-head">
+    <div class="hp-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+    <div class="hp-title">Orders Guide</div>
+    <div class="hp-close" onclick="toggleHelp()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+  </div>
+  <div class="hp-body">
+    <p class="hp-intro">Here's how orders work on Germany Assists — from the moment a client places an order to when you receive your payment.</p>
+
+    <div class="hp-section">How an order works</div>
+    <div class="hp-flow">
+      <div class="hp-step">
+        <div class="hp-step-num">1</div>
+        <div class="hp-step-body">
+          <div class="hp-step-title">Client Places an Order</div>
+          <div class="hp-step-desc">A client finds your service, pays upfront, and submits the order. Payment goes into <strong>Escrow</strong> — secure until the order is complete.</div>
+          <span class="hp-step-tag" style="background:rgba(217,119,6,0.10);color:#D97706;">⏳ Status: Pending</span>
+        </div>
+      </div>
+      <div class="hp-step">
+        <div class="hp-step-num">2</div>
+        <div class="hp-step-body">
+          <div class="hp-step-title">You Accept or Decline</div>
+          <div class="hp-step-desc">You have 48 hours to review and accept the order. If you decline, the client is fully refunded. Once accepted, a deadline counter starts.</div>
+          <span class="hp-step-tag" style="background:var(--bs);color:var(--blue);">▶ Status: Active</span>
+        </div>
+      </div>
+      <div class="hp-step">
+        <div class="hp-step-num">3</div>
+        <div class="hp-step-body">
+          <div class="hp-step-title">Deliver Your Work</div>
+          <div class="hp-step-desc">Complete the service before the deadline. Use the <strong>Deliver</strong> button to submit your work and a message to the client. Upload files if needed.</div>
+          <span class="hp-step-tag" style="background:rgba(2,132,199,0.10);color:#0284C7;">📦 Status: Delivered</span>
+        </div>
+      </div>
+      <div class="hp-step">
+        <div class="hp-step-num">4</div>
+        <div class="hp-step-body">
+          <div class="hp-step-title">Client Reviews (14 days)</div>
+          <div class="hp-step-desc">The client has 14 days to approve or raise a dispute. If no action is taken, the order <strong>auto-completes</strong> and payment releases.</div>
+        </div>
+      </div>
+      <div class="hp-step">
+        <div class="hp-step-num" style="background:#059669;">5</div>
+        <div class="hp-step-body">
+          <div class="hp-step-title">Payment Released</div>
+          <div class="hp-step-desc">Once complete, your earnings are added to your <strong>GA Wallet balance</strong>. You can withdraw at any time from the Finance page.</div>
+          <span class="hp-step-tag" style="background:rgba(5,150,105,0.10);color:#059669;">✅ Status: Completed</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-section">Order status reference</div>
+    <div class="hp-glossary">
+      <div class="hp-gl-row">
+        <span class="hp-gl-badge"><span class="badge b-pen"><span class="bd"></span>Pending</span></span>
+        <div class="hp-gl-text"><strong>Awaiting your acceptance.</strong> Review and accept within 48h or it expires.</div>
+      </div>
+      <div class="hp-gl-row">
+        <span class="hp-gl-badge"><span class="badge b-act"><span class="bd"></span>Active</span></span>
+        <div class="hp-gl-text"><strong>In progress.</strong> Deadline counter is running. Deliver before the due date.</div>
+      </div>
+      <div class="hp-gl-row">
+        <span class="hp-gl-badge"><span class="badge b-lat"><span class="bd"></span>Late</span></span>
+        <div class="hp-gl-text"><strong>Past deadline.</strong> Act now — repeated lateness affects your ranking.</div>
+      </div>
+      <div class="hp-gl-row">
+        <span class="hp-gl-badge" style="display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px;background:rgba(2,132,199,0.10);color:#0284C7;"><span style="width:5px;height:5px;border-radius:50%;background:#0284C7;display:inline-block;"></span>Delivered</span>
+        <div class="hp-gl-text"><strong>Awaiting client approval.</strong> 14-day auto-release if no response.</div>
+      </div>
+      <div class="hp-gl-row">
+        <span class="hp-gl-badge"><span class="badge b-dis"><span class="bd"></span>Disputed</span></span>
+        <div class="hp-gl-text"><strong>Under admin review.</strong> Respond with evidence via the order chat.</div>
+      </div>
+      <div class="hp-gl-row">
+        <span class="hp-gl-badge"><span class="badge b-done"><span class="bd"></span>Completed</span></span>
+        <div class="hp-gl-text"><strong>Payment released.</strong> Earnings are in your GA Wallet.</div>
+      </div>
+    </div>
+
+    <div class="hp-section">Pro tips</div>
+    <div class="hp-tips">
+      <div class="hp-tip"><div class="hp-tip-icon">💬</div><div class="hp-tip-text"><strong>Communicate early.</strong> Send a welcome message as soon as you accept — clients who hear from providers quickly leave better reviews.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">📎</div><div class="hp-tip-text"><strong>Attach documents.</strong> Upload checklists, templates, or notes directly in the order chat to keep everything in one place.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">⚡</div><div class="hp-tip-text"><strong>Deliver early.</strong> Orders completed ahead of schedule boost your provider score and unlock higher visibility in search.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">🛡️</div><div class="hp-tip-text"><strong>Disputes are rare.</strong> Clear communication and documented delivery reduce dispute risk to near zero.</div></div>
+    </div>
+  </div>
+  <div class="hp-footer" style="justify-content:flex-end;">
+    <a class="hp-docs-link" href="guide.html">Full Documentation <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+  </div>
+</div>
+
+
+<div class="shell">
+<aside class="sidebar" id="sidebar">
+  <div class="logo-area">
+    <div class="ga-mark"><div class="ga-flag"><div class="ga-flag-b"></div><div class="ga-flag-r"></div><div class="ga-flag-g"></div></div></div>
+    <div class="ga-logo-text"><div class="ga-name">Germany Assists</div><div class="ga-sub">Provider Portal</div></div>
+    <div class="collapse-btn" onclick="toggleCollapse()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></div>
+  </div>
+  <nav class="nav">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item" onclick="window.location.href='Dashborad.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="nav-text">Dashboard</span></div>
+    <div class="nav-item" onclick="window.location.href='Message.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="nav-text">Messages</span><span class="nb nb-red">5</span></div>
+    <div class="nav-item" onclick="window.location.href='notifications.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg><span class="nav-text">Notifications</span><span class="nb nb-red">3</span></div>
+    <div class="nav-label" style="margin-top:6px;">Work</div>
+    <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><span class="nav-text">Orders</span><span class="nb nb-blue">14</span></div>
+    <div class="nav-item" onclick="window.location.href='services.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span class="nav-text">My Services</span></div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="nav-text">Clients</span></div>
+    <div class="nav-label" style="margin-top:6px;">Finance</div>
+    <div class="nav-item" onclick="window.location.href='Finance.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg><span class="nav-text">Finance</span></div>
+    <div class="nav-label" style="margin-top:6px;">Account</div>
+    <div class="nav-item" onclick="window.location.href='profile.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="nav-text">Profile</span></div>
+    <div class="nav-item" onclick="window.location.href='verification_centre.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg><span class="nav-text">Verification Centre</span><span class="nb nb-sky">!</span></div>
+    <div class="nav-item" onclick="window.location.href='settings.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span class="nav-text">Settings</span></div>
+    <div class="nav-label" style="margin-top:6px;">Help</div>
+    <div class="nav-item" onclick="window.location.href='guide.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      <span class="nav-text">Guide</span>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sp-profile" onclick="window.location.href='profile.html'"><div class="s-av">GA</div><div><div class="sp-nm">Germany Assists</div><div class="sp-rl">Service Provider</div></div><div class="pf-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="ham" onclick="toggleSidebar()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
+    <button class="od-back" id="topbarBackBtn" onclick="closeOrderDetail()" style="display:none;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="page-title">Orders</span>
+    <div class="ti-btn" title="Export"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></div>
+    <div class="ti-btn" id="helpBtn" title="Help & Guide" onclick="toggleHelp()" style="color:var(--blue);border-color:rgba(2,76,238,0.2);background:var(--bs);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg></div>
+    <div class="ti-btn" title="Notifications"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg><span class="n-dot"></span></div>
+  </div>
+  <div class="content">
+    <div class="list-view" id="listView">
+    <div class="kpi-strip">
+      <div class="kc primary"><div class="kl" style="display:flex;align-items:center;gap:5px;">Active <span style="display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,0.18);color:#fff;font-size:9px;font-weight:600;padding:1px 6px;border-radius:20px;"><span style="width:5px;height:5px;border-radius:50%;background:#4ade80;display:inline-block;box-shadow:0 0 0 2px rgba(74,222,128,0.4);animation:pulse 1.5s infinite;"></span>In Progress</span></div><div class="kv">18</div><div class="ks"><span class="chip" style="background:rgba(255,255,255,0.18);color:#fff;font-size:10px;">↑ 3 from last week</span></div></div>
+      <div class="kc"><div class="kl">Pending Approval</div><div class="kv" style="color:#D97706;">6</div><div class="ks"><span class="chip cwarn">Needs action</span></div></div>
+      <div class="kc"><div class="kl">Disputed</div><div class="kv" style="color:#DC2626;">3</div><div class="ks"><span class="chip cdanger">Resolve now</span></div></div>
+      <div class="kc"><div class="kl">Completed</div><div class="kv">38</div><div class="ks"><span class="chip cup">↑ 5</span> this month</div></div>
+      <div class="kc"><div class="kl">Total Orders</div><div class="kv">65</div><div class="ks"><span class="chip cup">+8</span> this month</div></div>
+    </div>
+
+    <div class="card">
+      <div class="ch"><div class="ct">Pending Approvals</div><span class="badge b-pen" style="padding:3px 9px;font-size:11px;"><span class="bd"></span>6 require action</span></div>
+      <div class="pa-list" id="paList">
+        <div class="pa-row"><div class="pa-icon" style="background:var(--bs);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#024CEE" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div><div class="pa-info"><div class="pa-name">German A2 Course</div><div class="pa-meta">Sophie Müller · #ORD-8770 · Due 10 Apr</div></div><div class="pa-amount">€160</div><div class="pa-actions"><button class="pa-btn view" onclick="event.stopPropagation();openOrderDetail('ORD-8770')">View Details</button><button class="pa-btn approve" onclick="event.stopPropagation();paAction(this,'approve')">Accept</button><button class="pa-btn decline" onclick="event.stopPropagation();paAction(this,'decline')">Reject</button></div></div>
+        <div class="pa-row"><div class="pa-icon" style="background:var(--bs);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#024CEE" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div><div class="pa-info"><div class="pa-name">German A1 Course</div><div class="pa-meta">Rami Al-Harbi · #ORD-8755 · Due 12 Apr</div></div><div class="pa-amount">€180</div><div class="pa-actions"><button class="pa-btn view" onclick="event.stopPropagation();openOrderDetail('ORD-8755')">View Details</button><button class="pa-btn approve" onclick="event.stopPropagation();paAction(this,'approve')">Accept</button><button class="pa-btn decline" onclick="event.stopPropagation();paAction(this,'decline')">Reject</button></div></div>
+        <div class="pa-row"><div class="pa-icon" style="background:rgba(73,183,223,0.10);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="pa-info"><div class="pa-name">B1 Preparation Workshop</div><div class="pa-meta">Fatima Zahra · #ORD-8801 · Due 18 Apr</div></div><div class="pa-amount">€200</div><div class="pa-actions"><button class="pa-btn view" onclick="event.stopPropagation();openOrderDetail('ORD-8812')">View Details</button><button class="pa-btn approve" onclick="event.stopPropagation();paAction(this,'approve')">Accept</button><button class="pa-btn decline" onclick="event.stopPropagation();paAction(this,'decline')">Reject</button></div></div>
+        <div class="pa-extra" id="paExtra">
+          <div class="pa-row"><div class="pa-icon" style="background:var(--bs);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#024CEE" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div><div class="pa-info"><div class="pa-name">Visa Consulting Package</div><div class="pa-meta">Omar Khalil · #ORD-8821 · Due 22 Apr</div></div><div class="pa-amount">€250</div><div class="pa-actions"><button class="pa-btn view" onclick="event.stopPropagation();openOrderDetail('ORD-8812')">View Details</button><button class="pa-btn approve" onclick="event.stopPropagation();paAction(this,'approve')">Accept</button><button class="pa-btn decline" onclick="event.stopPropagation();paAction(this,'decline')">Reject</button></div></div>
+          <div class="pa-row"><div class="pa-icon" style="background:rgba(73,183,223,0.10);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="pa-info"><div class="pa-name">German C1 Intensive</div><div class="pa-meta">Leila Nouri · #ORD-8825 · Due 25 Apr</div></div><div class="pa-amount">€320</div><div class="pa-actions"><button class="pa-btn view" onclick="event.stopPropagation();openOrderDetail('ORD-8812')">View Details</button><button class="pa-btn approve" onclick="event.stopPropagation();paAction(this,'approve')">Accept</button><button class="pa-btn decline" onclick="event.stopPropagation();paAction(this,'decline')">Reject</button></div></div>
+          <div class="pa-row"><div class="pa-icon" style="background:var(--bs);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#024CEE" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div><div class="pa-info"><div class="pa-name">Job Market Workshop</div><div class="pa-meta">Tariq Mansouri · #ORD-8830 · Due 28 Apr</div></div><div class="pa-amount">€145</div><div class="pa-actions"><button class="pa-btn view" onclick="event.stopPropagation();openOrderDetail('ORD-8812')">View Details</button><button class="pa-btn approve" onclick="event.stopPropagation();paAction(this,'approve')">Accept</button><button class="pa-btn decline" onclick="event.stopPropagation();paAction(this,'decline')">Reject</button></div></div>
+        </div>
+      </div>
+      <button class="pa-viewall" id="paViewAll" onclick="togglePaExtra()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        View all 6 pending approvals
+      </button>
+    </div>
+
+<div class="fd-overlay" id="fdOverlay" onclick="closeFilterDrawer()"></div>
+<div class="filter-drawer" id="filterDrawer">
+  <div class="fd-head">
+    <div class="fd-title">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--blue)"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+      Filter Orders
+    </div>
+    <div class="fd-close" onclick="closeFilterDrawer()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+  </div>
+  <div class="fd-body">
+    <div class="fd-section">
+      <div class="fd-section-lbl">Status</div>
+      <div class="fd-chip-group">
+        <div class="fd-chip sel" data-status="all" onclick="selStatus(this)">All</div>
+        <div class="fd-chip" data-status="active" onclick="selStatus(this)">Active</div>
+        <div class="fd-chip" data-status="pending" onclick="selStatus(this)">Pending</div>
+        <div class="fd-chip" data-status="completed" onclick="selStatus(this)">Completed</div>
+        <div class="fd-chip" data-status="disputed" onclick="selStatus(this)">Disputed</div>
+        <div class="fd-chip" data-status="late" onclick="selStatus(this)">Late</div>
+      </div>
+    </div>
+    <div class="fd-section">
+      <div class="fd-section-lbl">Service Type</div>
+      <div class="fd-chip-group">
+        <div class="fd-chip sel" data-type="all" onclick="selType(this)">All</div>
+        <div class="fd-chip" data-type="course" onclick="selType(this)">Course</div>
+        <div class="fd-chip" data-type="consulting" onclick="selType(this)">Consulting</div>
+        <div class="fd-chip" data-type="workshop" onclick="selType(this)">Workshop</div>
+        <div class="fd-chip" data-type="support" onclick="selType(this)">Support</div>
+      </div>
+    </div>
+    <div class="fd-section">
+      <div class="fd-section-lbl">Date Range</div>
+      <div class="fd-date-row">
+        <div class="fd-date-group">
+          <div class="fd-date-label">From</div>
+          <input class="fd-date-input" type="date" id="fdDateFrom">
+        </div>
+        <div class="fd-date-group">
+          <div class="fd-date-label">To</div>
+          <input class="fd-date-input" type="date" id="fdDateTo">
+        </div>
+      </div>
+    </div>
+    <div class="fd-section">
+      <div class="fd-section-lbl">Amount Range</div>
+      <div class="fd-date-row">
+        <div class="fd-date-group">
+          <div class="fd-date-label">Min (€)</div>
+          <input class="fd-date-input" type="number" id="fdAmtMin" placeholder="0" min="0">
+        </div>
+        <div class="fd-date-group">
+          <div class="fd-date-label">Max (€)</div>
+          <input class="fd-date-input" type="number" id="fdAmtMax" placeholder="Any" min="0">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fd-footer">
+    <button class="fd-reset" onclick="resetFilters()">Reset all</button>
+    <button class="fd-apply" onclick="applyDrawerFilters()">Apply Filters</button>
+  </div>
+</div>
+
+    <div class="active-filters" id="activePills"></div>
+
+    <div class="card" style="padding-bottom:14px;padding-top:14px;">
+      <div class="ch" style="gap:10px;flex-wrap:nowrap;overflow-x:auto;">
+        <div class="filter-tabs" style="flex-shrink:0;">
+          <button class="ftab active" onclick="setTab(this,'all')">All <span style="opacity:0.55;font-size:10px;">(65)</span></button>
+          <button class="ftab" onclick="setTab(this,'active')">Active <span style="opacity:0.55;font-size:10px;">(18)</span></button>
+          <button class="ftab" onclick="setTab(this,'pending')">Pending <span style="opacity:0.55;font-size:10px;">(6)</span></button>
+          <button class="ftab" onclick="setTab(this,'completed')">Completed <span style="opacity:0.55;font-size:10px;">(38)</span></button>
+          <button class="ftab" onclick="setTab(this,'disputed')">Disputed <span style="opacity:0.55;font-size:10px;">(3)</span></button>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;margin-left:auto;flex-shrink:0;">
+          <div class="search-wrap" style="max-width:200px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="search-input" type="text" placeholder="Search orders…" oninput="filterTable(this.value)">
+          </div>
+          <button class="filter-btn" id="filterBtn" onclick="openFilterDrawer()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+            Filter
+            <span class="filter-badge" id="filterBadge"></span>
+          </button>
+          <button class="filter-btn" onclick="exportOrders()" title="Export CSV">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Export
+          </button>
+        </div>
+      </div>
+      <div class="big-table-wrap">
+        <table>
+          <thead><tr>
+            <th>Service</th>
+            <th>Client</th>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Due</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr></thead>
+          <tbody id="ordersBody">
+            <tr><td><div class="t-svc">Visa Consulting</div><div class="t-sub">Consulting · 3 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Mohammed Al-Rashidi</div><div class="t-id">#CLT-0041</div></td><td><div class="t-id">#ORD-8812</div></td><td><div style="font-size:12px;">01 Apr 2026</div></td><td><div style="font-size:12px;color:#059669;">15 Apr</div></td><td><div style="font-weight:600;color:var(--blue);">€220</div></td><td><span class="badge b-act"><span class="bd"></span>Active</span></td><td><div class="t-act blue">Manage</div></td></tr>
+            <tr><td><div class="t-svc">Job Search Support</div><div class="t-sub">Support · 5 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Layla Hassan</div><div class="t-id">#CLT-0029</div></td><td><div class="t-id">#ORD-8808</div></td><td><div style="font-size:12px;">30 Mar 2026</div></td><td><div style="font-size:12px;color:#059669;">20 Apr</div></td><td><div style="font-weight:600;color:var(--blue);">€175</div></td><td><span class="badge b-act"><span class="bd"></span>Active</span></td><td><div class="t-act blue">Manage</div></td></tr>
+            <tr><td><div class="t-svc">Integration Workshop</div><div class="t-sub">Workshop · Half day</div></td><td><div style="font-weight:500;font-size:12.5px;">Ahmed Karimi</div><div class="t-id">#CLT-0015</div></td><td><div class="t-id">#ORD-8800</div></td><td><div style="font-size:12px;">28 Mar 2026</div></td><td><div style="font-size:12px;color:#059669;">Done</div></td><td><div style="font-weight:600;color:var(--blue);">€130</div></td><td><span class="badge b-done"><span class="bd"></span>Completed</span></td><td><div class="t-act green">View</div></td></tr>
+            <tr><td><div class="t-svc">German B1 Course</div><div class="t-sub">Course · 10 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Nora Bergmann</div><div class="t-id">#CLT-0052</div></td><td><div class="t-id">#ORD-8795</div></td><td><div style="font-size:12px;">27 Mar 2026</div></td><td><div style="font-size:12px;color:#059669;">30 Apr</div></td><td><div style="font-weight:600;color:var(--blue);">€240</div></td><td><span class="badge b-act"><span class="bd"></span>Active</span></td><td><div class="t-act blue">Manage</div></td></tr>
+            <tr><td><div class="t-svc">Visa Consulting</div><div class="t-sub">Service · 2 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Khalid Farouk</div><div class="t-id">#CLT-0067</div></td><td><div class="t-id">#ORD-8780</div></td><td><div style="font-size:12px;">26 Mar 2026</div></td><td><div style="font-size:12px;color:#DC2626;">Overdue</div></td><td><div style="font-weight:600;color:#DC2626;">€150</div></td><td><span class="badge b-dis"><span class="bd"></span>Disputed</span></td><td><div class="t-act red">Resolve</div></td></tr>
+            <tr class="new-order"><td><div class="t-svc">German A2 Course<span class="new-tag">NEW</span></div><div class="t-sub">Course · 8 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Sophie Müller</div><div class="t-id">#CLT-0033</div></td><td><div class="t-id">#ORD-8770</div></td><td><div style="font-size:12px;">24 Mar 2026</div></td><td><div style="font-size:12px;color:#D97706;">10 Apr</div></td><td><div style="font-weight:600;color:var(--muted);">€160</div></td><td><span class="badge b-pen"><span class="bd"></span>Pending</span></td><td><div class="t-act blue">Review</div></td></tr>
+            <tr><td><div class="t-svc">Integration Workshop</div><div class="t-sub">Workshop · Half day</div></td><td><div style="font-weight:500;font-size:12.5px;">Yasmine Ali</div><div class="t-id">#CLT-0055</div></td><td><div class="t-id">#ORD-8763</div></td><td><div style="font-size:12px;">22 Mar 2026</div></td><td><div style="font-size:12px;color:#059669;">Done</div></td><td><div style="font-weight:600;color:var(--blue);">€130</div></td><td><span class="badge b-done"><span class="bd"></span>Completed</span></td><td><div class="t-act green">View</div></td></tr>
+            <tr class="new-order"><td><div class="t-svc">German A1 Course<span class="new-tag">NEW</span></div><div class="t-sub">Course · 12 sessions</div></td><td><div style="font-weight:500;font-size:12.5px;">Rami Al-Harbi</div><div class="t-id">#CLT-0071</div></td><td><div class="t-id">#ORD-8755</div></td><td><div style="font-size:12px;">20 Mar 2026</div></td><td><div style="font-size:12px;color:#D97706;">12 Apr</div></td><td><div style="font-weight:600;color:var(--muted);">€180</div></td><td><span class="badge b-pen"><span class="bd"></span>Pending</span></td><td><div class="t-act blue">Review</div></td></tr>
+            <tr><td><div class="t-svc">B1 Workshop</div><div class="t-sub">Workshop · 2 days</div></td><td><div style="font-weight:500;font-size:12.5px;">Hans Weber</div><div class="t-id">#CLT-0088</div></td><td><div class="t-id">#ORD-8749</div></td><td><div style="font-size:12px;">18 Mar 2026</div></td><td><div style="font-size:12px;color:#DC2626;">Overdue</div></td><td><div style="font-weight:600;color:var(--blue);">€200</div></td><td><span class="badge b-lat"><span class="bd"></span>Late</span></td><td><div class="t-act red">Act Now</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <span>Showing 9 of 65 orders</span>
+        <div class="pag-btns"><button class="pag-btn">← Prev</button><button class="pag-btn active">1</button><button class="pag-btn">2</button><button class="pag-btn">3</button><button class="pag-btn">Next →</button></div>
+      </div>
+    </div>
+    </div><!-- /list-view -->
+
+    <!-- ORDER DETAIL PAGE -->
+    <div class="od-page" id="odPage">
+      <div class="od-grid">
+        <!-- LEFT COL -->
+        <div class="od-left">
+
+          <!-- Hero Card -->
+          <div class="od-hero">
+            <div class="od-hero-head">
+              <div class="od-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#024CEE" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              </div>
+              <div class="od-hero-info">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                  <div class="od-title" id="od-service"></div>
+                  <span id="od-status-badge"></span>
+                </div>
+                <div class="od-subtitle" id="od-subtitle"></div>
+              </div>
+              <div id="od-countdown-wrap"></div>
+            </div>
+            <div class="od-info-grid">
+              <div class="od-ig-item"><div class="od-ig-label">Order ID</div><div class="od-ig-val" id="od-id"></div></div>
+              <div class="od-ig-item"><div class="od-ig-label">Client</div><div class="od-ig-val" id="od-client"></div></div>
+              <div class="od-ig-item"><div class="od-ig-label">Order Type</div><div class="od-ig-val" id="od-type"></div></div>
+              <div class="od-ig-item"><div class="od-ig-label">Order Date</div><div class="od-ig-val" id="od-date"></div></div>
+              <div class="od-ig-item"><div class="od-ig-label">Confirm Date</div><div class="od-ig-val" id="od-confirm"></div></div>
+              <div class="od-ig-item"><div class="od-ig-label">Due Date</div><div class="od-ig-val" id="od-due"></div></div>
+              <div class="od-ig-item" style="grid-column:span 3;"><div class="od-ig-label">Payment Status</div><div class="od-ig-val" id="od-pay-status" style="margin-top:3px;"></div></div>
+            </div>
+            <div class="od-earn-box">
+              <div><div class="od-earn-label">Net Earnings (Escrow)</div><div style="font-size:10.5px;color:var(--blue);opacity:0.7;margin-top:1px;">After platform fees</div></div>
+              <div class="od-earn-val" id="od-amount"></div>
+            </div>
+            <div id="od-pending-actions"></div>
+          </div>
+
+          <!-- Timeline -->
+          <div class="od-card">
+            <div class="od-card-title">Order Timeline</div>
+            <div class="od-tl" id="od-timeline"></div>
+          </div>
+
+          <!-- Service Card — rich -->
+          <div class="od-svc-rich" id="od-svc-card">
+            <div class="od-svc-rich-thumb">
+              <div class="od-svc-type-badge" id="od-svc-type-badge"></div>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+            <div class="od-svc-rich-body">
+              <div class="od-svc-rich-head">
+                <div>
+                  <div class="od-svc-rich-title" id="od-svc-rtitle"></div>
+                  <div class="od-svc-rich-meta" id="od-svc-rmeta"></div>
+                </div>
+                <a class="od-svc-btn" href="view_service.html">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  Go to Service
+                </a>
+              </div>
+              <div class="od-svc-desc" id="od-svc-desc"></div>
+              <div class="od-svc-tags" id="od-svc-tags"></div>
+              <div class="od-svc-stats" id="od-svc-stats"></div>
+              <div class="od-svc-details-grid" id="od-svc-details"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COL — Chat + Docs -->
+        <div class="od-right">
+          <div class="od-chat-page">
+            <div class="od-chat-header">
+              <div class="od-ch-av" id="od-ch-av"></div>
+              <div class="od-ch-info">
+                <div class="od-ch-name" id="od-ch-name"></div>
+                <div class="od-ch-sub" id="od-ch-sub"></div>
+              </div>
+              <div class="od-ch-actions">
+                <button class="od-ch-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.95 9.68 19.84 19.84 0 01.9 1.1 2 2 0 012.88.01h3a2 2 0 012 1.72c.13 1 .37 1.98.7 2.93a2 2 0 01-.45 2.11L7.09 7.91a16 16 0 006 6l1.14-1.14a2 2 0 012.11-.45c.95.33 1.93.57 2.93.7A2 2 0 0122 14.92z"/></svg> Call</button>
+                <button class="od-ch-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 10l4.553-2.069A1 1 0 0121 8.871v6.258a1 1 0 01-1.447.894L15 14"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg> Video</button>
+                <button class="od-ch-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+              </div>
+            </div>
+            <div class="od-chat-body" id="od-chat"></div>
+            <div class="od-chat-input-bar">
+              <div class="od-input-toolbar">
+                <button class="od-tool-btn" title="Attach file"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg></button>
+                <button class="od-tool-btn" title="Upload doc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></button>
+                <div style="width:1px;height:18px;background:var(--border);margin:auto 3px;"></div>
+                <button class="od-tool-btn" title="Emoji">😊</button>
+              </div>
+              <div class="od-input-row">
+                <textarea class="od-msg-textarea" id="odChatInput" placeholder="Type a message…" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();odSendMsg();}"></textarea>
+                <button class="od-send-btn" onclick="odSendMsg()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Documents under chat -->
+          <div class="od-card">
+            <div class="od-card-title">Documents Sent</div>
+            <div class="doc-list" id="od-docs"></div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /od-page -->
+
+  </div><!-- /content -->
+</main>
+</div>
+
+<script>
+function toggleCollapse(){const s=document.getElementById('sidebar');s.classList.toggle('collapsed');const svg=s.querySelector('.collapse-btn svg');if(s.classList.contains('collapsed'))svg.innerHTML='<polyline points="9 18 15 12 9 6"/>';else svg.innerHTML='<polyline points="15 18 9 12 15 6"/>';}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('show');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');}
+
+function toggleHelp(){
+  const panel=document.getElementById('helpPanel');
+  const overlay=document.getElementById('helpOverlay');
+  const btn=document.getElementById('helpBtn');
+  const isOpen=panel.classList.toggle('open');
+  overlay.classList.toggle('open',isOpen);
+  btn.style.background=isOpen?'var(--blue)':'var(--bs)';
+  btn.style.color=isOpen?'#fff':'var(--blue)';
+}
+function dismissHelp(){
+  try{localStorage.setItem('ga_orders_help_dismissed','1');}catch(e){}
+  toggleHelp();
+  document.getElementById('helpBtn').style.display='none';
+}
+// auto-show on first visit
+document.addEventListener('DOMContentLoaded',()=>{
+  try{if(!localStorage.getItem('ga_orders_help_dismissed'))setTimeout(()=>toggleHelp(),600);}catch(e){}
+});
+
+function togglePaExtra(){
+  const extra=document.getElementById('paExtra');
+  const btn=document.getElementById('paViewAll');
+  const open=extra.classList.toggle('open');
+  btn.classList.toggle('open',open);
+  btn.innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="${open?'18 15 12 9 6 15':'6 9 12 15 18 9'}"/></svg> ${open?'Show less':'View all 6 pending approvals'}`;
+}
+
+function paAction(btn,type){
+  const row=btn.closest('.pa-row');
+  if(type==='approve'){row.style.background='rgba(5,150,105,0.06)';row.style.borderColor='rgba(5,150,105,0.2)';btn.textContent='✓ Accepted';btn.disabled=true;row.querySelectorAll('.pa-btn.decline').forEach(b=>{b.style.display='none';});}
+  else{row.style.opacity='0.45';btn.textContent='✗ Rejected';btn.disabled=true;row.querySelectorAll('.pa-btn.approve').forEach(b=>{b.style.display='none';});}
+}
+
+// STATUS TABS
+function setTab(el,f){
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('#ordersBody tr').forEach(r=>{
+    if(f==='all'){r.style.display='';}
+    else{const txt=r.querySelector('.badge').textContent.toLowerCase();r.style.display=txt.includes(f)?'':'none';}
+  });
+}
+
+// SEARCH
+function filterTable(v){
+  document.querySelectorAll('#ordersBody tr').forEach(r=>{
+    r.style.display=r.textContent.toLowerCase().includes(v.toLowerCase())?'':'none';
+  });
+}
+
+// FILTER DRAWER
+let fStatus='all', fType='all', fDateFrom='', fDateTo='', fAmtMin='', fAmtMax='';
+
+function openFilterDrawer(){
+  document.getElementById('fdOverlay').classList.add('open');
+  document.getElementById('filterDrawer').classList.add('open');
+  document.getElementById('filterBtn').classList.add('active');
+}
+function closeFilterDrawer(){
+  document.getElementById('fdOverlay').classList.remove('open');
+  document.getElementById('filterDrawer').classList.remove('open');
+  document.getElementById('filterBtn').classList.remove('active');
+}
+
+function selStatus(chip){
+  document.querySelectorAll('.fd-chip[data-status]').forEach(c=>c.classList.remove('sel'));
+  chip.classList.add('sel');
+  fStatus=chip.dataset.status;
+}
+function selType(chip){
+  document.querySelectorAll('.fd-chip[data-type]').forEach(c=>c.classList.remove('sel'));
+  chip.classList.add('sel');
+  fType=chip.dataset.type;
+}
+
+function applyDrawerFilters(){
+  fDateFrom=document.getElementById('fdDateFrom').value;
+  fDateTo=document.getElementById('fdDateTo').value;
+  fAmtMin=document.getElementById('fdAmtMin').value;
+  fAmtMax=document.getElementById('fdAmtMax').value;
+
+  document.querySelectorAll('#ordersBody tr').forEach(r=>{
+    const statusTxt=r.querySelector('.badge')?r.querySelector('.badge').textContent.toLowerCase():'';
+    const typeTxt=r.cells[0]?r.cells[0].textContent.toLowerCase():'';
+    const amtTxt=r.cells[5]?r.cells[5].textContent.replace(/[^0-9]/g,''):'';
+    const amt=parseInt(amtTxt)||0;
+
+    const stOk=fStatus==='all'||statusTxt.includes(fStatus);
+    const tyOk=fType==='all'||typeTxt.includes(fType);
+    const mnOk=!fAmtMin||amt>=parseInt(fAmtMin);
+    const mxOk=!fAmtMax||amt<=parseInt(fAmtMax);
+    r.style.display=(stOk&&tyOk&&mnOk&&mxOk)?'':'none';
+  });
+
+  const count=[fStatus!=='all',fType!=='all',!!fDateFrom||!!fDateTo,!!fAmtMin||!!fAmtMax].filter(Boolean).length;
+  const badge=document.getElementById('filterBadge');
+  badge.textContent=count;
+  badge.classList.toggle('show',count>0);
+  document.getElementById('filterBtn').classList.toggle('active',count>0);
+  renderPills();
+  closeFilterDrawer();
+}
+
+function resetFilters(){
+  fStatus='all'; fType='all'; fDateFrom=''; fDateTo=''; fAmtMin=''; fAmtMax='';
+  document.querySelectorAll('.fd-chip[data-status]').forEach(c=>c.classList.remove('sel'));
+  document.querySelector('.fd-chip[data-status="all"]').classList.add('sel');
+  document.querySelectorAll('.fd-chip[data-type]').forEach(c=>c.classList.remove('sel'));
+  document.querySelector('.fd-chip[data-type="all"]').classList.add('sel');
+  document.getElementById('fdDateFrom').value='';
+  document.getElementById('fdDateTo').value='';
+  document.getElementById('fdAmtMin').value='';
+  document.getElementById('fdAmtMax').value='';
+  document.querySelectorAll('#ordersBody tr').forEach(r=>r.style.display='');
+  document.getElementById('filterBadge').classList.remove('show');
+  document.getElementById('filterBtn').classList.remove('active');
+  document.getElementById('activePills').classList.remove('show');
+  document.getElementById('activePills').innerHTML='';
+  closeFilterDrawer();
+}
+
+function renderPills(){
+  const pills=[];
+  if(fStatus!=='all') pills.push({label:'Status: '+cap(fStatus),key:'status'});
+  if(fType!=='all') pills.push({label:'Type: '+cap(fType),key:'type'});
+  if(fDateFrom||fDateTo) pills.push({label:'Date: '+(fDateFrom||'…')+' → '+(fDateTo||'…'),key:'date'});
+  if(fAmtMin||fAmtMax) pills.push({label:'€'+(fAmtMin||'0')+' – '+(fAmtMax||'∞'),key:'amt'});
+  const el=document.getElementById('activePills');
+  if(!pills.length){el.classList.remove('show');el.innerHTML='';return;}
+  el.classList.add('show');
+  el.innerHTML=pills.map(p=>`<div class="af-pill">${p.label}<button onclick="removePill('${p.key}')">×</button></div>`).join('')+
+    `<button class="af-clear-all" onclick="resetFilters()">Clear all</button>`;
+}
+function removePill(key){
+  if(key==='status'){fStatus='all';document.querySelectorAll('.fd-chip[data-status]').forEach(c=>c.classList.remove('sel'));document.querySelector('.fd-chip[data-status="all"]').classList.add('sel');}
+  if(key==='type'){fType='all';document.querySelectorAll('.fd-chip[data-type]').forEach(c=>c.classList.remove('sel'));document.querySelector('.fd-chip[data-type="all"]').classList.add('sel');}
+  if(key==='date'){fDateFrom='';fDateTo='';document.getElementById('fdDateFrom').value='';document.getElementById('fdDateTo').value='';}
+  if(key==='amt'){fAmtMin='';fAmtMax='';document.getElementById('fdAmtMin').value='';document.getElementById('fdAmtMax').value='';}
+  applyDrawerFilters();
+}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+
+// ── ORDER DETAIL ──
+const ORDER_DATA = {
+  'ORD-8812':{service:'Visa Consulting',cat:'Consulting · 3 sessions',svcMeta:'Consulting · Online · 3 sessions',client:'Mohammed Al-Rashidi',clientId:'#CLT-0041',amount:'198',status:'Active',type:'Normal',date:'01 Apr 2026',confirm:'02 Apr 2026',due:'15 Apr 2026',daysLeft:'3 days left',
+    svcData:{type:'Service',delivery:'Online',duration:'3 Sessions · 60 min each',rating:'4.9',orders:'42',completion:'97%',price:'220',deadline:'14 days',category:'Visa & Immigration',maxP:'1 (Individual)',tags:['Visa Extension','Aufenthaltstitel','Immigration','Germany'],desc:'Expert visa and immigration consulting tailored to your specific situation in Germany. Each session covers document review, strategy planning, and direct guidance through the German immigration process.'},
+    chat:[
+      {from:'them',name:'MA',text:'Hello, I wanted to confirm our first session for next Tuesday at 10am.',time:'01 Apr, 09:12'},
+      {from:'me',text:'Hi Mohammed! Yes, confirmed — session 1 is Tuesday 7 Apr at 10:00 CET. I\'ll send the Zoom link shortly.',time:'01 Apr, 10:05'},
+      {from:'them',name:'MA',text:'Perfect, thank you. Should I prepare any documents beforehand?',time:'01 Apr, 10:18'},
+      {from:'me',text:'Please bring your Aufenthaltstitel and the rejection letter. I\'ve also attached the document checklist below.',time:'01 Apr, 10:31'},
+      {from:'them',name:'MA',text:'Got it, I\'ll have everything ready. See you Tuesday!',time:'01 Apr, 10:45'},
+    ],
+    docs:[
+      {name:'Visa Checklist – Mohammed.pdf',type:'PDF',size:'124 KB',color:'#EF4444',date:'01 Apr 2026'},
+      {name:'Session 1 Notes.pdf',type:'PDF',size:'88 KB',color:'#EF4444',date:'07 Apr 2026'},
+      {name:'Appointment Confirmation.docx',type:'DOC',size:'34 KB',color:'#3B82F6',date:'01 Apr 2026'},
+    ],
+    tl:[
+      {state:'done',dot:'done',label:'Order Placed',desc:'Mohammed placed the order on 01 Apr 2026'},
+      {state:'done',dot:'done',label:'Accepted',desc:'You accepted on 02 Apr 2026 · Work started'},
+      {state:'curr',dot:'curr',label:'Active — In Progress',desc:'Session 1 complete · Session 2 scheduled 14 Apr',action:'Deliver Work',actionColor:'blue'},
+      {state:'pend',dot:'pend',label:'Delivered',desc:'Waiting for client approval · 14-day auto-release'},
+      {state:'pend',dot:'pend',label:'Completed',desc:'Payment released to GA Wallet'},
+    ]
+  },
+  'ORD-8770':{service:'German A2 Course',cat:'Course · 8 sessions',svcMeta:'Course · Online · 8 sessions',client:'Sophie Müller',clientId:'#CLT-0033',amount:'144',status:'Pending',type:'Normal',date:'24 Mar 2026',confirm:'—',due:'10 Apr 2026',
+    svcData:{type:'Course',delivery:'Online',duration:'8 Sessions · 90 min each',rating:'4.8',orders:'27',completion:'95%',price:'160',deadline:'60 days',category:'German Language',maxP:'6 Participants',tags:['German A2','Goethe','Language Course','A2 Exam'],desc:'Structured A2 German language course following the Goethe-Institut curriculum. Covers grammar, vocabulary, listening and speaking skills with exam preparation included.'},
+    chat:[
+      {from:'them',name:'SM',text:'Hi! I just placed an order for the A2 course. Looking forward to starting!',time:'24 Mar, 14:02'},
+      {from:'them',name:'SM',text:'Could you let me know when the schedule will be confirmed?',time:'24 Mar, 14:10'},
+    ],
+    docs:[
+      {name:'A2 Course Syllabus.pdf',type:'PDF',size:'210 KB',color:'#EF4444',date:'24 Mar 2026'},
+      {name:'Payment Invoice #8770.pdf',type:'PDF',size:'56 KB',color:'#EF4444',date:'24 Mar 2026'},
+    ],
+    tl:[
+      {state:'done',dot:'done',label:'Order Placed',desc:'Sophie placed the order on 24 Mar 2026 · Payment secured'},
+      {state:'curr',dot:'warn',label:'Awaiting Your Acceptance',desc:'Client is waiting — accept or decline to proceed',action:'Accept',actionColor:'green'},
+      {state:'pend',dot:'pend',label:'Active — In Progress',desc:'Deadline counter starts after acceptance'},
+      {state:'pend',dot:'pend',label:'Delivered',desc:'14-day client review period'},
+      {state:'pend',dot:'pend',label:'Completed',desc:'Payment released to GA Wallet'},
+    ]
+  },
+  'ORD-8808':{service:'Job Search Support',cat:'Support · 5 sessions',svcMeta:'Support · Online · 5 sessions',client:'Layla Hassan',clientId:'#CLT-0029',amount:'157',status:'Active',type:'Variant',date:'30 Mar 2026',confirm:'31 Mar 2026',due:'20 Apr 2026',daysLeft:'8 days left',
+    svcData:{type:'Service',delivery:'Online',duration:'5 Sessions · 60 min each',rating:'4.9',orders:'31',completion:'98%',price:'175',deadline:'30 days',category:'Career Coaching',maxP:'1 (Individual)',tags:['Job Search','CV Review','Germany','LinkedIn'],desc:'Comprehensive job search coaching for the German market. Covers CV and cover letter optimization in German format, LinkedIn/Xing profile setup, interview preparation, and direct employer outreach strategy.'},
+    chat:[
+      {from:'me',text:'Hi Layla, welcome! I\'ve reviewed your CV and prepared tailored feedback for our first session.',time:'30 Mar, 11:00'},
+      {from:'them',name:'LH',text:'Thank you! I\'m a bit nervous about the German job market. Is the competition high in my field?',time:'30 Mar, 11:22'},
+      {from:'me',text:'In IT project management, demand is actually strong right now. We\'ll focus on Xing/LinkedIn optimization and German letter format.',time:'30 Mar, 11:35'},
+      {from:'them',name:'LH',text:'That\'s reassuring! Looking forward to session 3.',time:'31 Mar, 09:10'},
+    ],
+    docs:[
+      {name:'CV Review – Layla Hassan.pdf',type:'PDF',size:'145 KB',color:'#EF4444',date:'30 Mar 2026'},
+      {name:'Job Market Guide 2026.pdf',type:'PDF',size:'380 KB',color:'#EF4444',date:'30 Mar 2026'},
+      {name:'Anschreiben Template.docx',type:'DOC',size:'42 KB',color:'#3B82F6',date:'31 Mar 2026'},
+    ],
+    tl:[
+      {state:'done',dot:'done',label:'Order Placed',desc:'Layla placed the order on 30 Mar 2026'},
+      {state:'done',dot:'done',label:'Accepted',desc:'You accepted on 31 Mar 2026'},
+      {state:'curr',dot:'curr',label:'Active — In Progress',desc:'2 of 5 sessions completed · Next session Apr 16',action:'Deliver Work',actionColor:'blue'},
+      {state:'pend',dot:'pend',label:'Delivered',desc:'14-day auto-release period'},
+      {state:'pend',dot:'pend',label:'Completed',desc:'Payment released to GA Wallet'},
+    ]
+  },
+  'ORD-8800':{service:'Integration Workshop',cat:'Workshop · Half day',svcMeta:'Workshop · In-Person · Half day',client:'Ahmed Karimi',clientId:'#CLT-0015',amount:'117',status:'Completed',type:'Normal',date:'28 Mar 2026',confirm:'28 Mar 2026',due:'28 Mar 2026',
+    svcData:{type:'Workshop',delivery:'In-Person',duration:'Half Day · 4 hours',rating:'5.0',orders:'18',completion:'100%',price:'130',deadline:'1 day',category:'Relocation Services',maxP:'12 Participants',tags:['Anmeldung','Finanzamt','Integration','Relocation'],desc:'Practical half-day workshop covering all essential steps for integrating into German life — city registration (Anmeldung), tax number, health insurance, and bank account setup. Hands-on and highly practical.'},
+    chat:[
+      {from:'them',name:'AK',text:'Really enjoyed the workshop! The Anmeldung and Finanzamt section was exactly what I needed.',time:'28 Mar, 17:05'},
+      {from:'me',text:'Glad to hear it Ahmed! I\'ve attached a summary PDF with all the key steps we covered.',time:'28 Mar, 17:30'},
+      {from:'them',name:'AK',text:'Perfect, thank you. I\'ll leave a 5-star review!',time:'28 Mar, 17:48'},
+    ],
+    docs:[
+      {name:'Workshop Summary – Ahmed.pdf',type:'PDF',size:'195 KB',color:'#EF4444',date:'28 Mar 2026'},
+      {name:'Integration Checklist Germany.pdf',type:'PDF',size:'260 KB',color:'#EF4444',date:'28 Mar 2026'},
+      {name:'Completion Certificate.pdf',type:'PDF',size:'78 KB',color:'#059669',date:'28 Mar 2026'},
+    ],
+    tl:[
+      {state:'done',dot:'done',label:'Order Placed',desc:'Ahmed placed the order on 28 Mar 2026'},
+      {state:'done',dot:'done',label:'Accepted',desc:'Accepted on 28 Mar 2026'},
+      {state:'done',dot:'done',label:'Delivered',desc:'Workshop delivered on 28 Mar 2026 · Ahmed approved'},
+      {state:'done',dot:'done',label:'Completed',desc:'Payment of €117 released to your GA Wallet · 28 Mar 2026'},
+    ]
+  },
+  'ORD-8780':{service:'Visa Consulting',cat:'Service · 2 sessions',svcMeta:'Consulting · Online · 2 sessions',client:'Khalid Farouk',clientId:'#CLT-0067',amount:'135',status:'Disputed',type:'Normal',date:'26 Mar 2026',confirm:'26 Mar 2026',due:'Overdue',
+    svcData:{type:'Service',delivery:'Online',duration:'2 Sessions · 60 min each',rating:'4.9',orders:'42',completion:'97%',price:'150',deadline:'14 days',category:'Visa & Immigration',maxP:'1 (Individual)',tags:['Visa Extension','Aufenthaltstitel','Immigration','Germany'],desc:'Expert visa and immigration consulting tailored to your specific situation in Germany. Each session covers document review, strategy planning, and direct guidance through the German immigration process.'},
+    chat:[
+      {from:'them',name:'KF',text:'I am not satisfied with the service. The advice you gave was incorrect for my visa type.',time:'05 Apr, 09:30'},
+      {from:'me',text:'Khalid, I understand your concern. Let\'s review session 1 notes together — the guidance was specific to your Aufenthaltserlaubnis type.',time:'05 Apr, 10:15'},
+      {from:'them',name:'KF',text:'I opened a dispute because I followed your advice and got rejected.',time:'05 Apr, 11:00'},
+    ],
+    docs:[
+      {name:'Session Notes – Khalid.pdf',type:'PDF',size:'98 KB',color:'#EF4444',date:'26 Mar 2026'},
+      {name:'Dispute Response.pdf',type:'PDF',size:'65 KB',color:'#DC2626',date:'05 Apr 2026'},
+    ],
+    tl:[
+      {state:'done',dot:'done',label:'Order Placed',desc:'26 Mar 2026 · Payment secured in Escrow'},
+      {state:'done',dot:'done',label:'Accepted & Delivered',desc:'Both sessions completed · Submitted for client review'},
+      {state:'curr',dot:'danger',label:'Disputed — Under Admin Review',desc:'Client opened a dispute on 05 Apr · Admin reviewing',action:'Respond to Dispute',actionColor:'red'},
+      {state:'pend',dot:'pend',label:'Resolved',desc:'Pending admin decision'},
+    ]
+  },
+};
+
+function openOrderDetail(id){
+  const d = ORDER_DATA[id] || ORDER_DATA['ORD-8812'];
+  document.getElementById('listView').classList.add('hidden');
+  document.getElementById('odPage').classList.add('active');
+  document.querySelector('.page-title').textContent = 'Order #' + id;
+  document.getElementById('topbarBackBtn').style.display = 'inline-flex';
+
+  // Hero head
+  document.getElementById('od-service').textContent = d.service;
+  document.getElementById('od-subtitle').textContent = d.cat + ' · ' + d.clientId;
+  document.getElementById('od-id').textContent = '#' + id;
+  document.getElementById('od-client').textContent = d.client;
+  document.getElementById('od-type').textContent = d.type;
+  document.getElementById('od-date').textContent = d.date;
+  document.getElementById('od-confirm').textContent = d.confirm;
+  document.getElementById('od-due').textContent = d.due;
+
+  // Status badge
+  const bmap={Active:'<span class="badge b-act"><span class="bd"></span>Active</span>',Pending:'<span class="badge b-pen"><span class="bd"></span>Pending</span>',Completed:'<span class="badge b-done"><span class="bd"></span>Completed</span>',Disputed:'<span class="badge b-dis"><span class="bd"></span>Disputed</span>',Late:'<span class="badge b-lat"><span class="bd"></span>Late</span>',Delivered:'<span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px;background:rgba(2,132,199,0.10);color:#0284C7;"><span style="width:5px;height:5px;border-radius:50%;background:#0284C7;display:inline-block;"></span>Delivered</span>'};
+  document.getElementById('od-status-badge').innerHTML = bmap[d.status]||'';
+
+  // Payment status per spec
+  const psMap={
+    Pending:'<span class="ps-badge ps-awaiting">💳 Paid by Client · Awaiting Approval</span>',
+    Active:'<span class="ps-badge ps-escrow">🔒 Payment in Escrow</span>',
+    Late:'<span class="ps-badge ps-escrow">🔒 Payment in Escrow</span>',
+    Delivered:'<span class="ps-badge ps-awaiting">⏳ Pending Release · 14-day notice</span>',
+    Disputed:'<span class="ps-badge ps-disputed">⚠️ Pending Release · Under Review</span>',
+    Completed:'<span class="ps-badge ps-paid">✅ Balanced · In Your GA Wallet</span>',
+  };
+  document.getElementById('od-pay-status').innerHTML = psMap[d.status]||'';
+
+  // Earnings
+  document.getElementById('od-amount').textContent = '€' + d.amount;
+
+  // Pending actions — Approve / Reject for Pending orders
+  const pa = document.getElementById('od-pending-actions');
+  if(d.status==='Pending'){
+    pa.innerHTML=`<div style="display:flex;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);"><button style="flex:1;padding:10px;border-radius:10px;font-size:13px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;border:none;background:#DC2626;color:#fff;transition:opacity 0.13s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'" onclick="this.textContent='✗ Rejected';this.disabled=true;this.nextElementSibling.style.display='none';">Reject Order</button><button style="flex:1;padding:10px;border-radius:10px;font-size:13px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;border:none;background:#059669;color:#fff;transition:opacity 0.13s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'" onclick="this.textContent='✓ Accepted';this.disabled=true;this.previousElementSibling.style.display='none';">Accept Order</button></div>`;
+  } else { pa.innerHTML=''; }
+
+  // Countdown
+  const cw = document.getElementById('od-countdown-wrap');
+  if(d.status==='Active'||d.status==='Late') cw.innerHTML=`<div class="od-countdown"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${d.daysLeft||'3 days left'}</div>`;
+  else cw.innerHTML='';
+
+  // Rich Service Card
+  const svc = d.svcData || {};
+  document.getElementById('od-svc-type-badge').textContent = svc.type || 'Service';
+  document.getElementById('od-svc-rtitle').textContent = d.service;
+  document.getElementById('od-svc-rmeta').innerHTML = `
+    <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${svc.duration||d.cat}</span>
+    <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>${svc.delivery||'Online'}</span>
+    <span style="color:#F59E0B;font-weight:600;">★ ${svc.rating||'4.9'}</span>`;
+  document.getElementById('od-svc-desc').textContent = svc.desc || 'Professional service delivered with expertise and care. All sessions are conducted online with personalized attention to the client\'s specific needs and goals.';
+  document.getElementById('od-svc-tags').innerHTML = (svc.tags||['German','Integration','Online']).map(t=>`<span class="od-svc-tag">${t}</span>`).join('');
+  document.getElementById('od-svc-stats').innerHTML = `
+    <div class="od-svc-stat"><div class="od-svc-stat-val">${svc.orders||'38'}</div><div class="od-svc-stat-lbl">Total Orders</div></div>
+    <div class="od-svc-stat"><div class="od-svc-stat-val" style="color:#F59E0B;">${svc.rating||'4.9'}★</div><div class="od-svc-stat-lbl">Rating</div></div>
+    <div class="od-svc-stat"><div class="od-svc-stat-val" style="color:#059669;">${svc.completion||'96%'}</div><div class="od-svc-stat-lbl">Completion</div></div>`;
+  document.getElementById('od-svc-details').innerHTML = `
+    <div class="od-svc-drow"><span class="od-svc-dlbl">Service Type</span><span class="od-svc-dval">${svc.type||'Service'}</span></div>
+    <div class="od-svc-drow"><span class="od-svc-dlbl">Delivery Mode</span><span class="od-svc-dval">${svc.delivery||'Online'}</span></div>
+    <div class="od-svc-drow"><span class="od-svc-dlbl">Price</span><span class="od-svc-dval" style="color:var(--blue);font-weight:700;">€${svc.price||d.amount}</span></div>
+    <div class="od-svc-drow"><span class="od-svc-dlbl">Deadline</span><span class="od-svc-dval">${svc.deadline||'7 days'}</span></div>
+    <div class="od-svc-drow"><span class="od-svc-dlbl">Category</span><span class="od-svc-dval">${svc.category||'Consulting'}</span></div>
+    <div class="od-svc-drow"><span class="od-svc-dlbl">Max Participants</span><span class="od-svc-dval">${svc.maxP||'1 (Individual)'}</span></div>`;
+
+  // Chat — Message.html style
+  const initials = d.client.split(' ').map(n=>n[0]).join('').slice(0,2);
+  document.getElementById('od-ch-av').textContent = initials;
+  document.getElementById('od-ch-name').textContent = d.client;
+  document.getElementById('od-ch-sub').textContent = d.clientId + ' · ' + d.service;
+  const chat = document.getElementById('od-chat');
+  chat.innerHTML = d.chat.map(m=>{
+    if(m.from==='me') return `
+      <div class="od-msg-row mine">
+        <div class="od-mini-av me">GA</div>
+        <div class="od-bubble-wrap">
+          <div class="od-bubble">${m.text}</div>
+          <div class="od-bubble-time">${m.time}</div>
+        </div>
+      </div>`;
+    return `
+      <div class="od-msg-row">
+        <div class="od-mini-av">${m.name}</div>
+        <div class="od-bubble-wrap">
+          <div class="od-bubble">${m.text}</div>
+          <div class="od-bubble-time">${m.time}</div>
+        </div>
+      </div>`;
+  }).join('');
+  setTimeout(()=>{chat.scrollTop=chat.scrollHeight;},50);
+
+  // Docs
+  document.getElementById('od-docs').innerHTML = d.docs.map(doc=>`
+    <div class="doc-item">
+      <div class="doc-icon" style="background:${doc.color}18;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${doc.color}" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div class="doc-info"><div class="doc-name">${doc.name}</div><div class="doc-meta">${doc.type} · ${doc.size} · ${doc.date}</div></div>
+      <div class="doc-dl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></div>
+    </div>`).join('');
+
+  // Timeline per spec
+  const checkSvg=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const circleSvg=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="4"/></svg>`;
+  const warnSvg=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="12 8 12 13"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>`;
+  document.getElementById('od-timeline').innerHTML = d.tl.map(t=>`
+    <div class="od-tl-item ${t.state}">
+      <div class="od-dot ${t.dot||t.state}">${t.dot==='warn'?warnSvg:t.dot==='danger'?warnSvg:t.state==='done'?checkSvg:circleSvg}</div>
+      <div class="od-tl-content">
+        <div class="od-tl-label" style="${t.state==='pend'?'color:var(--muted)':''}">${t.label}</div>
+        <div class="od-tl-desc">${t.desc}</div>
+        ${t.action?`<button class="od-tl-action ${t.actionColor||'blue'}" onclick="alert('${t.action} action')">${t.action}</button>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function closeOrderDetail(){
+  document.getElementById('listView').classList.remove('hidden');
+  document.getElementById('odPage').classList.remove('active');
+  document.querySelector('.page-title').textContent = 'Orders';
+  document.getElementById('topbarBackBtn').style.display = 'none';
+}
+
+function odSendMsg(){
+  const input = document.getElementById('odChatInput');
+  const text = input.value.trim();
+  if(!text) return;
+  const chat = document.getElementById('od-chat');
+  const now = new Date();
+  const time = now.getDate()+' Apr, '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  const row = document.createElement('div');
+  row.className='od-msg-row mine';
+  row.innerHTML=`<div class="od-mini-av me">GA</div><div class="od-bubble-wrap"><div class="od-bubble">${text}</div><div class="od-bubble-time">${time}</div></div>`;
+  chat.appendChild(row);
+  input.value='';
+  input.style.height='auto';
+  chat.scrollTop=chat.scrollHeight;
+}
+
+function exportOrders(){
+  const rows=[['Service','Client','Order ID','Date','Due','Amount','Status']];
+  document.querySelectorAll('#ordersBody tr').forEach(tr=>{
+    const tds=[...tr.querySelectorAll('td')];
+    if(tds.length<7)return;
+    rows.push([
+      tds[0].querySelector('.t-svc')?.textContent||'',
+      tds[1].querySelector('[style]')?.textContent||'',
+      tds[2].textContent.trim(),
+      tds[3].textContent.trim(),
+      tds[4].textContent.trim(),
+      tds[5].textContent.trim(),
+      tds[6].textContent.trim()
+    ]);
+  });
+  const csv=rows.map(r=>r.map(c=>'"'+c.replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='orders-export.csv';
+  a.click();
+}
+
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const rowMap = [
+    ['ORD-8812'],['ORD-8808'],['ORD-8800'],['ORD-8795'],['ORD-8780'],
+    ['ORD-8770'],['ORD-8763'],['ORD-8755'],['ORD-8749']
+  ];
+  document.querySelectorAll('#ordersBody tr').forEach((tr,i)=>{
+    if(rowMap[i]) tr.onclick = ()=> openOrderDetail(rowMap[i][0]);
+  });
+});
+
+</script>

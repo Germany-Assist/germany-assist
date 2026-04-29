@@ -27,6 +27,7 @@ module.exports = {
         float: "floating 6s ease-in-out infinite",
         shimmer: "shimmer 2.5s linear infinite",
         marquee: "marquee 20s linear infinite",
+        "pulse-ring": "pulseRing 2.5s ease-out infinite",
         "loading-bar": "loading-bar 1.5s infinite ease-in-out", // Added for HUD
       },
       keyframes: {
@@ -51,6 +52,10 @@ module.exports = {
           "0%": { width: "0%", left: "0%" },
           "50%": { width: "100%", left: "0%" },
           "100%": { width: "0%", left: "100%" },
+        },
+        pulseRing: {
+          "0%": { transform: "scale(0.33)", opacity: "0.7" },
+          "80%, 100%": { transform: "scale(4)", opacity: "0" },
         },
       },
       transitionTimingFunction: {

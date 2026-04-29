@@ -28,9 +28,13 @@ import { Op } from "sequelize";
 import Dispute from "./models/dispute.js";
 import AuditLog from "./models/auditLog.js";
 import Subcategory from "./models/subcategory.js";
-import ServiceProviderCategory from "./models/service_provider_category.js";
-import VerificationRequest from "./models/verificationRequest.js";
 
+import VerificationRequest from "./models/verificationRequest.js";
+import UserProfile from "./models/userProfile.js";
+import PostAsset from "./models/post_asset.js";
+import ServiceAsset from "./models/service_asset.js";
+import UserAsset from "./models/user_asset.js";
+import VerificationRequestAsset from "./models/verification_request_asset.js";
 export const defineConstrains = () => {
   if (sequelize.associationsDefined) return;
   sequelize.associationsDefined = true;
@@ -41,7 +45,13 @@ export const defineConstrains = () => {
   VerificationRequest.belongsTo(ServiceProvider, {
     foreignKey: "serviceProviderId",
   });
-  VerificationRequest.hasMany(Asset, {
+  VerificationRequest.belongsTo(User, { foreignKey: "userId" });
+  User.hasMany(VerificationRequest, { foreignKey: "userId" });
+  VerificationRequest.hasMany(VerificationRequestAsset, {
+    foreignKey: "verificationRequestId",
+    as: "verificationRequestAssets",
+  });
+  VerificationRequestAsset.belongsTo(VerificationRequest, {
     foreignKey: "verificationRequestId",
   });
 
@@ -53,6 +63,9 @@ export const defineConstrains = () => {
 
   //token
   Token.belongsTo(User, { foreignKey: "userId" });
+
+  //userProfile
+  UserProfile.belongsTo(User, { foreignKey: "userId" });
 
   //comment
   Comment.belongsTo(Post, {
@@ -83,6 +96,8 @@ export const defineConstrains = () => {
   Post.hasMany(Asset, {
     foreignKey: "postId",
   });
+  Post.hasMany(PostAsset, { foreignKey: "postId", as: "postAssets" });
+  PostAsset.belongsTo(Post, { foreignKey: "postId" });
 
   Variant.belongsTo(Service, { foreignKey: "serviceId" });
   Variant.hasMany(Order, {
@@ -136,13 +151,15 @@ export const defineConstrains = () => {
     as: "profilePicture",
     scope: { key: "userImage", confirmed: true },
   });
+  User.hasMany(UserAsset, { foreignKey: "userId", as: "userAssets" });
+  UserAsset.belongsTo(User, { foreignKey: "userId" });
   User.hasMany(Review, { foreignKey: "userId" });
   User.hasOne(UserRole, { foreignKey: "userId" });
   User.hasMany(Favorite, { foreignKey: "userId" });
   User.hasMany(Dispute, { foreignKey: "userId" });
   User.hasMany(Notification, { foreignKey: "userId" });
   User.hasMany(Comment, { foreignKey: "userId", as: "comments" });
-
+  User.hasOne(UserProfile, { foreignKey: "userId" });
   User.belongsToMany(Permission, {
     through: UserPermission,
     as: "userToPermission",
@@ -167,12 +184,11 @@ export const defineConstrains = () => {
   //service
   Service.hasMany(Order, { foreignKey: "serviceId" });
   Service.belongsTo(User, { foreignKey: "userId" });
-  Service.hasMany(Asset, { foreignKey: "serviceId" });
-  Service.hasMany(Asset, {
+  Service.hasMany(ServiceAsset, {
     foreignKey: "serviceId",
-    as: "image",
-    scope: { thumb: true, key: "serviceProfileImage" },
+    as: "serviceAssets",
   });
+  ServiceAsset.belongsTo(Service, { foreignKey: "serviceId" });
   Service.hasMany(Review, { foreignKey: "serviceId" });
   Service.hasMany(Favorite, { foreignKey: "serviceId" });
   // Service.hasMany Timeline
@@ -202,17 +218,26 @@ export const defineConstrains = () => {
   Service.belongsTo(ServiceProvider);
   //assets
   Asset.belongsTo(AssetTypes, { foreignKey: "key", targetKey: "key" });
-  Asset.belongsTo(Service, { foreignKey: "serviceId", as: "allAssets" });
-  Asset.belongsTo(Service, {
-    foreignKey: "serviceId",
-    as: "profileImage",
-    scope: { thumb: true, key: "serviceProfileImage" },
-  });
   Asset.belongsTo(User, {
     foreignKey: "userId",
   });
 
-  Asset.belongsTo(Post, { foreignKey: "postId" });
+  // Junction table relations
+  Asset.hasMany(PostAsset, { foreignKey: "assetId", as: "postAssets" });
+  PostAsset.belongsTo(Asset, { foreignKey: "assetId" });
+
+  Asset.hasMany(ServiceAsset, { foreignKey: "assetId", as: "serviceAssets" });
+  ServiceAsset.belongsTo(Asset, { foreignKey: "assetId" });
+
+  Asset.hasMany(UserAsset, { foreignKey: "assetId", as: "userAssets" });
+  UserAsset.belongsTo(Asset, { foreignKey: "assetId" });
+
+  Asset.hasMany(VerificationRequestAsset, {
+    foreignKey: "assetId",
+    as: "verificationRequestAssets",
+  });
+  VerificationRequestAsset.belongsTo(Asset, { foreignKey: "assetId" });
+
   //assetTypes
   AssetTypes.hasMany(Asset, { foreignKey: "key", targetKey: "key" });
   //review
@@ -233,16 +258,7 @@ export const defineConstrains = () => {
     as: "roles",
   });
   //category - serviceProvider
-  Category.belongsToMany(ServiceProvider, {
-    through: ServiceProviderCategory,
-    foreignKey: "categoryId",
-    otherKey: "serviceProviderId",
-  });
-  ServiceProvider.belongsToMany(Category, {
-    through: ServiceProviderCategory,
-    foreignKey: "serviceProviderId",
-    otherKey: "categoryId",
-  });
+
   ServiceProvider.hasMany(Notification, { foreignKey: "serviceProviderId" });
 
   //category
@@ -300,13 +316,14 @@ const db = {
   Permission,
   UserPermission,
   UserRole,
+  UserProfile,
   Employer,
   Timeline,
   Variant,
   Post,
   Category,
   Subcategory,
-  ServiceProviderCategory,
+
   ServiceProvider,
   Service,
   Order,
@@ -321,6 +338,10 @@ const db = {
   Payout,
   AuditLog,
   VerificationRequest,
+  PostAsset,
+  ServiceAsset,
+  UserAsset,
+  VerificationRequestAsset,
 };
 
 export default db;

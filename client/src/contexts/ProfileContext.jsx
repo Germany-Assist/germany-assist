@@ -103,7 +103,7 @@ export const ProfileProvider = ({ children }) => {
       setProfile(null);
       setError(null);
     }
-  }, [accessToken, fetchProfile]);
+  }, [accessToken]);
 
   return (
     <ProfileContext.Provider

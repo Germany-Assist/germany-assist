@@ -10,11 +10,19 @@ VerificationRequest.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    serviceProviderId: {
-      type: DataTypes.UUID,
+    userId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        isUUID: { args: 4, msg: "Service Provider must be a valid UUIDv4" },
+        isInt: { msg: "User must be an integer" },
+      },
+    },
+    serviceProviderId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      validate: {
+        isInt: { msg: "ServiceProviderId must be an integer" },
+        min: { args: [1], msg: "ServiceProviderId must be greater than 0" },
       },
     },
     relatedId: {

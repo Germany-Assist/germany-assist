@@ -1,0 +1,792 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --blue:#024CEE;--sky:#49B7DF;
+  --bs:rgba(2,76,238,0.07);--ss:rgba(73,183,223,0.10);--bm:rgba(2,76,238,0.13);
+  --text:#0a0f1e;--muted:#6b7280;--light:#f7f9ff;--border:rgba(2,76,238,0.10);--w:#fff;
+  --green:#059669;--amber:#D97706;--red:#DC2626;
+}
+body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-height:100vh;}
+.shell{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:220px;background:var(--w);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;flex-shrink:0;transition:width 0.25s;overflow:hidden;}
+.sidebar.collapsed{width:56px;}
+.sidebar.collapsed .ga-logo-text,.sidebar.collapsed .nav-label,.sidebar.collapsed .nav-text,.sidebar.collapsed .nb,.sidebar.collapsed .sp-nm,.sidebar.collapsed .sp-rl,.sidebar.collapsed .pf-arrow{display:none;}
+.sidebar.collapsed .nav-item{justify-content:center;padding:9px 0;gap:0;}
+.sidebar.collapsed .logo-area{justify-content:center;padding:14px 0;gap:0;}
+.sidebar.collapsed .collapse-btn{margin-left:0;}
+.sidebar.collapsed .sp-profile{justify-content:center;padding:9px 0;gap:0;}
+.sidebar.collapsed .s-av{margin:0;}
+.sidebar.collapsed .ga-mark{margin:0 auto;}
+.collapse-btn{width:22px;height:22px;border-radius:6px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--muted);transition:background 0.13s;margin-left:auto;}
+.collapse-btn:hover{background:var(--bs);color:var(--blue);}
+.logo-area{padding:16px 14px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.ga-mark{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;border:1px solid var(--border);flex-shrink:0;}
+.ga-flag{display:flex;flex-direction:column;width:100%;height:100%;}
+.ga-flag-b{flex:1;background:#000;}
+.ga-flag-r{flex:1;background:#d60d2e;}
+.ga-flag-g{flex:1;background:#f6ce17;}
+.ga-logo-text{display:flex;flex-direction:column;transition:opacity 0.2s;}
+.ga-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.1;}
+.ga-sub{font-size:10px;color:var(--muted);}
+.nav{flex:1;padding:10px 8px;overflow-y:auto;overflow-x:hidden;}
+.nav-label{font-size:9.5px;font-weight:600;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;padding:8px 8px 3px;white-space:nowrap;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;font-size:13px;font-weight:400;color:var(--muted);cursor:pointer;transition:all 0.13s;margin-bottom:1px;position:relative;white-space:nowrap;}
+.nav-item:hover{background:var(--bs);color:var(--blue);}
+.nav-item.active{background:var(--bs);color:var(--blue);font-weight:500;}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;}
+.nb{margin-left:auto;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;color:#fff;}
+.nb-red{background:#E53E3E;}
+.nb-blue{background:var(--blue);}
+.nb-sky{background:var(--sky);}
+.nb-green{background:#059669;}
+.sidebar-footer{padding:10px 8px 14px;border-top:1px solid var(--border);}
+.sp-profile{display:flex;align-items:center;gap:9px;padding:9px;border-radius:9px;cursor:pointer;transition:background 0.13s;}
+.sp-profile:hover{background:var(--bs);}
+.s-av{width:32px;height:32px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0;}
+.sp-nm{font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;}
+.sp-rl{font-size:10.5px;color:var(--muted);white-space:nowrap;}
+.pf-arrow{margin-left:auto;color:var(--muted);}
+
+/* MAIN */
+.main{flex:1;overflow:auto;background:#f7f9ff;min-width:0;}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:10px;height:52px;position:sticky;top:0;z-index:20;}
+.tb-title{font-size:14px;font-weight:600;color:var(--text);}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.tb-icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all 0.13s;position:relative;}
+.tb-icon-btn:hover{background:var(--bs);color:var(--blue);}
+.tb-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:#E53E3E;border:1.5px solid #fff;}
+.ham{display:none;width:32px;height:32px;border:1px solid var(--border);border-radius:8px;background:#fff;align-items:center;justify-content:center;cursor:pointer;margin-right:4px;}
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:99;}
+.mob-overlay.show{display:block;}
+.content{padding:22px 24px 32px;}
+
+/* ALERT BANNER */
+.vc-alert{display:flex;align-items:center;gap:10px;background:rgba(220,38,38,0.06);border:1px solid rgba(220,38,38,0.20);border-radius:10px;padding:11px 14px;margin-bottom:20px;animation:fadeUp 0.3s ease both;}
+.vc-alert-icon{width:28px;height:28px;border-radius:7px;background:rgba(220,38,38,0.10);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.vc-alert-text{flex:1;font-size:12.5px;color:var(--red);}
+.vc-alert-text strong{font-weight:600;}
+.vc-alert-cta{font-size:11.5px;font-weight:600;color:var(--red);cursor:pointer;border:1px solid rgba(220,38,38,0.25);padding:5px 12px;border-radius:6px;white-space:nowrap;transition:background 0.13s;}
+.vc-alert-cta:hover{background:rgba(220,38,38,0.08);}
+
+/* OVERALL STATUS BAR */
+.vc-status-bar{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:20px;}
+.vc-status-progress{flex:1;}
+.vc-sp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.vc-sp-label{font-size:12.5px;font-weight:600;color:var(--text);}
+.vc-sp-pct{font-size:12px;font-weight:600;color:var(--blue);}
+.vc-prog-track{height:7px;background:var(--bs);border-radius:99px;overflow:hidden;}
+.vc-prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--blue),var(--sky));transition:width 0.6s cubic-bezier(.4,0,.2,1);}
+.vc-status-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;font-size:11.5px;font-weight:600;flex-shrink:0;}
+.vsb-pending{background:rgba(217,119,6,0.08);color:var(--amber);}
+.vsb-verified{background:rgba(5,150,105,0.08);color:var(--green);}
+.vsb-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.vsb-pending .vsb-dot{background:var(--amber);}
+.vsb-verified .vsb-dot{background:var(--green);}
+
+/* SECTION CARD */
+.vc-card{background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:14px;overflow:hidden;animation:fadeUp 0.35s ease both;}
+.vc-card:nth-child(1){animation-delay:0.04s}
+.vc-card:nth-child(2){animation-delay:0.08s}
+.vc-card:nth-child(3){animation-delay:0.12s}
+.vc-card:nth-child(4){animation-delay:0.16s}
+.vc-ch{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;}
+.vc-ch:hover{background:rgba(2,76,238,0.02);}
+.vc-ch-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.vc-ch-info{flex:1;}
+.vc-ch-title{font-size:13px;font-weight:600;color:var(--text);}
+.vc-ch-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.vc-ch-right{display:flex;align-items:center;gap:8px;}
+.vc-sec-badge{font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:6px;}
+.vsb-ok{background:rgba(5,150,105,0.08);color:var(--green);}
+.vsb-warn{background:rgba(217,119,6,0.08);color:var(--amber);}
+.vsb-err{background:rgba(220,38,38,0.08);color:var(--red);}
+.vsb-none{background:var(--bs);color:var(--blue);}
+.vc-caret{transition:transform 0.2s;color:var(--muted);}
+.vc-caret.open{transform:rotate(90deg);}
+.vc-body{display:none;padding:16px;}
+.vc-body.open{display:block;}
+
+/* DOC ROWS */
+.doc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.doc-row{border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;transition:border-color 0.15s;}
+.doc-row:hover{border-color:rgba(2,76,238,0.20);}
+.doc-row.dr-error{border-color:rgba(220,38,38,0.25);background:rgba(220,38,38,0.02);}
+.doc-row.dr-ok{border-color:rgba(5,150,105,0.20);background:rgba(5,150,105,0.01);}
+.dr-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dr-content{flex:1;min-width:0;}
+.dr-title{font-size:12.5px;font-weight:600;color:var(--text);}
+.dr-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.dr-req{font-size:10.5px;font-weight:500;margin-top:3px;}
+.dr-actions{margin-top:8px;display:flex;align-items:center;gap:6px;}
+.dr-upload-btn{font-size:11px;font-weight:600;padding:5px 10px;border-radius:6px;cursor:pointer;border:none;display:flex;align-items:center;gap:4px;transition:all 0.13s;}
+.dub-primary{background:var(--blue);color:#fff;}
+.dub-primary:hover{background:#013bc0;}
+.dub-outline{background:#fff;color:var(--blue);border:1px solid var(--border)!important;border:none;}
+.dub-outline:hover{background:var(--bs);}
+.dub-red{background:rgba(220,38,38,0.08);color:var(--red);}
+.dub-red:hover{background:rgba(220,38,38,0.14);}
+.dr-file-chip{display:flex;align-items:center;gap:5px;background:var(--light);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:11px;color:var(--text);max-width:140px;overflow:hidden;}
+.dr-file-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.dr-status{display:flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;margin-top:5px;}
+.ds-ok{color:var(--green);}
+.ds-warn{color:var(--amber);}
+.ds-err{color:var(--red);}
+.ds-rev{color:var(--blue);}
+
+/* BADGE SECTION for Quality Gate */
+.badge-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.badge-card{border:1px solid var(--border);border-radius:10px;padding:13px 14px;transition:all 0.15s;position:relative;}
+.badge-card:hover{border-color:rgba(2,76,238,0.20);box-shadow:0 2px 12px rgba(2,76,238,0.06);}
+.badge-card.bc-locked{opacity:0.65;}
+.bc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+.bc-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.bc-status-pill{font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px;}
+.bsp-earned{background:rgba(5,150,105,0.10);color:var(--green);}
+.bsp-upload{background:rgba(2,76,238,0.08);color:var(--blue);}
+.bsp-required{background:rgba(220,38,38,0.08);color:var(--red);}
+.bsp-locked{background:rgba(107,114,128,0.10);color:var(--muted);}
+.bc-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.bc-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+.bc-upload-link{font-size:11px;font-weight:600;color:var(--blue);cursor:pointer;margin-top:7px;display:inline-flex;align-items:center;gap:3px;}
+.bc-upload-link:hover{text-decoration:underline;}
+.bc-earned-check{position:absolute;top:10px;right:10px;width:18px;height:18px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;}
+
+/* SPEC TABLE */
+.spec-table{width:100%;border-collapse:collapse;font-size:12px;}
+.spec-table th{text-align:left;font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;padding:0 0 8px;border-bottom:1px solid var(--border);}
+.spec-table td{padding:9px 0;border-bottom:1px solid var(--border);vertical-align:top;}
+.spec-table tr:last-child td{border-bottom:none;}
+.spec-table .sc-label{font-weight:500;color:var(--text);}
+.spec-table .sc-val{color:var(--muted);}
+.spec-table .sc-tag{display:inline-block;font-size:10.5px;font-weight:500;padding:2px 7px;border-radius:5px;background:var(--light);color:var(--blue);margin-right:3px;}
+
+/* HIDDEN FILE INPUT */
+input[type=file]{display:none;}
+
+/* FILE SPEC NOTE */
+.file-spec-note{display:flex;align-items:center;gap:6px;background:var(--light);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:11.5px;color:var(--muted);margin-bottom:14px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+@media(max-width:768px){
+  .sidebar{position:fixed;left:-220px;z-index:100;transition:left 0.25s;}
+  .sidebar.open{left:0;}
+  .content{padding:14px 16px;}
+  .doc-grid{grid-template-columns:1fr;}
+  .badge-grid{grid-template-columns:1fr 1fr;}
+  .topbar{padding:0 16px;}
+  .ham{display:flex!important;}
+}
+@media(max-width:520px){
+  .badge-grid{grid-template-columns:1fr;}
+}
+</style>
+
+<input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png">
+<div class="mob-overlay" id="overlay" onclick="closeSidebar()"></div>
+<div class="shell">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo-area">
+    <div class="ga-mark">
+      <div class="ga-flag"><div class="ga-flag-b"></div><div class="ga-flag-r"></div><div class="ga-flag-g"></div></div>
+    </div>
+    <div class="ga-logo-text">
+      <div class="ga-name">Germany Assists</div>
+      <div class="ga-sub">Provider Portal</div>
+    </div>
+    <div class="collapse-btn" onclick="toggleCollapse()" title="Collapse sidebar">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+  </div>
+  <nav class="nav">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item" onclick="window.location.href='Dashborad.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      <span class="nav-text">Dashboard</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='Message.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <span class="nav-text">Messages</span><span class="nb nb-red">5</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='notifications.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="nav-text">Notifications</span><span class="nb nb-red">3</span>
+    </div>
+    <div class="nav-label" style="margin-top:6px;">Work</div>
+    <div class="nav-item" onclick="window.location.href='orders.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      <span class="nav-text">Orders</span><span class="nb nb-blue">14</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='services.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      <span class="nav-text">My Services</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span class="nav-text">Clients</span>
+    </div>
+    <div class="nav-label" style="margin-top:6px;">Finance</div>
+    <div class="nav-item" onclick="window.location.href='Finance.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>
+      <span class="nav-text">Finance</span>
+    </div>
+    <div class="nav-label" style="margin-top:6px;">Account</div>
+    <div class="nav-item" onclick="window.location.href='profile.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span class="nav-text">Profile</span>
+    </div>
+    <div class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+      <span class="nav-text">Verification Centre</span><span class="nb nb-sky">!</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='settings.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span class="nav-text">Settings</span>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sp-profile" onclick="window.location.href='profile.html'">
+      <div class="s-av">GA</div>
+      <div><div class="sp-nm">Germany Assists</div><div class="sp-rl">Service Provider</div></div>
+      <div class="pf-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <button class="ham" id="hamBtn" onclick="toggleSidebar()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="tb-title">Verification Centre</div>
+    <div class="tb-right">
+      <div class="tb-icon-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="tb-dot"></span>
+      </div>
+      <div class="tb-icon-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <div class="s-av" style="cursor:pointer;">GA</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ALERT BANNER -->
+    <div class="vc-alert">
+      <div class="vc-alert-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div class="vc-alert-text"><strong>Action required:</strong> 1 document needs to be re-uploaded — your Proof of Residence was rejected. Your profile is not publicly listed until resolved.</div>
+      <div class="vc-alert-cta" onclick="jumpToSection('identity')">Fix now →</div>
+    </div>
+
+    <!-- PROGRESS BAR -->
+    <div class="vc-status-bar">
+      <div class="vc-status-progress">
+        <div class="vc-sp-top">
+          <div class="vc-sp-label">Verification progress</div>
+          <div class="vc-sp-pct">60%</div>
+        </div>
+        <div class="vc-prog-track"><div class="vc-prog-fill" style="width:60%"></div></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:5px;">3 of 5 sections complete · 2 actions pending</div>
+      </div>
+      <div class="vc-status-badge vsb-pending"><div class="vsb-dot"></div>Pending Review</div>
+    </div>
+
+    <!-- SECTION 1: Technical Specs -->
+    <div class="vc-card" id="sec-specs">
+      <div class="vc-ch" onclick="toggleSection('specs')">
+        <div class="vc-ch-icon" style="background:rgba(2,76,238,0.08);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        </div>
+        <div class="vc-ch-info">
+          <div class="vc-ch-title">Document Requirements</div>
+          <div class="vc-ch-sub">Accepted formats, size limits & language rules</div>
+        </div>
+        <div class="vc-ch-right">
+          <svg class="vc-caret open" id="caret-specs" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+      <div class="vc-body open" id="body-specs">
+        <table class="spec-table">
+          <thead><tr><th>Rule</th><th>Details</th></tr></thead>
+          <tbody>
+            <tr><td class="sc-label">Accepted Formats</td><td class="sc-val"><span class="sc-tag">PDF</span><span class="sc-tag">JPG</span><span class="sc-tag">PNG</span></td></tr>
+            <tr><td class="sc-label">Max File Size</td><td class="sc-val">5 MB per file</td></tr>
+            <tr><td class="sc-label">Languages</td><td class="sc-val"><span class="sc-tag">English</span><span class="sc-tag">German</span><span class="sc-tag">Arabic</span> — other languages require a certified translation</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 2: Identity & Business Verification -->
+    <div class="vc-card" id="sec-identity">
+      <div class="vc-ch" onclick="toggleSection('identity')">
+        <div class="vc-ch-icon" style="background:rgba(220,38,38,0.08);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        </div>
+        <div class="vc-ch-info">
+          <div class="vc-ch-title">Identity & Business Verification</div>
+          <div class="vc-ch-sub">Passport, Proof of Residence, Business License</div>
+        </div>
+        <div class="vc-ch-right">
+          <div class="vc-sec-badge vsb-err">1 issue</div>
+          <svg class="vc-caret open" id="caret-identity" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+      <div class="vc-body open" id="body-identity">
+        <div class="file-spec-note">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          PDF, JPG or PNG · Max 5 MB · English, German or Arabic
+        </div>
+        <div class="doc-grid">
+          <!-- Personal ID - Verified -->
+          <div class="doc-row dr-ok">
+            <div class="dr-icon" style="background:rgba(5,150,105,0.10);">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="dr-content">
+              <div class="dr-title">Personal Identification <span style="color:var(--red);font-size:11px;">*</span></div>
+              <div class="dr-sub">Valid Passport or National ID</div>
+              <div class="dr-req" style="color:var(--muted);">Freelancer & Company</div>
+              <div class="dr-status ds-ok">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Verified
+              </div>
+              <div class="dr-actions">
+                <div class="dr-file-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <span>passport_2024.pdf</span>
+                </div>
+                <button class="dr-upload-btn dub-outline" onclick="triggerUpload('personal-id')">Replace</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Proof of Residence - Error -->
+          <div class="doc-row dr-error" id="doc-residence">
+            <div class="dr-icon" style="background:rgba(220,38,38,0.10);">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div class="dr-content">
+              <div class="dr-title">Proof of Residence <span style="color:var(--red);font-size:11px;">*</span></div>
+              <div class="dr-sub">Recent utility bill or bank statement</div>
+              <div class="dr-req" style="color:var(--muted);">Company Only</div>
+              <div class="dr-status ds-err">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Rejected — document expired
+              </div>
+              <div class="dr-actions">
+                <button class="dr-upload-btn dub-red" onclick="triggerUpload('residence')">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>
+                  Re-upload
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Business Registration - Uploaded, Under Review -->
+          <div class="doc-row">
+            <div class="dr-icon" style="background:rgba(2,76,238,0.08);">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
+            <div class="dr-content">
+              <div class="dr-title">Business Registration <span style="color:var(--red);font-size:11px;">*</span></div>
+              <div class="dr-sub">Official commercial license (PDF only)</div>
+              <div class="dr-req" style="color:var(--muted);">Company Only</div>
+              <div class="dr-status ds-rev">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Under review
+              </div>
+              <div class="dr-actions">
+                <div class="dr-file-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <span>business_reg.pdf</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Freelance License - Optional, not uploaded -->
+          <div class="doc-row">
+            <div class="dr-icon" style="background:rgba(107,114,128,0.08);">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+            </div>
+            <div class="dr-content">
+              <div class="dr-title">Freelance License <span style="color:var(--muted);font-size:10.5px;">(Optional)</span></div>
+              <div class="dr-sub">Valid professional permit — PDF only</div>
+              <div class="dr-req" style="color:var(--muted);">Freelancer Only</div>
+              <div class="dr-status" style="color:var(--muted);">Not uploaded</div>
+              <div class="dr-actions">
+                <button class="dr-upload-btn dub-primary" onclick="triggerUpload('freelance-license')">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>
+                  Upload
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Quality Gate & Badges -->
+    <div class="vc-card" id="sec-quality">
+      <div class="vc-ch" onclick="toggleSection('quality')">
+        <div class="vc-ch-icon" style="background:rgba(5,150,105,0.08);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div class="vc-ch-info">
+          <div class="vc-ch-title">Quality Gate & Professional Badges</div>
+          <div class="vc-ch-sub">Upload credentials to earn trust badges on your profile</div>
+        </div>
+        <div class="vc-ch-right">
+          <div class="vc-sec-badge vsb-ok">1 earned</div>
+          <svg class="vc-caret open" id="caret-quality" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+      <div class="vc-body open" id="body-quality">
+
+        <!-- Tab selector -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;" id="qTabs">
+          <div class="ctab active" onclick="setQTab(this,'german')" style="font-size:11.5px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);cursor:pointer;background:var(--blue);color:#fff;font-family:'Outfit',sans-serif;font-weight:500;">German Language</div>
+          <div class="ctab" onclick="setQTab(this,'coaching')" style="font-size:11.5px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);cursor:pointer;background:#fff;color:var(--muted);font-family:'Outfit',sans-serif;">Career Coaching</div>
+          <div class="ctab" onclick="setQTab(this,'translation')" style="font-size:11.5px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);cursor:pointer;background:#fff;color:var(--muted);font-family:'Outfit',sans-serif;">Translation</div>
+          <div class="ctab" onclick="setQTab(this,'recruitment')" style="font-size:11.5px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);cursor:pointer;background:#fff;color:var(--muted);font-family:'Outfit',sans-serif;">Recruitment</div>
+          <div class="ctab" onclick="setQTab(this,'visa')" style="font-size:11.5px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);cursor:pointer;background:#fff;color:var(--muted);font-family:'Outfit',sans-serif;">Visa & Immigration</div>
+          <div class="ctab" onclick="setQTab(this,'recognition')" style="font-size:11.5px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);cursor:pointer;background:#fff;color:var(--muted);font-family:'Outfit',sans-serif;">Anerkennung</div>
+          <div class="ctab" onclick="setQTab(this,'university')" style="font-size:11.5px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);cursor:pointer;background:#fff;color:var(--muted);font-family:'Outfit',sans-serif;">University Services</div>
+          <div class="ctab" onclick="setQTab(this,'relocation')" style="font-size:11.5px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);cursor:pointer;background:#fff;color:var(--muted);font-family:'Outfit',sans-serif;">Relocation</div>
+        </div>
+
+        <!-- Badge panels -->
+        <div id="qtab-german" class="badge-grid">
+          <div class="badge-card bc-locked">
+            <div class="bc-top">
+              <div class="bc-icon" style="background:rgba(2,76,238,0.08);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              </div>
+              <div class="bc-status-pill bsp-upload">Upload needed</div>
+            </div>
+            <div class="bc-name">Certified Teacher</div>
+            <div class="bc-desc">Upload your Goethe / TELC / TestDaF teaching certificate</div>
+            <div class="bc-upload-link" onclick="triggerUpload('certified-teacher')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>
+              Upload certificate
+            </div>
+          </div>
+          <div class="badge-card">
+            <div class="bc-top">
+              <div class="bc-icon" style="background:rgba(5,150,105,0.08);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+              <div class="bc-status-pill bsp-earned">Earned ✓</div>
+            </div>
+            <div class="bc-name">Expert Teacher</div>
+            <div class="bc-desc">Germanistics university degree verified</div>
+            <div class="bc-earned-check">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+          <div class="badge-card bc-locked">
+            <div class="bc-top">
+              <div class="bc-icon" style="background:rgba(220,38,38,0.08);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M3 3h18v18H3zM9 9h6M9 15h6M9 12h6"/></svg>
+              </div>
+              <div class="bc-status-pill bsp-required">Required</div>
+            </div>
+            <div class="bc-name">Certified Exam Center</div>
+            <div class="bc-desc">Must upload Exam Center Accreditation to be listed</div>
+            <div class="bc-upload-link" onclick="triggerUpload('exam-center')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>
+              Upload accreditation
+            </div>
+          </div>
+        </div>
+
+        <div id="qtab-coaching" class="badge-grid" style="display:none;">
+          <div class="badge-card bc-locked">
+            <div class="bc-top">
+              <div class="bc-icon" style="background:rgba(2,76,238,0.08);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+              </div>
+              <div class="bc-status-pill bsp-upload">Upload needed</div>
+            </div>
+            <div class="bc-name">Certified Coach</div>
+            <div class="bc-desc">Upload ICF, EMCC, or equivalent credentials</div>
+            <div class="bc-upload-link" onclick="triggerUpload('coach-cred')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>
+              Upload credentials
+            </div>
+          </div>
+          <div class="badge-card bc-locked">
+            <div class="bc-top">
+              <div class="bc-icon" style="background:rgba(73,183,223,0.10);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+              </div>
+              <div class="bc-status-pill bsp-upload">Upload needed</div>
+            </div>
+            <div class="bc-name">German Market Expert</div>
+            <div class="bc-desc">Upload anonymized case studies or proof of experience</div>
+            <div class="bc-upload-link" onclick="triggerUpload('market-expert')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>
+              Upload case studies
+            </div>
+          </div>
+        </div>
+
+        <div id="qtab-translation" class="badge-grid" style="display:none;">
+          <div class="badge-card bc-locked">
+            <div class="bc-top">
+              <div class="bc-icon" style="background:rgba(2,76,238,0.08);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M5 3h14M3 8h18M7 3v5M17 3v5M12 8v13M7 13h10"/></svg>
+              </div>
+              <div class="bc-status-pill bsp-upload">Upload needed</div>
+            </div>
+            <div class="bc-name">Certified Translator</div>
+            <div class="bc-desc">Upload your translation degree</div>
+            <div class="bc-upload-link" onclick="triggerUpload('translator-degree')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>
+              Upload degree
+            </div>
+          </div>
+          <div class="badge-card bc-locked">
+            <div class="bc-top">
+              <div class="bc-icon" style="background:rgba(220,38,38,0.08);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div class="bc-status-pill bsp-required">Required</div>
+            </div>
+            <div class="bc-name">Sworn Translator</div>
+            <div class="bc-desc">Must upload Court Appointment (Bestallungsurkunde) & Official Stamp</div>
+            <div class="bc-upload-link" onclick="triggerUpload('sworn-translator')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>
+              Upload appointment
+            </div>
+          </div>
+        </div>
+
+        <div id="qtab-recruitment" class="badge-grid" style="display:none;">
+          <div class="badge-card bc-locked">
+            <div class="bc-top">
+              <div class="bc-icon" style="background:rgba(2,76,238,0.08);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></div>
+              <div class="bc-status-pill bsp-upload">Upload needed</div>
+            </div>
+            <div class="bc-name">Certified Recruiter</div>
+            <div class="bc-desc">Upload track record or portfolio</div>
+            <div class="bc-upload-link" onclick="triggerUpload('recruiter-portfolio')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>
+              Upload portfolio
+            </div>
+          </div>
+          <div class="badge-card bc-locked">
+            <div class="bc-top">
+              <div class="bc-icon" style="background:rgba(220,38,38,0.08);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div>
+              <div class="bc-status-pill bsp-required">Required</div>
+            </div>
+            <div class="bc-name">Licensed Agency</div>
+            <div class="bc-desc">Must upload Recruitment License to publish agency profile</div>
+            <div class="bc-upload-link" onclick="triggerUpload('recruitment-license')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>
+              Upload license
+            </div>
+          </div>
+        </div>
+
+        <div id="qtab-visa" class="badge-grid" style="display:none;">
+          <div class="badge-card bc-locked">
+            <div class="bc-top">
+              <div class="bc-icon" style="background:rgba(5,150,105,0.08);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+              <div class="bc-status-pill bsp-upload">Upload needed</div>
+            </div>
+            <div class="bc-name">Certified Consultant</div>
+            <div class="bc-desc">Upload anonymized "Visa Granted" documents to show high success rate</div>
+            <div class="bc-upload-link" onclick="triggerUpload('visa-granted')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>
+              Upload documents
+            </div>
+          </div>
+        </div>
+
+        <div id="qtab-recognition" class="badge-grid" style="display:none;">
+          <div class="badge-card bc-locked">
+            <div class="bc-top">
+              <div class="bc-icon" style="background:rgba(2,76,238,0.08);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></div>
+              <div class="bc-status-pill bsp-upload">Upload needed</div>
+            </div>
+            <div class="bc-name">Recognition Expert</div>
+            <div class="bc-desc">Upload successful Defizitbescheid or Approbation cases</div>
+            <div class="bc-upload-link" onclick="triggerUpload('recognition-cases')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>
+              Upload cases
+            </div>
+          </div>
+        </div>
+
+        <div id="qtab-university" class="badge-grid" style="display:none;">
+          <div class="badge-card bc-locked">
+            <div class="bc-top">
+              <div class="bc-icon" style="background:rgba(73,183,223,0.10);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+              <div class="bc-status-pill bsp-upload">Upload needed</div>
+            </div>
+            <div class="bc-name">Admission Expert</div>
+            <div class="bc-desc">Upload proof of student placements</div>
+            <div class="bc-upload-link" onclick="triggerUpload('student-placements')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>
+              Upload proof
+            </div>
+          </div>
+          <div class="badge-card bc-locked">
+            <div class="bc-top">
+              <div class="bc-icon" style="background:rgba(2,76,238,0.08);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+              <div class="bc-status-pill bsp-upload">Upload needed</div>
+            </div>
+            <div class="bc-name">Advanced German (C1+)</div>
+            <div class="bc-desc">Upload C1 or TestDaF certificate to show academic language skills</div>
+            <div class="bc-upload-link" onclick="triggerUpload('c1-cert')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>
+              Upload certificate
+            </div>
+          </div>
+        </div>
+
+        <div id="qtab-relocation" class="badge-grid" style="display:none;">
+          <div class="badge-card bc-locked">
+            <div class="bc-top">
+              <div class="bc-icon" style="background:rgba(5,150,105,0.08);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+              <div class="bc-status-pill bsp-upload">Upload needed</div>
+            </div>
+            <div class="bc-name">Local Relocation Expert</div>
+            <div class="bc-desc">Upload proof of local residency or Anmeldung experience</div>
+            <div class="bc-upload-link" onclick="triggerUpload('local-expert')">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>
+              Upload proof
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTION 4: Submission Summary -->
+    <div class="vc-card" id="sec-summary">
+      <div class="vc-ch" onclick="toggleSection('summary')">
+        <div class="vc-ch-icon" style="background:rgba(73,183,223,0.10);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <div class="vc-ch-info">
+          <div class="vc-ch-title">Submission Summary</div>
+          <div class="vc-ch-sub">Status of all submitted documents</div>
+        </div>
+        <div class="vc-ch-right">
+          <svg class="vc-caret" id="caret-summary" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+      <div class="vc-body" id="body-summary">
+        <table class="spec-table">
+          <thead><tr><th>Document</th><th>Submitted</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="sc-label">Personal Identification</td>
+              <td class="sc-val">08 Apr 2026</td>
+              <td><span style="font-size:11px;font-weight:600;color:var(--green);">✓ Verified</span></td>
+            </tr>
+            <tr>
+              <td class="sc-label">Proof of Residence</td>
+              <td class="sc-val">02 Apr 2026</td>
+              <td><span style="font-size:11px;font-weight:600;color:var(--red);">✗ Rejected</span></td>
+            </tr>
+            <tr>
+              <td class="sc-label">Business Registration</td>
+              <td class="sc-val">08 Apr 2026</td>
+              <td><span style="font-size:11px;font-weight:600;color:var(--blue);">⏳ Under Review</span></td>
+            </tr>
+            <tr>
+              <td class="sc-label">Germanistics Degree</td>
+              <td class="sc-val">01 Apr 2026</td>
+              <td><span style="font-size:11px;font-weight:600;color:var(--green);">✓ Badge Awarded</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<!-- Toast -->
+<div id="toast" style="position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;font-size:12.5px;font-weight:500;padding:10px 16px;border-radius:9px;opacity:0;transition:opacity 0.25s;pointer-events:none;z-index:999;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:7px;"></div>
+
+<script>
+function toggleCollapse(){
+  const s=document.getElementById('sidebar');
+  const collapsed=s.classList.toggle('collapsed');
+  const btn=s.querySelector('.collapse-btn svg');
+  if(collapsed){btn.innerHTML='<polyline points="9 18 15 12 9 6"/>';}
+  else{btn.innerHTML='<polyline points="15 18 9 12 15 6"/>';}
+}
+function toggleSidebar(){
+  const s=document.getElementById('sidebar');
+  const o=document.getElementById('overlay');
+  s.classList.toggle('open');o.classList.toggle('show');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+function toggleSection(id){
+  const body=document.getElementById('body-'+id);
+  const caret=document.getElementById('caret-'+id);
+  const isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  caret.classList.toggle('open',!isOpen);
+}
+function jumpToSection(id){
+  const el=document.getElementById('sec-'+id);
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+  const body=document.getElementById('body-'+id);
+  const caret=document.getElementById('caret-'+id);
+  body.classList.add('open');caret.classList.add('open');
+}
+let currentUploadTarget=null;
+function triggerUpload(target){
+  currentUploadTarget=target;
+  document.getElementById('fileInput').click();
+}
+document.getElementById('fileInput').addEventListener('change',function(){
+  if(this.files&&this.files[0]){
+    const fname=this.files[0].name;
+    showToast('✓ '+fname+' uploaded successfully');
+    this.value='';
+    // Dark pattern: auto-show summary section to reinforce progress
+    const body=document.getElementById('body-summary');
+    const caret=document.getElementById('caret-summary');
+    body.classList.add('open');caret.classList.add('open');
+  }
+});
+function setQTab(el,tab){
+  document.querySelectorAll('#qTabs .ctab').forEach(t=>{
+    t.style.background='#fff';t.style.color='var(--muted)';t.style.borderColor='var(--border)';
+  });
+  el.style.background='var(--blue)';el.style.color='#fff';
+  ['german','coaching','translation','recruitment','visa','recognition','university','relocation'].forEach(t=>{
+    const panel=document.getElementById('qtab-'+t);
+    if(panel) panel.style.display=t===tab?'grid':'none';
+  });
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>${msg}`;
+  t.style.opacity='1';
+  setTimeout(()=>t.style.opacity='0',3000);
+}
+</script>

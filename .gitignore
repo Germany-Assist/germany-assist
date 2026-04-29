@@ -6,11 +6,14 @@ node_modules/
 **/*.env
 
 client/build/
+client/dist/
+
 
 server/logs/
 server/localstack/
 server/database/seeds/data/
 server/backup/
-
+server/public/
+server/.vscode/*
 .DS_Store
 coverage/
