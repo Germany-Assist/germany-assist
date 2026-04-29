@@ -42,6 +42,6 @@ jobs:
             cd /var/www/germany-assist
             git reset --hard
             git pull origin main
-            npm install-all
+            npm run install-all
             # restart backend
             pm2 reload ecosystem.config.cjs || pm2 start ecosystem.config.cjs
