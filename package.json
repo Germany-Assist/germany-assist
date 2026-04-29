@@ -9,7 +9,8 @@
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "install-all": "npm install --prefix server && npm install --prefix client",
     "build": "npm run build --prefix client",
-    "dbInit": "node --env-file=server/dev.env  server/src/database/migrateAndSeed.js"
+    "dbInit": "node --env-file=server/dev.env  server/src/database/migrateAndSeed.js",
+    "start": "npm run start --prefix server"
   },
   "keywords": [],
   "author": "",
