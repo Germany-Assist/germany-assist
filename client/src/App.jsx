@@ -6,6 +6,7 @@ import DashboardPage from "./pages/DashboardPage.jsx";
 import ServiceProfile from "./features/service/serviceProfile/ServiceProfile.jsx";
 import SigninPage from "./features/auth/pages/SigninPage.jsx";
 import SignupPage from "./features/auth/pages/SignupPage.jsx";
+import ForgotPasswordPage from "./features/auth/pages/ForgotPasswordPage.jsx";
 import ServicesPage from "./pages/ServicesPage.jsx";
 import TimelinePage from "./pages/TimelinePage.jsx";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary.jsx";
@@ -27,6 +28,7 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/jobs" element={<JobsPage />} />
         <Route path="/signin" element={<SigninPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/service/:serviceId" element={<ServiceProfile />} />
