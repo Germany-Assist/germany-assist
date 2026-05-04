@@ -3,6 +3,9 @@ module.exports = {
   darkMode: "class",
   theme: {
     extend: {
+      fontFamily: {
+        outfit: ["Outfit", "sans-serif"],
+      },
       colors: {
         dark: {
           950: "#04080f", // Deepest background

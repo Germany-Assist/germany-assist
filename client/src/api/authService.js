@@ -55,3 +55,18 @@ export const resendVerificationEmail = async (email) => {
   const res = await api.post(`/auth/resendVerificationEmail`, { email });
   return res.data;
 };
+
+export const forgotPassword = async (email) => {
+  const res = await api.post(`/auth/password-reset`, { email }, { skipAuthRefresh: true });
+  return res.data;
+};
+
+export const verifyResetCode = async (code) => {
+  const res = await api.post(`/auth/verify-reset-code`, { code }, { skipAuthRefresh: true });
+  return res.data;
+};
+
+export const resetPassword = async ({ token, password }) => {
+  const res = await api.post(`/auth/password-reset/confirm`, { token, password }, { skipAuthRefresh: true });
+  return res.data;
+};

@@ -28,7 +28,6 @@ export const registerClient = async (body, files) => {
       phone,
       nationality,
       countryOfResidence,
-      displayName,
     } = body;
     const password = bcryptUtil.hashPassword(body.password);
     const userData = {
@@ -47,7 +46,6 @@ export const registerClient = async (body, files) => {
         nationality: nationality,
         countryOfResidence: countryOfResidence,
         phoneNumber: phone,
-        displayName: displayName,
       },
     };
     const profileImage = getFile(files, "profileImage");

@@ -16,6 +16,18 @@ const retrieveToken = async (hashedToken, userEmail, t) => {
   });
   return token;
 };
+
+const retrieveTokenByHash = async (hashedToken, t) => {
+  const token = await db.Token.findOne({
+    where: { token: hashedToken },
+    include: {
+      model: db.User,
+      required: true,
+    },
+    transaction: t,
+  });
+  return token;
+};
 const findActiveTokens = async (userId, type, t) => {
   return await db.Token.findAll({
     where: { userId, type, isValid: true },
@@ -45,6 +57,7 @@ const findRecentToken = (userId, type, seconds) => {
 const authRepository = {
   createToken,
   retrieveToken,
+  retrieveTokenByHash,
   findActiveTokens,
   invalidateTokens,
   findRecentToken,

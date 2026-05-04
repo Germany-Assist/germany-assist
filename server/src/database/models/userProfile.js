@@ -30,10 +30,6 @@ UserProfile.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    displayName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
   },
   {
     sequelize,

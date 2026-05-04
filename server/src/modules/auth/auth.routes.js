@@ -70,4 +70,13 @@ authRouter.post(
   authController.passwordResetConfirm,
 );
 
+authRouter.post(
+  "/verify-reset-code",
+  (req, res, next) => {
+    req.body.token = req.body.code;
+    next();
+  },
+  authController.verifyResetCode,
+);
+
 export default authRouter;
