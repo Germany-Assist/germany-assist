@@ -133,7 +133,7 @@ const RoleSelection = ({
         onClose={() => setGuideModalState({ isOpen: false, data: null })}
       />
 
-      <div className="text-xl font-bold text-[#111827] mb-1">
+      <div className="text-[1.375rem]  font-bold text-[#111827] ">
         Welcome! Who are you?
       </div>
       <div className="text-sm text-[#6B7280] mb-6">
