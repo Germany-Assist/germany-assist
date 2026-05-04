@@ -61,11 +61,6 @@ export const forgotPassword = async (email) => {
   return res.data;
 };
 
-export const verifyResetCode = async (code) => {
-  const res = await api.post(`/auth/verify-reset-code`, { code }, { skipAuthRefresh: true });
-  return res.data;
-};
-
 export const resetPassword = async ({ token, password }) => {
   const res = await api.post(`/auth/password-reset/confirm`, { token, password }, { skipAuthRefresh: true });
   return res.data;

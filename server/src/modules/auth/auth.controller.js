@@ -148,14 +148,6 @@ export async function passwordResetConfirm(req, res, next) {
     next(error);
   }
 }
-export async function verifyResetCode(req, res, next) {
-  try {
-    const result = await authServices.verifyResetCode(req.body);
-    res.status(200).json(result);
-  } catch (error) {
-    next(error);
-  }
-}
 const authController = {
   googleAuthRetrieveInfo,
   googleAuthSignin,
@@ -169,7 +161,6 @@ const authController = {
   updatePassword,
   passwordReset,
   passwordResetConfirm,
-  verifyResetCode,
 };
 
 export default authController;

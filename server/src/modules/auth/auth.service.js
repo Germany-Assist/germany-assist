@@ -133,7 +133,6 @@ export async function resendVerificationEmail(userEmail) {
 }
 export async function sendVerificationEmail(userEmail, userId, t) {
   try {
-    // return;
     const token = generateNumericCode(5);
     const tokenHash = hashToken(token);
     await authRepository.invalidateTokens(
@@ -254,14 +253,14 @@ export async function passwordReset(email) {
   const t = await sequelize.transaction();
   try {
     const user = await userRepository.getUserByEmail(email, t);
-    if (!user) throw new AppError(404, "User not found", true, "User not found");
+    if (!user)
+      throw new AppError(404, "User not found", true, "User not found");
     const { id: userId, email: userEmail } = user;
     const recentToken = await authRepository.findRecentToken(
       userId,
       TOKENS_CONSTANTS.PASSWORD_RESET,
       180,
     );
-
     if (recentToken) {
       throw new AppError(
         429,
@@ -275,7 +274,7 @@ export async function passwordReset(email) {
       t,
     );
 
-    const token = generateNumericCode(5);
+    const token = generateToken(32);
     const tokenHash = hashToken(token);
     const databaseToken = {
       token: tokenHash,
@@ -283,13 +282,13 @@ export async function passwordReset(email) {
       oneTime: true,
       isValid: true,
       type: TOKENS_CONSTANTS.PASSWORD_RESET,
-      expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      expiresAt: new Date(Date.now() + 60 * 60 * 1000),
     };
     await authRepository.createToken(databaseToken, t);
-    const link = `${FRONTEND_URL}/auth/reset-password?token=${encodeURIComponent(
+    const link = `${FRONTEND_URL}/forgot-password?token=${encodeURIComponent(
       token,
     )}`;
-    const html = passwordResetTemplate({ resetLink: link, token });
+    const html = passwordResetTemplate({ resetLink: link });
     await emailQueue.add("sendEmail", {
       to: userEmail,
       subject: "Password Reset Email",
@@ -303,45 +302,7 @@ export async function passwordReset(email) {
   }
 }
 
-export async function verifyResetCode({ token }) {
-  const t = await sequelize.transaction();
-  try {
-    const hashedToken = hashToken(token);
-    const dbToken = await authRepository.retrieveTokenByHash(hashedToken, t);
-    if (!dbToken)
-      throw new AppError(403, "Invalid code", false, "Invalid code");
-    if (dbToken.type !== TOKENS_CONSTANTS.PASSWORD_RESET)
-      throw new AppError(403, "Invalid code", false, "Invalid code");
-    if (!dbToken.isValid)
-      throw new AppError(403, "Code already used", false, "Code already used");
-    if (dbToken.expiresAt < new Date())
-      throw new AppError(403, "Code expired", false, "Code expired");
 
-    await authRepository.invalidateTokens(
-      dbToken.userId,
-      TOKENS_CONSTANTS.PASSWORD_RESET,
-      t,
-    );
-
-    const newToken = generateNumericCode(5);
-    const newTokenHash = hashToken(newToken);
-    const databaseToken = {
-      token: newTokenHash,
-      userId: dbToken.userId,
-      oneTime: true,
-      isValid: true,
-      type: TOKENS_CONSTANTS.PASSWORD_RESET,
-      expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-    };
-    await authRepository.createToken(databaseToken, t);
-
-    await t.commit();
-    return { newToken };
-  } catch (error) {
-    await t.rollback();
-    throw error;
-  }
-}
 
 export async function passwordResetConfirm({ token, password }) {
   const t = await sequelize.transaction();
@@ -401,6 +362,5 @@ const authServices = {
   verifyAccountConfirm,
   passwordReset,
   passwordResetConfirm,
-  verifyResetCode,
 };
 export default authServices;

@@ -1,4 +1,4 @@
-const passwordResetTemplate = ({ resetLink, token }) => `
+const passwordResetTemplate = ({ resetLink }) => `
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,22 +30,13 @@ const passwordResetTemplate = ({ resetLink, token }) => `
     .button {
       display: inline-block;
       margin-top: 20px;
-      padding: 12px 25px;
+      padding: 14px 28px;
       font-size: 16px;
-      color: #ffffff;
-      background-color: #2f2c57;
-      text-decoration: none;
-      border-radius: 5px;
-    }
-    .token-box {
-      margin-top: 20px;
-      padding: 12px;
-      background: #f2f2f2;
-      border-radius: 5px;
-      font-size: 18px;
       font-weight: bold;
-      text-align: center;
-      letter-spacing: 2px;
+      color: #ffffff;
+      background-color: #024CEE;
+      text-decoration: none;
+      border-radius: 8px;
     }
     .footer {
       margin-top: 30px;
@@ -59,18 +50,13 @@ const passwordResetTemplate = ({ resetLink, token }) => `
   <div class="container">
     <h1>Reset Your Password</h1>
     <p>You requested to reset your password.</p>
-
-    <p>Use the token below if prompted:</p>
-    <div class="token-box">${token}</div>
-
-    <p>Or click the button below to reset your password directly:</p>
+    <p>Click the button below to reset your password:</p>
     <a href="${resetLink}" class="button">Reset Password</a>
-
-    <p>If the button doesn’t work, copy and paste this link into your browser:</p>
-    <p><a href="${resetLink}">${resetLink}</a></p>
-
+    <p style="margin-top: 20px; font-size: 14px;">If the button doesn't work, copy and paste this link into your browser:</p>
+    <p style="font-size: 13px; word-break: break-all;"><a href="${resetLink}">${resetLink}</a></p>
     <div class="footer">
-      <p>If you didn’t request a password reset, you can safely ignore this email.</p>
+      <p>This link expires in 1 hour.</p>
+      <p>If you didn't request a password reset, you can safely ignore this email.</p>
     </div>
   </div>
 </body>
