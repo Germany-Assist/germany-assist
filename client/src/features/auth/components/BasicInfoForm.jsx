@@ -87,13 +87,57 @@ const BasicInfoForm = ({
   const inputBaseStyle =
     "w-full py-2.5 px-3 border-2 border-[#E5E7EB] rounded-xl text-sm text-[#111827] bg-white outline-none transition-colors duration-300 focus:border-[#024CEE] focus:shadow-[0_0_0_3px_rgba(2,76,238,0.07)]";
 
-  const updateField = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }));
+  const validateField = (field, value, currentFormData = formData) => {
+    let error = "";
+    switch (field) {
+      case "firstName":
+        if (!value.trim()) error = "First name is required";
+        else if (!validateName(value)) error = "Only letters, spaces, hyphens, and apostrophes allowed";
+        break;
+      case "lastName":
+        if (!value.trim()) error = "Last name is required";
+        else if (!validateName(value)) error = "Only letters, spaces, hyphens, and apostrophes allowed";
+        break;
+      case "email":
+        if (!value.trim()) error = "Email is required";
+        else if (!validateEmail(value)) error = "Invalid email format";
+        break;
+      case "phone":
+        if (!value.trim()) error = "Phone number is required";
+        else if (!validatePhone(value)) error = "Invalid phone number";
+        break;
+      case "password":
+        if (!value) error = "Password is required";
+        else if (value.length < 8) error = "Password must be at least 8 characters";
+        break;
+      case "confirmPassword":
+        if (!value) error = "Please confirm your password";
+        else if (currentFormData.password !== value) error = "Passwords do not match";
+        break;
+      case "nationality":
+        if (!value) error = "Please select your nationality";
+        break;
+      case "countryOfResidence":
+        if (!value) error = "Please select your country of residence";
+        break;
+      case "companyName":
+        if (role === "provider" && !value.trim()) {
+          error = subRole === "company" ? "Company name is required" : "Display name is required";
+        }
+        break;
+      default:
+        break;
     }
-    if (errors.general) {
-      setErrors((prev) => ({ ...prev, general: "" }));
+    return error;
+  };
+
+  const updateField = (field, value) => {
+    const newFormData = { ...formData, [field]: value };
+    setFormData(newFormData);
+    const fieldError = validateField(field, value, newFormData);
+    setErrors((prev) => ({ ...prev, [field]: fieldError }));
+    if (field === "email" && fieldError === "") {
+      setError(null);
     }
   };
 
@@ -105,8 +149,12 @@ const BasicInfoForm = ({
     }
     if (response.firstName) updateField("firstName", response.firstName);
     if (response.lastName) updateField("lastName", response.lastName);
-    if (response.email) updateField("email", response.email);
+    if (response.email) {
+      updateField("email", response.email);
+      setError(null);
+    }
     if (response.phone) updateField("phone", response.phone);
+    setErrors((prev) => ({ ...prev, general: "" }));
   };
 
   useEffect(() => {
@@ -499,11 +547,19 @@ const BasicInfoForm = ({
           checked={agreedToTerms}
           onChange={(value) => {
             setAgreedToTerms(value);
-            if (errors.terms) setErrors((prev) => ({ ...prev, terms: "" }));
+            if (value) setErrors((prev) => ({ ...prev, terms: "" }));
+            else setErrors((prev) => ({ ...prev, terms: "You must agree to the Terms and Privacy Policy" }));
           }}
           error={errors.terms}
         />
       </div>
+
+      {(error || errors.general) && (
+        <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-sm mb-4">
+          <span>⚠</span>
+          <span>{error || errors.general}</span>
+        </div>
+      )}
 
       <button
         onClick={handleSubmit}
