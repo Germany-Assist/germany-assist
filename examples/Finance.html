@@ -203,6 +203,13 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
 .full-card{background:#fff;border:1px solid var(--border);border-radius:13px;padding:16px 18px;margin-bottom:14px;}
 table{width:100%;border-collapse:collapse;font-size:12.5px;}
 thead th{text-align:left;font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;padding:0 10px 9px;border-bottom:1px solid var(--border);}
+thead th.sortable{cursor:pointer;user-select:none;}
+thead th.sortable:hover{color:var(--blue);}
+.th-inner{display:inline-flex;align-items:center;gap:4px;}
+.sort-icon{display:inline-flex;flex-direction:column;gap:1px;opacity:0.3;transition:all 0.13s;}
+thead th.sort-asc .sort-icon,thead th.sort-desc .sort-icon{opacity:1;color:var(--blue);}
+thead th.sort-asc .arr-up{opacity:1;}thead th.sort-asc .arr-dn{opacity:0.25;}
+thead th.sort-desc .arr-dn{opacity:1;}thead th.sort-desc .arr-up{opacity:0.25;}
 tbody tr{cursor:pointer;transition:background 0.1s;}
 tbody tr:hover{background:var(--light);}
 tbody td{padding:10px;border-bottom:1px solid var(--border);vertical-align:middle;}
@@ -377,26 +384,11 @@ tbody tr:last-child td{border-bottom:none;}
       <div class="txfd-sec-lbl">Status</div>
       <div class="txfd-chips">
         <div class="txfd-chip sel" data-tx-status="all" onclick="selTxStatus(this)">All</div>
-        <div class="txfd-chip" data-tx-status="awaiting" onclick="selTxStatus(this)">Awaiting Completion</div>
-        <div class="txfd-chip" data-tx-status="pending-release" onclick="selTxStatus(this)">Pending Release</div>
         <div class="txfd-chip" data-tx-status="balanced" onclick="selTxStatus(this)">Balanced</div>
-        <div class="txfd-chip" data-tx-status="in-dispute" onclick="selTxStatus(this)">In Dispute</div>
-        <div class="txfd-chip" data-tx-status="cancelled" onclick="selTxStatus(this)">Cancelled</div>
-        <div class="txfd-chip" data-tx-status="refunded" onclick="selTxStatus(this)">Refunded</div>
-        <div class="txfd-chip" data-tx-status="payout" onclick="selTxStatus(this)">Payouts</div>
+        <div class="txfd-chip" data-tx-status="payout" onclick="selTxStatus(this)">Paid Out</div>
       </div>
     </div>
-    <div class="txfd-sec">
-      <div class="txfd-sec-lbl">Service Type</div>
-      <div class="txfd-chips">
-        <div class="txfd-chip sel" data-tx-type="all" onclick="selTxType(this)">All</div>
-        <div class="txfd-chip" data-tx-type="course" onclick="selTxType(this)">Course</div>
-        <div class="txfd-chip" data-tx-type="service" onclick="selTxType(this)">Service</div>
-        <div class="txfd-chip" data-tx-type="workshop" onclick="selTxType(this)">Workshop</div>
-        <div class="txfd-chip" data-tx-type="event" onclick="selTxType(this)">Event</div>
-        <div class="txfd-chip" data-tx-type="payout" onclick="selTxType(this)">Payout</div>
-      </div>
-    </div>
+
     <div class="txfd-sec">
       <div class="txfd-sec-lbl">Net Amount Range (€)</div>
       <div class="txfd-range-row">
@@ -509,6 +501,7 @@ tbody tr:last-child td{border-bottom:none;}
     <div class="nav-label" style="margin-top:6px;">Work</div>
     <div class="nav-item" onclick="window.location.href='orders.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><span class="nav-text">Orders</span><span class="nb nb-blue">14</span></div>
     <div class="nav-item" onclick="window.location.href='services.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span class="nav-text">My Services</span></div>
+    <div class="nav-item" onclick="window.location.href='events.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nav-text">My Events</span></div>
     <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="nav-text">Clients</span></div>
     <div class="nav-label" style="margin-top:6px;">Finance</div>
     <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg><span class="nav-text">Finance</span></div>
@@ -566,23 +559,16 @@ tbody tr:last-child td{border-bottom:none;}
           </button>
         </div>
       </div>
-      <div class="bh-divider"></div>
-      <div class="bh-stats">
-        <div class="bh-stat">
-          <div class="bh-stat-label">Pending Earnings</div>
-          <div class="bh-stat-val">€840</div>
-          <div class="bh-stat-chip">⏳ In Escrow</div>
-        </div>
-        <div class="bh-stat">
-          <div class="bh-stat-label">Next Payout</div>
-          <div class="bh-stat-val">€840</div>
-          <div class="bh-stat-chip">📅 25 Apr 2026</div>
-        </div>
-      </div>
     </div>
 
     <!-- KPI ROW -->
-    <div class="kpi-row" style="grid-template-columns:repeat(4,1fr);">
+    <div class="kpi-row" style="grid-template-columns:repeat(5,1fr);">
+      <!-- 0. Awaiting Completion -->
+      <div class="kc" style="border-color:rgba(217,119,6,0.22);background:rgba(217,119,6,0.02);">
+        <div class="kl" style="color:#D97706;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Awaiting Completion</div>
+        <div class="kv" style="color:#D97706;">2</div>
+        <div class="ks"><span class="chip cwarn">In Escrow · €340</span></div>
+      </div>
       <!-- 1. Pending Earnings (Escrow) -->
       <div class="kc">
         <div class="kl">
@@ -663,65 +649,10 @@ tbody tr:last-child td{border-bottom:none;}
           </div>
         </div>
 
-        <!-- TOP 5 SERVICES -->
-        <div class="card" style="padding:14px 16px;">
-          <div class="ch" style="margin-bottom:12px;">
-            <div class="ct">Top Services by Income</div>
-            <div class="ts-period-tabs">
-              <button class="ts-tab active" onclick="setTopSvcPeriod(this,'thisMonth')">This Month</button>
-              <button class="ts-tab" onclick="setTopSvcPeriod(this,'lastMonth')">Last Month</button>
-            </div>
-          </div>
-          <div id="topSvcList"></div>
-        </div>
-
       </div>
 
       <!-- RIGHT COL -->
       <div style="display:flex;flex-direction:column;gap:14px;">
-
-        <!-- FINANCIAL ANALYTICS -->
-        <div class="card" style="padding-bottom:14px;">
-          <div class="ch"><div class="ct">Financial Analytics</div></div>
-          <!-- Stacked breakdown -->
-          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
-            <!-- Awaiting Completion = In Escrow -->
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 13px;border-radius:10px;background:rgba(217,119,6,0.05);border:1px solid rgba(217,119,6,0.16);">
-              <div>
-                <div style="font-size:10px;font-weight:700;color:#D97706;text-transform:uppercase;letter-spacing:0.07em;">Awaiting Completion</div>
-                <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">In Escrow · 2 orders</div>
-              </div>
-              <div style="font-size:18px;font-weight:700;color:#D97706;">€340</div>
-            </div>
-            <!-- Pending Release = In Dispute / Notice Period -->
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 13px;border-radius:10px;background:rgba(2,76,238,0.04);border:1px solid rgba(2,76,238,0.12);">
-              <div>
-                <div style="font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.07em;">Pending Release</div>
-                <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">14-day notice period</div>
-              </div>
-              <div style="font-size:18px;font-weight:700;color:var(--blue);">€500</div>
-            </div>
-            <!-- Balanced = In Balance -->
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 13px;border-radius:10px;background:rgba(5,150,105,0.05);border:1px solid rgba(5,150,105,0.16);">
-              <div>
-                <div style="font-size:10px;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:0.07em;">Balanced</div>
-                <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">In GA Balance · Available</div>
-              </div>
-              <div style="font-size:18px;font-weight:700;color:#059669;">€2,340</div>
-            </div>
-          </div>
-          <!-- Divider + Totals -->
-          <div style="border-top:1px solid var(--border);padding-top:12px;display:flex;flex-direction:column;gap:6px;">
-            <div style="display:flex;justify-content:space-between;font-size:12px;">
-              <span style="color:var(--muted);">Gross Total <span style="font-size:10px;">(all above)</span></span>
-              <span style="font-weight:700;color:var(--text);">€3,180</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:12.5px;padding-top:6px;border-top:1px solid var(--border);">
-              <span style="color:var(--text);font-weight:600;">Total Income <span style="font-size:10px;color:var(--muted);font-weight:400;">(Balance + Paid Out)</span></span>
-              <span style="font-weight:700;color:var(--blue);font-size:14px;">€9,850</span>
-            </div>
-          </div>
-        </div>
 
         <!-- PAYOUT SCHEDULE -->
         <div class="card" style="padding-bottom:14px;">
@@ -733,7 +664,7 @@ tbody tr:last-child td{border-bottom:none;}
               <div>
                 <div class="pc-label">Next Payout</div>
                 <div class="pc-date">25 Apr 2026</div>
-                <div class="pc-amount">Estimated €840 · PayPal basharshaikhani@gmail.com</div>
+                <div class="pc-amount">Estimated €25 · PayPal basharshaikhani@gmail.com</div>
               </div>
               <div style="font-size:11px;color:var(--blue);font-weight:600;background:var(--bs);padding:4px 8px;border-radius:7px;">Scheduled</div>
             </div>
@@ -763,6 +694,7 @@ tbody tr:last-child td{border-bottom:none;}
               <span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;background:rgba(2,76,238,0.09);color:var(--blue);">⏳ Processing</span>
             </div>
           </div>
+          <button onclick="openAllPayouts()" style="width:100%;margin-top:12px;padding:8px;border-radius:9px;border:1px solid var(--border);background:var(--bs);color:var(--blue);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.13s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">View All Payouts →</button>
         </div>
 
         <!-- PAYMENT METHOD -->
@@ -788,13 +720,8 @@ tbody tr:last-child td{border-bottom:none;}
       <div class="ch" style="gap:10px;flex-wrap:nowrap;overflow-x:auto;margin-bottom:14px;">
         <div class="filter-tabs" style="flex-shrink:0;margin-bottom:0;">
           <button class="ftab active" onclick="quickStatusFilter(this,'all')">All <span style="opacity:0.55;font-size:10px;">(42)</span></button>
-          <button class="ftab" onclick="quickStatusFilter(this,'awaiting')">Awaiting <span style="opacity:0.55;font-size:10px;">(2)</span></button>
-          <button class="ftab" onclick="quickStatusFilter(this,'pending-release')">Pending Release <span style="opacity:0.55;font-size:10px;">(1)</span></button>
           <button class="ftab" onclick="quickStatusFilter(this,'balanced')">Balanced <span style="opacity:0.55;font-size:10px;">(18)</span></button>
-          <button class="ftab" onclick="quickStatusFilter(this,'in-dispute')">In Dispute <span style="opacity:0.55;font-size:10px;">(1)</span></button>
-          <button class="ftab" onclick="quickStatusFilter(this,'cancelled')">Cancelled <span style="opacity:0.55;font-size:10px;">(4)</span></button>
-          <button class="ftab" onclick="quickStatusFilter(this,'refunded')">Refunded <span style="opacity:0.55;font-size:10px;">(2)</span></button>
-          <button class="ftab" onclick="quickStatusFilter(this,'payout')">Payouts <span style="opacity:0.55;font-size:10px;">(14)</span></button>
+          <button class="ftab" onclick="quickStatusFilter(this,'payout')">Paid Out <span style="opacity:0.55;font-size:10px;">(14)</span></button>
         </div>
         <div style="display:flex;align-items:center;gap:7px;margin-left:auto;flex-shrink:0;">
           <div class="search-wrap" style="max-width:210px;">
@@ -816,118 +743,86 @@ tbody tr:last-child td{border-bottom:none;}
         <table>
           <thead>
             <tr>
-              <th>Service</th>
-              <th>Client</th>
-              <th>Order ID</th>
-              <th>Date</th>
-              <th>Gross</th>
-              <th>Net Amount</th>
-              <th>Status</th>
+              <th class="sortable" onclick="sortTxTable(0,this)"><span class="th-inner">Order ID<span class="sort-icon"><svg class="arr-up" width="7" height="5" viewBox="0 0 8 5"><path d="M4 0L8 5H0z" fill="currentColor"/></svg><svg class="arr-dn" width="7" height="5" viewBox="0 0 8 5"><path d="M4 5L0 0H8z" fill="currentColor"/></svg></span></span></th>
+              <th class="sortable" onclick="sortTxTable(1,this)"><span class="th-inner">Service<span class="sort-icon"><svg class="arr-up" width="7" height="5" viewBox="0 0 8 5"><path d="M4 0L8 5H0z" fill="currentColor"/></svg><svg class="arr-dn" width="7" height="5" viewBox="0 0 8 5"><path d="M4 5L0 0H8z" fill="currentColor"/></svg></span></span></th>
+              <th class="sortable" onclick="sortTxTable(2,this)"><span class="th-inner">Date<span class="sort-icon"><svg class="arr-up" width="7" height="5" viewBox="0 0 8 5"><path d="M4 0L8 5H0z" fill="currentColor"/></svg><svg class="arr-dn" width="7" height="5" viewBox="0 0 8 5"><path d="M4 5L0 0H8z" fill="currentColor"/></svg></span></span></th>
+              <th class="sortable" onclick="sortTxTable(3,this)"><span class="th-inner">Net Amount<span class="sort-icon"><svg class="arr-up" width="7" height="5" viewBox="0 0 8 5"><path d="M4 0L8 5H0z" fill="currentColor"/></svg><svg class="arr-dn" width="7" height="5" viewBox="0 0 8 5"><path d="M4 5L0 0H8z" fill="currentColor"/></svg></span></span></th>
+              <th class="sortable" onclick="sortTxTable(4,this)"><span class="th-inner">Status<span class="sort-icon"><svg class="arr-up" width="7" height="5" viewBox="0 0 8 5"><path d="M4 0L8 5H0z" fill="currentColor"/></svg><svg class="arr-dn" width="7" height="5" viewBox="0 0 8 5"><path d="M4 5L0 0H8z" fill="currentColor"/></svg></span></span></th>
             </tr>
           </thead>
           <tbody id="txBody">
-            <!-- Balanced -->
-            <tr data-type="course" data-status="balanced" onclick="showSnack('Viewing transaction…')">
+            <tr data-type="course" data-status="balanced" onclick="window.location='orders.html'" style="cursor:pointer;">
+              <td><div style="font-size:11px;color:var(--blue);font-weight:500;">#ORD-8812</div></td>
               <td><div style="font-weight:500;font-size:12.5px;">German A1 Course</div><div style="font-size:11px;color:var(--muted);">Course</div></td>
-              <td><div style="font-size:12.5px;font-weight:500;">Ahmed Suleiman</div><div style="font-size:11px;color:var(--muted);">#CLT-4421</div></td>
-              <td><div style="font-size:11px;color:var(--muted);">#ORD-8812</div></td>
               <td><div style="font-size:12px;">08 Apr 2026</div></td>
-              <td><div style="font-size:12px;color:var(--muted);">€200</div></td>
               <td><div style="font-weight:700;color:var(--green);">€180</div></td>
               <td><span class="badge" style="background:rgba(5,150,105,0.10);color:#059669;"><span class="bd" style="background:#059669;"></span>Balanced</span></td>
             </tr>
-            <!-- Awaiting Completion -->
-            <tr data-type="course" data-status="awaiting" onclick="showSnack('Viewing transaction…')">
-              <td><div style="font-weight:500;font-size:12.5px;">German A2 Course</div><div style="font-size:11px;color:var(--muted);">Course</div></td>
-              <td><div style="font-size:12.5px;font-weight:500;">Sophie Müller</div><div style="font-size:11px;color:var(--muted);">#CLT-3390</div></td>
-              <td><div style="font-size:11px;color:var(--muted);">#ORD-8770</div></td>
-              <td><div style="font-size:12px;">24 Mar 2026</div></td>
-              <td><div style="font-size:12px;color:var(--muted);">€178</div></td>
-              <td><div style="font-weight:700;color:var(--warn);">€160</div></td>
-              <td><span class="badge" style="background:rgba(217,119,6,0.10);color:#D97706;white-space:nowrap;"><span class="bd" style="background:#D97706;"></span>Awaiting Completion</span></td>
-            </tr>
-            <!-- Pending Release -->
-            <tr data-type="course" data-status="pending-release" onclick="showSnack('Viewing transaction…')">
-              <td><div style="font-weight:500;font-size:12.5px;">German A1 Course</div><div style="font-size:11px;color:var(--muted);">Course</div></td>
-              <td><div style="font-size:12.5px;font-weight:500;">Rami Al-Harbi</div><div style="font-size:11px;color:var(--muted);">#CLT-5512</div></td>
-              <td><div style="font-size:11px;color:var(--muted);">#ORD-8799</div></td>
-              <td><div style="font-size:12px;">30 Mar 2026</div></td>
-              <td><div style="font-size:12px;color:var(--muted);">€200</div></td>
-              <td><div style="font-weight:700;color:var(--blue);">€180</div><div style="font-size:10px;color:var(--muted);">14-day period</div></td>
-              <td><span class="badge" style="background:rgba(2,76,238,0.09);color:var(--blue);white-space:nowrap;"><span class="bd" style="background:var(--blue);"></span>Pending Release</span></td>
-            </tr>
-            <!-- In Dispute -->
-            <tr data-type="service" data-status="in-dispute" onclick="showSnack('Viewing dispute…')" style="background:rgba(220,38,38,0.015);">
-              <td><div style="font-weight:500;font-size:12.5px;">Visa Consulting</div><div style="font-size:11px;color:var(--muted);">Service</div></td>
-              <td><div style="font-size:12.5px;font-weight:500;">Khalid Farouk</div><div style="font-size:11px;color:var(--muted);">#CLT-7723</div></td>
-              <td><div style="font-size:11px;color:var(--muted);">#ORD-8780</div></td>
-              <td><div style="font-size:12px;">26 Mar 2026</div></td>
-              <td><div style="font-size:12px;color:var(--muted);">€167</div></td>
-              <td><div style="font-weight:700;color:var(--red);">€150</div><div style="font-size:10px;color:var(--red);">Under admin review</div></td>
-              <td><span class="badge" style="background:rgba(220,38,38,0.10);color:#DC2626;white-space:nowrap;"><span class="bd" style="background:#DC2626;"></span>In Dispute</span></td>
-            </tr>
-            <!-- Balanced Workshop -->
-            <tr data-type="workshop" data-status="balanced" onclick="showSnack('Viewing transaction…')">
+            <tr data-type="workshop" data-status="balanced" onclick="window.location='orders.html'" style="cursor:pointer;">
+              <td><div style="font-size:11px;color:var(--blue);font-weight:500;">#ORD-8763</div></td>
               <td><div style="font-weight:500;font-size:12.5px;">Integration Workshop</div><div style="font-size:11px;color:var(--muted);">Workshop</div></td>
-              <td><div style="font-size:12.5px;font-weight:500;">Yasmine Ali</div><div style="font-size:11px;color:var(--muted);">#CLT-2201</div></td>
-              <td><div style="font-size:11px;color:var(--muted);">#ORD-8763</div></td>
               <td><div style="font-size:12px;">02 Apr 2026</div></td>
-              <td><div style="font-size:12px;color:var(--muted);">€145</div></td>
               <td><div style="font-weight:700;color:var(--green);">€130</div></td>
               <td><span class="badge" style="background:rgba(5,150,105,0.10);color:#059669;"><span class="bd" style="background:#059669;"></span>Balanced</span></td>
             </tr>
-            <!-- Balanced Service -->
-            <tr data-type="service" data-status="balanced" onclick="showSnack('Viewing transaction…')">
+            <tr data-type="service" data-status="balanced" onclick="window.location='orders.html'" style="cursor:pointer;">
+              <td><div style="font-size:11px;color:var(--blue);font-weight:500;">#ORD-8801</div></td>
               <td><div style="font-weight:500;font-size:12.5px;">Doc Translation</div><div style="font-size:11px;color:var(--muted);">Service</div></td>
-              <td><div style="font-size:12.5px;font-weight:500;">Maria Kovacs</div><div style="font-size:11px;color:var(--muted);">#CLT-8814</div></td>
-              <td><div style="font-size:11px;color:var(--muted);">#ORD-8801</div></td>
               <td><div style="font-size:12px;">20 Mar 2026</div></td>
-              <td><div style="font-size:12px;color:var(--muted);">€106</div></td>
               <td><div style="font-weight:700;color:var(--green);">€95</div></td>
               <td><span class="badge" style="background:rgba(5,150,105,0.10);color:#059669;"><span class="bd" style="background:#059669;"></span>Balanced</span></td>
             </tr>
-            <!-- Cancelled -->
-            <tr data-type="course" data-status="cancelled" onclick="showSnack('Viewing transaction…')">
+            <tr data-type="course" data-status="balanced" onclick="window.location='orders.html'" style="cursor:pointer;">
+              <td><div style="font-size:11px;color:var(--blue);font-weight:500;">#ORD-8790</div></td>
               <td><div style="font-weight:500;font-size:12.5px;">German B1 Course</div><div style="font-size:11px;color:var(--muted);">Course</div></td>
-              <td><div style="font-size:12.5px;font-weight:500;">Omar Nasser</div><div style="font-size:11px;color:var(--muted);">#CLT-6604</div></td>
-              <td><div style="font-size:11px;color:var(--muted);">#ORD-8755</div></td>
               <td><div style="font-size:12px;">15 Mar 2026</div></td>
-              <td><div style="font-size:12px;color:var(--muted);">€200</div></td>
-              <td><div style="font-weight:700;color:var(--muted);">—</div></td>
-              <td><span class="badge" style="background:#f1f5f9;color:var(--muted);"><span class="bd" style="background:#9ca3af;"></span>Cancelled</span></td>
+              <td><div style="font-weight:700;color:var(--green);">€200</div></td>
+              <td><span class="badge" style="background:rgba(5,150,105,0.10);color:#059669;"><span class="bd" style="background:#059669;"></span>Balanced</span></td>
             </tr>
-            <!-- Refunded -->
-            <tr data-type="service" data-status="refunded" onclick="showSnack('Viewing refund…')">
+            <tr data-type="service" data-status="balanced" onclick="window.location='orders.html'" style="cursor:pointer;">
+              <td><div style="font-size:11px;color:var(--blue);font-weight:500;">#ORD-8774</div></td>
               <td><div style="font-weight:500;font-size:12.5px;">Visa Consulting</div><div style="font-size:11px;color:var(--muted);">Service</div></td>
-              <td><div style="font-size:12.5px;font-weight:500;">Lena Braun</div><div style="font-size:11px;color:var(--muted);">#CLT-9910</div></td>
-              <td><div style="font-size:11px;color:var(--muted);">#ORD-8741</div></td>
               <td><div style="font-size:12px;">10 Mar 2026</div></td>
-              <td><div style="font-size:12px;color:var(--muted);">€134</div></td>
-              <td><div style="font-weight:700;color:var(--red);">-€120</div></td>
-              <td><span class="badge" style="background:rgba(220,38,38,0.08);color:#DC2626;"><span class="bd" style="background:#DC2626;"></span>Refunded</span></td>
+              <td><div style="font-weight:700;color:var(--green);">€150</div></td>
+              <td><span class="badge" style="background:rgba(5,150,105,0.10);color:#059669;"><span class="bd" style="background:#059669;"></span>Balanced</span></td>
             </tr>
-            <!-- Payout - Paid Out -->
-            <tr data-type="payout" data-status="payout" onclick="openPayoutReceipt()" style="background:rgba(5,150,105,0.015);">
-              <td><div style="font-weight:500;font-size:12.5px;">Payout · PayPal</div><div style="font-size:11px;color:var(--muted);">basharshaikhani@gmail.com</div></td>
-              <td><div style="font-size:12px;color:var(--muted);">—</div></td>
+            <tr data-type="workshop" data-status="balanced" onclick="window.location='orders.html'" style="cursor:pointer;">
+              <td><div style="font-size:11px;color:var(--blue);font-weight:500;">#ORD-8758</div></td>
+              <td><div style="font-weight:500;font-size:12.5px;">Career Workshop</div><div style="font-size:11px;color:var(--muted);">Workshop</div></td>
+              <td><div style="font-size:12px;">05 Mar 2026</div></td>
+              <td><div style="font-weight:700;color:var(--green);">€110</div></td>
+              <td><span class="badge" style="background:rgba(5,150,105,0.10);color:#059669;"><span class="bd" style="background:#059669;"></span>Balanced</span></td>
+            </tr>
+            <tr data-type="course" data-status="balanced" onclick="window.location='orders.html'" style="cursor:pointer;">
+              <td><div style="font-size:11px;color:var(--blue);font-weight:500;">#ORD-8745</div></td>
+              <td><div style="font-weight:500;font-size:12.5px;">German A2 Course</div><div style="font-size:11px;color:var(--muted);">Course</div></td>
+              <td><div style="font-size:12px;">28 Feb 2026</div></td>
+              <td><div style="font-weight:700;color:var(--green);">€160</div></td>
+              <td><span class="badge" style="background:rgba(5,150,105,0.10);color:#059669;"><span class="bd" style="background:#059669;"></span>Balanced</span></td>
+            </tr>
+            <tr data-type="service" data-status="balanced" onclick="window.location='orders.html'" style="cursor:pointer;">
+              <td><div style="font-size:11px;color:var(--blue);font-weight:500;">#ORD-8731</div></td>
+              <td><div style="font-weight:500;font-size:12.5px;">Relocation Package</div><div style="font-size:11px;color:var(--muted);">Service</div></td>
+              <td><div style="font-size:12px;">20 Feb 2026</div></td>
+              <td><div style="font-weight:700;color:var(--green);">€320</div></td>
+              <td><span class="badge" style="background:rgba(5,150,105,0.10);color:#059669;"><span class="bd" style="background:#059669;"></span>Balanced</span></td>
+            </tr>
+            <tr data-type="payout" data-status="payout" onclick="openPayoutReceipt()" style="cursor:pointer;background:rgba(220,38,38,0.015);">
               <td><div style="font-size:11px;color:var(--muted);">—</div></td>
+              <td><div style="font-weight:500;font-size:12.5px;">Payout · PayPal</div><div style="font-size:11px;color:var(--muted);">basharshaikhani@gmail.com</div></td>
               <td><div style="font-size:12px;">04 Apr 2026</div></td>
-              <td><div style="font-size:12px;color:var(--muted);">€840</div></td>
               <td><div style="font-weight:700;color:var(--red);">-€840</div></td>
               <td>
-                <span class="badge" style="background:rgba(5,150,105,0.10);color:#059669;white-space:nowrap;"><span class="bd" style="background:#059669;"></span>Paid Out</span>
+                <span class="badge" style="background:rgba(220,38,38,0.10);color:#DC2626;white-space:nowrap;"><span class="bd" style="background:#DC2626;"></span>Paid Out</span>
                 <div style="font-size:10px;color:var(--blue);margin-top:3px;font-weight:500;cursor:pointer;">View receipt →</div>
               </td>
             </tr>
-            <!-- Payout - Processing -->
-            <tr data-type="payout" data-status="payout" onclick="showSnack('Payout is being processed by admin…')">
-              <td><div style="font-weight:500;font-size:12.5px;">Payout · PayPal</div><div style="font-size:11px;color:var(--muted);">basharshaikhani@gmail.com</div></td>
-              <td><div style="font-size:12px;color:var(--muted);">—</div></td>
+            <tr data-type="payout" data-status="payout" onclick="showSnack('Payout is being processed by admin…')" style="cursor:pointer;background:rgba(220,38,38,0.015);">
               <td><div style="font-size:11px;color:var(--muted);">—</div></td>
+              <td><div style="font-weight:500;font-size:12.5px;">Payout · PayPal</div><div style="font-size:11px;color:var(--muted);">basharshaikhani@gmail.com</div></td>
               <td><div style="font-size:12px;">10 Apr 2026</div></td>
-              <td><div style="font-size:12px;color:var(--muted);">€120</div></td>
-              <td><div style="font-weight:700;color:var(--blue);">-€120</div></td>
-              <td><span class="badge" style="background:rgba(2,76,238,0.09);color:var(--blue);white-space:nowrap;"><span class="bd" style="background:var(--blue);"></span>Processing</span></td>
+              <td><div style="font-weight:700;color:var(--red);">-€120</div></td>
+              <td><span class="badge" style="background:rgba(220,38,38,0.10);color:#DC2626;white-space:nowrap;"><span class="bd" style="background:#DC2626;"></span>Paid Out</span></td>
             </tr>
           </tbody>
         </table>
@@ -935,10 +830,8 @@ tbody tr:last-child td{border-bottom:none;}
 
       <!-- SUMMARY ROW -->
       <div style="display:flex;gap:16px;padding:12px 0;border-top:1px solid var(--border);margin-top:4px;flex-wrap:wrap;">
-        <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);"><span style="width:8px;height:8px;border-radius:2px;background:rgba(217,119,6,0.5);display:inline-block;"></span>Awaiting: <strong style="color:var(--text);">€160</strong></div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);"><span style="width:8px;height:8px;border-radius:2px;background:rgba(2,76,238,0.4);display:inline-block;"></span>Pending Release: <strong style="color:var(--text);">€180</strong></div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);"><span style="width:8px;height:8px;border-radius:2px;background:rgba(5,150,105,0.5);display:inline-block;"></span>Balanced: <strong style="color:var(--text);">€405</strong></div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);"><span style="width:8px;height:8px;border-radius:2px;background:#e5e7eb;display:inline-block;"></span>Gross Total: <strong style="color:var(--text);">€996</strong></div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);"><span style="width:8px;height:8px;border-radius:2px;background:rgba(5,150,105,0.5);display:inline-block;"></span>Total Balanced: <strong style="color:var(--text);">€1,345</strong></div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);"><span style="width:8px;height:8px;border-radius:2px;background:rgba(220,38,38,0.5);display:inline-block;"></span>Payout Total: <strong style="color:var(--text);">-€960</strong></div>
         <div style="margin-left:auto;font-size:11.5px;color:var(--muted);">Showing 10 of 42 transactions</div>
       </div>
 
@@ -1324,6 +1217,22 @@ function filterTx(v){
   });
 }
 
+function sortTxTable(colIdx,th){
+  const tbody=document.getElementById('txBody');
+  const rows=[...tbody.querySelectorAll('tr')];
+  const isAsc=th.classList.contains('sort-asc');
+  document.querySelectorAll('thead th').forEach(h=>h.classList.remove('sort-asc','sort-desc'));
+  th.classList.add(isAsc?'sort-desc':'sort-asc');
+  rows.sort((a,b)=>{
+    const at=a.querySelectorAll('td')[colIdx]?.textContent.trim()||'';
+    const bt=b.querySelectorAll('td')[colIdx]?.textContent.trim()||'';
+    const an=parseFloat(at.replace(/[^0-9.]/g,'')),bn=parseFloat(bt.replace(/[^0-9.]/g,''));
+    const cmp=isNaN(an)||isNaN(bn)?at.localeCompare(bt):an-bn;
+    return isAsc?-cmp:cmp;
+  });
+  rows.forEach(r=>tbody.appendChild(r));
+}
+
 // PAYOUT RECEIPT MODAL
 function openPayoutReceipt(){document.getElementById('payoutReceiptModal').classList.add('open');}
 function closePayoutReceipt(e){
@@ -1338,6 +1247,59 @@ function toggleHelp(){
   const o=document.getElementById('helpOverlay'),p=document.getElementById('helpPanel');
   const open=p.classList.toggle('open');o.classList.toggle('open',open);
 }
+
+const allPayoutsData=[
+  {date:'25 Mar 2026',amount:'€840.00',method:'PayPal',account:'basharshaikhani@gmail.com',status:'Paid Out',statusColor:'#059669',statusBg:'rgba(5,150,105,0.10)'},
+  {date:'10 Apr 2026',amount:'€120.00',method:'PayPal',account:'Admin handling transfer',status:'Processing',statusColor:'var(--blue)',statusBg:'rgba(2,76,238,0.09)'},
+  {date:'25 Apr 2026',amount:'€25.00',method:'PayPal',account:'basharshaikhani@gmail.com',status:'Scheduled',statusColor:'var(--blue)',statusBg:'var(--bs)'},
+  {date:'25 Feb 2026',amount:'€1,200.00',method:'PayPal',account:'basharshaikhani@gmail.com',status:'Paid Out',statusColor:'#059669',statusBg:'rgba(5,150,105,0.10)'},
+  {date:'25 Jan 2026',amount:'€980.00',method:'PayPal',account:'basharshaikhani@gmail.com',status:'Paid Out',statusColor:'#059669',statusBg:'rgba(5,150,105,0.10)'},
+  {date:'25 Dec 2025',amount:'€760.00',method:'PayPal',account:'basharshaikhani@gmail.com',status:'Paid Out',statusColor:'#059669',statusBg:'rgba(5,150,105,0.10)'},
+];
+
+function openAllPayouts(){
+  const tbody=document.getElementById('allPayoutsTbody');
+  tbody.innerHTML=allPayoutsData.map(p=>`<tr style="border-bottom:1px solid var(--border);">
+    <td style="padding:10px 12px;font-size:12px;color:var(--text);white-space:nowrap;">${p.date}</td>
+    <td style="padding:10px 12px;font-size:12px;font-weight:600;color:var(--text);">${p.amount}</td>
+    <td style="padding:10px 12px;font-size:12px;color:var(--muted);">${p.method}</td>
+    <td style="padding:10px 12px;font-size:11.5px;color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${p.account}</td>
+    <td style="padding:10px 12px;"><span style="font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:20px;background:${p.statusBg};color:${p.statusColor};">${p.status}</span></td>
+  </tr>`).join('');
+  document.getElementById('allPayoutsModal').classList.add('open');
+}
+function closeAllPayouts(e){
+  if(!e||e.target===document.getElementById('allPayoutsModal'))
+    document.getElementById('allPayoutsModal').classList.remove('open');
+}
 </script>
+
+<!-- ALL PAYOUTS MODAL -->
+<div class="modal-overlay" id="allPayoutsModal" onclick="closeAllPayouts(event)" style="z-index:1100;">
+  <div class="modal" style="width:640px;max-width:calc(100vw - 32px);">
+    <div class="modal-head">
+      <div class="modal-title">All Payouts</div>
+      <div class="modal-close" onclick="closeAllPayouts()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+    </div>
+    <div class="modal-body" style="overflow-x:auto;padding-bottom:4px;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border);">
+            <th style="padding:8px 12px;font-size:11px;color:var(--muted);font-weight:600;text-align:left;white-space:nowrap;">Date</th>
+            <th style="padding:8px 12px;font-size:11px;color:var(--muted);font-weight:600;text-align:left;">Amount</th>
+            <th style="padding:8px 12px;font-size:11px;color:var(--muted);font-weight:600;text-align:left;">Method</th>
+            <th style="padding:8px 12px;font-size:11px;color:var(--muted);font-weight:600;text-align:left;">Account</th>
+            <th style="padding:8px 12px;font-size:11px;color:var(--muted);font-weight:600;text-align:left;">Status</th>
+          </tr>
+        </thead>
+        <tbody id="allPayoutsTbody"></tbody>
+      </table>
+    </div>
+    <div class="modal-foot" style="justify-content:flex-end;">
+      <button class="m-btn ghost" onclick="closeAllPayouts()">Close</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

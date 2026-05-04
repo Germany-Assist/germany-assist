@@ -7,6 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 
+.info-icon-wrap::after{content:attr(title);position:absolute;left:50%;transform:translateX(-50%);bottom:calc(100% + 7px);top:auto;background:#1F2937;color:#fff;font-size:0.72rem;font-family:'Outfit',sans-serif;font-weight:400;padding:7px 11px;border-radius:8px;white-space:normal;width:220px;line-height:1.5;pointer-events:none;opacity:0;transition:opacity 0.2s;z-index:999;text-align:left;}
+.info-icon-wrap:hover::after{opacity:1;}
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--blue:#024CEE;--sky:#49B7DF;--bl:#EBF1FD;--sl:#EAF7FC;--text:#111827;--muted:#6B7280;--border:#E5E7EB;--bg:#F9FAFB;--red:#DC2626;--green:#16A34A;}
 body{background:#fff;color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;}
@@ -221,7 +223,7 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
 .ms-opt input{accent-color:var(--blue);width:15px;height:15px;flex-shrink:0;cursor:pointer;}
 
 /* BADGE UPLOAD CARDS */
-.buc{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px;border:1.5px solid var(--border);border-radius:12px;background:#fff;margin-bottom:10px;transition:border-color 0.2s;}
+.buc{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px;border:1.5px solid var(--border);border-radius:12px;background:#fff;margin-bottom:10px;transition:border-color 0.2s;overflow:visible;}
 .buc:hover{border-color:#93b4f7;}
 .buc.uploaded{border-color:var(--green);background:#F0FFF4;}
 .buc-meta{display:flex;align-items:flex-start;gap:12px;flex:1;min-width:0;}
@@ -324,7 +326,7 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
               <div class="sub-card" onclick="selectSub(this,'office')">
                 <div class="sc-check">&#10003;</div>
                 <div class="sc-icon">🏛️</div>
-                <h4>Office / Organization</h4>
+                <h4>Company / Organization</h4>
                 <p>I represent a registered company, language school, agency, or organization with staff.</p>
               </div>
             </div>
@@ -379,7 +381,10 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
           <div class="field"><label>First Name <span class="req-star">*</span></label><input type="text" id="firstName" placeholder="Ahmed" oninput="checkReady()"></div>
           <div class="field"><label>Last Name <span class="req-star">*</span></label><input type="text" id="lastName" placeholder="Mohamed" oninput="checkReady()"></div>
         </div>
-        <div class="field">
+        <div class="field-note" style="margin-top:-10px;margin-bottom:14px;font-size:0.74rem;color:var(--muted);">
+          Enter your name exactly as it appears on your passport or official ID.
+        </div>
+        <div class="field" id="displayNameField">
           <label>Display Name <span class="req-star">*</span></label>
           <input type="text" id="displayName" placeholder="How you'll appear on the platform" oninput="checkReady()">
           <div class="field-note">This name will be shown publicly on your profile across the platform.</div>
@@ -452,7 +457,7 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
     <!-- PAGE 3: EXTRA -->
     <div class="page" id="page3">
       <button class="btn-back" onclick="sp('pageSkip',2.5)">&larr; Back</button>
-      <div class="page-title">Additional Details</div>
+      <div class="page-title" style="display:flex;align-items:center;gap:8px;">Additional Details <span title="These details help verify your profile and increase your visibility on the platform. All uploads are secure and reviewed by our team." style="cursor:pointer;display:inline-flex;align-items:center;color:var(--muted);position:relative;" class="info-icon-wrap"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v5M8 5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></div>
       <div class="page-sub">Upload your credentials to earn verified badges. Badges boost your visibility and build client trust. You can also complete this later from your profile.</div>
 
       <!-- PROFILE FIELDS -->
@@ -523,7 +528,7 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
           <div class="buc-meta">
             <div class="buc-icon">&#x1FA96;</div>
             <div>
-              <div class="buc-title">Passport or National ID <span class="buc-req-tag">Required</span></div>
+              <div class="buc-title">Passport or National ID <span class="buc-req-tag">Required</span> <span class="info-icon-wrap" title="Required for all providers to publish services on the platform." style="cursor:pointer;display:inline-flex;align-items:center;color:var(--muted);position:relative;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v5M8 5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></div>
               <div class="buc-desc">Required for all providers to publish services on the platform.</div>
             </div>
           </div>
@@ -539,7 +544,7 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
             <div class="buc-meta">
               <div class="buc-icon">&#x1F4CB;</div>
               <div>
-                <div class="buc-title">Business Registration <span class="buc-req-tag">Required for Office</span></div>
+                <div class="buc-title">Business Registration <span class="buc-req-tag">Required for Office</span> <span class="info-icon-wrap" title="Upload your official company registration document (PDF)." style="cursor:pointer;display:inline-flex;align-items:center;color:var(--muted);position:relative;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v5M8 5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></div>
                 <div class="buc-desc">Upload your official company registration document (PDF).</div>
               </div>
             </div>
@@ -695,7 +700,10 @@ function checkNext(){document.getElementById('nextBtn').disabled=!(actor&&(actor
 
 function goToPage2(){
   var isOffice=actor==='employer'||(actor==='provider'&&sub==='office');
-  var t={individual:'Individual Account',employer:'Employer Account',provider:sub==='freelancer'?'Freelancer Account':'Office / Organization Account'};
+  var isIndividual=actor==='individual'||(actor==='provider'&&sub==='freelancer');
+  var dnField=document.getElementById('displayNameField');
+  if(dnField)dnField.style.display=isIndividual?'none':'block';
+  var t={individual:'Individual Account',employer:'Employer Account',provider:sub==='freelancer'?'Freelancer Account':'Company / Organization Account'};
   var s={individual:'Free access · No transaction fees · Full platform access',employer:'Verified employer profile',provider:sub==='freelancer'?'Independent professional · Badge verification':'Company or organization · Business verification'};
   document.getElementById('formTitle').textContent=t[actor];
   document.getElementById('formSub').textContent=s[actor];
@@ -778,13 +786,15 @@ function checkReady(){
     pw=document.getElementById('pwInput').value,
     cpw=document.getElementById('cpwInput').value,
     terms=document.getElementById('termsCheck').checked;
+  var dnField=document.getElementById('displayNameField');
+  var dnOk=(dnField&&dnField.style.display==='none')||dn.length>0;
   var compOk=true;
   var compField=document.getElementById('companyNameField');
   if(compField && compField.style.display!=='none'){
     var cn=document.getElementById('companyName').value.trim();
     compOk=cn.length>0;
   }
-  var ready=fn&&ln&&dn&&country&&em&&ph&&pw.length>=8&&pw===cpw&&terms&&compOk;
+  var ready=fn&&ln&&dnOk&&country&&em&&ph&&pw.length>=8&&pw===cpw&&terms&&compOk;
   document.getElementById('submitBasicBtn').disabled=!ready;
 }
 function setupCode(){
@@ -946,7 +956,7 @@ function renderBadgeCards(){
         +'<div class="buc-meta">'
         +'<div class="buc-icon">'+c.icon+'</div>'
         +'<div>'
-        +'<div class="buc-title">'+c.title+' '+reqTag+' '+badgeTag+'</div>'
+        +'<div class="buc-title">'+c.title+' '+reqTag+' '+badgeTag+' <span class="info-icon-wrap" title="'+c.desc.replace(/"/g,"&quot;")+'" style="cursor:pointer;display:inline-flex;align-items:center;color:var(--muted);position:relative;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v5M8 5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></div>'
         +'<div class="buc-desc">'+c.desc+'</div>'
         +'</div></div>'
         +'<label class="buc-upload-btn"><input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="markUploaded(this)"><span>Upload</span></label>'
