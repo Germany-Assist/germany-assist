@@ -11,6 +11,13 @@ export const createUserValidators = [
     .withMessage(
       "First name can only contain letters, spaces, hyphens, and apostrophes",
     ),
+  body("phone")
+    .trim()
+    .isLength({ min: 7, max: 20 })
+    .withMessage("Phone number must be between 7 and 20 characters")
+    .matches(/^[0-9+()\-\s]*$/)
+    .withMessage("Phone number contains invalid characters"),
+  ,
   body("lastName")
     .trim()
     .notEmpty()
@@ -29,6 +36,11 @@ export const createUserValidators = [
     .withMessage("Invalid email format"),
   //TODO i disable email validation normalization to allow aliases for now
   // .normalizeEmail(),
+  body("nationality").trim().notEmpty().withMessage("Nationality is required"),
+  body("countryOfResidence")
+    .trim()
+    .notEmpty()
+    .withMessage("Country of residence is required"),
   body("password")
     .notEmpty()
     .withMessage("Password is required")

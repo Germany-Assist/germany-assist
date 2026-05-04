@@ -115,6 +115,16 @@ ServiceProvider.init(
         min: { args: [0], msg: "Total reviews cannot be negative" },
       },
     },
+    companyName: {
+      type: DataTypes.STRING(200),
+      allowNull: true,
+      validate: {
+        len: {
+          args: [3, 200],
+          msg: "Company name must be between 3 and 200 characters",
+        },
+      },
+    },
     owner: {
       type: DataTypes.VIRTUAL,
 

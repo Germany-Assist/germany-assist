@@ -11,7 +11,6 @@ import SectionHeader from "./SectionHeader";
 const initialFormData = {
   firstName: "",
   lastName: "",
-  displayName: "",
   email: "",
   phone: "",
   password: "",
@@ -29,7 +28,6 @@ const initialFormData = {
 const initialErrors = {
   firstName: "",
   lastName: "",
-  displayName: "",
   email: "",
   phone: "",
   password: "",
@@ -145,11 +143,6 @@ const BasicInfoForm = ({
       isValid = false;
     }
 
-    if (!formData.displayName.trim() && subRole !== "company") {
-      newErrors.displayName = "Display name is required";
-      isValid = false;
-    }
-
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
       isValid = false;
@@ -176,9 +169,11 @@ const BasicInfoForm = ({
       isValid = false;
     }
 
-    if (subRole === "company" && !formData.companyName.trim()) {
-      console.log(formData.companyName);
-      newErrors.companyName = "Company name is required";
+    if (role === "provider" && !formData.companyName.trim()) {
+      newErrors.companyName =
+        subRole === "company"
+          ? "Company name is required"
+          : "Display name is required";
       isValid = false;
     }
 
@@ -215,7 +210,6 @@ const BasicInfoForm = ({
     const data = {
       firstName: formData.firstName,
       lastName: formData.lastName,
-      displayName: formData.displayName,
       nationality: formData.nationality,
       email: formData.email,
       phone: formData.phone,
@@ -343,35 +337,29 @@ const BasicInfoForm = ({
             />
           </div>
         </div>
-        {role === "provider" && subRole === "company" ? (
-          <SectionHeader icon="🏢" title="Company Name" />
-        ) : (
-          <SectionHeader icon="🏢" title="Display Name" />
+        {role === "provider" &&
+          (role === "provider" && subRole === "company" ? (
+            <SectionHeader icon="🏢" title="Company Name" />
+          ) : (
+            <SectionHeader icon="🏢" title="Display Name" />
+          ))}
+        {role === "provider" && (
+          <div className="mb-2.5">
+            <FormInput
+              label={
+                role === "provider" && subRole === "company"
+                  ? "Company Name"
+                  : "Display Name"
+              }
+              value={formData.companyName}
+              onChange={(value) => updateField("companyName", value)}
+              placeholder="Company Name"
+              required
+              error={errors.companyName}
+              inputBaseStyle={inputBaseStyle}
+            />
+          </div>
         )}
-        <div className="mb-2.5">
-          <FormInput
-            label={
-              role === "provider" && subRole === "company"
-                ? `Company Name`
-                : `Display Name`
-            }
-            value={
-              formData[subRole === "company" ? "companyName" : "displayName"]
-            }
-            onChange={(value) => {
-              const field =
-                subRole === "company" ? "companyName" : "displayName";
-              updateField(field, value);
-            }}
-            placeholder="How you'll appear"
-            required
-            error={errors.displayName}
-            inputBaseStyle={inputBaseStyle}
-          />
-          <p className="text-[11px] text-[#6B7280] mt-1 ml-1">
-            This name will be shown publicly on your profile.
-          </p>
-        </div>
 
         {role === "provider" && (
           <div className="mb-2.5">

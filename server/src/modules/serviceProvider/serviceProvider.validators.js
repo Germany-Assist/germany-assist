@@ -15,12 +15,12 @@ export const createFreelancerValidator = [
     .isLength({ min: 1, max: 100 })
     .withMessage("Last name must be between 1 and 100 characters"),
 
-  body("displayName")
+  body("companyName")
     .trim()
     .notEmpty()
-    .withMessage("Display name is required")
-    .isLength({ min: 3, max: 100 })
-    .withMessage("Display name must be between 3 and 100 characters"),
+    .withMessage("Company name is required")
+    .isLength({ min: 2, max: 200 })
+    .withMessage("Company name must be between 2 and 200 characters"),
 
   body("email")
     .trim()
@@ -29,14 +29,13 @@ export const createFreelancerValidator = [
     .isEmail()
     .withMessage("Invalid email format")
     .normalizeEmail(),
-
   body("phone")
     .trim()
-    .notEmpty()
-    .withMessage("Phone number is required")
-    .matches(/^\+?[\d\s-]{10,}$/)
-    .withMessage("Invalid phone number"),
-
+    .isLength({ min: 7, max: 20 })
+    .withMessage("Phone number must be between 7 and 20 characters")
+    .matches(/^[0-9+()\-\s]*$/)
+    .withMessage("Phone number contains invalid characters"),
+  ,
   body("password")
     .trim()
     .notEmpty()

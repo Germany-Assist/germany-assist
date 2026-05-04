@@ -22,7 +22,7 @@ export const registerFreelancer = async (body, files) => {
     const {
       firstName,
       lastName,
-      displayName,
+      companyName,
       email,
       phone,
       password,
@@ -42,7 +42,7 @@ export const registerFreelancer = async (body, files) => {
     }
 
     const spData = {
-      name: displayName,
+      name: companyName,
       about: bio || "",
       description: bio || "",
       phoneNumber: phone,
@@ -71,7 +71,6 @@ export const registerFreelancer = async (body, files) => {
           nationality,
           countryOfResidence,
           phoneNumber: phone,
-          displayName,
         },
       },
       t,
@@ -140,7 +139,6 @@ export const registerCompany = async (body, files) => {
     const {
       firstName,
       lastName,
-      displayName,
       companyName,
       email,
       phone,
@@ -190,7 +188,6 @@ export const registerCompany = async (body, files) => {
           nationality,
           countryOfResidence,
           phoneNumber: phone,
-          displayName: companyName, //since we are using company name as display name,
         },
       },
       t,
