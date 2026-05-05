@@ -87,7 +87,7 @@ export const sanitizeServices = async (services = []) => {
       category: hashIdUtil.hashIdEncode(service.Subcategory.Category.id),
       subCategory: hashIdUtil.hashIdEncode(service.Subcategory.id),
       serviceProvider: service.ServiceProvider.name,
-      image: await resolveImageUrl(service.image[0]?.url),
+      image: await resolveImageUrl(service.assets[0]?.url),
       timelines: timelinesFormatter(service.timelines),
       variants: variantsFormatter(service.variants),
       status: service.status,
@@ -100,9 +100,8 @@ export const sanitizeServices = async (services = []) => {
 
 export const sanitizeServiceProfile = async (service) => {
   if (!service) return null;
-
   const assets = await Promise.all(
-    (service.Assets ?? []).map(
+    (service.assets ?? []).map(
       async ({ mediaType, key, confirmed, name, thumb, url }) => ({
         mediaType,
         key,

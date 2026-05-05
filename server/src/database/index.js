@@ -47,13 +47,6 @@ export const defineConstrains = () => {
   });
   VerificationRequest.belongsTo(User, { foreignKey: "userId" });
   User.hasMany(VerificationRequest, { foreignKey: "userId" });
-  VerificationRequest.hasMany(VerificationRequestAsset, {
-    foreignKey: "verificationRequestId",
-    as: "verificationRequestAssets",
-  });
-  VerificationRequestAsset.belongsTo(VerificationRequest, {
-    foreignKey: "verificationRequestId",
-  });
 
   Payout.belongsTo(Order, { foreignKey: "orderId" });
 
@@ -96,8 +89,6 @@ export const defineConstrains = () => {
   Post.hasMany(Asset, {
     foreignKey: "postId",
   });
-  Post.hasMany(PostAsset, { foreignKey: "postId", as: "postAssets" });
-  PostAsset.belongsTo(Post, { foreignKey: "postId" });
 
   Variant.belongsTo(Service, { foreignKey: "serviceId" });
   Variant.hasMany(Order, {
@@ -151,8 +142,6 @@ export const defineConstrains = () => {
     as: "profilePicture",
     scope: { key: "userImage", confirmed: true },
   });
-  User.hasMany(UserAsset, { foreignKey: "userId", as: "userAssets" });
-  UserAsset.belongsTo(User, { foreignKey: "userId" });
   User.hasMany(Review, { foreignKey: "userId" });
   User.hasOne(UserRole, { foreignKey: "userId" });
   User.hasMany(Favorite, { foreignKey: "userId" });
@@ -184,11 +173,6 @@ export const defineConstrains = () => {
   //service
   Service.hasMany(Order, { foreignKey: "serviceId" });
   Service.belongsTo(User, { foreignKey: "userId" });
-  Service.hasMany(ServiceAsset, {
-    foreignKey: "serviceId",
-    as: "serviceAssets",
-  });
-  ServiceAsset.belongsTo(Service, { foreignKey: "serviceId" });
   Service.hasMany(Review, { foreignKey: "serviceId" });
   Service.hasMany(Favorite, { foreignKey: "serviceId" });
   // Service.hasMany Timeline
@@ -223,20 +207,57 @@ export const defineConstrains = () => {
   });
 
   // Junction table relations
-  Asset.hasMany(PostAsset, { foreignKey: "assetId", as: "postAssets" });
-  PostAsset.belongsTo(Asset, { foreignKey: "assetId" });
-
-  Asset.hasMany(ServiceAsset, { foreignKey: "assetId", as: "serviceAssets" });
-  ServiceAsset.belongsTo(Asset, { foreignKey: "assetId" });
-
-  Asset.hasMany(UserAsset, { foreignKey: "assetId", as: "userAssets" });
-  UserAsset.belongsTo(Asset, { foreignKey: "assetId" });
-
-  Asset.hasMany(VerificationRequestAsset, {
+  Asset.belongsToMany(Post, {
+    through: PostAsset,
     foreignKey: "assetId",
-    as: "verificationRequestAssets",
+    otherKey: "postId",
+    as: "posts",
   });
-  VerificationRequestAsset.belongsTo(Asset, { foreignKey: "assetId" });
+  Post.belongsToMany(Asset, {
+    through: PostAsset,
+    foreignKey: "postId",
+    otherKey: "assetId",
+    as: "assets",
+  });
+
+  Asset.belongsToMany(Service, {
+    through: ServiceAsset,
+    foreignKey: "assetId",
+    otherKey: "serviceId",
+    as: "services",
+  });
+  Service.belongsToMany(Asset, {
+    through: ServiceAsset,
+    foreignKey: "serviceId",
+    otherKey: "assetId",
+    as: "assets",
+  });
+
+  Asset.belongsToMany(User, {
+    through: UserAsset,
+    foreignKey: "assetId",
+    otherKey: "userId",
+    as: "users",
+  });
+  User.belongsToMany(Asset, {
+    through: UserAsset,
+    foreignKey: "userId",
+    otherKey: "assetId",
+    as: "assets",
+  });
+
+  Asset.belongsToMany(VerificationRequest, {
+    through: VerificationRequestAsset,
+    foreignKey: "assetId",
+    otherKey: "verificationRequestId",
+    as: "verificationRequests",
+  });
+  VerificationRequest.belongsToMany(Asset, {
+    through: VerificationRequestAsset,
+    foreignKey: "verificationRequestId",
+    otherKey: "assetId",
+    as: "assets",
+  });
 
   //assetTypes
   AssetTypes.hasMany(Asset, { foreignKey: "key", targetKey: "key" });
