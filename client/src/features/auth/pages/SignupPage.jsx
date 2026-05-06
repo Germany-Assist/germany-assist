@@ -100,28 +100,13 @@ const SignupPage = () => {
       if (profileImage) formData.append("profileImage", profileImage);
     }
     if (additionalData.idDocument) {
-      const docArray = Array.isArray(additionalData.idDocument) 
-        ? additionalData.idDocument 
-        : [additionalData.idDocument];
-      docArray.forEach(file => {
-        if (file) formData.append("idDocument", file);
-      });
+      formData.append("idDocument", additionalData.idDocument);
     }
     if (additionalData.proofOfResidence) {
-      const proofArray = Array.isArray(additionalData.proofOfResidence) 
-        ? additionalData.proofOfResidence 
-        : [additionalData.proofOfResidence];
-      proofArray.forEach(file => {
-        if (file) formData.append("proofOfResidence", file);
-      });
+      formData.append("proofOfResidence", additionalData.proofOfResidence);
     }
     if (additionalData.businessRegistration) {
-      const bizArray = Array.isArray(additionalData.businessRegistration) 
-        ? additionalData.businessRegistration 
-        : [additionalData.businessRegistration];
-      bizArray.forEach(file => {
-        if (file) formData.append("businessRegistration", file);
-      });
+      formData.append("businessRegistration", additionalData.businessRegistration);
     }
     
     formData.append("role", role);
@@ -139,7 +124,7 @@ const SignupPage = () => {
           if (files) {
             const fileArray = Array.isArray(files) ? files : [files];
             fileArray.forEach((file, index) => {
-              formData.append(`category_${catId}`, file);
+              formData.append("categoryFiles", file);
             });
           }
         });

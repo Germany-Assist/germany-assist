@@ -11,9 +11,9 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete }) => {
     bio: "",
     categories: [],
     categoryUploads: {},
-    idDocument: [],
-    proofOfResidence: [],
-    businessRegistration: [],
+    idDocument: null,
+    proofOfResidence: null,
+    businessRegistration: null,
   });
 
   const inputBaseStyle =
@@ -257,11 +257,11 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete }) => {
               subtitle="Required for all providers to publish services on the platform. Upload a clear photo or scan — PDF, JPG, or PNG."
               badge
               badgeText="Required"
-              files={formData.idDocument}
-              onUpload={(files) => updateField("idDocument", files)}
-              onRemove={() => updateField("idDocument", [])}
+              files={formData.idDocument ? [formData.idDocument] : []}
+              onUpload={(files) => updateField("idDocument", files?.[0] || null)}
+              onRemove={() => updateField("idDocument", null)}
               accept=".pdf,.jpg,.jpeg,.png"
-              multiple={true}
+              multiple={false}
             />
 
             {role === "provider" && (
@@ -271,11 +271,11 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete }) => {
                 subtitle="Document proving your current address."
                 badge
                 badgeText="Optional"
-                files={formData.proofOfResidence}
-                onUpload={(files) => updateField("proofOfResidence", files)}
-                onRemove={() => updateField("proofOfResidence", [])}
+                files={formData.proofOfResidence ? [formData.proofOfResidence] : []}
+                onUpload={(files) => updateField("proofOfResidence", files?.[0] || null)}
+                onRemove={() => updateField("proofOfResidence", null)}
                 accept=".pdf,.jpg,.jpeg,.png"
-                multiple={true}
+                multiple={false}
               />
             )}
 
@@ -286,11 +286,11 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete }) => {
                 subtitle="Upload your official company registration document (Gewerbeanmeldung or equivalent) as PDF."
                 badge
                 badgeText="Required for Company"
-                files={formData.businessRegistration}
-                onUpload={(files) => updateField("businessRegistration", files)}
-                onRemove={() => updateField("businessRegistration", [])}
+                files={formData.businessRegistration ? [formData.businessRegistration] : []}
+                onUpload={(files) => updateField("businessRegistration", files?.[0] || null)}
+                onRemove={() => updateField("businessRegistration", null)}
                 accept=".pdf"
-                multiple={true}
+                multiple={false}
               />
             )}
           </div>

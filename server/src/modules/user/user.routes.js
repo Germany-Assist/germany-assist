@@ -12,6 +12,9 @@ userRouter.post(
   multerUpload.fields([
     { name: "profileImage", maxCount: 1 },
     { name: "idDocument", maxCount: 1 },
+    { name: "proofOfResidence", maxCount: 1 },
+    { name: "businessRegistration", maxCount: 1 },
+    { name: "categoryFiles", maxCount: 24 },
   ]),
   createUserValidators,
   validateExpress,
