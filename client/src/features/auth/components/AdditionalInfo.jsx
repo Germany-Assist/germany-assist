@@ -283,7 +283,7 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete }) => {
               <FileUpload
                 icon="📋"
                 title="Business Registration"
-                subtitle="Upload your official company registration document (PDF)."
+                subtitle="Upload your official company registration document (Gewerbeanmeldung or equivalent) as PDF."
                 badge
                 badgeText="Required for Company"
                 files={formData.businessRegistration}
