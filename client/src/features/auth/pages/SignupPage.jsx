@@ -35,7 +35,10 @@ const SignupPage = () => {
   };
 
   const handleSkipPage = async (additionalData = {}) => {
-    if (!basicInfoData) return;
+    if (!basicInfoData) {
+      setError("Please complete the previous step first.");
+      return;
+    }
     
     const formData = new FormData();
     
@@ -51,7 +54,10 @@ const SignupPage = () => {
     }
     
     if (additionalData.profileImage) {
-      formData.append("profileImage", additionalData.profileImage);
+      const profileImage = Array.isArray(additionalData.profileImage) 
+        ? additionalData.profileImage[0] 
+        : additionalData.profileImage;
+      if (profileImage) formData.append("profileImage", profileImage);
     }
     
     setEmail(formData.get("email"));
@@ -88,16 +94,34 @@ const SignupPage = () => {
     });
     
     if (additionalData.profileImage) {
-      formData.append("profileImage", additionalData.profileImage);
+      const profileImage = Array.isArray(additionalData.profileImage) 
+        ? additionalData.profileImage[0] 
+        : additionalData.profileImage;
+      if (profileImage) formData.append("profileImage", profileImage);
     }
     if (additionalData.idDocument) {
-      formData.append("idDocument", additionalData.idDocument);
+      const docArray = Array.isArray(additionalData.idDocument) 
+        ? additionalData.idDocument 
+        : [additionalData.idDocument];
+      docArray.forEach(file => {
+        if (file) formData.append("idDocument", file);
+      });
     }
     if (additionalData.proofOfResidence) {
-      formData.append("proofOfResidence", additionalData.proofOfResidence);
+      const proofArray = Array.isArray(additionalData.proofOfResidence) 
+        ? additionalData.proofOfResidence 
+        : [additionalData.proofOfResidence];
+      proofArray.forEach(file => {
+        if (file) formData.append("proofOfResidence", file);
+      });
     }
     if (additionalData.businessRegistration) {
-      formData.append("businessRegistration", additionalData.businessRegistration);
+      const bizArray = Array.isArray(additionalData.businessRegistration) 
+        ? additionalData.businessRegistration 
+        : [additionalData.businessRegistration];
+      bizArray.forEach(file => {
+        if (file) formData.append("businessRegistration", file);
+      });
     }
     
     formData.append("role", role);
@@ -111,9 +135,12 @@ const SignupPage = () => {
       
       if (additionalData.categoryUploads) {
         Object.keys(additionalData.categoryUploads).forEach((catId) => {
-          const file = additionalData.categoryUploads[catId];
-          if (file) {
-            formData.append(`category_${catId}`, file);
+          const files = additionalData.categoryUploads[catId];
+          if (files) {
+            const fileArray = Array.isArray(files) ? files : [files];
+            fileArray.forEach((file, index) => {
+              formData.append(`category_${catId}`, file);
+            });
           }
         });
       }

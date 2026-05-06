@@ -18,8 +18,12 @@ const TermsCheckbox = ({ checked, onChange, error }) => {
         {checked && "✓"}
       </span>
       <div className="text-sm text-[#6B7280]">
-        I agree to the <span className="text-[#024CEE] font-medium">Terms</span>{" "}
-        and <span className="text-[#024CEE] font-medium">Privacy Policy</span>.
+        I agree to{" "}
+        <span className="text-[#024CEE] font-medium">Terms of Service</span> and{" "}
+        the and{" "}
+        <span className="text-[#024CEE] font-medium">Privacy Policy</span>,
+        including the Internal Communication Only policy and escrow transaction
+        rules.
       </div>
       {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
     </div>

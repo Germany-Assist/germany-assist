@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import FileUpload from "./FileUpload";
 
 const CATEGORIES = [
   {
@@ -9,19 +8,25 @@ const CATEGORIES = [
     icon: "🇩🇪",
     requirements: [
       {
+        icon: "📜",
         title: "Teaching Certificate",
-        description: "Are you a Goethe/TELC/TestDaF teacher? Upload your teaching certificate to earn the 'Certified Teacher' or 'Certified Examiner' badge.",
         badge: "Certified Teacher / Certified Examiner",
+        description:
+          'Are you a Goethe/TELC/TestDaF teacher? Upload your teaching certificate to earn the "Certified Teacher" or "Certified Examiner" badge.',
       },
       {
+        icon: "🎓",
         title: "Germanistics Degree",
-        description: "Do you have a University Degree in Germanistics? Upload it to earn the 'Expert Teacher' badge.",
         badge: "Expert Teacher",
+        description:
+          'Do you have a University Degree in Germanistics? Upload it to earn the "Expert Teacher" badge.',
       },
       {
-        title: "Native Speaker Certificate",
-        description: "Are you a native German speaker? Upload your passport or ID to earn the 'Native Speaker' badge.",
-        badge: "Native Speaker",
+        icon: "🏫",
+        title: "Exam Center Accreditation",
+        badge: "Certified Exam Center",
+        description:
+          'Are you an Official Exam Center? Upload your Exam Center Accreditation to be listed as a "Certified Exam Center." Required to publish.',
       },
     ],
   },
@@ -32,14 +37,18 @@ const CATEGORIES = [
     icon: "💼",
     requirements: [
       {
-        title: "Coaching Certification",
-        description: "Do you have an ICF, CCA, or equivalent coaching certification? Upload it to earn the 'Certified Coach' badge.",
+        icon: "🏅",
+        title: "Coaching Credentials (ICF, EMCC, or similar)",
         badge: "Certified Coach",
+        description:
+          'Are you a Professional Coach? Upload your credentials to earn the "Certified Coach" badge.',
       },
       {
-        title: "HR Experience",
-        description: "Do you have 2+ years of HR or recruitment experience? Upload your CV or employment letter.",
-        badge: "Senior Career Advisor",
+        icon: "📊",
+        title: "Anonymized Case Studies / Proof of Experience",
+        badge: "German Market Expert",
+        description:
+          'Expert in the German Market? Upload anonymized case studies or proof of experience to earn the "German Market Expert" badge.',
       },
     ],
   },
@@ -50,14 +59,18 @@ const CATEGORIES = [
     icon: "📝",
     requirements: [
       {
-        title: "Translator License",
-        description: "Are you a certified translator? Upload your license or certification.",
+        icon: "📝",
+        title: "Translation Degree",
         badge: "Certified Translator",
+        description:
+          'General Translator? Upload your degree to earn the "Certified Translator" badge.',
       },
       {
-        title: "Language Certificates",
-        description: "Upload your C1/C2 proficiency certificates for relevant languages.",
-        badge: "Expert Linguist",
+        icon: "⚖️",
+        title: "Court Appointment (Bestallungsurkunde) + Official Stamp",
+        badge: "Sworn Translator",
+        description:
+          'Sworn Translator? Upload your Court Appointment and Official Stamp. Required to be verified and published as a "Sworn Translator."',
       },
     ],
   },
@@ -68,14 +81,18 @@ const CATEGORIES = [
     icon: "🤝",
     requirements: [
       {
-        title: "Agency Registration",
-        description: "Is your recruitment agency officially registered? Upload your business registration.",
-        badge: "Licensed Agency",
+        icon: "💼",
+        title: "Track Record or Portfolio",
+        badge: "Certified Recruiter",
+        description:
+          'Individual Recruiter? Upload your track record or portfolio to earn the "Certified Recruiter" badge.',
       },
       {
-        title: "Client References",
-        description: "Do you have active client contracts or references? Upload proof of placements.",
-        badge: "Trusted Partner",
+        icon: "🏢",
+        title: "Recruitment License",
+        badge: "Licensed Agency",
+        description:
+          'Are you an Agency? Upload your Recruitment License to publish your agency profile and earn the "Licensed Agency" badge.',
       },
     ],
   },
@@ -86,14 +103,11 @@ const CATEGORIES = [
     icon: "✈️",
     requirements: [
       {
-        title: "Legal Consultant License",
-        description: "Are you a licensed attorney or immigration consultant? Upload your license or bar membership.",
-        badge: "Licensed Consultant",
-      },
-      {
-        title: "Professional Insurance",
-        description: "Do you have professional liability insurance? Upload your policy document.",
-        badge: "Insured Professional",
+        icon: "✅",
+        title: 'Anonymized "Visa Granted" Documents',
+        badge: "Certified Consultant",
+        description:
+          'Have a high success rate? Upload anonymized "Visa Granted" documents to earn the "Certified Consultant" badge and build client trust.',
       },
     ],
   },
@@ -104,14 +118,11 @@ const CATEGORIES = [
     icon: "🏅",
     requirements: [
       {
-        title: "Anerkennung Experience",
-        description: "Have you successfully helped with certificate recognition (Anerkennung)? Upload case documentation.",
+        icon: "🏥",
+        title: "Successful Defizitbescheid or Approbation Cases",
         badge: "Recognition Expert",
-      },
-      {
-        title: "Educational Background",
-        description: "Upload your educational certificates related to the field.",
-        badge: "Qualified Specialist",
+        description:
+          'Expert in Medical or Engineering Recognition? Upload successful "Defizitbescheid" or "Approbation" cases to earn the "Recognition Expert" badge.',
       },
     ],
   },
@@ -122,14 +133,18 @@ const CATEGORIES = [
     icon: "🎓",
     requirements: [
       {
-        title: "University Partnership",
-        description: "Do you have a partnership agreement with German universities? Upload the agreement.",
-        badge: "University Partner",
+        icon: "🎓",
+        title: "Proof of Student Placements",
+        badge: "Admission Expert",
+        description:
+          'Successful Admission History? Upload proof of student placements to earn the "Admission Expert" badge.',
       },
       {
-        title: "Agent Registration",
-        description: "Are you a registered education agent? Upload your registration document.",
-        badge: "Registered Agent",
+        icon: "📄",
+        title: "C1 / TestDaF Certificate",
+        badge: "Academic Language Expert",
+        description:
+          "Advanced German Skills? Upload your C1/TestDaF certificate to show clients you understand academic requirements.",
       },
     ],
   },
@@ -140,21 +155,25 @@ const CATEGORIES = [
     icon: "🏠",
     requirements: [
       {
-        title: "Relocation Certification",
-        description: "Do you have relocation specialist certification? Upload your certificate.",
-        badge: "Certified Relocation Expert",
-      },
-      {
-        title: "German Presence",
-        description: "Do you have an office or partner in Germany? Upload proof of presence.",
-        badge: "Local Expert",
+        icon: "📍",
+        title: "Proof of Local Residency or Anmeldung Experience",
+        badge: "Local Relocation Expert",
+        description:
+          'Local Expert? Upload proof of your local residency or experience in city registration (Anmeldung) to earn the "Local Relocation Expert" badge.',
       },
     ],
   },
 ];
 
-const CategorySelect = ({ selectedCategories, onChange }) => {
+const MAX_FILES_PER_CATEGORY = 3;
+
+const CategorySelect = ({
+  selectedCategories,
+  onChange,
+  onValidationChange,
+}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [categoryFiles, setCategoryFiles] = useState({});
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -167,29 +186,81 @@ const CategorySelect = ({ selectedCategories, onChange }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (onValidationChange) {
+      const hasFiles = Object.values(categoryFiles).some(
+        (files) => files && files.length > 0,
+      );
+      onValidationChange(hasFiles || selectedCategories.length === 0);
+    }
+  }, [categoryFiles, selectedCategories, onValidationChange]);
+
   const toggleCategory = (categoryId) => {
     const newCategories = selectedCategories.includes(categoryId)
       ? selectedCategories.filter((c) => c !== categoryId)
       : [...selectedCategories, categoryId];
     onChange(newCategories);
+
+    if (!selectedCategories.includes(categoryId)) {
+      setCategoryFiles((prev) => ({ ...prev, [categoryId]: [] }));
+    } else {
+      setCategoryFiles((prev) => {
+        const newFiles = { ...prev };
+        delete newFiles[categoryId];
+        return newFiles;
+      });
+    }
   };
 
   const getCategoryById = (id) => CATEGORIES.find((c) => c.id === id);
 
-  const getSelectedCategoryData = () => 
+  const getSelectedCategoryData = () =>
     selectedCategories.map((id) => getCategoryById(id)).filter(Boolean);
 
-  const handleUpload = (categoryId, requirementTitle, file) => {
-    onChange(selectedCategories, { categoryId, requirementTitle, file });
+  const handleFileUpload = (categoryId, event) => {
+    const files = Array.from(event.target.files);
+    const currentFiles = categoryFiles[categoryId] || [];
+
+    if (currentFiles.length + files.length > MAX_FILES_PER_CATEGORY) {
+      alert(`Maximum ${MAX_FILES_PER_CATEGORY} files allowed per category`);
+      return;
+    }
+
+    const newFiles = [...currentFiles, ...files].slice(
+      0,
+      MAX_FILES_PER_CATEGORY,
+    );
+    setCategoryFiles((prev) => ({ ...prev, [categoryId]: newFiles }));
+
+    onChange(selectedCategories, { categoryId, files: newFiles });
+  };
+
+  const removeFile = (categoryId, fileIndex) => {
+    const currentFiles = categoryFiles[categoryId] || [];
+    const newFiles = currentFiles.filter((_, index) => index !== fileIndex);
+    setCategoryFiles((prev) => ({ ...prev, [categoryId]: newFiles }));
+    onChange(selectedCategories, { categoryId, files: newFiles });
+  };
+
+  const formatFileSize = (bytes) => {
+    const kb = Math.round(bytes / 1024);
+    return `${kb} KB`;
+  };
+
+  const getFileExtension = (filename) => {
+    return filename.split(".").pop().toUpperCase();
   };
 
   return (
     <div>
       <div className="relative" ref={dropdownRef}>
         <label className="block text-sm font-medium text-[#111827] mb-2">
-          Main Category <span className="text-[#6B7280] font-normal text-xs">(choose one or more)</span>
+          Main Category{" "}
+          <span className="text-[#6B7280] font-normal text-xs">
+            (choose one or more)
+          </span>
         </label>
-        
+
         <div
           className="flex items-center justify-between px-3 py-2.5 border-2 border-[#E5E7EB] rounded-xl bg-white cursor-pointer transition-colors hover:border-[#024CEE] focus:border-[#024CEE] focus:shadow-[0_0_0_3px_rgba(2,76,238,0.07)]"
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -211,7 +282,9 @@ const CategorySelect = ({ selectedCategories, onChange }) => {
               })
             )}
           </div>
-          <span className={`text-[#6B7280] text-xs transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}>
+          <span
+            className={`text-[#6B7280] text-xs transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
+          >
             ▼
           </span>
         </div>
@@ -240,74 +313,137 @@ const CategorySelect = ({ selectedCategories, onChange }) => {
       {selectedCategories.length > 0 && (
         <div className="mt-5">
           <div className="text-xs font-semibold text-[#6B7280] uppercase tracking-wider mb-3 pb-2 border-b border-[#E5E7EB]">
-            🏅 Credentials to Upload — earn verified badges · PDF, JPG, PNG · max 5MB
+            🏅 Credentials to Upload{" "}
+            <span className="font-normal text-[#9CA3AF] text-[10px]">
+              — earn verified badges · PDF, JPG, PNG · max 5MB
+            </span>
           </div>
-          
+
           <div className="bg-[#EBF1FD] border border-blue-100 rounded-lg p-3 mb-4">
             <p className="text-sm text-[#6B7280] leading-relaxed">
-              🏅 Upload your credentials to earn badges on your public profile. The more you verify, the higher you rank in search results.
+              🏅 Upload your credentials to earn badges on your public profile.
+              The more you verify, the higher you rank in search results.
             </p>
           </div>
 
           <div className="space-y-4">
-            {getSelectedCategoryData().map((category) => (
-              <div
-                key={category.id}
-                className="border-2 border-[#E5E7EB] rounded-xl overflow-hidden"
-              >
-                <div className="bg-[#F9FAFB] px-4 py-3 border-b border-[#E5E7EB] flex items-center gap-3">
-                  <span className="text-xl">{category.icon}</span>
-                  <span className="text-sm font-bold text-[#111827]">{category.title}</span>
-                </div>
-                
-                <div className="p-4">
-                  <div className="text-xs font-semibold text-[#6B7280] uppercase tracking-wider mb-3">
-                    Accepted credentials & files
-                  </div>
-                  
-                  <ul className="space-y-3 mb-4">
-                    {category.requirements.map((req, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-2 flex-shrink-0" />
-                        <div className="flex-1">
-                          <div className="text-sm font-semibold text-[#111827]">
-                            {req.icon} {req.title}
-                            <span className="text-xs font-semibold ml-2 px-1.5 py-0.5 rounded-full bg-[#EBF1FD] text-[#024CEE] border border-blue-200">
-                              🏅 {req.badge}
-                            </span>
-                          </div>
-                          <div className="text-xs text-[#6B7280] mt-0.5 leading-relaxed">
-                            {req.description}
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+            {getSelectedCategoryData().map((category) => {
+              const files = categoryFiles[category.id] || [];
+              const hasFiles = files.length > 0;
 
-                  <div
-                    className="border-2 border-dashed border-[#E5E7EB] rounded-lg p-4 text-center cursor-pointer hover:border-[#024CEE] hover:bg-[#EBF1FD] transition-all"
-                    onClick={() => document.getElementById(`upload_${category.id}`)?.click()}
-                  >
-                    <input
-                      type="file"
-                      id={`upload_${category.id}`}
-                      className="hidden"
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      multiple
-                      onChange={(e) => {
-                        const files = Array.from(e.target.files);
-                        if (files.length > 0) {
-                          handleUpload(category.id, "multiple", files[0]);
-                        }
-                      }}
-                    />
-                    <div className="text-xl mb-1">📎</div>
-                    <div className="text-sm font-medium text-[#024CEE]">Click to upload files</div>
-                    <div className="text-xs text-[#9CA3AF] mt-1">PDF, JPG, PNG · multiple files allowed · max 5MB each</div>
+              return (
+                <div
+                  key={category.id}
+                  className={`border-2 rounded-xl overflow-hidden ${hasFiles ? "border-green-500 bg-green-50" : "border-[#E5E7EB]"}`}
+                >
+                  <div className="bg-[#F9FAFB] px-4 py-3 border-b border-[#E5E7EB] flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">{category.icon}</span>
+                      <span className="text-sm font-bold text-[#111827]">
+                        {category.title}
+                      </span>
+                    </div>
+                    {hasFiles && (
+                      <span className="text-xs text-green-600 font-medium">
+                        ✓ {files.length} file(s) uploaded
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="p-4">
+                    <div className="text-xs font-semibold text-[#6B7280] uppercase tracking-wider mb-3">
+                      Accepted credentials & files
+                    </div>
+
+                    <ul className="space-y-3 mb-4">
+                      {category.requirements.map((req, idx) => (
+                        <li key={idx} className="flex items-start gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-2 flex-shrink-0" />
+                          <div className="flex-1">
+                            <div className="text-sm font-semibold text-[#111827]">
+                              {req.icon} {req.title}
+                              <span className="text-xs font-semibold ml-2 px-1.5 py-0.5 rounded-full bg-[#EBF1FD] text-[#024CEE] border border-blue-200">
+                                🏅 {req.badge}
+                              </span>
+                            </div>
+                            <div className="text-xs text-[#6B7280] mt-0.5 leading-relaxed">
+                              {req.description}
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div>
+                      <input
+                        type="file"
+                        id={`upload_${category.id}`}
+                        className="hidden"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        multiple
+                        onChange={(e) => handleFileUpload(category.id, e)}
+                        disabled={files.length >= MAX_FILES_PER_CATEGORY}
+                      />
+
+                      {files.length === 0 ? (
+                        <label
+                          htmlFor={`upload_${category.id}`}
+                          className="border-2 border-dashed border-[#E5E7EB] rounded-lg p-4 text-center cursor-pointer hover:border-[#024CEE] hover:bg-[#EBF1FD] transition-all block"
+                        >
+                          <div className="text-xl mb-1">📎</div>
+                          <div className="text-sm font-medium text-[#024CEE]">
+                            Click to upload files
+                          </div>
+                          <div className="text-xs text-[#9CA3AF] mt-1">
+                            PDF, JPG, PNG · max 5MB each
+                          </div>
+                        </label>
+                      ) : (
+                        <div className="space-y-2">
+                          {files.map((file, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center gap-2 p-2 border border-[#E5E7EB] rounded-lg bg-white"
+                            >
+                              <div className="w-8 h-8 rounded-lg bg-[#EBF1FD] border border-blue-200 flex items-center justify-center text-xs font-bold text-[#024CEE]">
+                                {getFileExtension(file.name)}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-sm font-medium text-[#111827] truncate">
+                                  {file.name}
+                                </div>
+                                <div className="text-xs text-[#9CA3AF]">
+                                  {formatFileSize(file.size)}
+                                </div>
+                              </div>
+                              <div className="text-green-500 text-sm">✓</div>
+                              <button
+                                type="button"
+                                onClick={() => removeFile(category.id, index)}
+                                className="text-[#9CA3AF] hover:text-red-500 text-sm px-1"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          ))}
+
+                          {files.length < MAX_FILES_PER_CATEGORY && (
+                            <label
+                              htmlFor={`upload_${category.id}`}
+                              className="border-2 border-dashed border-[#E5E7EB] rounded-lg p-3 text-center cursor-pointer hover:border-[#024CEE] hover:bg-[#EBF1FD] transition-all block"
+                            >
+                              <div className="text-sm font-medium text-[#024CEE]">
+                                + Add more files
+                              </div>
+                            </label>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

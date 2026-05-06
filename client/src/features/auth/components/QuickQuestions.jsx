@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 
-const QuickQuestions = ({ role, subRole, onRoleChange, onSubRoleChange, onContinue }) => {
+const QuickQuestions = ({
+  role,
+  subRole,
+  onRoleChange,
+  onSubRoleChange,
+  onContinue,
+}) => {
   const [step, setStep] = useState(1);
 
   const goalOptions = [
@@ -48,28 +54,34 @@ const QuickQuestions = ({ role, subRole, onRoleChange, onSubRoleChange, onContin
     individual: {
       icon: "🎯",
       role: "Individual Account",
-      desc: "Get free access to verified jobs, scholarships, language courses, and full relocation guidance.",
-      tags: ["Job Seeker", "Student", "Scholarship", "Relocation"],
+      desc: "Free access to verified job listings, scholarships, university programmes, and full relocation guidance.",
+      tags: [
+        "Job Seeker",
+        "Student",
+        "Scholarship",
+        "Ausbildung",
+        "Chance Card",
+      ],
     },
     provider: {
       freelancer: {
         icon: "🧑‍💻",
         role: "Freelance Service Provider",
-        desc: "Offer your services independently — coaching, translation, visa consulting, and more.",
-        tags: ["Individual", "Verified Badges", "20% Fee on Earnings"],
+        desc: "Step-by-step guidance for visa applications, language courses, certificate recognition, and everything you need to settle in Germany.",
+        tags: ["Visa Help", "Language Course", "Recognition", "Relocation"],
       },
       company: {
         icon: "🏛️",
-        role: "Company Service Provider",
-        desc: "Represent a registered company, language school, agency, or organisation.",
-        tags: ["Organization", "Verified Badges", "20% Fee on Earnings"],
+        role: "Service Provider — Company",
+        desc: "Register your organisation, upload your credentials, and connect with clients looking for certified agencies and language schools.",
+        tags: ["Language School", "Agency", "Recruitment", "Organisation"],
       },
     },
     relocate: {
       icon: "✈️",
       role: "Individual Account",
-      desc: "Get help with visa, language courses, certificate recognition, and full relocation support.",
-      tags: ["Relocation", "Visa Help", "Language Courses"],
+      desc: "Step-by-step guidance for visa applications, language courses, certificate recognition, and everything you need to settle in Germany.",
+      tags: ["Visa Help", "Language Course", "Recognition", "Relocation"],
     },
   };
 
@@ -107,7 +119,8 @@ const QuickQuestions = ({ role, subRole, onRoleChange, onSubRoleChange, onContin
             Let's get you set up 👋
           </div>
           <div className="text-sm text-[#6B7280] mb-5">
-            Answer a few quick questions and we'll take you to the right signup — takes under 30 seconds.
+            Answer a few quick questions and we'll take you to the right signup
+            — takes under 30 seconds.
           </div>
           <div className="text-xs font-semibold text-[#6B7280] uppercase tracking-wider mb-3">
             What's your main goal on Germany Assists?
@@ -126,7 +139,9 @@ const QuickQuestions = ({ role, subRole, onRoleChange, onSubRoleChange, onContin
                   {option.icon}
                 </div>
                 <div className="flex-1">
-                  <div className="text-base font-bold text-[#111827] mb-1">{option.title}</div>
+                  <div className="text-base font-bold text-[#111827] mb-1">
+                    {option.title}
+                  </div>
                   <p className="text-sm text-[#6B7280]">{option.desc}</p>
                 </div>
                 <div className="w-5 h-5 rounded-full border-2 border-[#E5E7EB] flex-shrink-0 mt-1" />
@@ -140,7 +155,7 @@ const QuickQuestions = ({ role, subRole, onRoleChange, onSubRoleChange, onContin
         <div className="fade-in">
           <button
             onClick={() => setStep(1)}
-            className="flex items-center gap-1.5 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-5"
+            className="flex items-center p-4 gap-1.5 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-5"
           >
             ← Back
           </button>
@@ -167,7 +182,9 @@ const QuickQuestions = ({ role, subRole, onRoleChange, onSubRoleChange, onContin
                   {option.icon}
                 </div>
                 <div className="flex-1">
-                  <div className="text-base font-bold text-[#111827] mb-1">{option.title}</div>
+                  <div className="text-base font-bold text-[#111827] mb-1">
+                    {option.title}
+                  </div>
                   <p className="text-sm text-[#6B7280]">{option.desc}</p>
                 </div>
                 <div className="w-5 h-5 rounded-full border-2 border-[#E5E7EB] flex-shrink-0 mt-1" />
@@ -187,23 +204,25 @@ const QuickQuestions = ({ role, subRole, onRoleChange, onSubRoleChange, onContin
                 setStep(1);
               }
             }}
-            className="flex items-center gap-1.5 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-5"
+            className="flex items-center p-4 gap-1.5 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-5"
           >
             ← Back
           </button>
           <div className="text-[1.375rem] font-bold text-[#111827] mb-1">
-            Ready to create your account
+            Perfect match found ✅
           </div>
           <div className="text-sm text-[#6B7280] mb-5">
-            You've selected the right path for your goals.
+            Based on your answers, here's the account type we'll create for you:
           </div>
-          <div
-            className="bg-[#EBF1FD] border-2 border-[#024CEE] rounded-2xl p-5 mb-5 flex items-start gap-4"
-          >
+          <div className="bg-[#EBF1FD] border-2 border-[#024CEE] rounded-2xl p-5 mb-5 flex items-start gap-4">
             <div className="text-3xl flex-shrink-0">{getResultData().icon}</div>
             <div>
-              <div className="text-base font-bold text-[#111827] mb-1">{getResultData().role}</div>
-              <p className="text-sm text-[#6B7280] leading-relaxed mb-3">{getResultData().desc}</p>
+              <div className="text-base font-bold text-[#111827] mb-1">
+                {getResultData().role}
+              </div>
+              <p className="text-sm text-[#6B7280] leading-relaxed mb-3">
+                {getResultData().desc}
+              </p>
               <div className="flex flex-wrap gap-1.5">
                 {getResultData().tags.map((tag) => (
                   <span
@@ -224,7 +243,7 @@ const QuickQuestions = ({ role, subRole, onRoleChange, onSubRoleChange, onContin
           </button>
           <button
             onClick={() => setStep(1)}
-            className="w-full py-2.75 mt-2 rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827]"
+            className="w-full p-4 py-2.75 mt-2 rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827]"
           >
             ← That's not me, start over
           </button>

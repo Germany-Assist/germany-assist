@@ -91,11 +91,13 @@ const BasicInfoForm = ({
     switch (field) {
       case "firstName":
         if (!value.trim()) error = "First name is required";
-        else if (!validateName(value)) error = "Only letters, spaces, hyphens, and apostrophes allowed";
+        else if (!validateName(value))
+          error = "Only letters, spaces, hyphens, and apostrophes allowed";
         break;
       case "lastName":
         if (!value.trim()) error = "Last name is required";
-        else if (!validateName(value)) error = "Only letters, spaces, hyphens, and apostrophes allowed";
+        else if (!validateName(value))
+          error = "Only letters, spaces, hyphens, and apostrophes allowed";
         break;
       case "email":
         if (!value.trim()) error = "Email is required";
@@ -107,11 +109,13 @@ const BasicInfoForm = ({
         break;
       case "password":
         if (!value) error = "Password is required";
-        else if (value.length < 8) error = "Password must be at least 8 characters";
+        else if (value.length < 8)
+          error = "Password must be at least 8 characters";
         break;
       case "confirmPassword":
         if (!value) error = "Please confirm your password";
-        else if (currentFormData.password !== value) error = "Passwords do not match";
+        else if (currentFormData.password !== value)
+          error = "Passwords do not match";
         break;
       case "nationality":
         if (!value) error = "Please select your nationality";
@@ -216,7 +220,11 @@ const BasicInfoForm = ({
       isValid = false;
     }
 
-    if (role === "provider" && subRole === "company" && !formData.companyName.trim()) {
+    if (
+      role === "provider" &&
+      subRole === "company" &&
+      !formData.companyName.trim()
+    ) {
       newErrors.companyName = "Company name is required";
       isValid = false;
     }
@@ -282,7 +290,7 @@ const BasicInfoForm = ({
       <div className="text-xl font-bold text-[#111827] mb-1">
         {role === "provider"
           ? subRole === "company"
-            ? "Company Account"
+            ? "Company / Organization Account"
             : "Freelancer Account"
           : role === "relocate"
             ? "Individual Account"
@@ -290,7 +298,13 @@ const BasicInfoForm = ({
       </div>
 
       <div className="text-sm text-[#6B7280] mb-5.5">
-        Fill in your details to get started.
+        {role === "provider"
+          ? subRole === "company"
+            ? "Company or organization."
+            : "Independent professional."
+          : role === "relocate"
+            ? "Free access · No transaction fees · Full platform access"
+            : "Free access · No transaction fees · Full platform access"}
       </div>
 
       {(error || errors.general) && (
@@ -308,29 +322,33 @@ const BasicInfoForm = ({
       </div>
 
       <div className="mb-5">
-        <SectionHeader icon="👤" title="Basic Information" required />
+        <SectionHeader title="Basic Information" required />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2.5">
-          <FormInput
-            label="First Name"
-            value={formData.firstName}
-            onChange={(value) => updateField("firstName", value)}
-            placeholder="Ahmed"
-            required
-            error={errors.firstName}
-            inputBaseStyle={inputBaseStyle}
-          />
-
-          <FormInput
-            label="Last Name"
-            value={formData.lastName}
-            onChange={(value) => updateField("lastName", value)}
-            placeholder="Mohamed"
-            required
-            error={errors.lastName}
-            inputBaseStyle={inputBaseStyle}
-          />
-
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-2.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+            <FormInput
+              label="First Name"
+              value={formData.firstName}
+              onChange={(value) => updateField("firstName", value)}
+              placeholder="Ahmed"
+              required
+              error={errors.firstName}
+              inputBaseStyle={inputBaseStyle}
+            />
+            <FormInput
+              label="Last Name"
+              value={formData.lastName}
+              onChange={(value) => updateField("lastName", value)}
+              placeholder="Mohamed"
+              required
+              error={errors.lastName}
+              inputBaseStyle={inputBaseStyle}
+            />
+          </div>
+          <span className="text-xs text-[#6B7280]  mt-[-0.7rem]">
+            Enter your name exactly as it appears on your passport or official
+            ID.
+          </span>
           <FormInput
             label="Email"
             type="email"
@@ -341,7 +359,6 @@ const BasicInfoForm = ({
             error={errors.email}
             inputBaseStyle={inputBaseStyle}
           />
-
           <FormInput
             label="Phone Number"
             type="tel"
@@ -354,39 +371,36 @@ const BasicInfoForm = ({
           />
         </div>
 
-<div className="mb-6">
-            <SectionHeader icon="🌍" title="Location" />
+        <div className="mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormSelect
+              label="Nationality"
+              value={formData.nationality}
+              onChange={(value) => updateField("nationality", value)}
+              options={countries}
+              placeholder="Select your nationality"
+              required
+              error={errors.nationality}
+              inputBaseStyle={inputBaseStyle}
+              isLoading={isLoadingCountries}
+            />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormSelect
-                label="Nationality"
-                value={formData.nationality}
-                onChange={(value) => updateField("nationality", value)}
-                options={countries}
-                placeholder="Select your nationality"
-                required
-                error={errors.nationality}
-                inputBaseStyle={inputBaseStyle}
-                isLoading={isLoadingCountries}
-              />
-
-              <FormSelect
-                label="Country of Residence"
-                value={formData.countryOfResidence}
-                onChange={(value) => updateField("countryOfResidence", value)}
-                options={countries}
-                placeholder="Select country"
-                required
-                error={errors.countryOfResidence}
-                inputBaseStyle={inputBaseStyle}
-                isLoading={isLoadingCountries}
-              />
-            </div>
+            <FormSelect
+              label="Country of Residence"
+              value={formData.countryOfResidence}
+              onChange={(value) => updateField("countryOfResidence", value)}
+              options={countries}
+              placeholder="Select country"
+              required
+              error={errors.countryOfResidence}
+              inputBaseStyle={inputBaseStyle}
+              isLoading={isLoadingCountries}
+            />
           </div>
+        </div>
 
         {role === "provider" && subRole === "company" && (
           <>
-            <SectionHeader icon="🏢" title="Company Name" />
             <div className="mb-2.5">
               <FormInput
                 label="Company Name"
@@ -402,8 +416,6 @@ const BasicInfoForm = ({
         )}
 
         <div className="mb-2.5">
-          <SectionHeader icon="🔒" title="Security" />
-
           <PasswordInput
             label="Password"
             value={formData.password}
@@ -452,7 +464,11 @@ const BasicInfoForm = ({
           onChange={(value) => {
             setAgreedToTerms(value);
             if (value) setErrors((prev) => ({ ...prev, terms: "" }));
-            else setErrors((prev) => ({ ...prev, terms: "You must agree to the Terms and Privacy Policy" }));
+            else
+              setErrors((prev) => ({
+                ...prev,
+                terms: "You must agree to the Terms and Privacy Policy",
+              }));
           }}
           error={errors.terms}
         />
