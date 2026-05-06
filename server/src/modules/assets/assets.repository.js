@@ -98,49 +98,57 @@ class AssetRepository {
   // ------------------- Count Methods for Junction Tables -------------------
 
   static async countUserAssets(userId, typeKey, transaction) {
-    return db.UserAsset.count({
+    return db.Asset.count({
       include: [{
-        model: db.Asset,
-        where: { key: typeKey },
+        model: db.User,
+        as: "users",
+        where: { id: userId },
+        through: { where: { userId } },
         attributes: [],
       }],
-      where: { userId },
+      where: { key: typeKey },
       transaction,
     });
   }
 
   static async countServiceAssets(serviceId, typeKey, transaction) {
-    return db.ServiceAsset.count({
+    return db.Asset.count({
       include: [{
-        model: db.Asset,
-        where: { key: typeKey },
+        model: db.Service,
+        as: "services",
+        where: { id: serviceId },
+        through: { where: { serviceId } },
         attributes: [],
       }],
-      where: { serviceId },
+      where: { key: typeKey },
       transaction,
     });
   }
 
   static async countPostAssets(postId, typeKey, transaction) {
-    return db.PostAsset.count({
+    return db.Asset.count({
       include: [{
-        model: db.Asset,
-        where: { key: typeKey },
+        model: db.Post,
+        as: "posts",
+        where: { id: postId },
+        through: { where: { postId } },
         attributes: [],
       }],
-      where: { postId },
+      where: { key: typeKey },
       transaction,
     });
   }
 
   static async countVerificationAssets(verificationRequestId, typeKey, transaction) {
-    return db.VerificationRequestAsset.count({
+    return db.Asset.count({
       include: [{
-        model: db.Asset,
-        where: { key: typeKey },
+        model: db.VerificationRequest,
+        as: "verificationRequests",
+        where: { id: verificationRequestId },
+        through: { where: { verificationRequestId } },
         attributes: [],
       }],
-      where: { verificationRequestId },
+      where: { key: typeKey },
       transaction,
     });
   }

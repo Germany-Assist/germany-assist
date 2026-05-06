@@ -238,7 +238,7 @@ async function getAllServices(filters, authority) {
       where: { isOffer: false, isArchived: false },
       attributes: ["id", "price", "label", "deliveryTime"],
     },
-    { model: db.Asset, as: "image", attributes: ["url"] },
+    { model: db.Asset, as: "assets", attributes: ["url"] },
     { model: db.ServiceProvider, attributes: ["name"] },
     {
       model: db.Subcategory,
@@ -278,6 +278,7 @@ async function getServiceByIdPublic(id) {
     include: [
       {
         model: db.Asset,
+        as: "assets",
         attributes: ["mediaType", "key", "confirmed", "url", "name", "thumb"],
       },
       {
@@ -331,6 +332,7 @@ async function getServiceProfileForAdminAndSP(id, SPID) {
     include: [
       {
         model: db.Asset,
+        as: "assets",
         attributes: ["mediaType", "key", "confirmed", "url", "name", "thumb"],
       },
       {
