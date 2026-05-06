@@ -2,9 +2,10 @@ import React from "react";
 
 const SignupSidebar = ({ currentStep }) => {
   const steps = [
-    { num: 1, label: "Choose Your Role", subLabel: "Individual or Provider" },
+    { num: 1, label: "Quick Questions", subLabel: "2 questions to find your path" },
     { num: 2, label: "Basic Info", subLabel: "Name, email & password" },
-    { num: 3, label: "Verification", subLabel: "Confirm your email" },
+    { num: 3, label: "Additional Info", subLabel: "Location & documents (optional)" },
+    { num: 4, label: "Verification", subLabel: "Confirm your email" },
   ];
 
   return (

@@ -3,8 +3,6 @@ import GoogleLoginButton from "./GoogleLoginButton";
 import FormInput from "./FormInput";
 import FormSelect from "./FormSelect";
 import PasswordInput from "./PasswordInput";
-import FileUpload from "./FileUpload";
-import ProfileImageUpload from "./ProfileImageUpload";
 import TermsCheckbox from "./TermsCheckbox";
 import SectionHeader from "./SectionHeader";
 
@@ -23,6 +21,7 @@ const initialFormData = {
   idDocument: null,
   proofOfResidence: null,
   businessRegistration: null,
+  termsAccepted: false,
 };
 
 const initialErrors = {
@@ -121,8 +120,8 @@ const BasicInfoForm = ({
         if (!value) error = "Please select your country of residence";
         break;
       case "companyName":
-        if (role === "provider" && !value.trim()) {
-          error = subRole === "company" ? "Company name is required" : "Display name is required";
+        if (role === "provider" && subRole === "company" && !value.trim()) {
+          error = "Company name is required";
         }
         break;
       default:
@@ -217,11 +216,8 @@ const BasicInfoForm = ({
       isValid = false;
     }
 
-    if (role === "provider" && !formData.companyName.trim()) {
-      newErrors.companyName =
-        subRole === "company"
-          ? "Company name is required"
-          : "Display name is required";
+    if (role === "provider" && subRole === "company" && !formData.companyName.trim()) {
+      newErrors.companyName = "Company name is required";
       isValid = false;
     }
 
@@ -288,7 +284,9 @@ const BasicInfoForm = ({
           ? subRole === "company"
             ? "Company Account"
             : "Freelancer Account"
-          : "Individual Account"}
+          : role === "relocate"
+            ? "Individual Account"
+            : "Individual Account"}
       </div>
 
       <div className="text-sm text-[#6B7280] mb-5.5">
@@ -356,85 +354,51 @@ const BasicInfoForm = ({
           />
         </div>
 
-        <div className="mb-6">
-          <SectionHeader icon="🌍" title="Location" />
+<div className="mb-6">
+            <SectionHeader icon="🌍" title="Location" />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormSelect
-              label="Nationality"
-              value={formData.nationality}
-              onChange={(value) => updateField("nationality", value)}
-              options={countries}
-              placeholder="Select your nationality"
-              required
-              error={errors.nationality}
-              inputBaseStyle={inputBaseStyle}
-              isLoading={isLoadingCountries}
-            />
-
-            <FormSelect
-              label="Country of Residence"
-              value={formData.countryOfResidence}
-              onChange={(value) => updateField("countryOfResidence", value)}
-              options={countries}
-              placeholder="Select country"
-              required
-              error={errors.countryOfResidence}
-              inputBaseStyle={inputBaseStyle}
-              isLoading={isLoadingCountries}
-            />
-          </div>
-        </div>
-        {role === "provider" &&
-          (role === "provider" && subRole === "company" ? (
-            <SectionHeader icon="🏢" title="Company Name" />
-          ) : (
-            <SectionHeader icon="🏢" title="Display Name" />
-          ))}
-        {role === "provider" && (
-          <div className="mb-2.5">
-            <FormInput
-              label={
-                role === "provider" && subRole === "company"
-                  ? "Company Name"
-                  : "Display Name"
-              }
-              value={formData.companyName}
-              onChange={(value) => updateField("companyName", value)}
-              placeholder="Company Name"
-              required
-              error={errors.companyName}
-              inputBaseStyle={inputBaseStyle}
-            />
-          </div>
-        )}
-
-        {role === "provider" && (
-          <div className="mb-2.5">
-            <SectionHeader icon="📝" title="About You" />
-            <div>
-              <label className="block text-sm font-medium text-[#111827] mb-1">
-                Bio{" "}
-                <span className="text-[#6B7280] font-normal text-xs">
-                  — Optional
-                </span>
-              </label>
-              <textarea
-                value={formData.bio}
-                onChange={(e) => updateField("bio", e.target.value)}
-                placeholder="Tell clients about yourself, your expertise, and what services you offer..."
-                rows={4}
-                className={`${inputBaseStyle} resize-none ${
-                  errors.bio
-                    ? "border-red-500 focus:border-red-500"
-                    : "border-[#E5E7EB] focus:border-[#024CEE]"
-                }`}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormSelect
+                label="Nationality"
+                value={formData.nationality}
+                onChange={(value) => updateField("nationality", value)}
+                options={countries}
+                placeholder="Select your nationality"
+                required
+                error={errors.nationality}
+                inputBaseStyle={inputBaseStyle}
+                isLoading={isLoadingCountries}
               />
-              <p className="text-[11px] text-[#6B7280] mt-1 ml-1">
-                {formData.bio.length}/500 characters
-              </p>
+
+              <FormSelect
+                label="Country of Residence"
+                value={formData.countryOfResidence}
+                onChange={(value) => updateField("countryOfResidence", value)}
+                options={countries}
+                placeholder="Select country"
+                required
+                error={errors.countryOfResidence}
+                inputBaseStyle={inputBaseStyle}
+                isLoading={isLoadingCountries}
+              />
             </div>
           </div>
+
+        {role === "provider" && subRole === "company" && (
+          <>
+            <SectionHeader icon="🏢" title="Company Name" />
+            <div className="mb-2.5">
+              <FormInput
+                label="Company Name"
+                value={formData.companyName}
+                onChange={(value) => updateField("companyName", value)}
+                placeholder="Official registered company name"
+                required
+                error={errors.companyName}
+                inputBaseStyle={inputBaseStyle}
+              />
+            </div>
+          </>
         )}
 
         <div className="mb-2.5">
@@ -482,66 +446,6 @@ const BasicInfoForm = ({
             )}
           </div>
         </div>
-
-        <div className="mb-8">
-          <SectionHeader
-            icon="🏅"
-            title="Credential Uploads"
-            subtitle="earn verified badges · PDF, JPG, PNG · max 5MB"
-          />
-          <p className="text-sm text-[#6B7280] mb-4 leading-relaxed">
-            Upload your credentials to earn badges that appear on your public
-            profile. The more you verify, the higher you rank in search results.
-          </p>
-
-          <FileUpload
-            icon="🪪"
-            title="Passport or National ID "
-            subtitle="Required for all members to fully use the platform."
-            badge
-            badgeText="Optional"
-            file={formData.idDocument}
-            fieldName="idDocumentument"
-            onUpload={(file) => updateField("idDocument", file)}
-            onRemove={() => updateField("idDocument", null)}
-            accept=".pdf,.jpg,.jpeg,.png"
-          />
-
-          {role === "provider" && subRole === "company" && (
-            <>
-              <FileUpload
-                icon="🏠"
-                title="Proof of Residence"
-                subtitle="Document proving your business address."
-                badge
-                badgeText="Optional"
-                file={formData.proofOfResidence}
-                fieldName="proofOfResidence"
-                onUpload={(file) => updateField("proofOfResidence", file)}
-                onRemove={() => updateField("proofOfResidence", null)}
-                accept=".pdf,.jpg,.jpeg,.png"
-              />
-
-              <FileUpload
-                icon="📋"
-                title="Business Registration"
-                subtitle="Upload your official company registration document (PDF)."
-                badge
-                badgeText="Optional"
-                file={formData.businessRegistration}
-                fieldName="businessRegistration"
-                onUpload={(file) => updateField("businessRegistration", file)}
-                onRemove={() => updateField("businessRegistration", null)}
-                accept=".pdf"
-              />
-            </>
-          )}
-        </div>
-
-        <ProfileImageUpload
-          file={formData.profileImage}
-          onUpload={(file) => updateField("profileImage", file)}
-        />
 
         <TermsCheckbox
           checked={agreedToTerms}

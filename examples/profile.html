@@ -389,12 +389,12 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
       </div>
       <div style="flex:1;">
         <div style="font-size:12.5px;font-weight:600;color:#DC2626;margin-bottom:1px;">Email address not verified</div>
-        <div style="font-size:11.5px;color:#7f1d1d;line-height:1.4;">Verify <strong>hello@germanyassists.de</strong> to keep your account secure and receive order notifications.</div>
+        <div style="font-size:11.5px;color:#7f1d1d;line-height:1.4;margin-bottom:7px;">Verify <strong>hello@germanyassists.de</strong> to keep your account secure and receive order notifications.</div>
+        <button id="resendEmailBtn" onclick="handleResendEmail()" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:#DC2626;color:#fff;border:none;border-radius:7px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:Outfit,sans-serif;transition:background 0.13s;" onmouseover="this.style.background='#B91C1C'" onmouseout="this.style.background='#DC2626'">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+          Resend Email
+        </button>
       </div>
-      <button id="resendEmailBtn" onclick="handleResendEmail()" style="flex-shrink:0;display:flex;align-items:center;gap:5px;padding:6px 14px;background:#DC2626;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:Outfit,sans-serif;transition:background 0.13s;" onmouseover="this.style.background='#B91C1C'" onmouseout="this.style.background='#DC2626'">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
-        Resend Email
-      </button>
       <button onclick="document.getElementById('emailVerifyBanner').style.display='none'" style="flex-shrink:0;width:26px;height:26px;border:none;background:transparent;cursor:pointer;color:#DC2626;display:flex;align-items:center;justify-content:center;border-radius:6px;" onmouseover="this.style.background='rgba(220,38,38,0.1)'" onmouseout="this.style.background='transparent'">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
