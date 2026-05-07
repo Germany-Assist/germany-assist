@@ -131,7 +131,7 @@ const BasicInfoForm = ({
     const hasConfirmPassword = formData.confirmPassword === formData.password && formData.confirmPassword.length > 0;
     const hasTerms = agreedToTerms;
 
-    return hasBasicInfo && hasLastName && hasValidEmail && hasNoEmailError && hasPhone && hasNationality && hasCountry && hasCompany && hasPassword && hasConfirmPassword && hasTerms;
+    return hasBasicInfo && hasLastName && hasValidEmail && hasNoEmailError && hasPhone && hasNationality && hasCountry && hasCompany && hasPassword && hasConfirmPassword && hasTerms && !checkingEmail;
   };
 
   const validateField = (field, value, currentFormData = formData) => {
@@ -374,10 +374,29 @@ const BasicInfoForm = ({
     return isValid;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validateForm()) {
       return;
     }
+    
+    // Check if email already exists before submitting
+    const email = formData.email.trim();
+    if (email && validateEmail(email)) {
+      setCheckingEmail(true);
+      try {
+        const { exists } = await checkEmailExists(email);
+        if (exists) {
+          setErrors((prev) => ({ ...prev, email: "This email is already registered" }));
+          setCheckingEmail(false);
+          return;
+        }
+      } catch (err) {
+        console.error("Failed to check email:", err);
+      } finally {
+        setCheckingEmail(false);
+      }
+    }
+    
     setError("");
     const data = {
       firstName: formData.firstName,
@@ -600,7 +619,7 @@ const BasicInfoForm = ({
             : "bg-[#E5E7EB] text-[#9CA3AF] cursor-not-allowed"
         }`}
       >
-        Continue →
+        {checkingEmail ? "Checking email..." : "Continue →"}
       </button>
     </div>
   );
