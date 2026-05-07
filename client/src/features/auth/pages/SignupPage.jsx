@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SignupHeader from "../components/SignupHeader";
 import SignupSidebar from "../components/SignupSidebar";
 import QuickQuestions from "../components/QuickQuestions";
@@ -26,8 +26,31 @@ const SignupPage = () => {
   const [basicInfoData, setBasicInfoData] = useState(null);
   const [animKey, setAnimKey] = useState(0);
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [hasSentInitialCode, setHasSentInitialCode] = useState(false);
 
   const navigate = useNavigate();
+
+  const startCooldown = (seconds) => {
+    setResendCooldown(seconds);
+    const interval = setInterval(() => {
+      setResendCooldown(prev => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  // Auto-start cooldown when entering verification step
+  useEffect(() => {
+    if (currentStep === 4 && !hasSentInitialCode) {
+      setHasSentInitialCode(true);
+      // Email is sent during signup on backend, just start cooldown
+      startCooldown(180);
+    }
+  }, [currentStep, hasSentInitialCode]);
 
   const downloadImageAsFile = async (url) => {
     // Not used anymore - URL is sent directly to backend
@@ -227,19 +250,6 @@ const SignupPage = () => {
     } catch (err) {
       setError("Invalid verification code. Please try again.");
     }
-  };
-
-  const startCooldown = (seconds) => {
-    setResendCooldown(seconds);
-    const interval = setInterval(() => {
-      setResendCooldown(prev => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
   };
 
   const handleResendVerificationEmail = async () => {

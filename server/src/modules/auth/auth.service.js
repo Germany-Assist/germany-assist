@@ -163,24 +163,26 @@ export async function resendVerificationEmail(userEmail) {
   }
 }
 export async function sendVerificationEmail(userEmail, userId, t) {
+  const useExternalTransaction = t !== undefined;
+  const transaction = useExternalTransaction ? t : await sequelize.transaction();
+  
   try {
-    // return;
     const token = generateSecureToken();
     const tokenHash = hashToken(token);
     await authRepository.invalidateTokens(
       userId,
       TOKENS_CONSTANTS.EMAIL_VERIFICATION,
-      t,
+      transaction,
     );
     const databaseToken = {
       token: tokenHash.trim(),
       userId: userId,
       oneTime: true,
       isValid: true,
-      type: TOKENS_CONSTANTS.EMAIL_VERIFICATION, //"emailVerification",
+      type: TOKENS_CONSTANTS.EMAIL_VERIFICATION,
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
     };
-    await authRepository.createToken(databaseToken, t);
+    await authRepository.createToken(databaseToken, transaction);
     const link = `${APP_DOMAIN}/api/auth/verifyAccount?token=${encodeURIComponent(
       token,
     )}`;
@@ -190,7 +192,15 @@ export async function sendVerificationEmail(userEmail, userId, t) {
       subject: "Verification Email",
       html,
     });
+    
+    if (!useExternalTransaction) {
+      await transaction.commit();
+    }
+    return { success: true };
   } catch (error) {
+    if (!useExternalTransaction) {
+      await transaction.rollback();
+    }
     errorLogger(error);
     throw error;
   }
