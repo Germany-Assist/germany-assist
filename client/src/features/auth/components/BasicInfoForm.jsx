@@ -503,7 +503,7 @@ const BasicInfoForm = ({
 
       <button
         onClick={handleSubmit}
-        className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] shadow-md active:scale-[0.98]"
+        className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] btn-ripple"
       >
         Continue →
       </button>

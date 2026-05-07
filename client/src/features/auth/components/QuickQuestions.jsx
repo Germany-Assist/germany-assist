@@ -126,14 +126,15 @@ const QuickQuestions = ({
             What's your main goal on Germany Assists?
           </div>
           <div className="flex flex-col gap-3">
-            {goalOptions.map((option) => (
+            {goalOptions.map((option, index) => (
               <div
                 key={option.id}
                 onClick={() => handleGoalSelect(option.id)}
-                className="flex items-start gap-4 p-4 border-2 border-[#E5E7EB] rounded-2xl cursor-pointer bg-white hover:border-[#93b4f7] transition-all"
+                className="flex items-start gap-4 p-4 border-2 border-[#E5E7EB] rounded-2xl cursor-pointer bg-white hover:border-[#93b4f7] hover:bg-[#F8FAFF] transition-all animate-fade-up"
+                style={{ animationDelay: `${0.35 + index * 0.1}s` }}
               >
                 <div
-                  className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 mt-0.5"
+                  className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 mt-0.5 transition-transform"
                   style={{ backgroundColor: option.bg }}
                 >
                   {option.icon}

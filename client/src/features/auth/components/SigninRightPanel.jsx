@@ -42,23 +42,23 @@ const SigninRightPanel = () => {
 
   return (
     <div className="flex-1 flex items-center justify-center p-5 bg-[#f8faff] relative overflow-hidden">
-      <div className="relative z-10 w-full max-w-[420px] text-left">
-        <div className="text-xs font-semibold text-[#024CEE] uppercase tracking-wider mb-2">
+      <div className="relative z-10 w-full max-w-[420px] text-left animate-fade-up">
+        <div className="text-xs font-semibold text-[#024CEE] uppercase tracking-wider mb-2 animate-fade-up stagger-1">
           Welcome back
         </div>
-        <h2 className="text-2xl font-extrabold text-[#111827] tracking-tight mb-1.25">
+        <h2 className="text-2xl font-extrabold text-[#111827] tracking-tight mb-1.25 animate-fade-up stagger-2">
           Sign in to your account
         </h2>
-        <p className="text-sm text-[#6B7280] mb-4 leading-relaxed">
+        <p className="text-sm text-[#6B7280] mb-4 leading-relaxed animate-fade-up stagger-3">
           Thousands of people found their path in Germany. Yours starts here.
         </p>
 
         {/* Social Buttons */}
-        <div className="flex gap-2.25 mb-3 h-11">
+        <div className="flex gap-2.25 mb-3 h-11 animate-fade-up stagger-4">
           <GoogleLoginButton signin={true} />
         </div>
 
-        <div className="flex items-center gap-3 mb-3 text-xs text-[#6B7280]">
+        <div className="flex items-center gap-3 mb-3 text-xs text-[#6B7280] animate-fade-up stagger-5">
           <span className="flex-1 h-px bg-[#E5E7EB]"></span>
           or sign in with email
           <span className="flex-1 h-px bg-[#E5E7EB]"></span>
@@ -66,7 +66,7 @@ const SigninRightPanel = () => {
 
         {/* Error Alert */}
         {error && (
-          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-sm mb-3.5">
+          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-sm mb-3.5 animate-alert-in">
             <span>⚠</span>
             <span>{error}</span>
           </div>
@@ -74,7 +74,7 @@ const SigninRightPanel = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit}>
-          <div className="mb-2.5">
+          <div className="mb-2.5 animate-fade-up stagger-6">
             <label className="block text-xs font-medium text-[#111827] mb-1.5">
               Email address
             </label>
@@ -87,12 +87,12 @@ const SigninRightPanel = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full h-11 py-2.75 pl-9 pr-3 border border-[#E5E7EB] rounded-xl text-sm text-[#111827] bg-white outline-none focus:border-[#024CEE] focus:shadow-[0_0_0_3px_rgba(2,76,238,0.07)] transition-all"
+                className="w-full h-11 py-2.75 pl-9 pr-3 border border-[#E5E7EB] rounded-xl text-sm text-[#111827] bg-white outline-none focus:border-[#024CEE] focus:shadow-[0_0_0_3px_rgba(2,76,238,0.07)] transition-all focus-glow"
               />
             </div>
           </div>
 
-          <div className="mb-2.5">
+          <div className="mb-2.5 animate-fade-up stagger-7">
             <label className="block text-xs font-medium text-[#111827] mb-1.5">
               Password
             </label>
@@ -105,7 +105,7 @@ const SigninRightPanel = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className="w-full h-11 py-2.75 pl-9 pr-9 border border-[#E5E7EB] rounded-xl text-sm text-[#111827] bg-white outline-none focus:border-[#024CEE] focus:shadow-[0_0_0_3px_rgba(2,76,238,0.07)] transition-all"
+                className="w-full h-11 py-2.75 pl-9 pr-9 border border-[#E5E7EB] rounded-xl text-sm text-[#111827] bg-white outline-none focus:border-[#024CEE] focus:shadow-[0_0_0_3px_rgba(2,76,238,0.07)] transition-all focus-glow"
               />
               <button
                 type="button"
@@ -117,7 +117,7 @@ const SigninRightPanel = () => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between mb-2.5">
+          <div className="flex items-center justify-between mb-2.5 animate-fade-up stagger-8">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
@@ -143,7 +143,7 @@ const SigninRightPanel = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 btn-ripple animate-fade-up stagger-8"
           >
             {isLoading ? (
               <>
@@ -155,7 +155,7 @@ const SigninRightPanel = () => {
           </button>
         </form>
 
-        <div className="text-center mt-3.5 text-sm text-[#6B7280]">
+        <div className="text-center mt-3.5 text-sm text-[#6B7280] animate-fade-up stagger-8">
           Don't have an account?{" "}
           <Link
             to="/signup"

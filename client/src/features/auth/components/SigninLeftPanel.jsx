@@ -36,24 +36,21 @@ const SigninLeftPanel = () => {
   ];
 
   return (
-    <div className="w-[480px] text-left flex-shrink-0 bg-gradient-to-b from-[#EBF4FF] via-[#C7E8FF] to-[#E0F3FF] px-11 py-10 flex flex-col relative overflow-hidden border-r border-[#B8DEFF]">
-      <div className="inline-flex items-center gap-1.5  bg-white border border-[#B8DEFF] rounded-full px-3 py-1 text-xs font-semibold text-[#024CEE] tracking-wider mb-4 w-fit shadow-[0_2px_8px_rgba(2,76,238,0.08)]">
+    <div className="w-[480px] text-left flex-shrink-0 bg-gradient-to-b from-[#EBF4FF] via-[#C7E8FF] to-[#E0F3FF] px-11 py-10 flex flex-col relative overflow-hidden border-r border-[#B8DEFF] animate-slide-in-left">
+      <div className="inline-flex items-center gap-1.5  bg-white border border-[#B8DEFF] rounded-full px-3 py-1 text-xs font-semibold text-[#024CEE] tracking-wider mb-4 w-fit shadow-[0_2px_8px_rgba(2,76,238,0.08)] animate-fade-up">
         <span className="relative flex items-center justify-center w-2 h-2">
-          {/* The Ring: Starts small and expands to 2.5x the size */}
-          <span className="absolute inline-flex h-full w-full rounded-full bg-[#024CEE] animate-pulse-ring"></span>
-
-          {/* The Static Center Dot */}
+          <span className="absolute inline-flex h-full w-full rounded-full bg-[#024CEE] animate-ping"></span>
           <span className="relative inline-flex rounded-full w-2 h-2 bg-[#024CEE]"></span>
         </span>
         Everything in one place
       </div>
 
-      <h1 className="text-2xl font-extrabold text-[#0a1a3a] tracking-tight leading-tight mb-2">
+      <h1 className="text-2xl font-extrabold text-[#0a1a3a] tracking-tight leading-tight mb-2 animate-fade-up" style={{ animationDelay: '0.1s' }}>
         Everything you need
         <br />
         <span className="text-[#024CEE]">to thrive in Germany</span>
       </h1>
-      <p className="text-sm text-[#4a6080] leading-relaxed mb-5">
+      <p className="text-sm text-[#4a6080] leading-relaxed mb-5 animate-fade-up" style={{ animationDelay: '0.15s' }}>
         From visa consulting to language courses — Germany Assists connects you
         with the right services at the right time.
       </p>
@@ -62,10 +59,10 @@ const SigninLeftPanel = () => {
         {features.map((feat, i) => (
           <div
             key={i}
-            className="flex items-center gap-3 p-3 bg-white border border-[#C8E8FF] rounded-xl cursor-default shadow-[0_2px_8px_rgba(2,76,238,0.05)]"
+            className="flex items-center gap-3 p-3 bg-white border border-[#C8E8FF] rounded-xl cursor-default shadow-[0_2px_8px_rgba(2,76,238,0.05)] hover:bg-[#EBF4FF] hover:border-[#7BBFFF] hover:translate-x-1 hover:shadow-[0_4px_16px_rgba(2,76,238,0.1)] transition-all animate-feat-in"
             style={{ animationDelay: `${0.35 + i * 0.1}s` }}
           >
-            <div className="text-2xl w-11 h-11 bg-gradient-to-br from-[#EBF4FF] to-[#C7E8FF] border border-[#B8DEFF] rounded-xl flex items-center justify-center flex-shrink-0">
+            <div className="text-2xl w-11 h-11 bg-gradient-to-br from-[#EBF4FF] to-[#C7E8FF] border border-[#B8DEFF] rounded-xl flex items-center justify-center flex-shrink-0 transition-transform hover:scale-105">
               {feat.icon}
             </div>
             <div className="flex-1 min-w-0">

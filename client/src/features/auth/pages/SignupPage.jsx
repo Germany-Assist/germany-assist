@@ -24,13 +24,22 @@ const SignupPage = () => {
   const [error, setError] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [basicInfoData, setBasicInfoData] = useState(null);
+  const [animKey, setAnimKey] = useState(0);
 
   const navigate = useNavigate();
 
-  const handleStep1Complete = () => setCurrentStep(2);
+  const triggerAnimation = () => {
+    setAnimKey(prev => prev + 1);
+  };
+
+  const handleStep1Complete = () => {
+    triggerAnimation();
+    setCurrentStep(2);
+  };
 
   const handleStep2Complete = (data) => {
     setBasicInfoData(data);
+    triggerAnimation();
     setCurrentStep(2.5);
   };
 
@@ -81,6 +90,7 @@ const SignupPage = () => {
   };
 
   const handleAdditionalInfo = () => {
+    triggerAnimation();
     setCurrentStep(3);
   };
 
@@ -223,7 +233,7 @@ const SignupPage = () => {
 
         <main className="flex-1 overflow-y-auto bg-white">
           <div className="min-h-full flex flex-col items-center px-4 sm:px-10 py-12">
-            <div className="w-full max-w-xl">
+            <div key={animKey} className="w-full max-w-xl animate-fade-up">
               {currentStep === 1 && (
                 <QuickQuestions
                   role={role}
