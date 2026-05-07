@@ -4,7 +4,14 @@ import FileUpload from "./FileUpload";
 import SectionHeader from "./SectionHeader";
 import CategorySelect from "./CategorySelect";
 
-const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete, initialProfileImage }) => {
+const AdditionalInfo = ({
+  role,
+  subRole,
+  onBack,
+  onSkip,
+  onComplete,
+  initialProfileImage,
+}) => {
   const [currentSubStep, setCurrentSubStep] = useState(1);
   const [formData, setFormData] = useState({
     profileImage: null,
@@ -19,7 +26,7 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete, initialProf
   // Set initial profile image from BasicInfoForm (Google signup)
   useEffect(() => {
     if (initialProfileImage && !formData.profileImage) {
-      setFormData(prev => ({ ...prev, profileImage: initialProfileImage }));
+      setFormData((prev) => ({ ...prev, profileImage: initialProfileImage }));
     }
   }, [initialProfileImage]);
 
@@ -266,7 +273,12 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete, initialProf
               badge
               badgeText="Required"
               files={formData.idDocument ? [formData.idDocument] : []}
-              onUpload={(files) => updateField("idDocument", Array.isArray(files) ? files[0] : files)}
+              onUpload={(files) =>
+                updateField(
+                  "idDocument",
+                  Array.isArray(files) ? files[0] : files,
+                )
+              }
               onRemove={() => updateField("idDocument", null)}
               accept=".pdf,.jpg,.jpeg,.png"
               multiple={false}
@@ -279,8 +291,15 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete, initialProf
                 subtitle="Document proving your current address."
                 badge
                 badgeText="Optional"
-                files={formData.proofOfResidence ? [formData.proofOfResidence] : []}
-                onUpload={(files) => updateField("proofOfResidence", Array.isArray(files) ? files[0] : files)}
+                files={
+                  formData.proofOfResidence ? [formData.proofOfResidence] : []
+                }
+                onUpload={(files) =>
+                  updateField(
+                    "proofOfResidence",
+                    Array.isArray(files) ? files[0] : files,
+                  )
+                }
                 onRemove={() => updateField("proofOfResidence", null)}
                 accept=".pdf,.jpg,.jpeg,.png"
                 multiple={false}
@@ -294,8 +313,17 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete, initialProf
                 subtitle="Upload your official company registration document (Gewerbeanmeldung or equivalent) as PDF."
                 badge
                 badgeText="Required for Company"
-                files={formData.businessRegistration ? [formData.businessRegistration] : []}
-                onUpload={(files) => updateField("businessRegistration", Array.isArray(files) ? files[0] : files)}
+                files={
+                  formData.businessRegistration
+                    ? [formData.businessRegistration]
+                    : []
+                }
+                onUpload={(files) =>
+                  updateField(
+                    "businessRegistration",
+                    Array.isArray(files) ? files[0] : files,
+                  )
+                }
                 onRemove={() => updateField("businessRegistration", null)}
                 accept=".pdf"
                 multiple={false}
