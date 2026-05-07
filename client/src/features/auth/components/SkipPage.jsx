@@ -1,6 +1,12 @@
 import React from "react";
 
-const SkipPage = ({ onBack, onAddDetails, onSkip, isSubmitting = false, error = "" }) => {
+const SkipPage = ({
+  onBack,
+  onAddDetails,
+  onSkip,
+  isSubmitting = false,
+  error = "",
+}) => {
   return (
     <div className="w-full max-w-[560px] text-left px-4  sm:px-0">
       {error && (
@@ -36,29 +42,17 @@ const SkipPage = ({ onBack, onAddDetails, onSkip, isSubmitting = false, error = 
           and unlocks all features. It only takes 2 minutes.
         </p>
         {isSubmitting && (
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            padding: '16px',
-            marginBottom: '16px',
-            backgroundColor: '#eff6ff',
-            borderRadius: '8px',
-            border: '1px solid #3b82f6'
-          }}>
-            <div style={{
-              width: '20px',
-              height: '20px',
-              border: '3px solid #024CEE',
-              borderRadius: '50%',
-              borderTopColor: 'transparent',
-              animation: 'spin 0.8s linear infinite'
-            }} />
-            <span style={{ fontWeight: 500, color: '#024CEE', fontSize: '14px' }}>Processing your request...</span>
+          <div className="flex flex-col items-center justify-center gap-2 p-4 mb-4 bg-blue-50 rounded-lg border border-blue-500">
+            {/* Loader Circle */}
+            <div className="w-5 h-5 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
+
+            {/* Text */}
+            <span className="font-medium text-blue-600 text-sm">
+              Processing your request...
+            </span>
           </div>
         )}
+
         <div className="flex flex-col gap-2">
           <button
             onClick={onAddDetails}
