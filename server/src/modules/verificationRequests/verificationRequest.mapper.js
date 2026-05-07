@@ -10,25 +10,27 @@ const singleRequestMapper = async (request) => {
     status: request.status,
     adminNote: request.adminNote,
     assets: await Promise.all(
-      assets.filter(Boolean).map((i) => generateDownloadUrl(i.url)),
+      assets.filter(Boolean).map(async (i) => ({
+        url: await generateDownloadUrl(i.url),
+        label: i.label,
+      })),
     ),
   };
 };
 const multiRequestMapper = async (requests) => {
   return await Promise.all(
     requests.map(async (i) => {
-      const assets = i.verificationRequestAssets?.map((x) => x.Asset) || [];
       return {
         id: hashIdUtil.hashIdEncode(i.id),
         serviceProviderId: i.serviceProviderId,
         type: i.type,
         status: i.status,
         adminNote: i.adminNote,
-        relatedId: i.relatedId
-          ? hashIdUtil.hashIdEncode(i.relatedId)
-          : undefined,
         assets: await Promise.all(
-          assets.filter(Boolean).map((x) => generateDownloadUrl(x.url)),
+          i.assets.filter(Boolean).map(async (x) => ({
+            url: await generateDownloadUrl(x.url),
+            label: x.label,
+          })),
         ),
       };
     }),

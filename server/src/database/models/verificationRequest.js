@@ -25,17 +25,13 @@ VerificationRequest.init(
         min: { args: [1], msg: "ServiceProviderId must be greater than 0" },
       },
     },
-    relatedId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
     type: {
       type: DataTypes.ENUM("identity", "category", "badge"),
       allowNull: false,
       validate: {
         isIn: {
-          args: [["identity", "category", "skill"]],
-          msg: "Type must be one of 'identity', 'category', 'skill'",
+          args: [["identity", "category", "badge"]],
+          msg: "Type must be one of 'identity', 'category', 'badge'",
         },
       },
     },

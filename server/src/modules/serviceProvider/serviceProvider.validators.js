@@ -15,13 +15,6 @@ export const createFreelancerValidator = [
     .isLength({ min: 1, max: 100 })
     .withMessage("Last name must be between 1 and 100 characters"),
 
-  body("companyName")
-    .trim()
-    .notEmpty()
-    .withMessage("Company name is required")
-    .isLength({ min: 2, max: 200 })
-    .withMessage("Company name must be between 2 and 200 characters"),
-
   body("email")
     .trim()
     .notEmpty()
@@ -53,7 +46,7 @@ export const createFreelancerValidator = [
   body("bio")
     .optional()
     .trim()
-    .isLength({ max: 500 })
+    .isLength({ max: 600 })
     .withMessage("Bio must not exceed 500 characters"),
 ];
 

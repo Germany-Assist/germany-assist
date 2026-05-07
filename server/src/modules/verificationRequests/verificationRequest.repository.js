@@ -40,7 +40,10 @@ async function getAllAdmin({ limit, offset, filters }) {
       {
         model: db.Asset,
         as: "assets",
-        attributes: ["mediaType", "url"],
+        through: {
+          attributes: [],
+        },
+        attributes: ["url", "label"],
       },
     ],
     order: [["updatedAt", "DESC"]],

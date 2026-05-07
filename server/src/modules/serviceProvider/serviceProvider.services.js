@@ -47,7 +47,6 @@ export const registerFreelancer = async (body, files) => {
     const {
       firstName,
       lastName,
-      companyName,
       email,
       phone,
       password,
@@ -67,9 +66,8 @@ export const registerFreelancer = async (body, files) => {
     }
 
     const spData = {
-      name: companyName,
-      about: bio || "",
-      description: bio || "",
+      name: firstName + " " + lastName,
+      bio: bio || "",
       phoneNumber: phone,
       email,
       type: PROVIDER_TYPES.freelancer, //"freelancer",
@@ -215,8 +213,7 @@ export const registerCompany = async (body, files) => {
 
     const spData = {
       name: companyName,
-      about: bio || "",
-      description: bio || "",
+      bio: bio || "",
       phoneNumber: phone,
       email,
       type: PROVIDER_TYPES.company, //"company",

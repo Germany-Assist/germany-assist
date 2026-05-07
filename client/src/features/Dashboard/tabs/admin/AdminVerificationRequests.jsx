@@ -53,7 +53,7 @@ export default function AdminVerificationManager() {
       );
 
       const response = await adminApis.getAllRequests(cleanParams);
-
+      console.log(response);
       if (response) {
         setRequests(response.data || []);
         setMeta(response.meta || { page: 1, totalPages: 1, total: 0 });
@@ -124,31 +124,38 @@ export default function AdminVerificationManager() {
       header: "Verification Type",
       render: (req) => (
         <span className="text-[10px] font-black uppercase px-2.5 py-1 bg-blue-500/5 text-blue-400 rounded-lg border border-blue-500/10 tracking-widest">
-          {req.type} {req.relatedId && getCategory(req.relatedId)}
+          {req.type} {req.relatedId && req.type !== "identity" && getCategory(req.relatedId)}
         </span>
       ),
     },
     {
       header: "Attachments",
       render: (req) => (
-        <div className="flex items-center gap-2">
-          {req.assets?.map((url, idx) => {
+        <div className="flex flex-col gap-2">
+          {req.assets?.map((asset, idx) => {
+            const url = asset.url;
             const isPdf = url.toLowerCase().includes(".pdf");
             return (
-              <a
-                key={idx}
-                href={url}
-                target="_blank"
-                rel="noreferrer"
-                className="p-2 rounded-xl bg-zinc-800 border border-white/5 hover:bg-zinc-700 hover:border-blue-500/50 transition-all group"
-                title={isPdf ? "Open Document" : "Open Image"}
-              >
-                {isPdf ? (
-                  <FileText size={16} className="text-purple-400" />
-                ) : (
-                  <ImageIcon size={16} className="text-blue-400" />
+              <div key={idx} className="flex items-center gap-2">
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-2 rounded-xl bg-zinc-800 border border-white/5 hover:bg-zinc-700 hover:border-blue-500/50 transition-all group"
+                  title={isPdf ? "Open Document" : "Open Image"}
+                >
+                  {isPdf ? (
+                    <FileText size={16} className="text-purple-400" />
+                  ) : (
+                    <ImageIcon size={16} className="text-blue-400" />
+                  )}
+                </a>
+                {asset.label && (
+                  <span className="text-[10px] font-bold text-zinc-400 bg-zinc-800 px-2 py-1 rounded">
+                    {asset.label}
+                  </span>
                 )}
-              </a>
+              </div>
             );
           })}
           {(!req.assets || req.assets.length === 0) && (

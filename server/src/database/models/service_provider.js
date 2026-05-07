@@ -24,25 +24,14 @@ ServiceProvider.init(
         },
       },
     },
-    about: {
+    bio: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
       validate: {
-        notEmpty: { msg: "About cannot be empty" },
+        notEmpty: { msg: "Bio cannot be empty" },
         len: {
-          args: [10, 5000],
-          msg: "About must be between 10 and 5000 characters",
-        },
-      },
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-      validate: {
-        notEmpty: { msg: "Description cannot be empty" },
-        len: {
-          args: [10, 5000],
-          msg: "Description must be between 10 and 5000 characters",
+          args: [0, 600],
+          msg: "Bio must be between 80 and 600 characters",
         },
       },
     },
