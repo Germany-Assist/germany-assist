@@ -1,8 +1,6 @@
 import React from "react";
 
 const ProfileImageUpload = ({ file, onUpload, onRemove }) => {
-  console.log("ProfileImageUpload file:", file, typeof file);
-
   const handleRemove = () => {
     if (onRemove) {
       onRemove();
@@ -11,7 +9,6 @@ const ProfileImageUpload = ({ file, onUpload, onRemove }) => {
 
   const isFile = file instanceof File;
   const isUrl = typeof file === "string" && file.startsWith("http");
-
   const imgSrc = isFile ? URL.createObjectURL(file) : isUrl ? file : null;
 
   return (
