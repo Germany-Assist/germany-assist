@@ -43,6 +43,24 @@ const invalidateTokens = async (userId, type, t) => {
     },
   );
 };
+
+const getRecentTokensByEmail = async (userEmail, type, withinSeconds) => {
+  // Find user first, then get recent tokens
+  const user = await db.User.findOne({ where: { email: userEmail } });
+  if (!user) return [];
+  
+  const since = new Date(Date.now() - withinSeconds * 1000);
+  
+  return await db.Token.findAll({
+    where: {
+      userId: user.id,
+      type,
+      createdAt: { [Op.gte]: since },
+    },
+    order: [['createdAt', 'DESC']],
+    limit: 1,
+  });
+};
 const findRecentToken = (userId, type, seconds) => {
   return db.Token.findOne({
     where: {
@@ -61,5 +79,6 @@ const authRepository = {
   findActiveTokens,
   invalidateTokens,
   findRecentToken,
+  getRecentTokensByEmail,
 };
 export default authRepository;

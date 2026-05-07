@@ -1,8 +1,6 @@
 import React from "react";
 
 const ProfileImageUpload = ({ file, onUpload, onRemove }) => {
-  console.log("ProfileImageUpload file:", file, typeof file);
-  
   const handleRemove = () => {
     if (onRemove) {
       onRemove();
@@ -11,8 +9,7 @@ const ProfileImageUpload = ({ file, onUpload, onRemove }) => {
 
   const isFile = file instanceof File;
   const isUrl = typeof file === "string" && file.startsWith("http");
-  
-  const imgSrc = isFile ? URL.createObjectURL(file) : (isUrl ? file : null);
+  const imgSrc = isFile ? URL.createObjectURL(file) : isUrl ? file : null;
 
   return (
     <div>
@@ -36,7 +33,10 @@ const ProfileImageUpload = ({ file, onUpload, onRemove }) => {
               src={imgSrc}
               alt="Preview"
               className="w-20 h-20 rounded-xl object-cover mb-2"
-              onError={(e) => { e.target.src = ''; e.target.alt = 'Image failed to load'; }}
+              onError={(e) => {
+                e.target.src = "";
+                e.target.alt = "Image failed to load";
+              }}
             />
             <div className="flex items-center gap-2">
               <span className="text-xs text-emerald-600 font-medium">

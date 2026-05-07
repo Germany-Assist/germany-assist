@@ -10,7 +10,7 @@ export function errorMiddleware(err, req, res, next) {
   err.trace = req.requestId;
 
   // App (business) errors
-  if (err instanceof AppError) {
+  if (err instanceof AppError && err.httpCode) {
     res.status(err.httpCode).json({
       success: false,
       message: err.publicMessage,

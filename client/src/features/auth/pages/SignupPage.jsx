@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SignupHeader from "../components/SignupHeader";
 import SignupSidebar from "../components/SignupSidebar";
 import QuickQuestions from "../components/QuickQuestions";
@@ -25,8 +25,32 @@ const SignupPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [basicInfoData, setBasicInfoData] = useState(null);
   const [animKey, setAnimKey] = useState(0);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [hasSentInitialCode, setHasSentInitialCode] = useState(false);
 
   const navigate = useNavigate();
+
+  const startCooldown = (seconds) => {
+    setResendCooldown(seconds);
+    const interval = setInterval(() => {
+      setResendCooldown(prev => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  // Auto-start cooldown when entering verification step
+  useEffect(() => {
+    if (currentStep === 4 && !hasSentInitialCode) {
+      setHasSentInitialCode(true);
+      // Email is sent during signup on backend, just start cooldown
+      startCooldown(180);
+    }
+  }, [currentStep, hasSentInitialCode]);
 
   const downloadImageAsFile = async (url) => {
     // Not used anymore - URL is sent directly to backend
@@ -229,13 +253,25 @@ const SignupPage = () => {
   };
 
   const handleResendVerificationEmail = async () => {
+    if (resendCooldown > 0) return;
+    
     try {
       const res = await resendVerificationEmail(email);
       if (res) {
         setError(null);
+        startCooldown(180);
       }
     } catch (err) {
-      setError("Failed to resend verification email. Please try again.");
+      const msg = getErrorMessage(err);
+      if (msg.includes("wait") || msg.includes("Cooldown") || msg.includes("seconds")) {
+        const match = msg.match(/(\d+)\s*seconds?/);
+        if (match) {
+          startCooldown(parseInt(match[1]));
+        }
+        setError(msg);
+      } else {
+        setError("Failed to resend verification email. Please try again.");
+      }
     }
   };
 
@@ -349,6 +385,7 @@ const SignupPage = () => {
                   onBack={handleBack}
                   error={error}
                   setError={setError}
+                  cooldown={resendCooldown}
                 />
               )}
             </div>

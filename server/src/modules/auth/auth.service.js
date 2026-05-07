@@ -90,7 +90,33 @@ export async function googleAuthSignin(body) {
   }
 }
 export async function resendVerificationEmail(userEmail) {
+  const RESEND_COOLDOWN_SECONDS = 180; // 3 minutes cooldown
+  const t = await sequelize.transaction();
+  
   try {
+    // Check for recent verification tokens to enforce cooldown
+    const recentTokens = await authRepository.getRecentTokensByEmail(
+      userEmail,
+      TOKENS_CONSTANTS.EMAIL_VERIFICATION,
+      RESEND_COOLDOWN_SECONDS
+    );
+    
+    if (recentTokens && recentTokens.length > 0) {
+      const lastToken = recentTokens[0];
+      const lastSentTime = new Date(lastToken.createdAt);
+      const secondsSinceLastSent = (Date.now() - lastSentTime.getTime()) / 1000;
+      const remainingSeconds = Math.ceil(RESEND_COOLDOWN_SECONDS - secondsSinceLastSent);
+      
+      if (remainingSeconds > 0) {
+        throw new AppError(
+          429,
+          `Please wait ${remainingSeconds} seconds before requesting a new code`,
+          true,
+          `Cooldown active. Try again in ${remainingSeconds} seconds`
+        );
+      }
+    }
+
     const token = generateSecureToken();
     const tokenHash = hashToken(token);
     const user = await userRepository.getUserByEmail(userEmail);
@@ -127,30 +153,36 @@ export async function resendVerificationEmail(userEmail) {
       subject: "Verification Email",
       html,
     });
+    
+    await t.commit();
+    return { success: true, message: "Verification email sent successfully" };
   } catch (error) {
+    await t.rollback();
     errorLogger(error);
     throw error;
   }
 }
 export async function sendVerificationEmail(userEmail, userId, t) {
+  const useExternalTransaction = t !== undefined;
+  const transaction = useExternalTransaction ? t : await sequelize.transaction();
+  
   try {
-    // return;
     const token = generateSecureToken();
     const tokenHash = hashToken(token);
     await authRepository.invalidateTokens(
       userId,
       TOKENS_CONSTANTS.EMAIL_VERIFICATION,
-      t,
+      transaction,
     );
     const databaseToken = {
       token: tokenHash.trim(),
       userId: userId,
       oneTime: true,
       isValid: true,
-      type: TOKENS_CONSTANTS.EMAIL_VERIFICATION, //"emailVerification",
+      type: TOKENS_CONSTANTS.EMAIL_VERIFICATION,
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
     };
-    await authRepository.createToken(databaseToken, t);
+    await authRepository.createToken(databaseToken, transaction);
     const link = `${APP_DOMAIN}/api/auth/verifyAccount?token=${encodeURIComponent(
       token,
     )}`;
@@ -160,7 +192,15 @@ export async function sendVerificationEmail(userEmail, userId, t) {
       subject: "Verification Email",
       html,
     });
+    
+    if (!useExternalTransaction) {
+      await transaction.commit();
+    }
+    return { success: true };
   } catch (error) {
+    if (!useExternalTransaction) {
+      await transaction.rollback();
+    }
     errorLogger(error);
     throw error;
   }
