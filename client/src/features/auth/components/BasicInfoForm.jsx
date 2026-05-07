@@ -75,8 +75,16 @@ const BasicInfoForm = ({
   onContinue,
   error,
   setError,
+  initialValues,
 }) => {
   const [formData, setFormData] = useState(initialFormData);
+  
+  // Sync with initialValues when provided (e.g., when going back)
+  useEffect(() => {
+    if (initialValues) {
+      setFormData((prev) => ({ ...prev, ...initialValues }));
+    }
+  }, [initialValues]);
   const [errors, setErrors] = useState(initialErrors);
   const [countries, setCountries] = useState([]);
   const [isLoadingCountries, setIsLoadingCountries] = useState(true);
@@ -92,6 +100,12 @@ const BasicInfoForm = ({
       const { exists } = await checkEmailExists(email);
       if (exists) {
         setErrors((prev) => ({ ...prev, email: "This email is already registered" }));
+      } else {
+        // Clear the error only if it was the "already registered" error
+        setErrors((prev) => ({
+          ...prev,
+          email: prev.email === "This email is already registered" ? "" : prev.email
+        }));
       }
     } catch (err) {
       console.error("Failed to check email:", err);
@@ -102,6 +116,23 @@ const BasicInfoForm = ({
 
   const inputBaseStyle =
     "w-full py-2.5 px-3 border-2 border-[#E5E7EB] rounded-xl text-sm text-[#111827] bg-white outline-none transition-colors duration-300 focus:border-[#024CEE] focus:shadow-[0_0_0_3px_rgba(2,76,238,0.07)]";
+
+  const isFormReady = () => {
+    // Check all required fields are filled and valid
+    const hasBasicInfo = formData.firstName.trim().length >= 2 && formData.firstName.trim().length <= 50 && validateName(formData.firstName);
+    const hasLastName = formData.lastName.trim().length >= 2 && formData.lastName.trim().length <= 50 && validateName(formData.lastName);
+    const hasValidEmail = formData.email.trim() && validateEmail(formData.email);
+    const hasNoEmailError = !errors.email || errors.email === "";
+    const hasPhone = formData.phone.trim().replace(/\s/g, "").length >= 7 && formData.phone.replace(/\s/g, "").length <= 20 && validatePhone(formData.phone);
+    const hasNationality = !!formData.nationality;
+    const hasCountry = !!formData.countryOfResidence;
+    const hasCompany = role === "provider" && subRole === "company" ? !!formData.companyName.trim() : true;
+    const hasPassword = formData.password.length >= 8 && /[A-Z]/.test(formData.password) && /[a-z]/.test(formData.password) && /[0-9]/.test(formData.password) && /[^a-zA-Z0-9]/.test(formData.password);
+    const hasConfirmPassword = formData.confirmPassword === formData.password && formData.confirmPassword.length > 0;
+    const hasTerms = agreedToTerms;
+
+    return hasBasicInfo && hasLastName && hasValidEmail && hasNoEmailError && hasPhone && hasNationality && hasCountry && hasCompany && hasPassword && hasConfirmPassword && hasTerms;
+  };
 
   const validateField = (field, value, currentFormData = formData) => {
     let error = "";
@@ -166,10 +197,12 @@ const BasicInfoForm = ({
   };
 
   const updateField = (field, value) => {
+    // Always set the value first
     const newFormData = { ...formData, [field]: value };
     setFormData(newFormData);
-    const fieldError = validateField(field, value, newFormData);
     
+    // Then validate and set error
+    const fieldError = validateField(field, value, newFormData);
     setErrors((prev) => {
       const newErrors = { ...prev, [field]: fieldError };
       // Preserve "already exists" error when editing other fields
@@ -185,7 +218,6 @@ const BasicInfoForm = ({
   };
 
   const handleGoogleResponse = async (response) => {
-    console.log("Google Response:", JSON.stringify(response));
     setError(null);
     if (!response.success) {
       setError(response.message);
@@ -198,25 +230,28 @@ const BasicInfoForm = ({
       googleProfileImageUrl = response.profilePicture.url;
     }
     
-    // Direct set without validation to ensure it works
-    setFormData((prev) => {
-      const newData = { ...prev };
-      if (response.firstName) newData.firstName = response.firstName;
-      if (response.lastName) newData.lastName = response.lastName;
-      if (response.email) newData.email = response.email;
-      if (response.phone) newData.phone = response.phone;
-      if (googleProfileImageUrl) newData.profileImage = googleProfileImageUrl;
-      return newData;
-    });
+    // Set Google data directly to form and validate
+    const newFormData = { ...formData };
+    if (response.firstName) newFormData.firstName = response.firstName;
+    if (response.lastName) newFormData.lastName = response.lastName;
+    if (response.email) newFormData.email = response.email;
+    if (response.phone) newFormData.phone = response.phone;
     
-    // Clear any field errors
+    setFormData(newFormData);
+    
+    // Validate all Google-filled fields and set errors
     setErrors((prev) => ({
       ...prev,
-      firstName: "",
-      lastName: "",
-      email: "",
-      general: ""
+      firstName: response.firstName ? validateField("firstName", response.firstName, newFormData) : prev.firstName,
+      lastName: response.lastName ? validateField("lastName", response.lastName, newFormData) : prev.lastName,
+      email: response.email ? validateField("email", response.email, newFormData) : prev.email,
+      phone: response.phone ? validateField("phone", response.phone, newFormData) : prev.phone,
     }));
+    
+    // Set profile image separately (no validation needed)
+    if (googleProfileImageUrl) {
+      setFormData((prev) => ({ ...prev, profileImage: googleProfileImageUrl }));
+    }
   };
 
   useEffect(() => {
@@ -366,7 +401,7 @@ const BasicInfoForm = ({
   return (
     <div className="w-full max-w-[560px] text-left px-4 sm:px-0 animate-fade-up">
       <button
-        onClick={onBack}
+        onClick={() => onBack(formData)}
         className="flex items-center justify-center gap-1.5 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-5 pl-2.5 pr-2.5"
       >
         <span className="flex items-center">←</span> Back
@@ -439,11 +474,13 @@ const BasicInfoForm = ({
             type="email"
             value={formData.email}
             onChange={(value) => updateField("email", value)}
+            onInput={(value) => updateField("email", value)}
             onBlur={() => handleEmailCheck(formData.email)}
             placeholder="your@email.com"
             required
             error={errors.email}
             inputBaseStyle={inputBaseStyle}
+            autoComplete="email"
           />
           <FormInput
             label="Phone Number"
@@ -556,7 +593,12 @@ const BasicInfoForm = ({
 
       <button
         onClick={handleSubmit}
-        className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] btn-ripple"
+        disabled={!isFormReady()}
+        className={`w-full py-3 rounded-xl font-semibold text-sm transition-all btn-ripple ${
+          isFormReady() 
+            ? "bg-[#024CEE] text-white cursor-pointer hover:bg-[#0341cc] hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98]" 
+            : "bg-[#E5E7EB] text-[#9CA3AF] cursor-not-allowed"
+        }`}
       >
         Continue →
       </button>

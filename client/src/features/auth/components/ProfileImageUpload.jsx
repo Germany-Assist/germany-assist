@@ -13,7 +13,6 @@ const ProfileImageUpload = ({ file, onUpload, onRemove }) => {
   const isUrl = typeof file === "string" && file.startsWith("http");
   
   const imgSrc = isFile ? URL.createObjectURL(file) : (isUrl ? file : null);
-  console.log("imgSrc:", imgSrc);
 
   return (
     <div>
