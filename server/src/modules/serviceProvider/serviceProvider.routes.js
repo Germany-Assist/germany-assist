@@ -25,6 +25,7 @@ serviceProviderRouter.post(
   ]),
   createFreelancerValidator,
   validateExpress,
+  // categoryEntries is sent as text field alongside categoryFiles
   serviceProviderController.signupFreelancer,
 );
 
@@ -39,6 +40,7 @@ serviceProviderRouter.post(
   ]),
   createCompanyValidator,
   validateExpress,
+  // categoryEntries is sent as text field alongside categoryFiles
   serviceProviderController.signupCompany,
 );
 

@@ -16,6 +16,32 @@ import userMapper from "./user.mapper.js";
 import userRepository from "./user.repository.js";
 
 const getFile = (files, field) => files?.[field]?.[0] || null;
+
+// Helper to process category files - parses categoryEntries and maps files to categories
+// categoryEntries: [{"categoryId": "german_language", "fileIndices": [0, 1]}, ...]
+// files: array of uploaded files from req.files?.categoryFiles
+const processCategoryFiles = (body, files) => {
+  const categoryFilesMap = {};
+  
+  if (!body.categoryEntries || !files || files.length === 0) {
+    return categoryFilesMap;
+  }
+  
+  try {
+    const categoryEntries = JSON.parse(body.categoryEntries);
+    
+    categoryEntries.forEach(({ categoryId, fileIndices }) => {
+      categoryFilesMap[categoryId] = fileIndices
+        .filter(idx => files[idx])
+        .map(idx => files[idx]);
+    });
+  } catch (e) {
+    console.error("Error parsing categoryEntries:", e);
+  }
+  
+  return categoryFilesMap;
+};
+
 export const registerClient = async (body, files) => {
   const t = await sequelize.transaction();
   try {
@@ -93,6 +119,35 @@ export const registerClient = async (body, files) => {
         userId: user.id,
         transaction: t,
       });
+    }
+
+    // Process category credential files
+    // categoryEntries tells us which file indices belong to which category
+    const categoryFiles = files?.categoryFiles || [];
+    const categoryFilesMap = processCategoryFiles(body, categoryFiles);
+    
+    // For each category, create a verification request and upload the files
+    for (const [categoryId, catFiles] of Object.entries(categoryFilesMap)) {
+      if (catFiles && catFiles.length > 0) {
+        const categoryRequest = await verificationRequestRepository.createRequest(
+          {
+            auth: user,
+            userId: user.id,
+            relatedId: user.id,
+            type: "category",
+            categoryId: categoryId,
+          },
+          t,
+        );
+        await AssetService.uploadAsset({
+          files: catFiles,
+          ownerId: categoryRequest.id,
+          typeKey: "credentialDocument",
+          label: `Category: ${categoryId}`,
+          userId: user.id,
+          transaction: t,
+        });
+      }
     }
 
     await t.commit();

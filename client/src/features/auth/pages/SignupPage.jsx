@@ -118,17 +118,27 @@ const SignupPage = () => {
     if (additionalData.categories && additionalData.categories.length > 0) {
       formData.append("categories", JSON.stringify(additionalData.categories));
       
+      // Build category entries mapping file indices to categories
+      const categoryEntries = [];
+      let fileIndex = 0;
+      
       if (additionalData.categoryUploads) {
         Object.keys(additionalData.categoryUploads).forEach((catId) => {
           const files = additionalData.categoryUploads[catId];
           if (files) {
             const fileArray = Array.isArray(files) ? files : [files];
-            fileArray.forEach((file, index) => {
+            const startIndex = fileIndex;
+            fileArray.forEach((file) => {
               formData.append("categoryFiles", file);
+              fileIndex++;
             });
+            categoryEntries.push({ categoryId: catId, fileIndices: Array.from({ length: fileArray.length }, (_, i) => startIndex + i) });
           }
         });
       }
+      
+      // Send category entries so backend knows which file indices belong to which category
+      formData.append("categoryEntries", JSON.stringify(categoryEntries));
     }
     
     setEmail(formData.get("email"));

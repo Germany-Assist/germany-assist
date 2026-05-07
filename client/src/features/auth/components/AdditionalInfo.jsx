@@ -258,7 +258,7 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete }) => {
               badge
               badgeText="Required"
               files={formData.idDocument ? [formData.idDocument] : []}
-              onUpload={(files) => updateField("idDocument", files?.[0] || null)}
+              onUpload={(files) => updateField("idDocument", Array.isArray(files) ? files[0] : files)}
               onRemove={() => updateField("idDocument", null)}
               accept=".pdf,.jpg,.jpeg,.png"
               multiple={false}
@@ -272,7 +272,7 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete }) => {
                 badge
                 badgeText="Optional"
                 files={formData.proofOfResidence ? [formData.proofOfResidence] : []}
-                onUpload={(files) => updateField("proofOfResidence", files?.[0] || null)}
+                onUpload={(files) => updateField("proofOfResidence", Array.isArray(files) ? files[0] : files)}
                 onRemove={() => updateField("proofOfResidence", null)}
                 accept=".pdf,.jpg,.jpeg,.png"
                 multiple={false}
@@ -287,7 +287,7 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete }) => {
                 badge
                 badgeText="Required for Company"
                 files={formData.businessRegistration ? [formData.businessRegistration] : []}
-                onUpload={(files) => updateField("businessRegistration", files?.[0] || null)}
+                onUpload={(files) => updateField("businessRegistration", Array.isArray(files) ? files[0] : files)}
                 onRemove={() => updateField("businessRegistration", null)}
                 accept=".pdf"
                 multiple={false}

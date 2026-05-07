@@ -18,6 +18,7 @@ userRouter.post(
   ]),
   createUserValidators,
   validateExpress,
+  // categoryEntries is sent as text field alongside categoryFiles
   userControllers.createClientController,
 );
 
