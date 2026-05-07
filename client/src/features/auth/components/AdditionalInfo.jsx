@@ -19,7 +19,6 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete, initialProf
   // Set initial profile image from BasicInfoForm (Google signup)
   useEffect(() => {
     if (initialProfileImage && !formData.profileImage) {
-      console.log("Setting initial profile image:", initialProfileImage);
       setFormData(prev => ({ ...prev, profileImage: initialProfileImage }));
     }
   }, [initialProfileImage]);

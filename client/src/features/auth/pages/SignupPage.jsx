@@ -239,10 +239,22 @@ const SignupPage = () => {
     }
   };
 
-  const handleBack = () => {
-    setError("");
+  const handleBack = (formData = null) => {
     if (currentStep === 3) return;
-    if (currentStep > 1) setCurrentStep(currentStep - 1);
+    if (currentStep > 1) {
+      // If going back from step 2, preserve form data
+      if (currentStep === 2 && formData) {
+        const newFormData = new FormData();
+        Object.keys(formData).forEach(key => {
+          if (formData[key] !== null && formData[key] !== undefined) {
+            newFormData.append(key, formData[key]);
+          }
+        });
+        setBasicInfoData(newFormData);
+      }
+      setCurrentStep(currentStep - 1);
+      setError("");
+    }
   };
 
   const getSidebarStep = () => {
@@ -306,6 +318,7 @@ const SignupPage = () => {
                   onContinue={handleStep2Complete}
                   error={error}
                   setError={setError}
+                  initialValues={basicInfoData ? Object.fromEntries(basicInfoData.entries()) : null}
                 />
               )}
 
