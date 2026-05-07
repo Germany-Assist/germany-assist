@@ -163,7 +163,7 @@ export const registerFreelancer = async (body, files) => {
         await AssetService.uploadAsset({
           files: catFiles,
           ownerId: categoryRequest.id,
-          typeKey: "credentialDocument",
+          typeKey: "verificationDocument",
           label: `Category: ${categoryId}`,
           userId: user.id,
           transaction: t,
