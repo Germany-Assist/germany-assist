@@ -278,7 +278,7 @@ const SignupPage = () => {
 
         <main className="flex-1 overflow-y-auto bg-white">
           <div className="min-h-full flex flex-col items-center px-4 sm:px-10 py-12">
-            <div key={animKey} className="w-full max-w-xl animate-fade-up">
+            <div className="w-full max-w-xl">
               {currentStep === 1 && (
                 <QuickQuestions
                   role={role}

@@ -54,6 +54,7 @@ export const registerClient = async (body, files) => {
       phone,
       nationality,
       countryOfResidence,
+      bio,
     } = body;
     const password = bcryptUtil.hashPassword(body.password);
     const userData = {
@@ -69,6 +70,8 @@ export const registerClient = async (body, files) => {
         relatedId: null,
       },
       UserProfile: {
+        // i added the bio of the client here for now since i have no idea what to do with it at the moment or even create a client profile in the future
+        bio: bio,
         nationality: nationality,
         countryOfResidence: countryOfResidence,
         phoneNumber: phone,

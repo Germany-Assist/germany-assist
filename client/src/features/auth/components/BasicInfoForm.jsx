@@ -5,6 +5,7 @@ import FormSelect from "./FormSelect";
 import PasswordInput from "./PasswordInput";
 import TermsCheckbox from "./TermsCheckbox";
 import SectionHeader from "./SectionHeader";
+import { checkEmailExists } from "../../../api/authService";
 
 const initialFormData = {
   firstName: "",
@@ -82,6 +83,22 @@ const BasicInfoForm = ({
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [checkingEmail, setCheckingEmail] = useState(false);
+
+  const handleEmailCheck = async (email) => {
+    if (!email || !validateEmail(email)) return;
+    setCheckingEmail(true);
+    try {
+      const { exists } = await checkEmailExists(email);
+      if (exists) {
+        setErrors((prev) => ({ ...prev, email: "This email is already registered" }));
+      }
+    } catch (err) {
+      console.error("Failed to check email:", err);
+    } finally {
+      setCheckingEmail(false);
+    }
+  };
 
   const inputBaseStyle =
     "w-full py-2.5 px-3 border-2 border-[#E5E7EB] rounded-xl text-sm text-[#111827] bg-white outline-none transition-colors duration-300 focus:border-[#024CEE] focus:shadow-[0_0_0_3px_rgba(2,76,238,0.07)]";
@@ -152,7 +169,16 @@ const BasicInfoForm = ({
     const newFormData = { ...formData, [field]: value };
     setFormData(newFormData);
     const fieldError = validateField(field, value, newFormData);
-    setErrors((prev) => ({ ...prev, [field]: fieldError }));
+    
+    setErrors((prev) => {
+      const newErrors = { ...prev, [field]: fieldError };
+      // Preserve "already exists" error when editing other fields
+      if (field !== "email" && prev.email === "This email is already registered") {
+        newErrors.email = prev.email;
+      }
+      return newErrors;
+    });
+    
     if (field === "email" && fieldError === "") {
       setError(null);
     }
@@ -209,6 +235,10 @@ const BasicInfoForm = ({
   const validateForm = () => {
     const newErrors = { ...initialErrors };
     let isValid = true;
+    
+    // Preserve "already registered" error from API check
+    const existingEmailError = errors.email === "This email is already registered" ? errors.email : "";
+
     if (!formData.firstName.trim()) {
       newErrors.firstName = "First name is required";
       isValid = false;
@@ -232,10 +262,13 @@ const BasicInfoForm = ({
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = existingEmailError || "Email is required";
       isValid = false;
     } else if (!validateEmail(formData.email)) {
-      newErrors.email = "Invalid email format";
+      newErrors.email = existingEmailError || "Invalid email format";
+      isValid = false;
+    } else if (existingEmailError) {
+      newErrors.email = existingEmailError;
       isValid = false;
     }
 
@@ -331,7 +364,7 @@ const BasicInfoForm = ({
     onContinue(formDataPayload);
   };
   return (
-    <div className="w-full max-w-[560px] text-left px-4 sm:px-0">
+    <div className="w-full max-w-[560px] text-left px-4 sm:px-0 animate-fade-up">
       <button
         onClick={onBack}
         className="flex items-center justify-center gap-1.5 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-5 pl-2.5 pr-2.5"
@@ -406,6 +439,7 @@ const BasicInfoForm = ({
             type="email"
             value={formData.email}
             onChange={(value) => updateField("email", value)}
+            onBlur={() => handleEmailCheck(formData.email)}
             placeholder="your@email.com"
             required
             error={errors.email}

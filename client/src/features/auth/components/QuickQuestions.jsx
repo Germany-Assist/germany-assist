@@ -112,7 +112,7 @@ const QuickQuestions = ({
   };
 
   return (
-    <div className="w-full max-w-[560px] text-left px-4 sm:px-0">
+    <div className="w-full max-w-[560px] text-left px-4 sm:px-0 animate-fade-up">
       {step === 1 && (
         <div className="fade-in">
           <div className="text-[1.375rem] font-bold text-[#111827] mb-1">
