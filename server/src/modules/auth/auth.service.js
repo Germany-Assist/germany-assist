@@ -121,7 +121,7 @@ export async function resendVerificationEmail(userEmail) {
     const link = `${APP_DOMAIN}/api/auth/verifyAccount?token=${encodeURIComponent(
       token,
     )}`;
-    const html = verificationEmailTemplate(link);
+    const html = verificationEmailTemplate(link, token);
     await emailQueue.add("sendEmail", {
       to: userEmail,
       subject: "Verification Email",
@@ -154,7 +154,7 @@ export async function sendVerificationEmail(userEmail, userId, t) {
     const link = `${APP_DOMAIN}/api/auth/verifyAccount?token=${encodeURIComponent(
       token,
     )}`;
-    const html = verificationEmailTemplate(link);
+    const html = verificationEmailTemplate(link, token);
     await emailQueue.add("sendEmail", {
       to: userEmail,
       subject: "Verification Email",

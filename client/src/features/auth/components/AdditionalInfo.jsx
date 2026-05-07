@@ -16,15 +16,13 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete, initialProf
     businessRegistration: null,
   });
 
-  // Update profileImage when initialProfileImage changes (only on mount)
+  // Set initial profile image from BasicInfoForm (Google signup)
   useEffect(() => {
-    if (initialProfileImage) {
-      setFormData(prev => ({ 
-        ...prev, 
-        profileImage: prev.profileImage || initialProfileImage 
-      }));
+    if (initialProfileImage && !formData.profileImage) {
+      console.log("Setting initial profile image:", initialProfileImage);
+      setFormData(prev => ({ ...prev, profileImage: initialProfileImage }));
     }
-  }, []);
+  }, [initialProfileImage]);
 
   const inputBaseStyle =
     "w-full py-2.5 px-3 border-2 border-[#E5E7EB] rounded-xl text-sm text-[#111827] bg-white outline-none transition-colors duration-300 focus:border-[#024CEE] focus:shadow-[0_0_0_3px_rgba(2,76,238,0.07)]";
