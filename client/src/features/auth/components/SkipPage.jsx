@@ -1,8 +1,15 @@
 import React from "react";
 
-const SkipPage = ({ onBack, onAddDetails, onSkip }) => {
+const SkipPage = ({ onBack, onAddDetails, onSkip, isSubmitting = false, error = "" }) => {
   return (
     <div className="w-full max-w-[560px] text-left px-4  sm:px-0">
+      {error && (
+        <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-sm mb-3.5 animate-shake">
+          <span>⚠</span>
+          <span>{error}</span>
+        </div>
+      )}
+
       <button
         onClick={onBack}
         className="flex items-center gap-1.5 p-3 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-5"
@@ -30,15 +37,17 @@ const SkipPage = ({ onBack, onAddDetails, onSkip }) => {
         <div className="flex flex-col gap-2">
           <button
             onClick={onAddDetails}
-            className="w-full p-3 py-2.75 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc]"
+            disabled={isSubmitting}
+            className="w-full p-3 py-2.75 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] disabled:opacity-60 disabled:cursor-not-allowed"
           >
             Yes, add details →
           </button>
           <button
             onClick={onSkip}
-            className="w-full p-3 py-2.75 bg-white rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827]"
+            disabled={isSubmitting}
+            className="w-full p-3 py-2.75 bg-white rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Skip for now — verify my email
+            {isSubmitting ? "Submitting..." : "Skip for now — verify my email"}
           </button>
         </div>
       </div>

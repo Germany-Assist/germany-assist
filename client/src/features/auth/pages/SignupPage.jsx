@@ -27,6 +27,7 @@ const SignupPage = () => {
   const [animKey, setAnimKey] = useState(0);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [hasSentInitialCode, setHasSentInitialCode] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
 
@@ -119,6 +120,9 @@ const SignupPage = () => {
     
     setEmail(formData.get("email"));
     
+    setIsSubmitting(true);
+    setError("");
+    
     try {
       let result;
       if (role === "provider" || role === "service") {
@@ -134,6 +138,8 @@ const SignupPage = () => {
       }
     } catch (err) {
       setError(getErrorMessage(err));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -222,6 +228,9 @@ const SignupPage = () => {
     
     setEmail(formData.get("email"));
     
+    setIsSubmitting(true);
+    setError("");
+    
     try {
       let result;
       if (role === "provider" || role === "service") {
@@ -237,6 +246,8 @@ const SignupPage = () => {
       }
     } catch (err) {
       setError(getErrorMessage(err));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -363,6 +374,8 @@ const SignupPage = () => {
                   onBack={() => setCurrentStep(2)}
                   onAddDetails={handleAdditionalInfo}
                   onSkip={handleSkipPage}
+                  isSubmitting={isSubmitting}
+                  error={error}
                 />
               )}
 
@@ -374,6 +387,8 @@ const SignupPage = () => {
                   onSkip={handleSkipPage}
                   onComplete={handleAdditionalInfoComplete}
                   initialProfileImage={basicInfoData?.get("profileImage")}
+                  isSubmitting={isSubmitting}
+                  error={error}
                 />
               )}
 
