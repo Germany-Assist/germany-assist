@@ -1,7 +1,6 @@
 import authDomain from "../auth/auth.domain.js";
 import userDomain from "./user.domain.js";
 import userServices from "./user.services.js";
-
 export async function createClientController(req, res, next) {
   try {
     const result = await userServices.registerClient(req.body, req.files);

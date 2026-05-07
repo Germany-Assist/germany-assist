@@ -95,27 +95,8 @@ const SignupPage = () => {
       googleProfileImageUrl.startsWith("http");
     
     // If Google image URL exists, send it as separate field
-    if (isGoogleImageUrl) {
+if (isGoogleImageUrl) {
       formData.append("profileImageUrl", googleProfileImageUrl);
-    }
-    
-    formData.append("role", role);
-    formData.append("subRole", subRole || "");
-    
-    if (additionalData.bio) {
-      formData.append("bio", additionalData.bio);
-    }
-    
-    // Handle uploaded profile image from AdditionalInfo (if skipping directly)
-    if (additionalData.profileImage && !isGoogleImageUrl) {
-      const profileImage = Array.isArray(additionalData.profileImage) 
-        ? additionalData.profileImage[0] 
-        : additionalData.profileImage;
-      if (profileImage instanceof File) {
-        formData.append("profileImage", profileImage);
-      } else if (typeof profileImage === "string" && !profileImage.startsWith("http")) {
-        formData.append("profileImageUrl", profileImage);
-      }
     }
     
     setEmail(formData.get("email"));
