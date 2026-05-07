@@ -57,7 +57,7 @@ app.use(
           "https://accounts.google.com",
           "https://restcountries.com",
         ],
-        imgSrc: ["'self'", "data:", "https:"],
+        imgSrc: ["'self'", "data:", "https:", "blob:"],
       },
     },
   }),

@@ -92,27 +92,29 @@ export async function googleAuthSignin(body) {
 export async function resendVerificationEmail(userEmail) {
   const RESEND_COOLDOWN_SECONDS = 180; // 3 minutes cooldown
   const t = await sequelize.transaction();
-  
+
   try {
     // Check for recent verification tokens to enforce cooldown
     const recentTokens = await authRepository.getRecentTokensByEmail(
       userEmail,
       TOKENS_CONSTANTS.EMAIL_VERIFICATION,
-      RESEND_COOLDOWN_SECONDS
+      RESEND_COOLDOWN_SECONDS,
     );
-    
+
     if (recentTokens && recentTokens.length > 0) {
       const lastToken = recentTokens[0];
       const lastSentTime = new Date(lastToken.createdAt);
       const secondsSinceLastSent = (Date.now() - lastSentTime.getTime()) / 1000;
-      const remainingSeconds = Math.ceil(RESEND_COOLDOWN_SECONDS - secondsSinceLastSent);
-      
+      const remainingSeconds = Math.ceil(
+        RESEND_COOLDOWN_SECONDS - secondsSinceLastSent,
+      );
+
       if (remainingSeconds > 0) {
         throw new AppError(
           429,
           `Please wait ${remainingSeconds} seconds before requesting a new code`,
           true,
-          `Cooldown active. Try again in ${remainingSeconds} seconds`
+          `Cooldown active. Try again in ${remainingSeconds} seconds`,
         );
       }
     }
@@ -147,14 +149,14 @@ export async function resendVerificationEmail(userEmail) {
     const link = `${APP_DOMAIN}/api/auth/verifyAccount?token=${encodeURIComponent(
       token,
     )}`;
+
+    await t.commit();
     const html = verificationEmailTemplate(link, token);
-    await emailQueue.add("sendEmail", {
+    emailQueue.add("sendEmail", {
       to: userEmail,
       subject: "Verification Email",
       html,
     });
-    
-    await t.commit();
     return { success: true, message: "Verification email sent successfully" };
   } catch (error) {
     await t.rollback();
@@ -164,8 +166,10 @@ export async function resendVerificationEmail(userEmail) {
 }
 export async function sendVerificationEmail(userEmail, userId, t) {
   const useExternalTransaction = t !== undefined;
-  const transaction = useExternalTransaction ? t : await sequelize.transaction();
-  
+  const transaction = useExternalTransaction
+    ? t
+    : await sequelize.transaction();
+
   try {
     const token = generateSecureToken();
     const tokenHash = hashToken(token);
@@ -192,7 +196,7 @@ export async function sendVerificationEmail(userEmail, userId, t) {
       subject: "Verification Email",
       html,
     });
-    
+
     if (!useExternalTransaction) {
       await transaction.commit();
     }

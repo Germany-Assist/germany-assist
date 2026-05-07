@@ -12,7 +12,8 @@ const SkipPage = ({ onBack, onAddDetails, onSkip, isSubmitting = false, error = 
 
       <button
         onClick={onBack}
-        className="flex items-center gap-1.5 p-3 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-5"
+        className="flex items-center gap-1.5 p-3 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-5 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={isSubmitting}
       >
         ← Back
       </button>
@@ -34,20 +35,44 @@ const SkipPage = ({ onBack, onAddDetails, onSkip, isSubmitting = false, error = 
           Adding your location and documents helps verify your account faster
           and unlocks all features. It only takes 2 minutes.
         </p>
+        {isSubmitting && (
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            padding: '16px',
+            marginBottom: '16px',
+            backgroundColor: '#eff6ff',
+            borderRadius: '8px',
+            border: '1px solid #3b82f6'
+          }}>
+            <div style={{
+              width: '20px',
+              height: '20px',
+              border: '3px solid #024CEE',
+              borderRadius: '50%',
+              borderTopColor: 'transparent',
+              animation: 'spin 0.8s linear infinite'
+            }} />
+            <span style={{ fontWeight: 500, color: '#024CEE', fontSize: '14px' }}>Processing your request...</span>
+          </div>
+        )}
         <div className="flex flex-col gap-2">
           <button
             onClick={onAddDetails}
             disabled={isSubmitting}
             className="w-full p-3 py-2.75 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Yes, add details →
+            {isSubmitting ? "Processing..." : "Yes, add details →"}
           </button>
           <button
             onClick={onSkip}
             disabled={isSubmitting}
             className="w-full p-3 py-2.75 bg-white rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? "Submitting..." : "Skip for now — verify my email"}
+            {isSubmitting ? "Processing..." : "Skip for now — verify my email"}
           </button>
         </div>
       </div>

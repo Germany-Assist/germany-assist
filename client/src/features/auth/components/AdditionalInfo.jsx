@@ -150,10 +150,23 @@ const AdditionalInfo = ({
             ? onBack
             : () => setCurrentSubStep(currentSubStep - 1)
         }
-        className="flex items-center p-3 gap-1.5 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-5"
+        disabled={isSubmitting}
+        className="flex items-center p-3 gap-1.5 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-5 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         ← Back
       </button>
+
+      {isSubmitting && (
+        <div className="flex flex-col items-center justify-center gap-2 p-4 mb-4 bg-blue-50 rounded-lg border border-blue-500">
+          {/* Loader Circle */}
+          <div className="w-5 h-5 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
+
+          {/* Text */}
+          <span className="font-medium text-blue-600 text-sm">
+            Processing your request...
+          </span>
+        </div>
+      )}
 
       {currentSubStep === 1 && (
         <div className="fade-in">
@@ -205,14 +218,14 @@ const AdditionalInfo = ({
             disabled={isSubmitting}
             className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Next: Choose Category →
+            {isSubmitting ? "Processing..." : "Next: Choose Category →"}
           </button>
           <button
             onClick={() => onSkip(formData)}
             disabled={isSubmitting}
             className="w-full py-2.75 p-4 mt-2 rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? "Submitting..." : "Skip all — verify my email"}
+            {isSubmitting ? "Processing..." : "Skip all — verify my email"}
           </button>
         </div>
       )}
@@ -247,22 +260,23 @@ const AdditionalInfo = ({
           <button
             onClick={handleNextSubStep}
             disabled={
-              formData.categories.length > 0 && !canProceedFromCategories()
+              isSubmitting ||
+              (formData.categories.length > 0 && !canProceedFromCategories())
             }
-            className={`w-full py-3 rounded-xl font-semibold text-sm cursor-pointer transition-all active:scale-[0.98] ${
+            className={`w-full py-3 rounded-xl font-semibold text-sm cursor-pointer transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed ${
               formData.categories.length > 0 && !canProceedFromCategories()
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-[#024CEE] text-white hover:bg-[#0341cc]"
             }`}
           >
-            Next: Identity Verification →
+            {isSubmitting ? "Processing..." : "Next: Identity Verification →"}
           </button>
           <button
             onClick={() => onSkip(formData)}
             disabled={isSubmitting}
             className="w-full py-2.75 p-4 mt-2 rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? "Submitting..." : "Skip all — verify my email"}
+            {isSubmitting ? "Processing..." : "Skip all — verify my email"}
           </button>
         </div>
       )}
@@ -345,15 +359,17 @@ const AdditionalInfo = ({
 
           <button
             onClick={() => onComplete(formData)}
-            className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] active:scale-[0.98]"
+            disabled={isSubmitting}
+            className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Submit & Verify Email →
+            {isSubmitting ? "Processing..." : "Submit & Verify Email →"}
           </button>
           <button
             onClick={() => onSkip(formData)}
-            className="w-full p-4 py-2.75 mt-2 rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827]"
+            disabled={isSubmitting}
+            className="w-full p-4 py-2.75 mt-2 rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Skip all — verify my email
+            {isSubmitting ? "Processing..." : "Skip all — verify my email"}
           </button>
         </div>
       )}
