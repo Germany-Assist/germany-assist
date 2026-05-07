@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ProfileImageUpload from "./ProfileImageUpload";
 import FileUpload from "./FileUpload";
 import SectionHeader from "./SectionHeader";
 import CategorySelect from "./CategorySelect";
 
-const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete }) => {
+const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete, initialProfileImage }) => {
   const [currentSubStep, setCurrentSubStep] = useState(1);
   const [formData, setFormData] = useState({
     profileImage: null,
@@ -15,6 +15,16 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete }) => {
     proofOfResidence: null,
     businessRegistration: null,
   });
+
+  // Update profileImage when initialProfileImage changes (only on mount)
+  useEffect(() => {
+    if (initialProfileImage) {
+      setFormData(prev => ({ 
+        ...prev, 
+        profileImage: prev.profileImage || initialProfileImage 
+      }));
+    }
+  }, []);
 
   const inputBaseStyle =
     "w-full py-2.5 px-3 border-2 border-[#E5E7EB] rounded-xl text-sm text-[#111827] bg-white outline-none transition-colors duration-300 focus:border-[#024CEE] focus:shadow-[0_0_0_3px_rgba(2,76,238,0.07)]";
@@ -146,6 +156,7 @@ const AdditionalInfo = ({ role, subRole, onBack, onSkip, onComplete }) => {
             <ProfileImageUpload
               file={formData.profileImage}
               onUpload={(file) => updateField("profileImage", file)}
+              onRemove={() => updateField("profileImage", null)}
             />
           </div>
 

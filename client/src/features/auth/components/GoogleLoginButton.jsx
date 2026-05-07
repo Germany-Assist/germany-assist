@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import { GOOGLE_CLIENT_ID } from "../../../config/api";
 import { googleRetrieveInfo } from "../../../api/authService";
@@ -9,23 +9,29 @@ export default function GoogleLoginButton({
   signin = false,
 }) {
   const { googleLogin } = useAuth();
+
   const googleRegistration = async (idToken) => {
     const user = await googleRetrieveInfo(idToken);
     return user;
   };
-  // Called when Google returns the ID token
-  const handleCredentialResponse = async (response) => {
+
+  const handleCredentialResponse = useCallback(async (response) => {
     try {
       if (signin) {
         await googleLogin(response.credential);
       } else {
         const resp = await googleRegistration(response.credential);
-        return handleGoogleResponse(resp);
+        if (handleGoogleResponse) {
+          handleGoogleResponse(resp);
+        }
       }
     } catch (err) {
       console.error("Google login failed", err);
+      if (handleGoogleResponse) {
+        handleGoogleResponse({ success: false, message: err.message || "Google signup failed" });
+      }
     }
-  };
+  }, [signin, googleLogin, googleRegistration, handleGoogleResponse]);
 
   useEffect(() => {
     if (!window.google) {
@@ -36,6 +42,9 @@ export default function GoogleLoginButton({
     window.google.accounts.id.initialize({
       client_id: GOOGLE_CLIENT_ID,
       callback: handleCredentialResponse,
+      context: signin ? "signin" : "signup",
+      ux_mode: "popup",
+      login_hint: "",
     });
 
     window.google.accounts.id.renderButton(
@@ -43,13 +52,15 @@ export default function GoogleLoginButton({
       {
         theme: "outline",
         size: "large",
-        width: 200,
+        width: "100%",
+        text: signin ? "signin_with" : "signup_with",
+        shape: "rectangular",
+        logo_alignment: "left",
       },
     );
 
-    // Optional: prevent auto One Tap
     window.google.accounts.id.disableAutoSelect();
-  }, []);
+  }, [handleCredentialResponse, signin]);
 
   return <div id="googleBtn" className={authStyle} />;
 }

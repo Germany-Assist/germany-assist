@@ -28,6 +28,11 @@ const SignupPage = () => {
 
   const navigate = useNavigate();
 
+  const downloadImageAsFile = async (url) => {
+    // Not used anymore - URL is sent directly to backend
+    return null;
+  };
+
   const triggerAnimation = () => {
     setAnimKey(prev => prev + 1);
   };
@@ -51,9 +56,23 @@ const SignupPage = () => {
     
     const formData = new FormData();
     
-    basicInfoData.forEach((value, key) => {
-      formData.append(key, value);
-    });
+    // Copy all fields from basicInfoData (skip profileImage, we'll handle it separately)
+    for (const [key, value] of basicInfoData.entries()) {
+      if (key !== "profileImage") {
+        formData.append(key, value);
+      }
+    }
+    
+    // Check for Google profile image URL from BasicInfoForm
+    const googleProfileImageUrl = basicInfoData.get("profileImage");
+    const isGoogleImageUrl = googleProfileImageUrl && 
+      typeof googleProfileImageUrl === "string" && 
+      googleProfileImageUrl.startsWith("http");
+    
+    // If Google image URL exists, send it as separate field
+    if (isGoogleImageUrl) {
+      formData.append("profileImageUrl", googleProfileImageUrl);
+    }
     
     formData.append("role", role);
     formData.append("subRole", subRole || "");
@@ -62,11 +81,16 @@ const SignupPage = () => {
       formData.append("bio", additionalData.bio);
     }
     
-    if (additionalData.profileImage) {
+    // Handle uploaded profile image from AdditionalInfo (if skipping directly)
+    if (additionalData.profileImage && !isGoogleImageUrl) {
       const profileImage = Array.isArray(additionalData.profileImage) 
         ? additionalData.profileImage[0] 
         : additionalData.profileImage;
-      if (profileImage) formData.append("profileImage", profileImage);
+      if (profileImage instanceof File) {
+        formData.append("profileImage", profileImage);
+      } else if (typeof profileImage === "string" && !profileImage.startsWith("http")) {
+        formData.append("profileImageUrl", profileImage);
+      }
     }
     
     setEmail(formData.get("email"));
@@ -99,15 +123,36 @@ const SignupPage = () => {
     
     const formData = new FormData();
     
-    basicInfoData.forEach((value, key) => {
-      formData.append(key, value);
-    });
+    // Check for Google profile image URL from BasicInfoForm
+    const googleProfileImageUrl = basicInfoData.get("profileImage");
+    const isGoogleImageUrl = googleProfileImageUrl && 
+      typeof googleProfileImageUrl === "string" && 
+      googleProfileImageUrl.startsWith("http");
     
+    // Copy all fields from basicInfoData (skip profileImage, we'll handle it separately)
+    for (const [key, value] of basicInfoData.entries()) {
+      if (key !== "profileImage") {
+        formData.append(key, value);
+      }
+    }
+    
+    // If Google image URL exists, send it as separate field
+    if (isGoogleImageUrl) {
+      formData.append("profileImageUrl", googleProfileImageUrl);
+    }
+    
+    // Handle uploaded profile image (from AdditionalInfo)
     if (additionalData.profileImage) {
       const profileImage = Array.isArray(additionalData.profileImage) 
         ? additionalData.profileImage[0] 
         : additionalData.profileImage;
-      if (profileImage) formData.append("profileImage", profileImage);
+      // Only append if it's a File, not a URL
+      if (profileImage instanceof File) {
+        formData.append("profileImage", profileImage);
+      } else if (typeof profileImage === "string" && !profileImage.startsWith("http")) {
+        // It's a URL from our server, pass as profileImageUrl
+        formData.append("profileImageUrl", profileImage);
+      }
     }
     if (additionalData.idDocument) {
       formData.append("idDocument", additionalData.idDocument);
@@ -279,6 +324,7 @@ const SignupPage = () => {
                   onBack={() => setCurrentStep(2.5)}
                   onSkip={handleSkipPage}
                   onComplete={handleAdditionalInfoComplete}
+                  initialProfileImage={basicInfoData?.get("profileImage")}
                 />
               )}
 

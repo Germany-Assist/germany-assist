@@ -105,9 +105,18 @@ export const registerFreelancer = async (body, files) => {
     );
 
     const profileImage = getFile(files, "profileImage");
+    const profileImageUrl = body.profileImageUrl;
     if (profileImage) {
       await AssetService.uploadAsset({
         files: [profileImage],
+        ownerId: user.id,
+        typeKey: "userImage",
+        userId: user.id,
+        transaction: t,
+      });
+    } else if (profileImageUrl) {
+      await AssetService.createAssetFromUrl({
+        url: profileImageUrl,
         ownerId: user.id,
         typeKey: "userImage",
         userId: user.id,
@@ -253,9 +262,18 @@ export const registerCompany = async (body, files) => {
     );
 
     const profileImage = getFile(files, "profileImage");
+    const profileImageUrl = body.profileImageUrl;
     if (profileImage) {
       await AssetService.uploadAsset({
         files: [profileImage],
+        ownerId: user.id,
+        typeKey: "userImage",
+        userId: user.id,
+        transaction: t,
+      });
+    } else if (profileImageUrl) {
+      await AssetService.createAssetFromUrl({
+        url: profileImageUrl,
         ownerId: user.id,
         typeKey: "userImage",
         userId: user.id,

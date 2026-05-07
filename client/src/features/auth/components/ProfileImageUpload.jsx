@@ -7,6 +7,9 @@ const ProfileImageUpload = ({ file, onUpload, onRemove }) => {
     }
   };
 
+  const isFile = file instanceof File;
+  const isUrl = typeof file === "string" && file.startsWith("http");
+
   return (
     <div>
       <label className="block text-sm font-medium text-[#111827] mb-1">
@@ -26,13 +29,13 @@ const ProfileImageUpload = ({ file, onUpload, onRemove }) => {
         {file ? (
           <div className="flex flex-col items-center">
             <img
-              src={URL.createObjectURL(file)}
+              src={isFile ? URL.createObjectURL(file) : file}
               alt="Preview"
               className="w-20 h-20 rounded-xl object-cover mb-2"
             />
             <div className="flex items-center gap-2">
               <span className="text-xs text-emerald-600 font-medium">
-                ✓ {file.name}
+                {isFile ? `✓ ${file.name}` : "✓ Current image"}
               </span>
               <button
                 type="button"

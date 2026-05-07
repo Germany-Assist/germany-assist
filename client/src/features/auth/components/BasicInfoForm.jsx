@@ -158,20 +158,39 @@ const BasicInfoForm = ({
     }
   };
 
-  const handleGoogleResponse = (response) => {
+  const handleGoogleResponse = async (response) => {
+    console.log("Google Response:", JSON.stringify(response));
     setError(null);
     if (!response.success) {
       setError(response.message);
       return;
     }
-    if (response.firstName) updateField("firstName", response.firstName);
-    if (response.lastName) updateField("lastName", response.lastName);
-    if (response.email) {
-      updateField("email", response.email);
-      setError(null);
+
+    // Store Google profile image URL temporarily (will upload on final submit)
+    let googleProfileImageUrl = null;
+    if (response.profilePicture?.url) {
+      googleProfileImageUrl = response.profilePicture.url;
     }
-    if (response.phone) updateField("phone", response.phone);
-    setErrors((prev) => ({ ...prev, general: "" }));
+    
+    // Direct set without validation to ensure it works
+    setFormData((prev) => {
+      const newData = { ...prev };
+      if (response.firstName) newData.firstName = response.firstName;
+      if (response.lastName) newData.lastName = response.lastName;
+      if (response.email) newData.email = response.email;
+      if (response.phone) newData.phone = response.phone;
+      if (googleProfileImageUrl) newData.profileImage = googleProfileImageUrl;
+      return newData;
+    });
+    
+    // Clear any field errors
+    setErrors((prev) => ({
+      ...prev,
+      firstName: "",
+      lastName: "",
+      email: "",
+      general: ""
+    }));
   };
 
   useEffect(() => {

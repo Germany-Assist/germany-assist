@@ -166,6 +166,59 @@ class AssetService {
     return { urls: publicUrls, assets: createdAssets };
   }
 
+  /**
+   * Create asset from external URL (e.g., Google profile image)
+   * Downloads the image and uploads to S3
+   */
+  static async createAssetFromUrl({ url, ownerId, typeKey, userId, transaction }) {
+    if (!transaction) throw new AppError(400, "Transaction is required");
+    if (!url) throw new AppError(400, "URL is required");
+
+    // Get constraints from AssetTypes table
+    const constraints = await AssetRepository.extractConstrains(typeKey);
+    const ownerType = constraints.ownerType;
+    const junctionMethods = this.getJunctionMethods(ownerType);
+
+    // Validate no existing assets for this type (userImage typically has limit 1)
+    const existingCount = await junctionMethods.count(ownerId, typeKey, transaction);
+    if (existingCount >= constraints.maxCount) {
+      throw new AppError(400, `Maximum ${constraints.maxCount} assets allowed for ${typeKey}`);
+    }
+
+    // Download image from URL
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new AppError(400, "Failed to download image from URL");
+    }
+    const buffer = await response.arrayBuffer();
+    const contentType = response.headers.get("content-type") || "image/jpeg";
+    
+    // Create a file-like object
+    const filename = `external-${Date.now()}.${contentType.split("/")[1] || "jpg"}`;
+    const file = {
+      buffer: Buffer.from(buffer),
+      originalname: filename,
+      mimetype: contentType,
+    };
+
+    // Format and upload
+    const filesToUpload = await this.formatFiles([file], typeKey, constraints);
+    await AssetRepository.uploadToS3(filesToUpload);
+
+    // Create Asset records
+    const assetRecords = this.formatAssetRecords(filesToUpload, userId, "external");
+    const createdAssets = await AssetRepository.saveAssets(assetRecords, transaction);
+
+    // Create junction table records
+    const assetIds = createdAssets.map((a) => a.id);
+    await junctionMethods.insert(ownerId, assetIds, transaction);
+
+    // Generate signed URL
+    const publicUrls = await AssetRepository.generateSignedUrls(filesToUpload);
+
+    return { urls: publicUrls, assets: createdAssets };
+  }
+
   // ------------------- Junction Table Methods Mapping -------------------
 
   /**

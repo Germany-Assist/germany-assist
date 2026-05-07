@@ -22,23 +22,23 @@ const getFile = (files, field) => files?.[field]?.[0] || null;
 // files: array of uploaded files from req.files?.categoryFiles
 const processCategoryFiles = (body, files) => {
   const categoryFilesMap = {};
-  
+
   if (!body.categoryEntries || !files || files.length === 0) {
     return categoryFilesMap;
   }
-  
+
   try {
     const categoryEntries = JSON.parse(body.categoryEntries);
-    
+
     categoryEntries.forEach(({ categoryId, fileIndices }) => {
       categoryFilesMap[categoryId] = fileIndices
-        .filter(idx => files[idx])
-        .map(idx => files[idx]);
+        .filter((idx) => files[idx])
+        .map((idx) => files[idx]);
     });
   } catch (e) {
     console.error("Error parsing categoryEntries:", e);
   }
-  
+
   return categoryFilesMap;
 };
 
@@ -75,6 +75,7 @@ export const registerClient = async (body, files) => {
       },
     };
     const profileImage = getFile(files, "profileImage");
+    const profileImageUrl = body.profileImageUrl;
     const idDocument = getFile(files, "idDocument");
     const userExists = await userRepository.getUserByEmail(email);
     if (userExists) {
@@ -92,6 +93,15 @@ export const registerClient = async (body, files) => {
     if (profileImage) {
       await AssetService.uploadAsset({
         files: [profileImage],
+        ownerId: user.id,
+        typeKey: "userImage",
+        userId: user.id,
+        transaction: t,
+      });
+    } else if (profileImageUrl) {
+      // Handle Google profile image URL
+      const userProfile = await AssetService.createAssetFromUrl({
+        url: profileImageUrl,
         ownerId: user.id,
         typeKey: "userImage",
         userId: user.id,
@@ -125,20 +135,21 @@ export const registerClient = async (body, files) => {
     // categoryEntries tells us which file indices belong to which category
     const categoryFiles = files?.categoryFiles || [];
     const categoryFilesMap = processCategoryFiles(body, categoryFiles);
-    
+
     // For each category, create a verification request and upload the files
     for (const [categoryId, catFiles] of Object.entries(categoryFilesMap)) {
       if (catFiles && catFiles.length > 0) {
-        const categoryRequest = await verificationRequestRepository.createRequest(
-          {
-            auth: user,
-            userId: user.id,
-            relatedId: user.id,
-            type: "category",
-            categoryId: categoryId,
-          },
-          t,
-        );
+        const categoryRequest =
+          await verificationRequestRepository.createRequest(
+            {
+              auth: user,
+              userId: user.id,
+              relatedId: user.id,
+              type: "category",
+              categoryId: categoryId,
+            },
+            t,
+          );
         await AssetService.uploadAsset({
           files: catFiles,
           ownerId: categoryRequest.id,
