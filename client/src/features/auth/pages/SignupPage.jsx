@@ -25,6 +25,7 @@ const SignupPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [basicInfoData, setBasicInfoData] = useState(null);
   const [animKey, setAnimKey] = useState(0);
+  const [resendCooldown, setResendCooldown] = useState(0);
 
   const navigate = useNavigate();
 
@@ -228,14 +229,39 @@ const SignupPage = () => {
     }
   };
 
+  const startCooldown = (seconds) => {
+    setResendCooldown(seconds);
+    const interval = setInterval(() => {
+      setResendCooldown(prev => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
   const handleResendVerificationEmail = async () => {
+    if (resendCooldown > 0) return;
+    
     try {
       const res = await resendVerificationEmail(email);
       if (res) {
         setError(null);
+        startCooldown(180);
       }
     } catch (err) {
-      setError("Failed to resend verification email. Please try again.");
+      const msg = getErrorMessage(err);
+      if (msg.includes("wait") || msg.includes("Cooldown") || msg.includes("seconds")) {
+        const match = msg.match(/(\d+)\s*seconds?/);
+        if (match) {
+          startCooldown(parseInt(match[1]));
+        }
+        setError(msg);
+      } else {
+        setError("Failed to resend verification email. Please try again.");
+      }
     }
   };
 
@@ -349,6 +375,7 @@ const SignupPage = () => {
                   onBack={handleBack}
                   error={error}
                   setError={setError}
+                  cooldown={resendCooldown}
                 />
               )}
             </div>

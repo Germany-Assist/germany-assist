@@ -2,9 +2,17 @@ import React from "react";
 
 const SignupSidebar = ({ currentStep }) => {
   const steps = [
-    { num: 1, label: "Quick Questions", subLabel: "2 questions to find your path" },
+    {
+      num: 1,
+      label: "Quick Questions",
+      subLabel: "2 questions to find your path",
+    },
     { num: 2, label: "Basic Info", subLabel: "Name, email & password" },
-    { num: 3, label: "Additional Info", subLabel: "Location & documents (optional)" },
+    {
+      num: 3,
+      label: "Additional Info",
+      subLabel: "Location & documents (optional)",
+    },
     { num: 4, label: "Verification", subLabel: "Confirm your email" },
   ];
 
@@ -23,7 +31,7 @@ const SignupSidebar = ({ currentStep }) => {
             {/* Step Connector Line */}
             {i < steps.length - 1 && (
               <div
-                className={`absolute left-[11px] top-7 w-0.5 h-full ${
+                className={`absolute left-[11px] top-6 w-0.5 h-full ${
                   step.num < currentStep ? "bg-[#49B7DF]" : "bg-[#E5E7EB]"
                 }`}
               ></div>
@@ -39,7 +47,7 @@ const SignupSidebar = ({ currentStep }) => {
                     : "bg-white border-[#E5E7EB] text-[#6B7280]"
               }`}
             >
-              {step.num < currentStep ? "✓" : step.num}
+              {step.num}
             </div>
 
             {/* Step Text */}

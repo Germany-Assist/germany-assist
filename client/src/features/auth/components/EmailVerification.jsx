@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 
-const EmailVerification = ({ email, onVerify, onResend, error, setError }) => {
+const EmailVerification = ({ email, onVerify, onResend, error, setError, cooldown = 0 }) => {
   const [code, setCode] = useState(["", "", "", "", "", "", "", ""]);
   const inputRefs = useRef([]);
 
@@ -65,11 +65,8 @@ const EmailVerification = ({ email, onVerify, onResend, error, setError }) => {
           <div className="w-1.5 h-1.5 rounded-full bg-blue-400 group-hover:scale-125 transition-transform"></div>
         </div>
         <div className="text-sm text-[#6B7280] max-w-[340px] mx-auto mb-2 leading-relaxed">
-          We sent an 8-character verification code to your email. Enter it below to
-          activate your account.
-        </div>
-        <div className="text-xs text-[#9CA3AF] mb-0.5">
-          Demo: use code <span className="text-[#024CEE] font-bold">a1b2c3d4</span>
+          We sent an 8-character verification code to your email. Enter it below
+          to activate your account.
         </div>
       </div>
 
@@ -98,10 +95,12 @@ const EmailVerification = ({ email, onVerify, onResend, error, setError }) => {
       </button>
 
       <div
-        className="text-center mt-2.25 text-xs text-[#024CEE] cursor-pointer"
-        onClick={onResend}
+        className={`text-center mt-2.25 text-xs ${cooldown > 0 ? "text-gray-400 cursor-not-allowed" : "text-[#024CEE] cursor-pointer hover:underline"}`}
+        onClick={cooldown > 0 ? undefined : onResend}
       >
-        Didn't receive it? Resend code
+        {cooldown > 0 
+          ? `Resend code in ${Math.floor(cooldown / 60)}:${(cooldown % 60).toString().padStart(2, '0')}` 
+          : "Didn't receive it? Resend code"}
       </div>
 
       <div className="border border-[#E5E7EB] rounded-xl overflow-hidden mt-3.5">

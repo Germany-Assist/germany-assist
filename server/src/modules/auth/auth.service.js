@@ -90,7 +90,33 @@ export async function googleAuthSignin(body) {
   }
 }
 export async function resendVerificationEmail(userEmail) {
+  const RESEND_COOLDOWN_SECONDS = 180; // 3 minutes cooldown
+  const t = await sequelize.transaction();
+  
   try {
+    // Check for recent verification tokens to enforce cooldown
+    const recentTokens = await authRepository.getRecentTokensByEmail(
+      userEmail,
+      TOKENS_CONSTANTS.EMAIL_VERIFICATION,
+      RESEND_COOLDOWN_SECONDS
+    );
+    
+    if (recentTokens && recentTokens.length > 0) {
+      const lastToken = recentTokens[0];
+      const lastSentTime = new Date(lastToken.createdAt);
+      const secondsSinceLastSent = (Date.now() - lastSentTime.getTime()) / 1000;
+      const remainingSeconds = Math.ceil(RESEND_COOLDOWN_SECONDS - secondsSinceLastSent);
+      
+      if (remainingSeconds > 0) {
+        throw new AppError(
+          429,
+          `Please wait ${remainingSeconds} seconds before requesting a new code`,
+          true,
+          `Cooldown active. Try again in ${remainingSeconds} seconds`
+        );
+      }
+    }
+
     const token = generateSecureToken();
     const tokenHash = hashToken(token);
     const user = await userRepository.getUserByEmail(userEmail);
@@ -127,7 +153,11 @@ export async function resendVerificationEmail(userEmail) {
       subject: "Verification Email",
       html,
     });
+    
+    await t.commit();
+    return { success: true, message: "Verification email sent successfully" };
   } catch (error) {
+    await t.rollback();
     errorLogger(error);
     throw error;
   }
