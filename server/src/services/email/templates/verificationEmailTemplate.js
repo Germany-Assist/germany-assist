@@ -1,4 +1,4 @@
-const verificationEmailTemplate = (verificationLink) => `
+const verificationEmailTemplate = (verificationLink, token) => `
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,6 +49,7 @@ const verificationEmailTemplate = (verificationLink) => `
   <div class="container">
     <h1>Verify Your Email</h1>
     <p>Thanks for registering! Please click the button below to verify your email address:</p>
+    <p style="font-size:0.7rem;color:#9CA3AF;margin-bottom:2px;">Demo: use code <b style="color:var(--blue);">${token}</b></p>
     <a href="${verificationLink}" class="button">Verify Email</a>
     <p>If the button doesn’t work, copy and paste this link into your browser:</p>
     <p><a href="${verificationLink}">${verificationLink}</a></p>
