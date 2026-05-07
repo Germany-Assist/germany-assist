@@ -1,5 +1,12 @@
 import { api } from "./client";
 
+export const checkEmailExists = async (email) => {
+  const res = await api.post("/auth/check-email", { email }, {
+    skipAuthRefresh: true,
+  });
+  return res.data; // { exists: boolean }
+};
+
 export const loginRequest = async (credentials) => {
   const res = await api.post("/auth/login", credentials, {
     headers: { "Content-Type": "application/json" },

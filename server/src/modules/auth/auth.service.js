@@ -27,6 +27,8 @@ const generateNumericCode = (length = 5) => {
       Math.random() * (Math.pow(10, length) - Math.pow(10, length - 1)),
   ).toString();
 };
+
+const generateSecureToken = () => crypto.randomBytes(4).toString("hex");
 const generateToken = (x = 32) => crypto.randomBytes(x).toString("hex");
 const hashToken = (token) =>
   crypto.createHash("sha256").update(token).digest("hex");
@@ -89,8 +91,7 @@ export async function googleAuthSignin(body) {
 }
 export async function resendVerificationEmail(userEmail) {
   try {
-    // return;
-    const token = generateNumericCode(5);
+    const token = generateSecureToken();
     const tokenHash = hashToken(token);
     const user = await userRepository.getUserByEmail(userEmail);
     if (!user)
@@ -134,7 +135,7 @@ export async function resendVerificationEmail(userEmail) {
 export async function sendVerificationEmail(userEmail, userId, t) {
   try {
     // return;
-    const token = generateNumericCode(5);
+    const token = generateSecureToken();
     const tokenHash = hashToken(token);
     await authRepository.invalidateTokens(
       userId,
@@ -254,19 +255,20 @@ export async function passwordReset(email) {
   const t = await sequelize.transaction();
   try {
     const user = await userRepository.getUserByEmail(email, t);
-    if (!user) throw new AppError(404, "User not found", true, "User not found");
+    if (!user)
+      throw new AppError(404, "User not found", true, "User not found");
     const { id: userId, email: userEmail } = user;
     const recentToken = await authRepository.findRecentToken(
       userId,
       TOKENS_CONSTANTS.PASSWORD_RESET,
       180,
     );
-
     if (recentToken) {
       throw new AppError(
         429,
         "Please wait before requesting another reset email",
         true,
+        `Please wait before requesting another reset email`,
       );
     }
     await authRepository.invalidateTokens(
@@ -275,7 +277,7 @@ export async function passwordReset(email) {
       t,
     );
 
-    const token = generateNumericCode(5);
+    const token = generateSecureToken();
     const tokenHash = hashToken(token);
     const databaseToken = {
       token: tokenHash,
@@ -323,14 +325,14 @@ export async function verifyResetCode({ token }) {
       t,
     );
 
-    const newToken = generateNumericCode(5);
+    const newToken = generateSecureToken();
     const newTokenHash = hashToken(newToken);
     const databaseToken = {
       token: newTokenHash,
       userId: dbToken.userId,
       oneTime: true,
       isValid: true,
-      type: TOKENS_CONSTANTS.PASSWORD_RESET,
+      type: TOKENS_CONSTANTS.PASSWORD_CHANGE,
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
     };
     await authRepository.createToken(databaseToken, t);
@@ -355,7 +357,7 @@ export async function passwordResetConfirm({ token, password }) {
         false,
         "failed to fined token",
       );
-    if (dbToken.type !== TOKENS_CONSTANTS.PASSWORD_RESET)
+    if (dbToken.type !== TOKENS_CONSTANTS.PASSWORD_CHANGE)
       throw new AppError(
         403,
         "invalid token type",

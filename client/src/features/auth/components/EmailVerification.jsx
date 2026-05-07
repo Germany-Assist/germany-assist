@@ -1,16 +1,16 @@
 import React, { useState, useRef } from "react";
 
 const EmailVerification = ({ email, onVerify, onResend, error, setError }) => {
-  const [code, setCode] = useState(["", "", "", "", ""]);
+  const [code, setCode] = useState(["", "", "", "", "", "", "", ""]);
   const inputRefs = useRef([]);
 
   const handleChange = (index, value) => {
     if (value.length > 1) value = value[0];
-    value = value.replace(/[^0-9]/g, "");
+    value = value.replace(/[^a-zA-Z0-9]/g, "");
     const newCode = [...code];
     newCode[index] = value;
     setCode(newCode);
-    if (value && index < 4) inputRefs.current[index + 1]?.focus();
+    if (value && index < 7) inputRefs.current[index + 1]?.focus();
   };
 
   const handleKeyDown = (index, e) => {
@@ -65,11 +65,11 @@ const EmailVerification = ({ email, onVerify, onResend, error, setError }) => {
           <div className="w-1.5 h-1.5 rounded-full bg-blue-400 group-hover:scale-125 transition-transform"></div>
         </div>
         <div className="text-sm text-[#6B7280] max-w-[340px] mx-auto mb-2 leading-relaxed">
-          We sent a 5-digit verification code to your email. Enter it below to
+          We sent an 8-character verification code to your email. Enter it below to
           activate your account.
         </div>
         <div className="text-xs text-[#9CA3AF] mb-0.5">
-          Demo: use code <span className="text-[#024CEE] font-bold">12345</span>
+          Demo: use code <span className="text-[#024CEE] font-bold">a1b2c3d4</span>
         </div>
       </div>
 
@@ -79,7 +79,7 @@ const EmailVerification = ({ email, onVerify, onResend, error, setError }) => {
             key={i}
             ref={(el) => (inputRefs.current[i] = el)}
             type="text"
-            inputMode="numeric"
+            inputMode="text"
             maxLength={1}
             value={digit}
             onChange={(e) => handleChange(i, e.target.value)}

@@ -15,13 +15,6 @@ export const createFreelancerValidator = [
     .isLength({ min: 1, max: 100 })
     .withMessage("Last name must be between 1 and 100 characters"),
 
-  body("companyName")
-    .trim()
-    .notEmpty()
-    .withMessage("Company name is required")
-    .isLength({ min: 2, max: 200 })
-    .withMessage("Company name must be between 2 and 200 characters"),
-
   body("email")
     .trim()
     .notEmpty()
@@ -41,7 +34,15 @@ export const createFreelancerValidator = [
     .notEmpty()
     .withMessage("Password is required")
     .isLength({ min: 8 })
-    .withMessage("Password must be at least 8 characters"),
+    .withMessage("Password must be at least 8 characters long")
+    .matches(/[A-Z]/)
+    .withMessage("Password must contain at least one uppercase letter")
+    .matches(/[a-z]/)
+    .withMessage("Password must contain at least one lowercase letter")
+    .matches(/[0-9]/)
+    .withMessage("Password must contain at least one number")
+    .matches(/[^a-zA-Z0-9]/)
+    .withMessage("Password must contain at least one special character"),
 
   body("nationality").trim().notEmpty().withMessage("Nationality is required"),
 
@@ -53,7 +54,7 @@ export const createFreelancerValidator = [
   body("bio")
     .optional()
     .trim()
-    .isLength({ max: 500 })
+    .isLength({ max: 600 })
     .withMessage("Bio must not exceed 500 characters"),
 ];
 
@@ -99,7 +100,15 @@ export const createCompanyValidator = [
     .notEmpty()
     .withMessage("Password is required")
     .isLength({ min: 8 })
-    .withMessage("Password must be at least 8 characters"),
+    .withMessage("Password must be at least 8 characters long")
+    .matches(/[A-Z]/)
+    .withMessage("Password must contain at least one uppercase letter")
+    .matches(/[a-z]/)
+    .withMessage("Password must contain at least one lowercase letter")
+    .matches(/[0-9]/)
+    .withMessage("Password must contain at least one number")
+    .matches(/[^a-zA-Z0-9]/)
+    .withMessage("Password must contain at least one special character"),
 
   body("nationality").trim().notEmpty().withMessage("Nationality is required"),
 

@@ -4,6 +4,7 @@ const FormInput = ({
   label,
   value,
   onChange,
+  onBlur,
   type = "text",
   placeholder,
   required = false,
@@ -19,6 +20,7 @@ const FormInput = ({
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onBlur={onBlur}
         placeholder={placeholder}
         className={`${inputBaseStyle} ${
           error ? "border-red-500 focus:border-red-500" : "border-[#E5E7EB] focus:border-[#024CEE]"

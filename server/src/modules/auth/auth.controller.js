@@ -4,6 +4,20 @@ import { AppError } from "../../utils/error.class.js";
 import authUtil from "../../utils/authorize.util.js";
 import authDomain from "./auth.domain.js";
 import { sequelize } from "../../configs/database.js";
+import userRepository from "../user/user.repository.js";
+
+async function checkEmailExists(req, res, next) {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      throw new AppError(400, "Email is required");
+    }
+    const user = await userRepository.getUserByEmail(email);
+    res.status(200).json({ exists: !!user });
+  } catch (error) {
+    next(error);
+  }
+}
 
 async function googleAuthRetrieveInfo(req, res, next) {
   try {
@@ -157,6 +171,7 @@ export async function verifyResetCode(req, res, next) {
   }
 }
 const authController = {
+  checkEmailExists,
   googleAuthRetrieveInfo,
   googleAuthSignin,
   getUserProfile,

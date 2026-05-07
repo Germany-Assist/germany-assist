@@ -16,6 +16,9 @@ const authRouter = express.Router();
 authRouter.post("/google/signin", authController.googleAuthSignin);
 authRouter.post("/google/retrieveInfo", authController.googleAuthRetrieveInfo);
 
+// Check if email already exists
+authRouter.post("/check-email", authController.checkEmailExists);
+
 authRouter.post("/verifyAccount", authController.verifyAccountByDigits);
 authRouter.post(
   "/resendVerificationEmail",

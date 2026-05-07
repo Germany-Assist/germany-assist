@@ -30,7 +30,11 @@ Token.init(
       defaultValue: true,
     },
     type: {
-      type: DataTypes.ENUM("emailVerification", "passwordReset"),
+      type: DataTypes.ENUM(
+        "emailVerification",
+        "passwordReset",
+        "passwordChange",
+      ),
       allowNull: false,
     },
     expiresAt: {
@@ -46,5 +50,5 @@ Token.init(
       { fields: ["user_id"] },
       { fields: ["type"] },
     ],
-  }
+  },
 );

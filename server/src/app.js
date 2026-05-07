@@ -34,8 +34,9 @@ app.use(
       directives: {
         // 2. Disable the auto-upgrade to HTTPS
         "upgrade-insecure-requests": null,
-
         defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
         scriptSrc: [
           "'self'",
           "'unsafe-inline'",
@@ -56,7 +57,6 @@ app.use(
           "https://accounts.google.com",
           "https://restcountries.com",
         ],
-        styleSrc: ["'self'", "'unsafe-inline'"],
         imgSrc: ["'self'", "data:", "https:"],
       },
     },

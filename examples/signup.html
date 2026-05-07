@@ -240,7 +240,20 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
 .buc.uploaded .buc-upload-btn{display:none;}
 .badge-intro{font-size:0.78rem;color:var(--muted);margin-bottom:14px;line-height:1.5;padding:11px 13px;background:var(--bl);border-radius:9px;border:1px solid rgba(2,76,238,0.1);}
 
-/* MOBILE RESPONSIVE */
+/* CREDENTIAL UPLOAD AREA */
+.cred-upload-area{border:2px dashed var(--border);border-radius:11px;padding:18px;text-align:center;cursor:pointer;background:var(--bg);transition:border-color 0.2s,background 0.2s;}
+.cred-upload-area:hover{border-color:var(--blue);background:var(--bl);}
+.cred-file-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:9px;background:#fff;margin-bottom:7px;transition:border-color 0.2s;}
+.cred-file-item:last-child{margin-bottom:0;}
+
+/* P3 SUB-STEPS */
+.p3-dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:var(--muted);transition:all 0.3s;flex-shrink:0;}
+.p3-dot.active{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 3px rgba(2,76,238,0.15);}
+.p3-dot.done{background:var(--sl);border-color:var(--sky);color:var(--sky);}
+.p3-line{flex:1;height:2px;background:var(--border);border-radius:2px;transition:background 0.4s;}
+.p3-line.done{background:var(--sky);}
+
+
 @media(max-width:600px){
   header{padding:12px 16px;}
   .logo-img{height:34px;}
@@ -270,7 +283,7 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
     <div class="left-title">Create your account</div>
     <div class="left-sub">Your trusted, verified gateway to opportunities in Germany.</div>
     <div class="steps-list">
-      <div class="step-row active" id="ls1"><div class="step-circle">1</div><div><div class="step-name">Choose Your Role</div><div class="step-desc">Individual, Employer, or Provider</div></div></div>
+      <div class="step-row active" id="ls1"><div class="step-circle">1</div><div><div class="step-name">Quick Questions</div><div class="step-desc">2 questions to find your path</div></div></div>
       <div class="step-row" id="ls2"><div class="step-circle">2</div><div><div class="step-name">Basic Info</div><div class="step-desc">Name, email &amp; password</div></div></div>
       <div class="step-row" id="ls3"><div class="step-circle">3</div><div><div class="step-name">Additional Info</div><div class="step-desc">Location &amp; documents (optional)</div></div></div>
       <div class="step-row" id="ls4"><div class="step-circle">4</div><div><div class="step-name">Verification</div><div class="step-desc">Confirm your email</div></div></div>
@@ -284,73 +297,82 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
 
   <div class="right-panel">
 
-    <!-- PAGE 1: ROLE -->
+    <!-- PAGE 1: QUESTION FLOW -->
     <div class="page active fadein" id="page1">
-      <div class="page-title">Welcome! Who are you?</div>
-      <div class="page-sub">Choose your role to get started. You'll be able to sign in with Google, Apple, or Facebook after selecting.</div>
 
-      <div class="actor-grid">
-
-        <div class="actor-card" onclick="selectActor(this,'individual')">
-          <div class="aicon" style="background:#EBF1FD;">🎯</div>
-          <div class="atext">
-            <h3>Individual</h3>
-            <p class="adesc">Job seekers, students, scholarship applicants, and anyone planning to relocate to Germany. Access verified job listings, scholarships, language courses, visa services, and full relocation guidance — completely free.</p>
-            <div class="atags"><span class="atag">Job Seeker</span><span class="atag">Student</span><span class="atag">Scholarship</span><span class="atag">Relocation</span><span class="atag">Chance Card</span></div>
-            <span class="read-more-link" onclick="event.stopPropagation();showGuide('individual')">&#128196; Read full guide</span>
+      <!-- Q-STEP 1 -->
+      <div id="qs1" class="fadein">
+        <div class="page-title">Let's get you set up 👋</div>
+        <div class="page-sub">Answer a few quick questions and we'll take you to the right signup — takes under 30 seconds.</div>
+        <div style="font-size:0.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px;">What's your main goal on Germany Assists?</div>
+        <div class="actor-grid">
+          <div class="actor-card" onclick="answerQ1(this,'work')">
+            <div class="aicon" style="background:#EBF1FD;">💼</div>
+            <div class="atext"><h3>Find work or study in Germany</h3><p class="adesc">I'm looking for jobs, Ausbildung, scholarships, or university programmes.</p></div>
+            <div class="aradio"></div>
           </div>
-          <div class="aradio"></div>
-        </div>
-
-        <div class="actor-card" id="providerCard" onclick="selectActor(this,'provider')" style="flex-wrap:wrap;">
-          <div style="display:flex;align-items:flex-start;gap:14px;width:100%;">
+          <div class="actor-card" onclick="answerQ1(this,'relocate')">
+            <div class="aicon" style="background:#EAF7FC;">✈️</div>
+            <div class="atext"><h3>Plan my move to Germany</h3><p class="adesc">I need help with visa, language courses, certificate recognition, or relocation.</p></div>
+            <div class="aradio"></div>
+          </div>
+          <div class="actor-card" onclick="answerQ1(this,'service')">
             <div class="aicon" style="background:#F0FFF4;">⚡</div>
-            <div class="atext" style="flex:1;">
-              <h3>Service Provider</h3>
-              <p class="adesc">Language schools, career coaches, translators, visa consultants, certificate recognition experts, and relocation specialists. Earn verified professional badges and reach thousands of motivated international candidates.</p>
-              <div class="atags"><span class="atag">Language School</span><span class="atag">Career Coach</span><span class="atag">Translator</span><span class="atag">Visa Consultant</span><span class="atag">Recruiter</span></div>
-              <span class="read-more-link" onclick="event.stopPropagation();showGuide('provider')">&#128196; Read full guide</span>
+            <div class="atext"><h3>Offer services to people moving to Germany</h3><p class="adesc">I'm a coach, translator, language school, visa consultant, or relocation specialist.</p></div>
+            <div class="aradio"></div>
+          </div>
+          <div class="actor-card" onclick="answerQ1(this,'hire')" style="opacity:0.6;pointer-events:none;position:relative;">
+            <div class="aicon" style="background:#F9FAFB;">🏢</div>
+            <div class="atext"><h3>Hire international talent for my company</h3><p class="adesc">I'm a German employer, university, or Ausbildung centre looking for candidates.</p></div>
+            <div class="aradio"></div>
+            <div class="cs-overlay"><div class="cs-badge">🚧 Coming Soon</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q-STEP 2 (only for 'service') -->
+      <div id="qs2" style="display:none;">
+        <button class="btn-back" onclick="backToQs1()">&larr; Back</button>
+        <div class="page-title">Almost there! 🎯</div>
+        <div class="page-sub">One more question to personalise your account.</div>
+        <div style="font-size:0.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px;">How do you offer your services?</div>
+        <div class="actor-grid">
+          <div class="actor-card" onclick="answerQ2(this,'freelancer')">
+            <div class="aicon" style="background:#EBF1FD;">🧑‍💻</div>
+            <div class="atext">
+              <h3>Independently / Freelance</h3>
+              <p class="adesc">I work solo — as an individual coach, consultant, teacher, or specialist.</p>
             </div>
             <div class="aradio"></div>
           </div>
-          <div id="provSub" style="display:none;width:100%;" onclick="event.stopPropagation()">
-            <div class="sub-section-inner">
-            <div class="sub-label">How do you work?</div>
-            <div class="sub-grid">
-              <div class="sub-card" onclick="selectSub(this,'freelancer')">
-                <div class="sc-check">&#10003;</div>
-                <div class="sc-icon">🧑&#x200D;💻</div>
-                <h4>Freelancer</h4>
-                <p>I work independently as an individual professional — solo consultant, teacher, or coach.</p>
-              </div>
-              <div class="sub-card" onclick="selectSub(this,'office')">
-                <div class="sc-check">&#10003;</div>
-                <div class="sc-icon">🏛️</div>
-                <h4>Company / Organization</h4>
-                <p>I represent a registered company, language school, agency, or organization with staff.</p>
-              </div>
+          <div class="actor-card" onclick="answerQ2(this,'office')">
+            <div class="aicon" style="background:#F0FFF4;">🏛️</div>
+            <div class="atext">
+              <h3>As a company or organisation</h3>
+              <p class="adesc">I represent a registered company, language school, agency, or organisation with staff.</p>
             </div>
-            </div>
+            <div class="aradio"></div>
           </div>
         </div>
+      </div>
 
-        <div class="actor-card" style="pointer-events:none;opacity:0.6;">
-          <div class="aicon" style="background:#EAF7FC;">🏢</div>
-          <div class="atext">
-            <h3>German Employer</h3>
-            <p class="adesc">Companies, universities, Ausbildung training centers, and HR departments seeking qualified international talent from Egypt, Morocco, Syria, Iraq, Jordan, and beyond. A streamlined, platform-integrated hiring process.</p>
-            <div class="atags"><span class="atag">Company</span><span class="atag">University</span><span class="atag">Ausbildung</span><span class="atag">HR / Recruitment</span></div>
-            <span class="read-more-link" onclick="event.stopPropagation();showGuide('employer')">&#128196; Read full guide</span>
+      <!-- RESULT CARD (shown before routing) -->
+      <div id="qs3" style="display:none;">
+        <button class="btn-back" onclick="backToQs()">&larr; Back</button>
+        <div class="page-title" id="qsResultTitle"></div>
+        <div class="page-sub" id="qsResultSub"></div>
+        <div id="qsResultCard" style="background:var(--bl);border:2px solid var(--blue);border-radius:16px;padding:22px 20px;margin-bottom:20px;display:flex;align-items:flex-start;gap:14px;">
+          <div id="qsResultIcon" style="font-size:32px;flex-shrink:0;"></div>
+          <div>
+            <div id="qsResultRole" style="font-size:0.95rem;font-weight:700;color:var(--text);margin-bottom:4px;"></div>
+            <div id="qsResultDesc" style="font-size:0.8rem;color:var(--muted);line-height:1.5;"></div>
+            <div id="qsResultTags" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;"></div>
           </div>
-          <div class="aradio"></div>
-          <div class="cs-overlay"><div class="cs-badge">🚧 Coming Soon</div></div>
         </div>
-
+        <button class="btn-primary" onclick="goToPage2()">Yes, create my account &rarr;</button>
+        <button class="btn-secondary" onclick="backToQs1()">← That's not me, start over</button>
       </div>
 
-      <div style="margin-top:18px;">
-        <button class="btn-primary" id="nextBtn" onclick="goToPage2()" disabled>Continue &rarr;</button>
-      </div>
     </div>
 
     <!-- PAGE 2: BASIC INFO -->
@@ -454,106 +476,132 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
       </div>
     </div>
 
-    <!-- PAGE 3: EXTRA -->
+    <!-- PAGE 3: ADDITIONAL DETAILS (3 sub-steps) -->
     <div class="page" id="page3">
-      <button class="btn-back" onclick="sp('pageSkip',2.5)">&larr; Back</button>
-      <div class="page-title" style="display:flex;align-items:center;gap:8px;">Additional Details <span title="These details help verify your profile and increase your visibility on the platform. All uploads are secure and reviewed by our team." style="cursor:pointer;display:inline-flex;align-items:center;color:var(--muted);position:relative;" class="info-icon-wrap"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v5M8 5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></div>
-      <div class="page-sub">Upload your credentials to earn verified badges. Badges boost your visibility and build client trust. You can also complete this later from your profile.</div>
 
-      <!-- PROFILE FIELDS -->
-      <div class="form-section">
-        <div class="section-head">Profile Setup</div>
-
-        <div class="field">
-          <label>Main Category <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">(choose one or more)</span></label>
-          <div class="multi-select-wrap">
-            <div class="multi-select-display" id="mainCatDisplay" onclick="toggleMultiDrop('mainCat')" tabindex="0">
-              <span id="mainCatPlaceholder" style="color:#C4C9D4;font-size:0.86rem;">Select categories…</span>
-              <span class="ms-arrow">&#9660;</span>
-            </div>
-            <div class="multi-select-drop" id="mainCatDrop" style="display:none;">
-              <label class="ms-opt"><input type="checkbox" value="german_language" onchange="onMainCatChange()"> &#x1F1E9;&#x1F1EA; German Language</label>
-              <label class="ms-opt"><input type="checkbox" value="career_coaching" onchange="onMainCatChange()"> &#x1F4BC; Career Coaching</label>
-              <label class="ms-opt"><input type="checkbox" value="translation" onchange="onMainCatChange()"> &#x1F4DD; Translation Services</label>
-              <label class="ms-opt"><input type="checkbox" value="recruitment" onchange="onMainCatChange()"> &#x1F91D; Recruitment Services</label>
-              <label class="ms-opt"><input type="checkbox" value="visa" onchange="onMainCatChange()"> &#x2708;&#xFE0F; Visa &amp; Immigration</label>
-              <label class="ms-opt"><input type="checkbox" value="recognition" onchange="onMainCatChange()"> &#x1F3C5; Certificate Recognition</label>
-              <label class="ms-opt"><input type="checkbox" value="university" onchange="onMainCatChange()"> &#x1F393; University Student Services</label>
-              <label class="ms-opt"><input type="checkbox" value="relocation" onchange="onMainCatChange()"> &#x1F3D9;&#xFE0F; Relocation Services</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="field" id="subCatField" style="display:none;">
-          <label>Sub Categories <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">(multi-select)</span></label>
-          <div class="multi-select-wrap">
-            <div class="multi-select-display" onclick="toggleMultiDrop('subCat')" tabindex="0">
-              <span id="subCatPlaceholder" style="color:#C4C9D4;font-size:0.86rem;">Select sub-categories…</span>
-              <span class="ms-arrow">&#9660;</span>
-            </div>
-            <div class="multi-select-drop" id="subCatDrop" style="display:none;"></div>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Profile Image / Logo <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">— Square 1:1, high resolution</span></label>
-          <div class="img-upload-wrap" style="position:relative;border:1.5px dashed var(--border);border-radius:12px;padding:20px;text-align:center;cursor:pointer;background:var(--bg);transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
-            <input type="file" accept=".jpg,.jpeg,.png" style="position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;" onchange="previewProfileImg(this)">
-            <div id="imgUploadInner">
-              <div style="font-size:26px;margin-bottom:5px;">&#x1F5BC;&#xFE0F;</div>
-              <p style="font-size:0.77rem;color:var(--muted);"><span style="color:var(--blue);font-weight:500;">Click to upload</span> your photo or logo</p>
-              <p style="font-size:0.68rem;color:#9CA3AF;margin-top:2px;">JPG or PNG &middot; Square (1:1) &middot; min 400&times;400px</p>
-            </div>
-            <img id="imgPreview" style="display:none;width:80px;height:80px;border-radius:12px;object-fit:cover;margin:0 auto;" alt="Preview">
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Bio <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">— 80 to 600 characters</span></label>
-          <textarea id="bioInput" rows="4" oninput="checkBio(this)" placeholder="Tell clients about your experience, qualifications, and what makes you the right choice&#x2026;" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Outfit',sans-serif;font-size:0.86rem;color:var(--text);background:#fff;outline:none;resize:vertical;transition:border-color 0.2s;line-height:1.5;" onfocus="this.style.borderColor='var(--blue)';this.style.boxShadow='0 0 0 3px rgba(2,76,238,0.07)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"></textarea>
-          <div style="display:flex;justify-content:space-between;margin-top:4px;align-items:center;">
-            <div id="bioMsg" style="font-size:0.69rem;color:var(--muted);"></div>
-            <span id="bioCount" style="font-size:0.68rem;color:#9CA3AF;">0 / 600</span>
-          </div>
-        </div>
+      <!-- SUB-STEP INDICATOR -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:22px;" id="p3StepBar">
+        <div class="p3-dot active" id="p3d1">1</div>
+        <div class="p3-line" id="p3l1"></div>
+        <div class="p3-dot" id="p3d2">2</div>
+        <div class="p3-line" id="p3l2"></div>
+        <div class="p3-dot" id="p3d3">3</div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-left:4px;" id="p3StepLabel">Profile Setup</div>
       </div>
 
-      <!-- BADGE UPLOADS -->
-      <div class="form-section">
-        <div class="section-head">&#x1F3C5; Credential Uploads <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#9CA3AF;font-size:0.69rem;">— earn verified badges &middot; PDF, JPG, PNG &middot; max 5MB</span></div>
-        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:14px;line-height:1.5;">Upload your credentials to earn badges that appear on your public profile. The more you verify, the higher you rank in search results.</p>
-
-        <!-- IDENTITY - ALWAYS SHOWN -->
-        <div class="buc">
-          <div class="buc-meta">
-            <div class="buc-icon">&#x1FA96;</div>
-            <div>
-              <div class="buc-title">Passport or National ID <span class="buc-req-tag">Required</span> <span class="info-icon-wrap" title="Required for all providers to publish services on the platform." style="cursor:pointer;display:inline-flex;align-items:center;color:var(--muted);position:relative;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v5M8 5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></div>
-              <div class="buc-desc">Required for all providers to publish services on the platform.</div>
+      <!-- SUB-STEP 1: PROFILE SETUP -->
+      <div id="p3s1" class="fadein">
+        <button class="btn-back" onclick="sp('pageSkip',2.5)">&larr; Back</button>
+        <div class="page-title">Profile Setup</div>
+        <div class="page-sub">Add a photo and a short bio so clients know who they're working with.</div>
+        <div class="form-section">
+          <div class="field">
+            <label>Profile Image / Logo <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">— Square 1:1, high resolution</span></label>
+            <div class="img-upload-wrap" style="position:relative;border:1.5px dashed var(--border);border-radius:12px;padding:20px;text-align:center;cursor:pointer;background:var(--bg);transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
+              <input type="file" accept=".jpg,.jpeg,.png" style="position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;" onchange="previewProfileImg(this)">
+              <div id="imgUploadInner">
+                <div style="font-size:26px;margin-bottom:5px;">&#x1F5BC;&#xFE0F;</div>
+                <p style="font-size:0.77rem;color:var(--muted);"><span style="color:var(--blue);font-weight:500;">Click to upload</span> your photo or logo</p>
+                <p style="font-size:0.68rem;color:#9CA3AF;margin-top:2px;">JPG or PNG &middot; Square (1:1) &middot; min 400&times;400px</p>
+              </div>
+              <img id="imgPreview" style="display:none;width:80px;height:80px;border-radius:12px;object-fit:cover;margin:0 auto;" alt="Preview">
             </div>
           </div>
-          <label class="buc-upload-btn"><input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="markUploaded(this)"><span>Upload</span></label>
+          <div class="field">
+            <label>Bio <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">— 80 to 600 characters</span></label>
+            <textarea id="bioInput" rows="4" oninput="checkBio(this)" placeholder="Tell clients about your experience, qualifications, and what makes you the right choice…" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Outfit',sans-serif;font-size:0.86rem;color:var(--text);background:#fff;outline:none;resize:vertical;transition:border-color 0.2s;line-height:1.5;" onfocus="this.style.borderColor='var(--blue)';this.style.boxShadow='0 0 0 3px rgba(2,76,238,0.07)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"></textarea>
+            <div style="display:flex;justify-content:space-between;margin-top:4px;align-items:center;">
+              <div id="bioMsg" style="font-size:0.69rem;color:var(--muted);"></div>
+              <span id="bioCount" style="font-size:0.68rem;color:#9CA3AF;">0 / 600</span>
+            </div>
+          </div>
         </div>
+        <button class="btn-primary" onclick="goToP3S2()" id="p3s1NextBtn">Next: Choose Category &rarr;</button>
+        <button class="btn-secondary" onclick="goToVerify()">Skip all &mdash; verify my email</button>
+      </div>
 
-        <!-- DYNAMIC BADGE CARDS PER CATEGORY -->
-        <div id="categoryBadgeCards"></div>
-
-        <!-- BUSINESS REG FOR OFFICE -->
-        <div id="bizRegCard" style="display:none;">
-          <div class="buc">
-            <div class="buc-meta">
-              <div class="buc-icon">&#x1F4CB;</div>
-              <div>
-                <div class="buc-title">Business Registration <span class="buc-req-tag">Required for Office</span> <span class="info-icon-wrap" title="Upload your official company registration document (PDF)." style="cursor:pointer;display:inline-flex;align-items:center;color:var(--muted);position:relative;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v5M8 5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></div>
-                <div class="buc-desc">Upload your official company registration document (PDF).</div>
+      <!-- SUB-STEP 2: CATEGORY + CREDENTIALS -->
+      <div id="p3s2" style="display:none;">
+        <button class="btn-back" onclick="goToP3S1()">&larr; Back</button>
+        <div class="page-title" id="p3s2Title">Your Category</div>
+        <div class="page-sub" id="p3s2Sub">Select the service(s) you offer. We'll show you which credentials to upload to earn verified badges.</div>
+        <div class="form-section">
+          <div class="field">
+            <label id="p3s2CatLabel">Main Category <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">(choose one or more)</span></label>
+            <div class="multi-select-wrap">
+              <div class="multi-select-display" id="mainCatDisplay" onclick="toggleMultiDrop('mainCat')" tabindex="0">
+                <span id="mainCatPlaceholder" style="color:#C4C9D4;font-size:0.86rem;">Select categories…</span>
+                <span class="ms-arrow">&#9660;</span>
+              </div>
+              <div class="multi-select-drop" id="mainCatDrop" style="display:none;">
+                <label class="ms-opt"><input type="checkbox" value="german_language" onchange="onMainCatChange()"> &#x1F1E9;&#x1F1EA; German Language</label>
+                <label class="ms-opt"><input type="checkbox" value="career_coaching" onchange="onMainCatChange()"> &#x1F4BC; Career Coaching</label>
+                <label class="ms-opt"><input type="checkbox" value="translation" onchange="onMainCatChange()"> &#x1F4DD; Translation Services</label>
+                <label class="ms-opt"><input type="checkbox" value="recruitment" onchange="onMainCatChange()"> &#x1F91D; Recruitment Services</label>
+                <label class="ms-opt"><input type="checkbox" value="visa" onchange="onMainCatChange()"> &#x2708;&#xFE0F; Visa &amp; Immigration</label>
+                <label class="ms-opt"><input type="checkbox" value="recognition" onchange="onMainCatChange()"> &#x1F3C5; Certificate Recognition</label>
+                <label class="ms-opt"><input type="checkbox" value="university" onchange="onMainCatChange()"> &#x1F393; University Student Services</label>
+                <label class="ms-opt"><input type="checkbox" value="relocation" onchange="onMainCatChange()"> &#x1F3D9;&#xFE0F; Relocation Services</label>
               </div>
             </div>
-            <label class="buc-upload-btn"><input type="file" accept=".pdf" style="display:none;" onchange="markUploaded(this)"><span>Upload</span></label>
           </div>
         </div>
+
+        <!-- CREDENTIAL UPLOAD LIST (dynamic) -->
+        <div id="credentialSection" style="display:none;">
+          <div class="section-head" style="font-size:0.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:14px;display:flex;align-items:center;gap:6px;" id="p3s2CredHead">&#x1F3C5; Credentials to Upload <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#9CA3AF;font-size:0.69rem;">— earn verified badges &middot; PDF, JPG, PNG &middot; max 5MB</span></div>
+          <div style="font-size:0.78rem;color:var(--muted);margin-bottom:16px;padding:11px 13px;background:var(--bl);border-radius:9px;border:1px solid rgba(2,76,238,0.1);line-height:1.6;" id="p3s2CredNote">
+            🏅 Upload your credentials to earn badges on your public profile. The more you verify, the higher you rank in search results.
+          </div>
+          <div id="categoryBadgeCards"></div>
+        </div>
+
+        <div id="p3s2NoneMsg" style="display:none;text-align:center;padding:28px 0;color:var(--muted);font-size:0.84rem;">Select a category above to see which credentials you can upload.</div>
+
+        <button class="btn-primary" onclick="goToP3S3()" style="margin-top:8px;" id="p3s2NextBtn">Next: Identity Verification &rarr;</button>
+        <button class="btn-secondary" onclick="goToVerify()">Skip all &mdash; verify my email</button>
       </div>
 
-      <button class="btn-primary" onclick="goToVerify()">Submit &amp; Verify Email &rarr;</button>
+      <!-- SUB-STEP 3: VERIFICATION -->
+      <div id="p3s3" style="display:none;">
+        <button class="btn-back" onclick="goToP3S2()">&larr; Back</button>
+        <div class="page-title">Identity Verification</div>
+        <div class="page-sub">Upload your ID to activate your provider account. Documents are reviewed securely by our team and never shared publicly.</div>
+
+        <div class="form-section">
+          <!-- PASSPORT / ID -->
+          <div class="buc">
+            <div class="buc-meta">
+              <div class="buc-icon">&#x1FA96;</div>
+              <div>
+                <div class="buc-title">Passport or National ID <span class="buc-req-tag">Required</span></div>
+                <div class="buc-desc">Required for all providers to publish services on the platform. Upload a clear photo or scan — PDF, JPG, or PNG.</div>
+              </div>
+            </div>
+            <label class="buc-upload-btn"><input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="markUploaded(this)"><span>Upload</span></label>
+            <div class="buc-done-tag">&#10003; Uploaded</div>
+          </div>
+
+          <!-- BUSINESS REG — shown only for company sub -->
+          <div id="bizRegCard" style="display:none;">
+            <div class="buc">
+              <div class="buc-meta">
+                <div class="buc-icon">&#x1F4CB;</div>
+                <div>
+                  <div class="buc-title">Business Registration <span class="buc-req-tag">Required for Company</span></div>
+                  <div class="buc-desc">Upload your official company registration document (Gewerbeanmeldung or equivalent) as PDF.</div>
+                </div>
+              </div>
+              <label class="buc-upload-btn"><input type="file" accept=".pdf" style="display:none;" onchange="markUploaded(this)"><span>Upload</span></label>
+              <div class="buc-done-tag">&#10003; Uploaded</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="goToVerify()">Submit &amp; Verify Email &rarr;</button>
+        <button class="btn-secondary" onclick="goToVerify()">Skip for now &mdash; verify my email</button>
+      </div>
+
     </div>
 
     <!-- PAGE 4: CODE -->
@@ -600,7 +648,7 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 
-var actor=null,sub=null;
+var actor=null,sub=null,q1ans=null;
 var DEMO='12345';
 var COUNTRIES=[
   {n:'Egypt',f:'🇪🇬'},{n:'Morocco',f:'🇲🇦'},{n:'Syria',f:'🇸🇾'},{n:'Iraq',f:'🇮🇶'},
@@ -666,37 +714,72 @@ function showGuide(type){
 }
 function closePopup(e){if(e.target===document.getElementById('popOv'))document.getElementById('popOv').style.display='none';}
 
-function selectActor(card,val){
-  document.querySelectorAll('.actor-card').forEach(function(c){c.classList.remove('selected');});
-  card.classList.add('selected'); actor=val;
-  var ps=document.getElementById('provSub');
-  var compField=document.getElementById('companyNameField');
-  if(val==='provider'){
-    // animate open
-    ps.style.display='block';
-    ps.style.animation='slideDown 0.35s cubic-bezier(0.4,0,0.2,1) forwards';
-    sub=null;
-    document.querySelectorAll('.sub-card').forEach(function(c){c.classList.remove('selected');});
-  } else {
-    if(ps.style.display!=='none'){
-      ps.style.animation='none';
-      ps.style.display='none';
+var RESULT_MAP={
+  work:{icon:'🎯',role:'Individual Account',desc:'Free access to verified job listings, scholarships, university programmes, and full relocation guidance.',tags:['Job Seeker','Student','Scholarship','Ausbildung','Chance Card'],actor:'individual',sub:null},
+  relocate:{icon:'✈️',role:'Individual Account',desc:'Step-by-step guidance for visa applications, language courses, certificate recognition, and everything you need to settle in Germany.',tags:['Visa Help','Language Course','Recognition','Relocation'],actor:'individual',sub:null},
+  freelancer:{icon:'🧑‍💻',role:'Service Provider — Freelancer',desc:'Earn verified professional badges, reach thousands of motivated candidates, and grow your solo practice on the platform.',tags:['Career Coach','Translator','Consultant','Teacher'],actor:'provider',sub:'freelancer'},
+  office:{icon:'🏛️',role:'Service Provider — Company',desc:'Register your organisation, upload your credentials, and connect with clients looking for certified agencies and language schools.',tags:['Language School','Agency','Recruitment','Organisation'],actor:'provider',sub:'office'}
+};
+
+function answerQ1(card,val){
+  document.querySelectorAll('#qs1 .actor-card').forEach(function(c){c.classList.remove('selected');});
+  card.classList.add('selected');
+  q1ans=val;
+  setTimeout(function(){
+    if(val==='service'){
+      document.getElementById('qs1').style.display='none';
+      var qs2=document.getElementById('qs2');
+      qs2.style.display='block';
+      qs2.classList.add('fadein');
+    } else {
+      showResult(val);
     }
-    sub=null;
-  }
-  // company name only for provider+office — handled in selectSub
-  if(compField) compField.style.display='none';
-  checkNext();
+  },180);
 }
-function selectSub(card,val){
-  document.querySelectorAll('.sub-card').forEach(function(c){c.classList.remove('selected');});
-  card.classList.add('selected');sub=val;
+
+function answerQ2(card,val){
+  document.querySelectorAll('#qs2 .actor-card').forEach(function(c){c.classList.remove('selected');});
+  card.classList.add('selected');
+  setTimeout(function(){ showResult(val); },180);
+}
+
+function showResult(key){
+  var r=RESULT_MAP[key];
+  actor=r.actor; sub=r.sub;
+  document.getElementById('qsResultTitle').textContent='Perfect match found ✅';
+  document.getElementById('qsResultSub').textContent='Based on your answers, here\'s the account type we\'ll create for you:';
+  document.getElementById('qsResultIcon').textContent=r.icon;
+  document.getElementById('qsResultRole').textContent=r.role;
+  document.getElementById('qsResultDesc').textContent=r.desc;
+  document.getElementById('qsResultTags').innerHTML=r.tags.map(function(t){return '<span class="atag" style="background:#fff;border-color:rgba(2,76,238,0.25);color:var(--blue);">'+t+'</span>';}).join('');
+  document.getElementById('qs1').style.display='none';
+  document.getElementById('qs2').style.display='none';
+  var qs3=document.getElementById('qs3');
+  qs3.style.display='block';
+  qs3.classList.add('fadein');
+  // update form for sub type
   var compField=document.getElementById('companyNameField');
-  if(compField) compField.style.display=(val==='office')?'block':'none';
-  checkNext();
-  checkReady();
+  if(compField) compField.style.display=(sub==='office')?'block':'none';
 }
-function checkNext(){document.getElementById('nextBtn').disabled=!(actor&&(actor!=='provider'||sub));}
+
+function backToQs1(){
+  document.getElementById('qs2').style.display='none';
+  document.getElementById('qs3').style.display='none';
+  document.getElementById('qs1').style.display='block';
+  document.querySelectorAll('#qs1 .actor-card').forEach(function(c){c.classList.remove('selected');});
+  q1ans=null; actor=null; sub=null;
+}
+
+function backToQs(){
+  document.getElementById('qs3').style.display='none';
+  if(q1ans==='service'){
+    document.getElementById('qs2').style.display='block';
+  } else {
+    document.getElementById('qs1').style.display='block';
+    document.querySelectorAll('#qs1 .actor-card').forEach(function(c){c.classList.remove('selected');});
+  }
+  actor=null; sub=null;
+}
 
 function goToPage2(){
   var isOffice=actor==='employer'||(actor==='provider'&&sub==='office');
@@ -713,7 +796,64 @@ function goToPage2(){
   sp('page2',2);
 }
 function goToSkip(){sp('pageSkip',2.5);}
-function goToPage3(){sp('page3',3);updatePage3ForSubType();}
+function goToPage3(){sp('page3',3);updatePage3ForSubType();goToP3S1();}
+function setP3Step(n){
+  [1,2,3].forEach(function(i){
+    var d=document.getElementById('p3d'+i);
+    d.className='p3-dot'+(i<n?' done':i===n?' active':'');
+  });
+  [1,2].forEach(function(i){
+    var l=document.getElementById('p3l'+i);
+    l.className='p3-line'+(i<n?' done':'');
+  });
+  var labels=['','Profile Setup','Category & Credentials','Identity Verification'];
+  document.getElementById('p3StepLabel').textContent=labels[n]||'';
+}
+function goToP3S1(){
+  document.getElementById('p3s1').style.display='block';
+  document.getElementById('p3s2').style.display='none';
+  document.getElementById('p3s3').style.display='none';
+  setP3Step(1);
+  var isInd=(actor==='individual');
+  document.getElementById('p3s1NextBtn').textContent=isInd?'Next: Your Certificates →':'Next: Choose Category →';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goToP3S2(){
+  document.getElementById('p3s1').style.display='none';
+  document.getElementById('p3s2').style.display='block';
+  document.getElementById('p3s3').style.display='none';
+  setP3Step(2);
+  // Dynamic text for individual vs provider
+  var isInd=(actor==='individual');
+  document.getElementById('p3s2Title').textContent=isInd?'Your Certificates':'Your Category';
+  document.getElementById('p3s2Sub').textContent=isInd
+    ?'Select the field(s) that match your background. We\'ll show you which certificates you can upload to strengthen your profile.'
+    :'Select the service(s) you offer. We\'ll show you which credentials to upload to earn verified badges.';
+  document.getElementById('p3s2CatLabel').innerHTML=isInd
+    ?'Field / Sector <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">(choose one or more)</span>'
+    :'Main Category <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">(choose one or more)</span>';
+  document.getElementById('p3s2CredHead').innerHTML=isInd
+    ?'&#x1F4C4; Certificates You Have <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#9CA3AF;font-size:0.69rem;">— PDF, JPG, PNG &middot; max 5MB</span>'
+    :'&#x1F3C5; Credentials to Upload <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#9CA3AF;font-size:0.69rem;">— earn verified badges &middot; PDF, JPG, PNG &middot; max 5MB</span>';
+  document.getElementById('p3s2CredNote').textContent=isInd
+    ?'📄 Upload any relevant certificates you already have. This helps providers understand your background and match you better.'
+    :'🏅 Upload your credentials to earn badges on your public profile. The more you verify, the higher you rank in search results.';
+  document.getElementById('p3s2NoneMsg').textContent=isInd
+    ?'Select a field above to see which certificates you can upload.'
+    :'Select a category above to see which credentials you can upload.';
+  // show/hide credential section
+  var hasCat=mainCatSelected.length>0;
+  document.getElementById('credentialSection').style.display=hasCat?'block':'none';
+  document.getElementById('p3s2NoneMsg').style.display=hasCat?'none':'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goToP3S3(){
+  document.getElementById('p3s1').style.display='none';
+  document.getElementById('p3s2').style.display='none';
+  document.getElementById('p3s3').style.display='block';
+  setP3Step(3);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 function goToVerify(){
   var e=document.getElementById('emailInput').value||'your@email.com';
   document.getElementById('cEmail').textContent=e;
@@ -897,13 +1037,12 @@ function onMainCatChange(){
   var checks=document.querySelectorAll('#mainCatDrop input[type=checkbox]');
   mainCatSelected=[];
   checks.forEach(function(c){if(c.checked)mainCatSelected.push(c.value);});
-  // update display
   var ph=document.getElementById('mainCatPlaceholder');
   if(mainCatSelected.length===0){ph.textContent='Select categories…';ph.style.color='#C4C9D4';}
   else{ph.innerHTML=mainCatSelected.map(function(v){return '<span class="ms-tag">'+getMainCatLabel(v)+'</span>';}).join('');}
-  // rebuild sub-cats
-  rebuildSubCats();
-  // rebuild badge cards
+  var hasCat=mainCatSelected.length>0;
+  document.getElementById('credentialSection').style.display=hasCat?'block':'none';
+  document.getElementById('p3s2NoneMsg').style.display=hasCat?'none':'block';
   renderBadgeCards();
 }
 function getMainCatLabel(v){
@@ -948,23 +1087,94 @@ function renderBadgeCards(){
   mainCatSelected.forEach(function(cat){
     var cards=BADGE_CARDS[cat]||[];
     if(!cards.length)return;
-    html+='<div style="font-size:0.7rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin:14px 0 8px;">'+getMainCatLabel(cat)+'</div>';
-    cards.forEach(function(c,i){
-      var reqTag=c.req?'<span class="buc-req-tag">Required</span>':'';
-      var badgeTag='<span class="buc-badge-tag">&#x1F3C5; '+c.badge+'</span>';
-      html+='<div class="buc" id="buc_'+cat+'_'+i+'">'
-        +'<div class="buc-meta">'
-        +'<div class="buc-icon">'+c.icon+'</div>'
+    var catId='cred_'+cat;
+
+    // Category header
+    html+='<div style="margin-bottom:14px;border:1.5px solid var(--border);border-radius:14px;overflow:hidden;">';
+
+    // Header bar
+    html+='<div style="background:var(--bg);padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">'
+      +'<div style="font-size:18px;">'+CAT_ICONS[cat]+'</div>'
+      +'<div style="font-size:0.88rem;font-weight:700;color:var(--text);">'+getMainCatLabel(cat)+'</div>'
+      +'</div>';
+
+    // Text list of accepted credentials
+    html+='<div style="padding:14px 16px;">';
+    html+='<div style="font-size:0.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">Accepted credentials &amp; files</div>';
+    html+='<ul style="list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:7px;">';
+    cards.forEach(function(c){
+    cards.forEach(function(c){
+      html+='<li style="display:flex;align-items:flex-start;gap:9px;">'
+        +'<span style="width:7px;height:7px;border-radius:50%;background:#93C5FD;flex-shrink:0;margin-top:5px;"></span>'
         +'<div>'
-        +'<div class="buc-title">'+c.title+' '+reqTag+' '+badgeTag+' <span class="info-icon-wrap" title="'+c.desc.replace(/"/g,"&quot;")+'" style="cursor:pointer;display:inline-flex;align-items:center;color:var(--muted);position:relative;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v5M8 5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></div>'
-        +'<div class="buc-desc">'+c.desc+'</div>'
-        +'</div></div>'
-        +'<label class="buc-upload-btn"><input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="markUploaded(this)"><span>Upload</span></label>'
-        +'<div class="buc-done-tag">&#10003; Uploaded</div>'
-        +'</div>';
+        +'<div style="font-size:0.82rem;font-weight:600;color:var(--text);">'+c.icon+' '+c.title
+        +' <span style="font-size:0.63rem;font-weight:600;padding:1px 6px;border-radius:20px;background:var(--bl);color:var(--blue);border:1px solid rgba(2,76,238,0.2);vertical-align:middle;">&#x1F3C5; '+c.badge+'</span>'
+        +'</div>'
+        +'<div style="font-size:0.75rem;color:var(--muted);margin-top:2px;line-height:1.5;">'+c.desc+'</div>'
+        +'</div></li>';
     });
+    });
+    html+='</ul>';
+
+    // Single multi-file upload area
+    html+='<div class="cred-upload-area" id="'+catId+'" onclick="document.getElementById(\'fi_'+cat+'\').click()">'
+      +'<input type="file" id="fi_'+cat+'" accept=".pdf,.jpg,.jpeg,.png" multiple style="display:none;" onchange="handleCredUpload(this,\''+catId+'\')">'
+      +'<div class="cred-upload-inner" id="'+catId+'_inner">'
+      +'<div style="font-size:22px;margin-bottom:6px;">📎</div>'
+      +'<div style="font-size:0.82rem;font-weight:500;color:var(--blue);">Click to upload files</div>'
+      +'<div style="font-size:0.7rem;color:#9CA3AF;margin-top:3px;">PDF, JPG, PNG &middot; multiple files allowed &middot; max 5MB each</div>'
+      +'</div>'
+      +'<div class="cred-file-list" id="'+catId+'_files" style="display:none;"></div>'
+      +'</div>';
+
+    html+='</div></div>';
   });
   container.innerHTML=html;
+}
+
+var CAT_ICONS={german_language:'🇩🇪',career_coaching:'💼',translation:'📝',recruitment:'🤝',visa:'✈️',recognition:'🏅',university:'🎓',relocation:'🏙️'};
+
+function handleCredUpload(input,areaId){
+  if(!input.files||!input.files.length)return;
+  var files=Array.from(input.files);
+  var listEl=document.getElementById(areaId+'_files');
+  var innerEl=document.getElementById(areaId+'_inner');
+  var areaEl=document.getElementById(areaId);
+  // append new files to existing list
+  var existing=listEl.querySelectorAll('.cred-file-item');
+  var existingNames=Array.from(existing).map(function(el){return el.dataset.name;});
+  files.forEach(function(f){
+    if(existingNames.includes(f.name))return;
+    var item=document.createElement('div');
+    item.className='cred-file-item';
+    item.dataset.name=f.name;
+    var ext=f.name.split('.').pop().toUpperCase();
+    var kb=Math.round(f.size/1024);
+    item.innerHTML='<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">'
+      +'<div style="width:30px;height:30px;border-radius:7px;background:var(--bl);border:1px solid rgba(2,76,238,0.15);display:flex;align-items:center;justify-content:center;font-size:0.62rem;font-weight:700;color:var(--blue);flex-shrink:0;">'+ext+'</div>'
+      +'<div style="min-width:0;"><div style="font-size:0.78rem;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;">'+f.name+'</div>'
+      +'<div style="font-size:0.68rem;color:#9CA3AF;">'+kb+' KB</div></div></div>'
+      +'<div style="color:#34D399;font-size:13px;flex-shrink:0;">✓</div>'
+      +'<button onclick="removeCredFile(this,\''+areaId+'\')" style="background:none;border:none;cursor:pointer;color:#9CA3AF;font-size:14px;padding:2px 4px;flex-shrink:0;" title="Remove">✕</button>';
+    listEl.appendChild(item);
+  });
+  innerEl.style.display='none';
+  listEl.style.display='block';
+  areaEl.style.borderColor='var(--green)';
+  areaEl.style.background='#F0FFF4';
+}
+
+function removeCredFile(btn,areaId){
+  btn.closest('.cred-file-item').remove();
+  var listEl=document.getElementById(areaId+'_files');
+  var innerEl=document.getElementById(areaId+'_inner');
+  var areaEl=document.getElementById(areaId);
+  if(!listEl.querySelector('.cred-file-item')){
+    innerEl.style.display='block';
+    listEl.style.display='none';
+    areaEl.style.borderColor='';
+    areaEl.style.background='';
+  }
 }
 
 function markUploaded(input){

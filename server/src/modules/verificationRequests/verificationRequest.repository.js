@@ -38,14 +38,12 @@ async function getAllAdmin({ limit, offset, filters }) {
     where: filters,
     include: [
       {
-        model: db.VerificationRequestAsset,
-        as: "verificationRequestAssets",
-        include: [
-          {
-            model: db.Asset,
-            attributes: ["mediaType", "url"],
-          },
-        ],
+        model: db.Asset,
+        as: "assets",
+        through: {
+          attributes: [],
+        },
+        attributes: ["url", "label"],
       },
     ],
     order: [["updatedAt", "DESC"]],

@@ -3,10 +3,9 @@ import GoogleLoginButton from "./GoogleLoginButton";
 import FormInput from "./FormInput";
 import FormSelect from "./FormSelect";
 import PasswordInput from "./PasswordInput";
-import FileUpload from "./FileUpload";
-import ProfileImageUpload from "./ProfileImageUpload";
 import TermsCheckbox from "./TermsCheckbox";
 import SectionHeader from "./SectionHeader";
+import { checkEmailExists } from "../../../api/authService";
 
 const initialFormData = {
   firstName: "",
@@ -23,6 +22,7 @@ const initialFormData = {
   idDocument: null,
   proofOfResidence: null,
   businessRegistration: null,
+  termsAccepted: false,
 };
 
 const initialErrors = {
@@ -41,7 +41,7 @@ const initialErrors = {
 };
 
 const validateName = (name) => {
-  const regex = /^[a-zA-Z\s'-]*$/;
+  const regex = /^[a-zA-Z\s'-]+$/;
   return regex.test(name);
 };
 
@@ -51,8 +51,8 @@ const validateEmail = (email) => {
 };
 
 const validatePhone = (phone) => {
-  const regex = /^\+?[\d\s-]{10,}$/;
-  return regex.test(phone.replace(/\s/g, ""));
+  const regex = /^[0-9+()\-\s]*$/;
+  return regex.test(phone);
 };
 
 const createFormData = (data) => {
@@ -83,6 +83,22 @@ const BasicInfoForm = ({
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [checkingEmail, setCheckingEmail] = useState(false);
+
+  const handleEmailCheck = async (email) => {
+    if (!email || !validateEmail(email)) return;
+    setCheckingEmail(true);
+    try {
+      const { exists } = await checkEmailExists(email);
+      if (exists) {
+        setErrors((prev) => ({ ...prev, email: "This email is already registered" }));
+      }
+    } catch (err) {
+      console.error("Failed to check email:", err);
+    } finally {
+      setCheckingEmail(false);
+    }
+  };
 
   const inputBaseStyle =
     "w-full py-2.5 px-3 border-2 border-[#E5E7EB] rounded-xl text-sm text-[#111827] bg-white outline-none transition-colors duration-300 focus:border-[#024CEE] focus:shadow-[0_0_0_3px_rgba(2,76,238,0.07)]";
@@ -92,11 +108,17 @@ const BasicInfoForm = ({
     switch (field) {
       case "firstName":
         if (!value.trim()) error = "First name is required";
-        else if (!validateName(value)) error = "Only letters, spaces, hyphens, and apostrophes allowed";
+        else if (value.trim().length < 2 || value.trim().length > 50)
+          error = "First name must be between 2 and 50 characters";
+        else if (!validateName(value))
+          error = "First name can only contain letters, spaces, hyphens, and apostrophes";
         break;
       case "lastName":
         if (!value.trim()) error = "Last name is required";
-        else if (!validateName(value)) error = "Only letters, spaces, hyphens, and apostrophes allowed";
+        else if (value.trim().length < 2 || value.trim().length > 50)
+          error = "Last name must be between 2 and 50 characters";
+        else if (!validateName(value))
+          error = "Last name can only contain letters, spaces, hyphens, and apostrophes";
         break;
       case "email":
         if (!value.trim()) error = "Email is required";
@@ -104,15 +126,27 @@ const BasicInfoForm = ({
         break;
       case "phone":
         if (!value.trim()) error = "Phone number is required";
-        else if (!validatePhone(value)) error = "Invalid phone number";
+        else if (value.replace(/\s/g, "").length < 7 || value.replace(/\s/g, "").length > 20)
+          error = "Phone number must be between 7 and 20 characters";
+        else if (!validatePhone(value)) error = "Phone number contains invalid characters";
         break;
       case "password":
         if (!value) error = "Password is required";
-        else if (value.length < 8) error = "Password must be at least 8 characters";
+        else if (value.length < 8)
+          error = "Password must be at least 8 characters long";
+        else if (!/[A-Z]/.test(value))
+          error = "Password must contain at least one uppercase letter";
+        else if (!/[a-z]/.test(value))
+          error = "Password must contain at least one lowercase letter";
+        else if (!/[0-9]/.test(value))
+          error = "Password must contain at least one number";
+        else if (!/[^a-zA-Z0-9]/.test(value))
+          error = "Password must contain at least one special character";
         break;
       case "confirmPassword":
         if (!value) error = "Please confirm your password";
-        else if (currentFormData.password !== value) error = "Passwords do not match";
+        else if (currentFormData.password !== value)
+          error = "Passwords do not match";
         break;
       case "nationality":
         if (!value) error = "Please select your nationality";
@@ -121,8 +155,8 @@ const BasicInfoForm = ({
         if (!value) error = "Please select your country of residence";
         break;
       case "companyName":
-        if (role === "provider" && !value.trim()) {
-          error = subRole === "company" ? "Company name is required" : "Display name is required";
+        if (role === "provider" && subRole === "company" && !value.trim()) {
+          error = "Company name is required";
         }
         break;
       default:
@@ -135,26 +169,54 @@ const BasicInfoForm = ({
     const newFormData = { ...formData, [field]: value };
     setFormData(newFormData);
     const fieldError = validateField(field, value, newFormData);
-    setErrors((prev) => ({ ...prev, [field]: fieldError }));
+    
+    setErrors((prev) => {
+      const newErrors = { ...prev, [field]: fieldError };
+      // Preserve "already exists" error when editing other fields
+      if (field !== "email" && prev.email === "This email is already registered") {
+        newErrors.email = prev.email;
+      }
+      return newErrors;
+    });
+    
     if (field === "email" && fieldError === "") {
       setError(null);
     }
   };
 
-  const handleGoogleResponse = (response) => {
+  const handleGoogleResponse = async (response) => {
+    console.log("Google Response:", JSON.stringify(response));
     setError(null);
     if (!response.success) {
       setError(response.message);
       return;
     }
-    if (response.firstName) updateField("firstName", response.firstName);
-    if (response.lastName) updateField("lastName", response.lastName);
-    if (response.email) {
-      updateField("email", response.email);
-      setError(null);
+
+    // Store Google profile image URL temporarily (will upload on final submit)
+    let googleProfileImageUrl = null;
+    if (response.profilePicture?.url) {
+      googleProfileImageUrl = response.profilePicture.url;
     }
-    if (response.phone) updateField("phone", response.phone);
-    setErrors((prev) => ({ ...prev, general: "" }));
+    
+    // Direct set without validation to ensure it works
+    setFormData((prev) => {
+      const newData = { ...prev };
+      if (response.firstName) newData.firstName = response.firstName;
+      if (response.lastName) newData.lastName = response.lastName;
+      if (response.email) newData.email = response.email;
+      if (response.phone) newData.phone = response.phone;
+      if (googleProfileImageUrl) newData.profileImage = googleProfileImageUrl;
+      return newData;
+    });
+    
+    // Clear any field errors
+    setErrors((prev) => ({
+      ...prev,
+      firstName: "",
+      lastName: "",
+      email: "",
+      general: ""
+    }));
   };
 
   useEffect(() => {
@@ -173,37 +235,51 @@ const BasicInfoForm = ({
   const validateForm = () => {
     const newErrors = { ...initialErrors };
     let isValid = true;
+    
+    // Preserve "already registered" error from API check
+    const existingEmailError = errors.email === "This email is already registered" ? errors.email : "";
+
     if (!formData.firstName.trim()) {
       newErrors.firstName = "First name is required";
       isValid = false;
+    } else if (formData.firstName.trim().length < 2 || formData.firstName.trim().length > 50) {
+      newErrors.firstName = "First name must be between 2 and 50 characters";
+      isValid = false;
     } else if (!validateName(formData.firstName)) {
-      newErrors.firstName =
-        "Only letters, spaces, hyphens, and apostrophes allowed";
+      newErrors.firstName = "First name can only contain letters, spaces, hyphens, and apostrophes";
       isValid = false;
     }
 
     if (!formData.lastName.trim()) {
       newErrors.lastName = "Last name is required";
       isValid = false;
+    } else if (formData.lastName.trim().length < 2 || formData.lastName.trim().length > 50) {
+      newErrors.lastName = "Last name must be between 2 and 50 characters";
+      isValid = false;
     } else if (!validateName(formData.lastName)) {
-      newErrors.lastName =
-        "Only letters, spaces, hyphens, and apostrophes allowed";
+      newErrors.lastName = "Last name can only contain letters, spaces, hyphens, and apostrophes";
       isValid = false;
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = existingEmailError || "Email is required";
       isValid = false;
     } else if (!validateEmail(formData.email)) {
-      newErrors.email = "Invalid email format";
+      newErrors.email = existingEmailError || "Invalid email format";
+      isValid = false;
+    } else if (existingEmailError) {
+      newErrors.email = existingEmailError;
       isValid = false;
     }
 
     if (!formData.phone.trim()) {
       newErrors.phone = "Phone number is required";
       isValid = false;
+    } else if (formData.phone.replace(/\s/g, "").length < 7 || formData.phone.replace(/\s/g, "").length > 20) {
+      newErrors.phone = "Phone number must be between 7 and 20 characters";
+      isValid = false;
     } else if (!validatePhone(formData.phone)) {
-      newErrors.phone = "Invalid phone number";
+      newErrors.phone = "Phone number contains invalid characters";
       isValid = false;
     }
 
@@ -217,11 +293,12 @@ const BasicInfoForm = ({
       isValid = false;
     }
 
-    if (role === "provider" && !formData.companyName.trim()) {
-      newErrors.companyName =
-        subRole === "company"
-          ? "Company name is required"
-          : "Display name is required";
+    if (
+      role === "provider" &&
+      subRole === "company" &&
+      !formData.companyName.trim()
+    ) {
+      newErrors.companyName = "Company name is required";
       isValid = false;
     }
 
@@ -229,7 +306,19 @@ const BasicInfoForm = ({
       newErrors.password = "Password is required";
       isValid = false;
     } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+      newErrors.password = "Password must be at least 8 characters long";
+      isValid = false;
+    } else if (!/[A-Z]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one uppercase letter";
+      isValid = false;
+    } else if (!/[a-z]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one lowercase letter";
+      isValid = false;
+    } else if (!/[0-9]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one number";
+      isValid = false;
+    } else if (!/[^a-zA-Z0-9]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one special character";
       isValid = false;
     }
 
@@ -275,7 +364,7 @@ const BasicInfoForm = ({
     onContinue(formDataPayload);
   };
   return (
-    <div className="w-full max-w-[560px] text-left px-4 sm:px-0">
+    <div className="w-full max-w-[560px] text-left px-4 sm:px-0 animate-fade-up">
       <button
         onClick={onBack}
         className="flex items-center justify-center gap-1.5 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-5 pl-2.5 pr-2.5"
@@ -286,13 +375,21 @@ const BasicInfoForm = ({
       <div className="text-xl font-bold text-[#111827] mb-1">
         {role === "provider"
           ? subRole === "company"
-            ? "Company Account"
+            ? "Company / Organization Account"
             : "Freelancer Account"
-          : "Individual Account"}
+          : role === "relocate"
+            ? "Individual Account"
+            : "Individual Account"}
       </div>
 
       <div className="text-sm text-[#6B7280] mb-5.5">
-        Fill in your details to get started.
+        {role === "provider"
+          ? subRole === "company"
+            ? "Company or organization."
+            : "Independent professional."
+          : role === "relocate"
+            ? "Free access · No transaction fees · Full platform access"
+            : "Free access · No transaction fees · Full platform access"}
       </div>
 
       {(error || errors.general) && (
@@ -310,40 +407,44 @@ const BasicInfoForm = ({
       </div>
 
       <div className="mb-5">
-        <SectionHeader icon="👤" title="Basic Information" required />
+        <SectionHeader title="Basic Information" required />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2.5">
-          <FormInput
-            label="First Name"
-            value={formData.firstName}
-            onChange={(value) => updateField("firstName", value)}
-            placeholder="Ahmed"
-            required
-            error={errors.firstName}
-            inputBaseStyle={inputBaseStyle}
-          />
-
-          <FormInput
-            label="Last Name"
-            value={formData.lastName}
-            onChange={(value) => updateField("lastName", value)}
-            placeholder="Mohamed"
-            required
-            error={errors.lastName}
-            inputBaseStyle={inputBaseStyle}
-          />
-
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-2.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+            <FormInput
+              label="First Name"
+              value={formData.firstName}
+              onChange={(value) => updateField("firstName", value)}
+              placeholder="Ahmed"
+              required
+              error={errors.firstName}
+              inputBaseStyle={inputBaseStyle}
+            />
+            <FormInput
+              label="Last Name"
+              value={formData.lastName}
+              onChange={(value) => updateField("lastName", value)}
+              placeholder="Mohamed"
+              required
+              error={errors.lastName}
+              inputBaseStyle={inputBaseStyle}
+            />
+          </div>
+          <span className="text-xs text-[#6B7280]  mt-[-0.7rem]">
+            Enter your name exactly as it appears on your passport or official
+            ID.
+          </span>
           <FormInput
             label="Email"
             type="email"
             value={formData.email}
             onChange={(value) => updateField("email", value)}
+            onBlur={() => handleEmailCheck(formData.email)}
             placeholder="your@email.com"
             required
             error={errors.email}
             inputBaseStyle={inputBaseStyle}
           />
-
           <FormInput
             label="Phone Number"
             type="tel"
@@ -357,8 +458,6 @@ const BasicInfoForm = ({
         </div>
 
         <div className="mb-6">
-          <SectionHeader icon="🌍" title="Location" />
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormSelect
               label="Nationality"
@@ -385,61 +484,24 @@ const BasicInfoForm = ({
             />
           </div>
         </div>
-        {role === "provider" &&
-          (role === "provider" && subRole === "company" ? (
-            <SectionHeader icon="🏢" title="Company Name" />
-          ) : (
-            <SectionHeader icon="🏢" title="Display Name" />
-          ))}
-        {role === "provider" && (
-          <div className="mb-2.5">
-            <FormInput
-              label={
-                role === "provider" && subRole === "company"
-                  ? "Company Name"
-                  : "Display Name"
-              }
-              value={formData.companyName}
-              onChange={(value) => updateField("companyName", value)}
-              placeholder="Company Name"
-              required
-              error={errors.companyName}
-              inputBaseStyle={inputBaseStyle}
-            />
-          </div>
-        )}
 
-        {role === "provider" && (
-          <div className="mb-2.5">
-            <SectionHeader icon="📝" title="About You" />
-            <div>
-              <label className="block text-sm font-medium text-[#111827] mb-1">
-                Bio{" "}
-                <span className="text-[#6B7280] font-normal text-xs">
-                  — Optional
-                </span>
-              </label>
-              <textarea
-                value={formData.bio}
-                onChange={(e) => updateField("bio", e.target.value)}
-                placeholder="Tell clients about yourself, your expertise, and what services you offer..."
-                rows={4}
-                className={`${inputBaseStyle} resize-none ${
-                  errors.bio
-                    ? "border-red-500 focus:border-red-500"
-                    : "border-[#E5E7EB] focus:border-[#024CEE]"
-                }`}
+        {role === "provider" && subRole === "company" && (
+          <>
+            <div className="mb-2.5">
+              <FormInput
+                label="Company Name"
+                value={formData.companyName}
+                onChange={(value) => updateField("companyName", value)}
+                placeholder="Official registered company name"
+                required
+                error={errors.companyName}
+                inputBaseStyle={inputBaseStyle}
               />
-              <p className="text-[11px] text-[#6B7280] mt-1 ml-1">
-                {formData.bio.length}/500 characters
-              </p>
             </div>
-          </div>
+          </>
         )}
 
         <div className="mb-2.5">
-          <SectionHeader icon="🔒" title="Security" />
-
           <PasswordInput
             label="Password"
             value={formData.password}
@@ -467,88 +529,19 @@ const BasicInfoForm = ({
               }
               inputBaseStyle={inputBaseStyle}
             />
-            {formData.confirmPassword && (
-              <div
-                className={`text-xs mt-1.5 ml-1 ${
-                  formData.password === formData.confirmPassword
-                    ? "text-green-600"
-                    : "text-red-600"
-                }`}
-              >
-                {formData.password === formData.confirmPassword
-                  ? "✓ Passwords match"
-                  : "✗ Passwords do not match"}
-              </div>
-            )}
           </div>
         </div>
-
-        <div className="mb-8">
-          <SectionHeader
-            icon="🏅"
-            title="Credential Uploads"
-            subtitle="earn verified badges · PDF, JPG, PNG · max 5MB"
-          />
-          <p className="text-sm text-[#6B7280] mb-4 leading-relaxed">
-            Upload your credentials to earn badges that appear on your public
-            profile. The more you verify, the higher you rank in search results.
-          </p>
-
-          <FileUpload
-            icon="🪪"
-            title="Passport or National ID "
-            subtitle="Required for all members to fully use the platform."
-            badge
-            badgeText="Optional"
-            file={formData.idDocument}
-            fieldName="idDocumentument"
-            onUpload={(file) => updateField("idDocument", file)}
-            onRemove={() => updateField("idDocument", null)}
-            accept=".pdf,.jpg,.jpeg,.png"
-          />
-
-          {role === "provider" && subRole === "company" && (
-            <>
-              <FileUpload
-                icon="🏠"
-                title="Proof of Residence"
-                subtitle="Document proving your business address."
-                badge
-                badgeText="Optional"
-                file={formData.proofOfResidence}
-                fieldName="proofOfResidence"
-                onUpload={(file) => updateField("proofOfResidence", file)}
-                onRemove={() => updateField("proofOfResidence", null)}
-                accept=".pdf,.jpg,.jpeg,.png"
-              />
-
-              <FileUpload
-                icon="📋"
-                title="Business Registration"
-                subtitle="Upload your official company registration document (PDF)."
-                badge
-                badgeText="Optional"
-                file={formData.businessRegistration}
-                fieldName="businessRegistration"
-                onUpload={(file) => updateField("businessRegistration", file)}
-                onRemove={() => updateField("businessRegistration", null)}
-                accept=".pdf"
-              />
-            </>
-          )}
-        </div>
-
-        <ProfileImageUpload
-          file={formData.profileImage}
-          onUpload={(file) => updateField("profileImage", file)}
-        />
 
         <TermsCheckbox
           checked={agreedToTerms}
           onChange={(value) => {
             setAgreedToTerms(value);
             if (value) setErrors((prev) => ({ ...prev, terms: "" }));
-            else setErrors((prev) => ({ ...prev, terms: "You must agree to the Terms and Privacy Policy" }));
+            else
+              setErrors((prev) => ({
+                ...prev,
+                terms: "You must agree to the Terms and Privacy Policy",
+              }));
           }}
           error={errors.terms}
         />
@@ -563,7 +556,7 @@ const BasicInfoForm = ({
 
       <button
         onClick={handleSubmit}
-        className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] shadow-md active:scale-[0.98]"
+        className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] btn-ripple"
       >
         Continue →
       </button>

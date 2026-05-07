@@ -10,6 +10,10 @@ UserProfile.init(
       primaryKey: true,
       autoIncrement: true,
     },
+    bio: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,

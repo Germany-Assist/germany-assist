@@ -39,6 +39,7 @@ export const NOTIFICATION_EVENTS = {
 
 export const TOKENS_CONSTANTS = {
   PASSWORD_RESET: "passwordReset",
+  PASSWORD_CHANGE: "passwordChange",
   EMAIL_VERIFICATION: "emailVerification",
 };
 export const AUDIT_LOGS_CONSTANTS = {

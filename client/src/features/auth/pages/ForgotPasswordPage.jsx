@@ -6,7 +6,7 @@ const ForgotPasswordPage = () => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [resetToken, setResetToken] = useState("");
-  const [code, setCode] = useState(["", "", "", "", ""]);
+  const [code, setCode] = useState(["", "", "", "", "", "", "", ""]);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -62,12 +62,12 @@ const ForgotPasswordPage = () => {
   };
 
   const handleCodeChange = (index, value) => {
-    if (!/^\d*$/.test(value)) return;
+    if (!/^[a-zA-Z0-9]*$/.test(value)) return;
     const newCode = [...code];
     newCode[index] = value;
     setCode(newCode);
 
-    if (value && index < 4) {
+    if (value && index < 7) {
       codeInputs.current[index + 1]?.focus();
     }
   };
@@ -80,18 +80,18 @@ const ForgotPasswordPage = () => {
 
   const handleCodePaste = (e) => {
     e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 5);
-    const newCode = pasted.split("").concat(Array(5).fill("")).slice(0, 5);
+    const pasted = e.clipboardData.getData("text").slice(0, 8);
+    const newCode = pasted.split("").concat(Array(8).fill("")).slice(0, 8);
     setCode(newCode);
-    if (pasted.length === 5) {
-      codeInputs.current[4]?.focus();
+    if (pasted.length === 8) {
+      codeInputs.current[7]?.focus();
     }
   };
 
   const handleVerifyCode = async () => {
     const codeStr = code.join("");
-    if (codeStr.length < 5) {
-      setError("Please enter the 5-digit code.");
+    if (codeStr.length < 8) {
+      setError("Please enter the 8-character code.");
       return;
     }
     setIsLoading(true);
@@ -286,7 +286,7 @@ const ForgotPasswordPage = () => {
                 <div className="text-xs font-semibold text-[#024CEE] uppercase tracking-wider mb-2">Step 2 of 3</div>
                 <h2 className="text-2xl font-extrabold mb-1.5">Check your email</h2>
                 <p className="text-sm text-[#6B7280] mb-5">
-                  We sent a 5-digit code to <b className="text-[#111827]">{maskEmail(email)}</b>
+                  We sent an 8-character code to <b className="text-[#111827]">{maskEmail(email)}</b>
                 </p>
 
                 {error && (
@@ -338,7 +338,7 @@ const ForgotPasswordPage = () => {
 
                 <button
                   onClick={handleVerifyCode}
-                  disabled={isLoading || code.join("").length < 5}
+                  disabled={isLoading || code.join("").length < 8}
                   className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-bold text-sm cursor-pointer transition-all hover:bg-[#0341cc] hover:-translate-y-0.5 hover:shadow-[0_5px_20px_rgba(2,76,238,0.3)] disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {isLoading ? "Verifying..." : "Verify Code"}
@@ -348,7 +348,7 @@ const ForgotPasswordPage = () => {
                   <button
                     onClick={() => {
                       setStep(1);
-                      setCode(["", "", "", "", ""]);
+                      setCode(["", "", "", "", "", "", "", ""]);
                       setError("");
                     }}
                     className="text-sm text-[#6B7280] bg-none border-none cursor-pointer font-[Outfit]"

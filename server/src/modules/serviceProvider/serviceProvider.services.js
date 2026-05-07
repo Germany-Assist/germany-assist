@@ -16,13 +16,37 @@ import { PROVIDER_TYPES } from "../../configs/constants.js";
 
 const getFile = (files, field) => files?.[field]?.[0] || null;
 
+// Helper to process category files - parses categoryEntries and maps files to categories
+// categoryEntries: [{"categoryId": "german_language", "fileIndices": [0, 1]}, ...]
+// files: array of uploaded files from req.files?.categoryFiles
+const processCategoryFiles = (body, files) => {
+  const categoryFilesMap = {};
+
+  if (!body.categoryEntries || !files || files.length === 0) {
+    return categoryFilesMap;
+  }
+
+  try {
+    const categoryEntries = JSON.parse(body.categoryEntries);
+
+    categoryEntries.forEach(({ categoryId, fileIndices }) => {
+      categoryFilesMap[categoryId] = fileIndices
+        .filter((idx) => files[idx])
+        .map((idx) => files[idx]);
+    });
+  } catch (e) {
+    console.error("Error parsing categoryEntries:", e);
+  }
+
+  return categoryFilesMap;
+};
+
 export const registerFreelancer = async (body, files) => {
   const t = await sequelize.transaction();
   try {
     const {
       firstName,
       lastName,
-      companyName,
       email,
       phone,
       password,
@@ -42,9 +66,8 @@ export const registerFreelancer = async (body, files) => {
     }
 
     const spData = {
-      name: companyName,
-      about: bio || "",
-      description: bio || "",
+      name: firstName + " " + lastName,
+      bio: bio || "",
       phoneNumber: phone,
       email,
       type: PROVIDER_TYPES.freelancer, //"freelancer",
@@ -82,9 +105,18 @@ export const registerFreelancer = async (body, files) => {
     );
 
     const profileImage = getFile(files, "profileImage");
+    const profileImageUrl = body.profileImageUrl;
     if (profileImage) {
       await AssetService.uploadAsset({
         files: [profileImage],
+        ownerId: user.id,
+        typeKey: "userImage",
+        userId: user.id,
+        transaction: t,
+      });
+    } else if (profileImageUrl) {
+      await AssetService.createAssetFromUrl({
+        url: profileImageUrl,
         ownerId: user.id,
         typeKey: "userImage",
         userId: user.id,
@@ -114,6 +146,36 @@ export const registerFreelancer = async (body, files) => {
         userId: user.id,
         transaction: t,
       });
+    }
+
+    // Process category credential files
+    // categoryEntries tells us which file indices belong to which category
+    const categoryFiles = files?.categoryFiles || [];
+    const categoryFilesMap = processCategoryFiles(body, categoryFiles);
+
+    // For each category, create a verification request and upload the files
+    for (const [categoryId, catFiles] of Object.entries(categoryFilesMap)) {
+      if (catFiles && catFiles.length > 0) {
+        const categoryRequest =
+          await verificationRequestRepository.createProvider(
+            {
+              auth: user,
+              userId: user.id,
+              relatedId: sp.id,
+              type: "category",
+              categoryId: categoryId, // Store which category this file belongs to
+            },
+            t,
+          );
+        await AssetService.uploadAsset({
+          files: catFiles,
+          ownerId: categoryRequest.id,
+          typeKey: "verificationDocument",
+          label: `Category: ${categoryId}`,
+          userId: user.id,
+          transaction: t,
+        });
+      }
     }
 
     const { accessToken, refreshToken } = jwtUtils.generateTokens(user);
@@ -160,8 +222,7 @@ export const registerCompany = async (body, files) => {
 
     const spData = {
       name: companyName,
-      about: bio || "",
-      description: bio || "",
+      bio: bio || "",
       phoneNumber: phone,
       email,
       type: PROVIDER_TYPES.company, //"company",
@@ -169,6 +230,7 @@ export const registerCompany = async (body, files) => {
 
     const sp = await serviceProviderRepository.createServiceProvider(spData, t);
     const hashedPassword = bcryptUtil.hashPassword(password);
+    // TODO replace with the constants created
     const domain = userDomain.setRoleAndType("serviceProvider");
     const { rootRole, rootRelatedType } = domain;
 
@@ -200,9 +262,18 @@ export const registerCompany = async (body, files) => {
     );
 
     const profileImage = getFile(files, "profileImage");
+    const profileImageUrl = body.profileImageUrl;
     if (profileImage) {
       await AssetService.uploadAsset({
         files: [profileImage],
+        ownerId: user.id,
+        typeKey: "userImage",
+        userId: user.id,
+        transaction: t,
+      });
+    } else if (profileImageUrl) {
+      await AssetService.createAssetFromUrl({
+        url: profileImageUrl,
         ownerId: user.id,
         typeKey: "userImage",
         userId: user.id,
@@ -212,6 +283,7 @@ export const registerCompany = async (body, files) => {
     const idDocument = getFile(files, "idDocument");
     const proofOfResidence = getFile(files, "proofOfResidence");
     const businessRegistration = getFile(files, "businessRegistration");
+
     if (idDocument || proofOfResidence || businessRegistration) {
       const request = await verificationRequestRepository.createProvider(
         {
@@ -222,6 +294,7 @@ export const registerCompany = async (body, files) => {
         },
         t,
       );
+
       if (idDocument) {
         await AssetService.uploadAsset({
           files: [idDocument],
@@ -258,6 +331,36 @@ export const registerCompany = async (body, files) => {
               : "verificationImage",
           userId: user.id,
           label: "businessRegistration",
+          transaction: t,
+        });
+      }
+    }
+
+    // Process category credential files
+    // categoryEntries tells us which file indices belong to which category
+    const categoryFiles = files?.categoryFiles || [];
+    const categoryFilesMap = processCategoryFiles(body, categoryFiles);
+
+    // For each category, create a verification request and upload the files
+    for (const [categoryId, catFiles] of Object.entries(categoryFilesMap)) {
+      if (catFiles && catFiles.length > 0) {
+        const categoryRequest =
+          await verificationRequestRepository.createProvider(
+            {
+              auth: user,
+              userId: user.id,
+              relatedId: sp.id,
+              type: "category",
+              categoryId: categoryId,
+            },
+            t,
+          );
+        await AssetService.uploadAsset({
+          files: catFiles,
+          ownerId: categoryRequest.id,
+          typeKey: "verificationDocument",
+          label: `Category: ${categoryId}`,
+          userId: user.id,
           transaction: t,
         });
       }
