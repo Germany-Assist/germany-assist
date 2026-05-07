@@ -1,6 +1,8 @@
 import React from "react";
 
 const ProfileImageUpload = ({ file, onUpload, onRemove }) => {
+  console.log("ProfileImageUpload file:", file, typeof file);
+  
   const handleRemove = () => {
     if (onRemove) {
       onRemove();
