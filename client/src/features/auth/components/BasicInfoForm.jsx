@@ -40,7 +40,7 @@ const initialErrors = {
 };
 
 const validateName = (name) => {
-  const regex = /^[a-zA-Z\s'-]*$/;
+  const regex = /^[a-zA-Z\s'-]+$/;
   return regex.test(name);
 };
 
@@ -50,8 +50,8 @@ const validateEmail = (email) => {
 };
 
 const validatePhone = (phone) => {
-  const regex = /^\+?[\d\s-]{10,}$/;
-  return regex.test(phone.replace(/\s/g, ""));
+  const regex = /^[0-9+()\-\s]*$/;
+  return regex.test(phone);
 };
 
 const createFormData = (data) => {
@@ -91,13 +91,17 @@ const BasicInfoForm = ({
     switch (field) {
       case "firstName":
         if (!value.trim()) error = "First name is required";
+        else if (value.trim().length < 2 || value.trim().length > 50)
+          error = "First name must be between 2 and 50 characters";
         else if (!validateName(value))
-          error = "Only letters, spaces, hyphens, and apostrophes allowed";
+          error = "First name can only contain letters, spaces, hyphens, and apostrophes";
         break;
       case "lastName":
         if (!value.trim()) error = "Last name is required";
+        else if (value.trim().length < 2 || value.trim().length > 50)
+          error = "Last name must be between 2 and 50 characters";
         else if (!validateName(value))
-          error = "Only letters, spaces, hyphens, and apostrophes allowed";
+          error = "Last name can only contain letters, spaces, hyphens, and apostrophes";
         break;
       case "email":
         if (!value.trim()) error = "Email is required";
@@ -105,12 +109,22 @@ const BasicInfoForm = ({
         break;
       case "phone":
         if (!value.trim()) error = "Phone number is required";
-        else if (!validatePhone(value)) error = "Invalid phone number";
+        else if (value.replace(/\s/g, "").length < 7 || value.replace(/\s/g, "").length > 20)
+          error = "Phone number must be between 7 and 20 characters";
+        else if (!validatePhone(value)) error = "Phone number contains invalid characters";
         break;
       case "password":
         if (!value) error = "Password is required";
         else if (value.length < 8)
-          error = "Password must be at least 8 characters";
+          error = "Password must be at least 8 characters long";
+        else if (!/[A-Z]/.test(value))
+          error = "Password must contain at least one uppercase letter";
+        else if (!/[a-z]/.test(value))
+          error = "Password must contain at least one lowercase letter";
+        else if (!/[0-9]/.test(value))
+          error = "Password must contain at least one number";
+        else if (!/[^a-zA-Z0-9]/.test(value))
+          error = "Password must contain at least one special character";
         break;
       case "confirmPassword":
         if (!value) error = "Please confirm your password";
@@ -179,18 +193,22 @@ const BasicInfoForm = ({
     if (!formData.firstName.trim()) {
       newErrors.firstName = "First name is required";
       isValid = false;
+    } else if (formData.firstName.trim().length < 2 || formData.firstName.trim().length > 50) {
+      newErrors.firstName = "First name must be between 2 and 50 characters";
+      isValid = false;
     } else if (!validateName(formData.firstName)) {
-      newErrors.firstName =
-        "Only letters, spaces, hyphens, and apostrophes allowed";
+      newErrors.firstName = "First name can only contain letters, spaces, hyphens, and apostrophes";
       isValid = false;
     }
 
     if (!formData.lastName.trim()) {
       newErrors.lastName = "Last name is required";
       isValid = false;
+    } else if (formData.lastName.trim().length < 2 || formData.lastName.trim().length > 50) {
+      newErrors.lastName = "Last name must be between 2 and 50 characters";
+      isValid = false;
     } else if (!validateName(formData.lastName)) {
-      newErrors.lastName =
-        "Only letters, spaces, hyphens, and apostrophes allowed";
+      newErrors.lastName = "Last name can only contain letters, spaces, hyphens, and apostrophes";
       isValid = false;
     }
 
@@ -205,8 +223,11 @@ const BasicInfoForm = ({
     if (!formData.phone.trim()) {
       newErrors.phone = "Phone number is required";
       isValid = false;
+    } else if (formData.phone.replace(/\s/g, "").length < 7 || formData.phone.replace(/\s/g, "").length > 20) {
+      newErrors.phone = "Phone number must be between 7 and 20 characters";
+      isValid = false;
     } else if (!validatePhone(formData.phone)) {
-      newErrors.phone = "Invalid phone number";
+      newErrors.phone = "Phone number contains invalid characters";
       isValid = false;
     }
 
@@ -233,7 +254,19 @@ const BasicInfoForm = ({
       newErrors.password = "Password is required";
       isValid = false;
     } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+      newErrors.password = "Password must be at least 8 characters long";
+      isValid = false;
+    } else if (!/[A-Z]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one uppercase letter";
+      isValid = false;
+    } else if (!/[a-z]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one lowercase letter";
+      isValid = false;
+    } else if (!/[0-9]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one number";
+      isValid = false;
+    } else if (!/[^a-zA-Z0-9]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one special character";
       isValid = false;
     }
 
@@ -443,19 +476,6 @@ const BasicInfoForm = ({
               }
               inputBaseStyle={inputBaseStyle}
             />
-            {formData.confirmPassword && (
-              <div
-                className={`text-xs mt-1.5 ml-1 ${
-                  formData.password === formData.confirmPassword
-                    ? "text-green-600"
-                    : "text-red-600"
-                }`}
-              >
-                {formData.password === formData.confirmPassword
-                  ? "✓ Passwords match"
-                  : "✗ Passwords do not match"}
-              </div>
-            )}
           </div>
         </div>
 
