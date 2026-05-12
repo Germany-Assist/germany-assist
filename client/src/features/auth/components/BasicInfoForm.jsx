@@ -51,8 +51,7 @@ const validateEmail = (email) => {
 };
 
 const validatePhone = (phone) => {
-  const regex = /^[0-9+()\-\s]*$/;
-  return regex.test(phone);
+  return /^\+?[0-9()\-\s]{7,20}$/.test(phone.trim());
 };
 
 const createFormData = (data) => {
@@ -78,7 +77,7 @@ const BasicInfoForm = ({
   initialValues,
 }) => {
   const [formData, setFormData] = useState(initialFormData);
-  
+
   // Sync with initialValues when provided (e.g., when going back)
   useEffect(() => {
     if (initialValues) {
@@ -99,12 +98,16 @@ const BasicInfoForm = ({
     try {
       const { exists } = await checkEmailExists(email);
       if (exists) {
-        setErrors((prev) => ({ ...prev, email: "This email is already registered" }));
+        setErrors((prev) => ({
+          ...prev,
+          email: "This email is already registered",
+        }));
       } else {
         // Clear the error only if it was the "already registered" error
         setErrors((prev) => ({
           ...prev,
-          email: prev.email === "This email is already registered" ? "" : prev.email
+          email:
+            prev.email === "This email is already registered" ? "" : prev.email,
         }));
       }
     } catch (err) {
@@ -119,19 +122,52 @@ const BasicInfoForm = ({
 
   const isFormReady = () => {
     // Check all required fields are filled and valid
-    const hasBasicInfo = formData.firstName.trim().length >= 2 && formData.firstName.trim().length <= 50 && validateName(formData.firstName);
-    const hasLastName = formData.lastName.trim().length >= 2 && formData.lastName.trim().length <= 50 && validateName(formData.lastName);
-    const hasValidEmail = formData.email.trim() && validateEmail(formData.email);
+    const hasBasicInfo =
+      formData.firstName.trim().length >= 2 &&
+      formData.firstName.trim().length <= 50 &&
+      validateName(formData.firstName);
+    const hasLastName =
+      formData.lastName.trim().length >= 2 &&
+      formData.lastName.trim().length <= 50 &&
+      validateName(formData.lastName);
+    const hasValidEmail =
+      formData.email.trim() && validateEmail(formData.email);
     const hasNoEmailError = !errors.email || errors.email === "";
-    const hasPhone = formData.phone.trim().replace(/\s/g, "").length >= 7 && formData.phone.replace(/\s/g, "").length <= 20 && validatePhone(formData.phone);
+    const hasPhone =
+      formData.phone.trim().replace(/\s/g, "").length >= 7 &&
+      formData.phone.replace(/\s/g, "").length <= 20 &&
+      validatePhone(formData.phone);
     const hasNationality = !!formData.nationality;
     const hasCountry = !!formData.countryOfResidence;
-    const hasCompany = role === "provider" && subRole === "company" ? !!formData.companyName.trim() : true;
-    const hasPassword = formData.password.length >= 8 && /[A-Z]/.test(formData.password) && /[a-z]/.test(formData.password) && /[0-9]/.test(formData.password) && /[^a-zA-Z0-9]/.test(formData.password);
-    const hasConfirmPassword = formData.confirmPassword === formData.password && formData.confirmPassword.length > 0;
+    const hasCompany =
+      role === "provider" && subRole === "company"
+        ? !!formData.companyName.trim()
+        : true;
+    const hasPassword =
+      formData.password.length >= 8 &&
+      /[A-Z]/.test(formData.password) &&
+      /[a-z]/.test(formData.password) &&
+      /[0-9]/.test(formData.password) &&
+      /[^a-zA-Z0-9]/.test(formData.password);
+    const hasConfirmPassword =
+      formData.confirmPassword === formData.password &&
+      formData.confirmPassword.length > 0;
     const hasTerms = agreedToTerms;
 
-    return hasBasicInfo && hasLastName && hasValidEmail && hasNoEmailError && hasPhone && hasNationality && hasCountry && hasCompany && hasPassword && hasConfirmPassword && hasTerms && !checkingEmail;
+    return (
+      hasBasicInfo &&
+      hasLastName &&
+      hasValidEmail &&
+      hasNoEmailError &&
+      hasPhone &&
+      hasNationality &&
+      hasCountry &&
+      hasCompany &&
+      hasPassword &&
+      hasConfirmPassword &&
+      hasTerms &&
+      !checkingEmail
+    );
   };
 
   const validateField = (field, value, currentFormData = formData) => {
@@ -142,14 +178,16 @@ const BasicInfoForm = ({
         else if (value.trim().length < 2 || value.trim().length > 50)
           error = "First name must be between 2 and 50 characters";
         else if (!validateName(value))
-          error = "First name can only contain letters, spaces, hyphens, and apostrophes";
+          error =
+            "First name can only contain letters, spaces, hyphens, and apostrophes";
         break;
       case "lastName":
         if (!value.trim()) error = "Last name is required";
         else if (value.trim().length < 2 || value.trim().length > 50)
           error = "Last name must be between 2 and 50 characters";
         else if (!validateName(value))
-          error = "Last name can only contain letters, spaces, hyphens, and apostrophes";
+          error =
+            "Last name can only contain letters, spaces, hyphens, and apostrophes";
         break;
       case "email":
         if (!value.trim()) error = "Email is required";
@@ -157,9 +195,13 @@ const BasicInfoForm = ({
         break;
       case "phone":
         if (!value.trim()) error = "Phone number is required";
-        else if (value.replace(/\s/g, "").length < 7 || value.replace(/\s/g, "").length > 20)
+        else if (
+          value.replace(/\s/g, "").length < 7 ||
+          value.replace(/\s/g, "").length > 20
+        )
           error = "Phone number must be between 7 and 20 characters";
-        else if (!validatePhone(value)) error = "Phone number contains invalid characters";
+        else if (!validatePhone(value))
+          error = "Phone number contains invalid characters";
         break;
       case "password":
         if (!value) error = "Password is required";
@@ -200,18 +242,21 @@ const BasicInfoForm = ({
     // Always set the value first
     const newFormData = { ...formData, [field]: value };
     setFormData(newFormData);
-    
+
     // Then validate and set error
     const fieldError = validateField(field, value, newFormData);
     setErrors((prev) => {
       const newErrors = { ...prev, [field]: fieldError };
       // Preserve "already exists" error when editing other fields
-      if (field !== "email" && prev.email === "This email is already registered") {
+      if (
+        field !== "email" &&
+        prev.email === "This email is already registered"
+      ) {
         newErrors.email = prev.email;
       }
       return newErrors;
     });
-    
+
     if (field === "email" && fieldError === "") {
       setError(null);
     }
@@ -229,25 +274,33 @@ const BasicInfoForm = ({
     if (response.profilePicture?.url) {
       googleProfileImageUrl = response.profilePicture.url;
     }
-    
+
     // Set Google data directly to form and validate
     const newFormData = { ...formData };
     if (response.firstName) newFormData.firstName = response.firstName;
     if (response.lastName) newFormData.lastName = response.lastName;
     if (response.email) newFormData.email = response.email;
     if (response.phone) newFormData.phone = response.phone;
-    
+
     setFormData(newFormData);
-    
+
     // Validate all Google-filled fields and set errors
     setErrors((prev) => ({
       ...prev,
-      firstName: response.firstName ? validateField("firstName", response.firstName, newFormData) : prev.firstName,
-      lastName: response.lastName ? validateField("lastName", response.lastName, newFormData) : prev.lastName,
-      email: response.email ? validateField("email", response.email, newFormData) : prev.email,
-      phone: response.phone ? validateField("phone", response.phone, newFormData) : prev.phone,
+      firstName: response.firstName
+        ? validateField("firstName", response.firstName, newFormData)
+        : prev.firstName,
+      lastName: response.lastName
+        ? validateField("lastName", response.lastName, newFormData)
+        : prev.lastName,
+      email: response.email
+        ? validateField("email", response.email, newFormData)
+        : prev.email,
+      phone: response.phone
+        ? validateField("phone", response.phone, newFormData)
+        : prev.phone,
     }));
-    
+
     // Set profile image separately (no validation needed)
     if (googleProfileImageUrl) {
       setFormData((prev) => ({ ...prev, profileImage: googleProfileImageUrl }));
@@ -270,29 +323,38 @@ const BasicInfoForm = ({
   const validateForm = () => {
     const newErrors = { ...initialErrors };
     let isValid = true;
-    
+
     // Preserve "already registered" error from API check
-    const existingEmailError = errors.email === "This email is already registered" ? errors.email : "";
+    const existingEmailError =
+      errors.email === "This email is already registered" ? errors.email : "";
 
     if (!formData.firstName.trim()) {
       newErrors.firstName = "First name is required";
       isValid = false;
-    } else if (formData.firstName.trim().length < 2 || formData.firstName.trim().length > 50) {
+    } else if (
+      formData.firstName.trim().length < 2 ||
+      formData.firstName.trim().length > 50
+    ) {
       newErrors.firstName = "First name must be between 2 and 50 characters";
       isValid = false;
     } else if (!validateName(formData.firstName)) {
-      newErrors.firstName = "First name can only contain letters, spaces, hyphens, and apostrophes";
+      newErrors.firstName =
+        "First name can only contain letters, spaces, hyphens, and apostrophes";
       isValid = false;
     }
 
     if (!formData.lastName.trim()) {
       newErrors.lastName = "Last name is required";
       isValid = false;
-    } else if (formData.lastName.trim().length < 2 || formData.lastName.trim().length > 50) {
+    } else if (
+      formData.lastName.trim().length < 2 ||
+      formData.lastName.trim().length > 50
+    ) {
       newErrors.lastName = "Last name must be between 2 and 50 characters";
       isValid = false;
     } else if (!validateName(formData.lastName)) {
-      newErrors.lastName = "Last name can only contain letters, spaces, hyphens, and apostrophes";
+      newErrors.lastName =
+        "Last name can only contain letters, spaces, hyphens, and apostrophes";
       isValid = false;
     }
 
@@ -310,7 +372,10 @@ const BasicInfoForm = ({
     if (!formData.phone.trim()) {
       newErrors.phone = "Phone number is required";
       isValid = false;
-    } else if (formData.phone.replace(/\s/g, "").length < 7 || formData.phone.replace(/\s/g, "").length > 20) {
+    } else if (
+      formData.phone.replace(/\s/g, "").length < 7 ||
+      formData.phone.replace(/\s/g, "").length > 20
+    ) {
       newErrors.phone = "Phone number must be between 7 and 20 characters";
       isValid = false;
     } else if (!validatePhone(formData.phone)) {
@@ -344,16 +409,19 @@ const BasicInfoForm = ({
       newErrors.password = "Password must be at least 8 characters long";
       isValid = false;
     } else if (!/[A-Z]/.test(formData.password)) {
-      newErrors.password = "Password must contain at least one uppercase letter";
+      newErrors.password =
+        "Password must contain at least one uppercase letter";
       isValid = false;
     } else if (!/[a-z]/.test(formData.password)) {
-      newErrors.password = "Password must contain at least one lowercase letter";
+      newErrors.password =
+        "Password must contain at least one lowercase letter";
       isValid = false;
     } else if (!/[0-9]/.test(formData.password)) {
       newErrors.password = "Password must contain at least one number";
       isValid = false;
     } else if (!/[^a-zA-Z0-9]/.test(formData.password)) {
-      newErrors.password = "Password must contain at least one special character";
+      newErrors.password =
+        "Password must contain at least one special character";
       isValid = false;
     }
 
@@ -378,7 +446,7 @@ const BasicInfoForm = ({
     if (!validateForm()) {
       return;
     }
-    
+
     // Check if email already exists before submitting
     const email = formData.email.trim();
     if (email && validateEmail(email)) {
@@ -386,7 +454,10 @@ const BasicInfoForm = ({
       try {
         const { exists } = await checkEmailExists(email);
         if (exists) {
-          setErrors((prev) => ({ ...prev, email: "This email is already registered" }));
+          setErrors((prev) => ({
+            ...prev,
+            email: "This email is already registered",
+          }));
           setCheckingEmail(false);
           return;
         }
@@ -396,7 +467,7 @@ const BasicInfoForm = ({
         setCheckingEmail(false);
       }
     }
-    
+
     setError("");
     const data = {
       firstName: formData.firstName,
@@ -414,7 +485,6 @@ const BasicInfoForm = ({
       businessRegistration: formData.businessRegistration,
     };
     const formDataPayload = createFormData(data);
-
     onContinue(formDataPayload);
   };
   return (
@@ -425,7 +495,6 @@ const BasicInfoForm = ({
       >
         <span className="flex items-center">←</span> Back
       </button>
-
       <div className="text-xl font-bold text-[#111827] mb-1">
         {role === "provider"
           ? subRole === "company"
@@ -435,7 +504,6 @@ const BasicInfoForm = ({
             ? "Individual Account"
             : "Individual Account"}
       </div>
-
       <div className="text-sm text-[#6B7280] mb-5.5">
         {role === "provider"
           ? subRole === "company"
@@ -445,22 +513,34 @@ const BasicInfoForm = ({
             ? "Free access · No transaction fees · Full platform access"
             : "Free access · No transaction fees · Full platform access"}
       </div>
-
       {(error || errors.general) && (
         <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-sm mb-4">
           <span>⚠</span>
           <span>{error || errors.general}</span>
         </div>
       )}
-
       <div className="flex w-full justify-left pt-3 pb-3">
         <GoogleLoginButton
-          authStyle={"flex items-center justify-left"}
+          authStyle={
+            "flex items-center justify-left w-full border rounded-lg py-2"
+          }
           handleGoogleResponse={handleGoogleResponse}
         />
       </div>
+      <div className="relative flex items-center ">
+        {/* The left line */}
+        <div className="flex-grow border-t border-gray-200"></div>
 
-      <div className="mb-5">
+        {/* The text */}
+        <span className="mx-4 flex-shrink text-gray-500 text-sm">
+          or create account with email
+        </span>
+
+        {/* The right line */}
+        <div className="flex-grow border-t border-gray-200"></div>
+      </div>
+
+      <div className="mb-5 mt-6">
         <SectionHeader title="Basic Information" required />
 
         <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-2.5">
@@ -602,20 +682,18 @@ const BasicInfoForm = ({
           error={errors.terms}
         />
       </div>
-
       {(error || errors.general) && (
         <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-sm mb-4">
           <span>⚠</span>
           <span>{error || errors.general}</span>
         </div>
       )}
-
       <button
         onClick={handleSubmit}
         disabled={!isFormReady()}
         className={`w-full py-3 rounded-xl font-semibold text-sm transition-all btn-ripple ${
-          isFormReady() 
-            ? "bg-[#024CEE] text-white cursor-pointer hover:bg-[#0341cc] hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98]" 
+          isFormReady()
+            ? "bg-[#024CEE] text-white cursor-pointer hover:bg-[#0341cc] hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98]"
             : "bg-[#E5E7EB] text-[#9CA3AF] cursor-not-allowed"
         }`}
       >

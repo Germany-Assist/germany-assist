@@ -24,24 +24,15 @@ ServiceProvider.init(
         },
       },
     },
-    bio: {
+    about: {
       type: DataTypes.TEXT,
       allowNull: true,
       validate: {
-        notEmpty: { msg: "Bio cannot be empty" },
+        notEmpty: { msg: "about cannot be empty" },
         len: {
           args: [0, 600],
-          msg: "Bio must be between 80 and 600 characters",
+          msg: "about must be between 80 and 600 characters",
         },
-      },
-    },
-    views: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      defaultValue: 0,
-      validate: {
-        isInt: { msg: "Views must be an integer" },
-        min: { args: [0], msg: "Views cannot be negative" },
       },
     },
     email: {
@@ -56,13 +47,9 @@ ServiceProvider.init(
       type: DataTypes.STRING(20),
       allowNull: true,
       validate: {
-        len: {
-          args: [7, 20],
-          msg: "Phone number must be between 7 and 20 characters",
-        },
         is: {
-          args: /^[0-9+()-\s]*$/,
-          msg: "Phone number contains invalid characters",
+          args: /^\+?[0-9()\-\s]{7,20}$/,
+          msg: "Invalid phone number",
         },
       },
     },
@@ -102,23 +89,6 @@ ServiceProvider.init(
       validate: {
         isInt: { msg: "Total reviews must be an integer" },
         min: { args: [0], msg: "Total reviews cannot be negative" },
-      },
-    },
-    companyName: {
-      type: DataTypes.STRING(200),
-      allowNull: true,
-      validate: {
-        len: {
-          args: [3, 200],
-          msg: "Company name must be between 3 and 200 characters",
-        },
-      },
-    },
-    owner: {
-      type: DataTypes.VIRTUAL,
-
-      get() {
-        return this.id;
       },
     },
   },

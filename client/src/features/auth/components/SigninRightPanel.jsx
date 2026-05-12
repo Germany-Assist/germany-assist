@@ -54,8 +54,13 @@ const SigninRightPanel = () => {
         </p>
 
         {/* Social Buttons */}
-        <div className="flex gap-2.25 mb-3 h-11 animate-fade-up stagger-4">
-          <GoogleLoginButton signin={true} />
+        <div className="flex gap-2.25 mb-3 h-11 animate-fade-up stagger-4  ">
+          <GoogleLoginButton
+            signin={true}
+            authStyle={
+              "flex items-center justify-left w-full border rounded-lg py-2 bg-white border-gray-300 hover:bg-gray-50"
+            }
+          />
         </div>
 
         <div className="flex items-center gap-3 mb-3 text-xs text-[#6B7280] animate-fade-up stagger-5">

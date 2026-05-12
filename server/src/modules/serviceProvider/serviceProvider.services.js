@@ -67,7 +67,7 @@ export const registerFreelancer = async (body, files) => {
 
     const spData = {
       name: firstName + " " + lastName,
-      bio: bio || "",
+      about: about || "",
       phoneNumber: phone,
       email,
       type: PROVIDER_TYPES.freelancer, //"freelancer",
@@ -207,7 +207,7 @@ export const registerCompany = async (body, files) => {
       password,
       nationality,
       countryOfResidence,
-      bio,
+      about,
     } = body;
 
     const userExists = await userRepository.getUserByEmail(email);
@@ -222,7 +222,7 @@ export const registerCompany = async (body, files) => {
 
     const spData = {
       name: companyName,
-      bio: bio || "",
+      about: about || "",
       phoneNumber: phone,
       email,
       type: PROVIDER_TYPES.company, //"company",
