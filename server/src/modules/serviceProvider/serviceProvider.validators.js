@@ -26,7 +26,7 @@ export const createFreelancerValidator = [
     .trim()
     .isLength({ min: 7, max: 20 })
     .withMessage("Phone number must be between 7 and 20 characters")
-    .matches(/^[0-9+()\-\s]*$/)
+    .matches(/^\+?[0-9()\-\s]{7,20}$/)
     .withMessage("Phone number contains invalid characters"),
   ,
   body("password")
@@ -51,11 +51,11 @@ export const createFreelancerValidator = [
     .notEmpty()
     .withMessage("Country of residence is required"),
 
-  body("bio")
+  body("about")
     .optional()
     .trim()
     .isLength({ max: 600 })
-    .withMessage("Bio must not exceed 500 characters"),
+    .withMessage("About must not exceed 500 characters"),
 ];
 
 export const createCompanyValidator = [
@@ -92,7 +92,7 @@ export const createCompanyValidator = [
     .trim()
     .notEmpty()
     .withMessage("Phone number is required")
-    .matches(/^\+?[\d\s-]{10,}$/)
+    .matches(/^\+?[0-9()\-\s]{7,20}$/)
     .withMessage("Invalid phone number"),
 
   body("password")
@@ -124,51 +124,6 @@ export const createCompanyValidator = [
     .withMessage("Bio must not exceed 500 characters"),
 ];
 
-export const createServiceProviderValidator = [
-  body("name")
-    .trim()
-    .notEmpty()
-    .withMessage("Name is required")
-    .isLength({ min: 3, max: 200 })
-    .withMessage("Name must be between 3 and 200 characters"),
-
-  body("about")
-    .trim()
-    .notEmpty()
-    .withMessage("About is required")
-    .isLength({ min: 10, max: 5000 })
-    .withMessage("About must be between 10 and 5000 characters"),
-
-  body("description")
-    .trim()
-    .notEmpty()
-    .withMessage("Description is required")
-    .isLength({ min: 10, max: 5000 })
-    .withMessage("Description must be between 10 and 5000 characters"),
-
-  body("email")
-    .trim()
-    .notEmpty()
-    .withMessage("Email is required")
-    .isEmail()
-    .withMessage("Invalid email format")
-    .normalizeEmail(),
-
-  body("phoneNumber")
-    .optional()
-    .isLength({ min: 7, max: 20 })
-    .withMessage("Phone number must be between 7 and 20 characters")
-    .matches(/^[0-9+()\-\s]*$/)
-    .withMessage("Phone number contains invalid characters"),
-
-  body("image")
-    .optional()
-    .isURL()
-    .withMessage("Image must be a valid URL")
-    .matches(/\.(jpg|jpeg|png|gif)$/i)
-    .withMessage("Image must end with .jpg, .jpeg, .png, or .gif"),
-];
-
 export const updateServiceProviderValidator = [
   body("name")
     .optional()
@@ -185,11 +140,11 @@ export const updateServiceProviderValidator = [
     .isLength({ min: 10, max: 5000 })
     .withMessage("Description must be between 10 and 5000 characters"),
 
-  body("phoneNumber")
+  body("phone")
     .optional()
     .isLength({ min: 7, max: 20 })
     .withMessage("Phone number must be between 7 and 20 characters")
-    .matches(/^[0-9+()\-\s]*$/)
+    .matches(/^\+?[0-9()\-\s]{7,20}$/)
     .withMessage("Phone number contains invalid characters"),
 
   body("image")

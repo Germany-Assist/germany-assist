@@ -34,7 +34,7 @@ const SignupPage = () => {
   const startCooldown = (seconds) => {
     setResendCooldown(seconds);
     const interval = setInterval(() => {
-      setResendCooldown(prev => {
+      setResendCooldown((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
           return 0;
@@ -59,7 +59,7 @@ const SignupPage = () => {
   };
 
   const triggerAnimation = () => {
-    setAnimKey(prev => prev + 1);
+    setAnimKey((prev) => prev + 1);
   };
 
   const handleStep1Complete = () => {
@@ -78,38 +78,40 @@ const SignupPage = () => {
       setError("Please complete the previous step first.");
       return;
     }
-    
+
     const formData = new FormData();
-    
+
     // Copy all fields from basicInfoData (skip profileImage, we'll handle it separately)
     for (const [key, value] of basicInfoData.entries()) {
       if (key !== "profileImage") {
         formData.append(key, value);
       }
     }
-    
+
     // Check for Google profile image URL from BasicInfoForm
     const googleProfileImageUrl = basicInfoData.get("profileImage");
-    const isGoogleImageUrl = googleProfileImageUrl && 
-      typeof googleProfileImageUrl === "string" && 
+    const isGoogleImageUrl =
+      googleProfileImageUrl &&
+      typeof googleProfileImageUrl === "string" &&
       googleProfileImageUrl.startsWith("http");
-    
+
     // If Google image URL exists, send it as separate field
-if (isGoogleImageUrl) {
+    if (isGoogleImageUrl) {
       formData.append("profileImageUrl", googleProfileImageUrl);
     }
-    
+
     setEmail(formData.get("email"));
-    
+
     setIsSubmitting(true);
     setError("");
-    
+
     try {
       let result;
       if (role === "provider" || role === "service") {
-        result = subRole === "company" 
-          ? await signUpCompany(formData) 
-          : await signUpFreelancer(formData);
+        result =
+          subRole === "company"
+            ? await signUpCompany(formData)
+            : await signUpFreelancer(formData);
       } else {
         result = await signUpClient(formData);
       }
@@ -131,36 +133,40 @@ if (isGoogleImageUrl) {
 
   const handleAdditionalInfoComplete = async (additionalData) => {
     if (!basicInfoData) return;
-    
+
     const formData = new FormData();
-    
+
     // Check for Google profile image URL from BasicInfoForm
     const googleProfileImageUrl = basicInfoData.get("profileImage");
-    const isGoogleImageUrl = googleProfileImageUrl && 
-      typeof googleProfileImageUrl === "string" && 
+    const isGoogleImageUrl =
+      googleProfileImageUrl &&
+      typeof googleProfileImageUrl === "string" &&
       googleProfileImageUrl.startsWith("http");
-    
+
     // Copy all fields from basicInfoData (skip profileImage, we'll handle it separately)
     for (const [key, value] of basicInfoData.entries()) {
       if (key !== "profileImage") {
         formData.append(key, value);
       }
     }
-    
+
     // If Google image URL exists, send it as separate field
     if (isGoogleImageUrl) {
       formData.append("profileImageUrl", googleProfileImageUrl);
     }
-    
+
     // Handle uploaded profile image (from AdditionalInfo)
     if (additionalData.profileImage) {
-      const profileImage = Array.isArray(additionalData.profileImage) 
-        ? additionalData.profileImage[0] 
+      const profileImage = Array.isArray(additionalData.profileImage)
+        ? additionalData.profileImage[0]
         : additionalData.profileImage;
       // Only append if it's a File, not a URL
       if (profileImage instanceof File) {
         formData.append("profileImage", profileImage);
-      } else if (typeof profileImage === "string" && !profileImage.startsWith("http")) {
+      } else if (
+        typeof profileImage === "string" &&
+        !profileImage.startsWith("http")
+      ) {
         // It's a URL from our server, pass as profileImageUrl
         formData.append("profileImageUrl", profileImage);
       }
@@ -172,22 +178,25 @@ if (isGoogleImageUrl) {
       formData.append("proofOfResidence", additionalData.proofOfResidence);
     }
     if (additionalData.businessRegistration) {
-      formData.append("businessRegistration", additionalData.businessRegistration);
+      formData.append(
+        "businessRegistration",
+        additionalData.businessRegistration,
+      );
     }
-    
+
     formData.append("role", role);
     formData.append("subRole", subRole || "");
     if (additionalData.bio) {
       formData.append("bio", additionalData.bio);
     }
-    
+
     if (additionalData.categories && additionalData.categories.length > 0) {
       formData.append("categories", JSON.stringify(additionalData.categories));
-      
+
       // Build category entries mapping file indices to categories
       const categoryEntries = [];
       let fileIndex = 0;
-      
+
       if (additionalData.categoryUploads) {
         Object.keys(additionalData.categoryUploads).forEach((catId) => {
           const files = additionalData.categoryUploads[catId];
@@ -198,26 +207,33 @@ if (isGoogleImageUrl) {
               formData.append("categoryFiles", file);
               fileIndex++;
             });
-            categoryEntries.push({ categoryId: catId, fileIndices: Array.from({ length: fileArray.length }, (_, i) => startIndex + i) });
+            categoryEntries.push({
+              categoryId: catId,
+              fileIndices: Array.from(
+                { length: fileArray.length },
+                (_, i) => startIndex + i,
+              ),
+            });
           }
         });
       }
-      
+
       // Send category entries so backend knows which file indices belong to which category
       formData.append("categoryEntries", JSON.stringify(categoryEntries));
     }
-    
+
     setEmail(formData.get("email"));
-    
+
     setIsSubmitting(true);
     setError("");
-    
+
     try {
       let result;
       if (role === "provider" || role === "service") {
-        result = subRole === "company" 
-          ? await signUpCompany(formData) 
-          : await signUpFreelancer(formData);
+        result =
+          subRole === "company"
+            ? await signUpCompany(formData)
+            : await signUpFreelancer(formData);
       } else {
         result = await signUpClient(formData);
       }
@@ -246,7 +262,7 @@ if (isGoogleImageUrl) {
 
   const handleResendVerificationEmail = async () => {
     if (resendCooldown > 0) return;
-    
+
     try {
       const res = await resendVerificationEmail(email);
       if (res) {
@@ -255,7 +271,11 @@ if (isGoogleImageUrl) {
       }
     } catch (err) {
       const msg = getErrorMessage(err);
-      if (msg.includes("wait") || msg.includes("Cooldown") || msg.includes("seconds")) {
+      if (
+        msg.includes("wait") ||
+        msg.includes("Cooldown") ||
+        msg.includes("seconds")
+      ) {
         const match = msg.match(/(\d+)\s*seconds?/);
         if (match) {
           startCooldown(parseInt(match[1]));
@@ -273,7 +293,7 @@ if (isGoogleImageUrl) {
       // If going back from step 2, preserve form data
       if (currentStep === 2 && formData) {
         const newFormData = new FormData();
-        Object.keys(formData).forEach(key => {
+        Object.keys(formData).forEach((key) => {
           if (formData[key] !== null && formData[key] !== undefined) {
             newFormData.append(key, formData[key]);
           }
@@ -343,10 +363,20 @@ if (isGoogleImageUrl) {
                   role={role}
                   subRole={subRole}
                   onBack={handleBack}
-                  onContinue={handleStep2Complete}
+                  onContinue={
+                    role === "provider"
+                      ? handleStep2Complete
+                      : handleAdditionalInfo
+                  }
+                  onSkip={handleSkipPage}
+                  isSubmitting={isSubmitting}
                   error={error}
                   setError={setError}
-                  initialValues={basicInfoData ? Object.fromEntries(basicInfoData.entries()) : null}
+                  initialValues={
+                    basicInfoData
+                      ? Object.fromEntries(basicInfoData.entries())
+                      : null
+                  }
                 />
               )}
 
@@ -360,7 +390,7 @@ if (isGoogleImageUrl) {
                 />
               )}
 
-              {(currentStep === 3) && (
+              {currentStep === 3 && (
                 <AdditionalInfo
                   role={role}
                   subRole={subRole}

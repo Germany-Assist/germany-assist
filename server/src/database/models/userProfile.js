@@ -10,10 +10,6 @@ UserProfile.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    bio: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -29,6 +25,12 @@ UserProfile.init(
     phoneNumber: {
       type: DataTypes.STRING,
       allowNull: true,
+      validate: {
+        is: {
+          args: /^\+?[0-9()\-\s]{7,20}$/,
+          msg: "Invalid phone number",
+        },
+      },
     },
     dob: {
       type: DataTypes.DATE,

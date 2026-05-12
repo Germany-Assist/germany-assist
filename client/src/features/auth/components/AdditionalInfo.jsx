@@ -17,7 +17,7 @@ const AdditionalInfo = ({
   const [currentSubStep, setCurrentSubStep] = useState(1);
   const [formData, setFormData] = useState({
     profileImage: null,
-    bio: "",
+    about: "",
     categories: [],
     categoryUploads: {},
     idDocument: null,
@@ -97,52 +97,54 @@ const AdditionalInfo = ({
         </div>
       )}
 
-      <div className="flex items-center gap-2 mb-6">
-        <div
-          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold ${
-            currentSubStep == 1
-              ? "bg-[#024CEE] outline outline-3 outline-[#cfe9f3] border-[#024CEE] text-white "
-              : currentSubStep > 1
-                ? "bg-[#eaf7fc] border-[#49b7df] text-[#49b7df]"
-                : "bg-white border-[#E5E7EB] text-[#6B7280]"
-          }`}
-        >
-          1
+      {role === "provider" && (
+        <div className="flex items-center gap-2 mb-6">
+          <div
+            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold ${
+              currentSubStep == 1
+                ? "bg-[#024CEE] outline outline-3 outline-[#cfe9f3] border-[#024CEE] text-white "
+                : currentSubStep > 1
+                  ? "bg-[#eaf7fc] border-[#49b7df] text-[#49b7df]"
+                  : "bg-white border-[#E5E7EB] text-[#6B7280]"
+            }`}
+          >
+            1
+          </div>
+          <div
+            className={`flex-1 h-0.5 rounded ${currentSubStep >= 2 ? "bg-[#49B7DF]" : "bg-[#E5E7EB]"}`}
+          />
+          <div
+            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold ${
+              currentSubStep == 2
+                ? "bg-[#024CEE] outline outline-3 outline-[#cfe9f3] border-[#024CEE] text-white "
+                : currentSubStep > 2
+                  ? "bg-[#eaf7fc] border-[#49b7df] text-[#49b7df]"
+                  : "bg-white border-[#E5E7EB] text-[#6B7280]"
+            }`}
+          >
+            2
+          </div>
+          <div
+            className={`flex-1 h-0.5 rounded ${currentSubStep >= 3 ? "bg-[#49B7DF]" : "bg-[#E5E7EB]"}`}
+          />
+          <div
+            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold ${
+              currentSubStep == 3
+                ? "bg-[#024CEE] outline outline-3 outline-[#cfe9f3] border-[#024CEE] text-white "
+                : currentSubStep > 3
+                  ? "bg-[#eaf7fc] border-[#49b7df] text-[#49b7df]"
+                  : "bg-white border-[#E5E7EB] text-[#6B7280]"
+            }`}
+          >
+            3
+          </div>
+          <span className="text-sm text-[#6B7280] ml-2">
+            {currentSubStep === 1 && "Profile Setup"}
+            {currentSubStep === 2 && "Category & Credentials"}
+            {currentSubStep === 3 && "Identity Verification"}
+          </span>
         </div>
-        <div
-          className={`flex-1 h-0.5 rounded ${currentSubStep >= 2 ? "bg-[#49B7DF]" : "bg-[#E5E7EB]"}`}
-        />
-        <div
-          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold ${
-            currentSubStep == 2
-              ? "bg-[#024CEE] outline outline-3 outline-[#cfe9f3] border-[#024CEE] text-white "
-              : currentSubStep > 2
-                ? "bg-[#eaf7fc] border-[#49b7df] text-[#49b7df]"
-                : "bg-white border-[#E5E7EB] text-[#6B7280]"
-          }`}
-        >
-          2
-        </div>
-        <div
-          className={`flex-1 h-0.5 rounded ${currentSubStep >= 3 ? "bg-[#49B7DF]" : "bg-[#E5E7EB]"}`}
-        />
-        <div
-          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold ${
-            currentSubStep == 3
-              ? "bg-[#024CEE] outline outline-3 outline-[#cfe9f3] border-[#024CEE] text-white "
-              : currentSubStep > 3
-                ? "bg-[#eaf7fc] border-[#49b7df] text-[#49b7df]"
-                : "bg-white border-[#E5E7EB] text-[#6B7280]"
-          }`}
-        >
-          3
-        </div>
-        <span className="text-sm text-[#6B7280] ml-2">
-          {currentSubStep === 1 && "Profile Setup"}
-          {currentSubStep === 2 && "Category & Credentials"}
-          {currentSubStep === 3 && "Identity Verification"}
-        </span>
-      </div>
+      )}
 
       <button
         onClick={
@@ -174,8 +176,9 @@ const AdditionalInfo = ({
             Profile Setup
           </div>
           <div className="text-sm text-[#6B7280] mb-5">
-            Add a photo and a short bio so clients know who they're working
-            with.
+            {role != "provider"
+              ? "Add a photo and identity proof optional."
+              : "Add a photo and a short about so clients know who they're working with."}
           </div>
 
           <div className="mb-5">
@@ -185,48 +188,100 @@ const AdditionalInfo = ({
               onRemove={() => updateField("profileImage", null)}
             />
           </div>
+          {role == "individual" && (
+            <>
+              <div className="text-[1.375rem] font-bold text-[#111827] mb-1">
+                Identity Verification
+              </div>
+              <div className="text-sm text-[#6B7280] mb-5">
+                Upload your ID to activate your provider account. Documents are
+                reviewed securely by our team and never shared publicly.
+              </div>
 
-          <div className="mb-5">
-            <label className="block text-sm font-medium text-[#111827] mb-2">
-              Bio{" "}
-              <span className="text-[#6B7280] font-normal text-xs">
-                — 80 to 600 characters
-              </span>
-            </label>
-            <textarea
-              value={formData.bio}
-              onChange={(e) => updateField("bio", e.target.value)}
-              placeholder="Tell clients about your experience, qualifications, and what makes you the right choice…"
-              rows={4}
-              className={`${inputBaseStyle} resize-none`}
-              maxLength={600}
-            />
-            <div className="flex justify-between mt-1 ml-1">
-              <span className="text-[11px] text-[#6B7280]">
-                {formData.bio.length < 80
-                  ? "Minimum 80 characters recommended"
-                  : ""}
-              </span>
-              <span className="text-xs text-[#9CA3AF]">
-                {formData.bio.length}/600
-              </span>
+              <div className="mb-5">
+                <FileUpload
+                  icon="🪖"
+                  title="Passport or National ID"
+                  subtitle="Required for all providers to publish services on the platform. Upload a clear photo or scan — PDF, JPG, or PNG."
+                  badge
+                  badgeText="Required"
+                  files={formData.idDocument ? [formData.idDocument] : []}
+                  onUpload={(files) =>
+                    updateField(
+                      "idDocument",
+                      Array.isArray(files) ? files[0] : files,
+                    )
+                  }
+                  onRemove={() => updateField("idDocument", null)}
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  multiple={false}
+                />
+              </div>
+            </>
+          )}
+          {role == "provider" && (
+            <div className="mb-5">
+              <label className="block text-sm font-medium text-[#111827] mb-2">
+                About{" "}
+                <span className="text-[#6B7280] font-normal text-xs">
+                  — 80 to 600 characters
+                </span>
+              </label>
+              <textarea
+                value={formData.about}
+                onChange={(e) => updateField("about", e.target.value)}
+                placeholder="Tell clients about your experience, qualifications, and what makes you the right choice…"
+                rows={4}
+                className={`${inputBaseStyle} resize-none`}
+                maxLength={600}
+              />
+              <div className="flex justify-between mt-1 ml-1">
+                <span className="text-[11px] text-[#6B7280]">
+                  {formData.about.length < 80
+                    ? "Minimum 80 characters recommended"
+                    : ""}
+                </span>
+                <span className="text-xs text-[#9CA3AF]">
+                  {formData.about.length}/600
+                </span>
+              </div>
             </div>
-          </div>
-
-          <button
-            onClick={handleNextSubStep}
-            disabled={isSubmitting}
-            className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? "Processing..." : "Next: Choose Category →"}
-          </button>
-          <button
-            onClick={() => onSkip(formData)}
-            disabled={isSubmitting}
-            className="w-full py-2.75 p-4 mt-2 rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? "Processing..." : "Skip all — verify my email"}
-          </button>
+          )}
+          {role === "individual" ? (
+            <>
+              <button
+                onClick={() => onComplete(formData)}
+                disabled={isSubmitting}
+                className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Processing..." : "Submit & Verify Email →"}
+              </button>
+              <button
+                onClick={() => onSkip(formData)}
+                disabled={isSubmitting}
+                className="w-full p-4 py-2.75 mt-2 rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Processing..." : "Skip — verify my email"}
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={handleNextSubStep}
+                disabled={isSubmitting}
+                className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Processing..." : "Next: Choose Category →"}
+              </button>
+              <button
+                onClick={() => onSkip(formData)}
+                disabled={isSubmitting}
+                className="w-full py-2.75 p-4 mt-2 rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Processing..." : "Skip all — verify my email"}
+              </button>
+            </>
+          )}
         </div>
       )}
 
@@ -332,11 +387,11 @@ const AdditionalInfo = ({
               />
             )}
 
-            {role === "provider" && subRole === "company" && (
+            {role === "provider" && (
               <FileUpload
                 icon="📋"
                 title="Business Registration"
-                subtitle="Upload your official company registration document (Gewerbeanmeldung or equivalent) as PDF."
+                subtitle="Upload your official company registration document (Gewerbeanmeldung or equivalent) ."
                 badge
                 badgeText="Required for Company"
                 files={
@@ -351,7 +406,7 @@ const AdditionalInfo = ({
                   )
                 }
                 onRemove={() => updateField("businessRegistration", null)}
-                accept=".pdf"
+                accept=".pdf,.jpg,.jpeg,.png"
                 multiple={false}
               />
             )}

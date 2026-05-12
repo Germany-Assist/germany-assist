@@ -70,8 +70,6 @@ export const registerClient = async (body, files) => {
         relatedId: null,
       },
       UserProfile: {
-        // i added the bio of the client here for now since i have no idea what to do with it at the moment or even create a client profile in the future
-        bio: bio,
         nationality: nationality,
         countryOfResidence: countryOfResidence,
         phoneNumber: phone,
@@ -133,37 +131,6 @@ export const registerClient = async (body, files) => {
         transaction: t,
       });
     }
-
-    // Process category credential files
-    // categoryEntries tells us which file indices belong to which category
-    const categoryFiles = files?.categoryFiles || [];
-    const categoryFilesMap = processCategoryFiles(body, categoryFiles);
-
-    // For each category, create a verification request and upload the files
-    for (const [categoryId, catFiles] of Object.entries(categoryFilesMap)) {
-      if (catFiles && catFiles.length > 0) {
-        const categoryRequest =
-          await verificationRequestRepository.createRequest(
-            {
-              auth: user,
-              userId: user.id,
-              relatedId: user.id,
-              type: "category",
-              categoryId: categoryId,
-            },
-            t,
-          );
-        await AssetService.uploadAsset({
-          files: catFiles,
-          ownerId: categoryRequest.id,
-          typeKey: "credentialDocument",
-          label: `Category: ${categoryId}`,
-          userId: user.id,
-          transaction: t,
-        });
-      }
-    }
-
     await t.commit();
     await authServices.sendVerificationEmail(email, user.id);
     return {

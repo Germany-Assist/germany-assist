@@ -3,7 +3,6 @@ import serviceProviderController from "./serviceProvider.controller.js";
 import jwt from "../../middlewares/jwt.middleware.js";
 import { validateExpress } from "../../middlewares/expressValidator.js";
 import {
-  createServiceProviderValidator,
   updateServiceProviderValidator,
   createFreelancerValidator,
   createCompanyValidator,
@@ -64,13 +63,7 @@ serviceProviderRouter.put(
   jwt.authenticateJwt,
   serviceProviderController.updateServiceProvider,
 );
-serviceProviderRouter.post(
-  "/",
-  jwt.authenticateJwt,
-  createServiceProviderValidator,
-  validateExpress,
-  serviceProviderController.createServiceProvider,
-);
+
 serviceProviderRouter.get(
   "/restore/:id",
   idUUIDparamValidator,
