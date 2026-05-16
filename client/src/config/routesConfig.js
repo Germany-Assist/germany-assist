@@ -1,59 +1,154 @@
 import { lazy } from "react";
-import { 
-  LayoutDashboard, Users, Briefcase, ShoppingBag, Wallet, 
-  UserCircle, Heart, MessageSquare, AlertCircle, ShieldCheck,
-  Home, Info, Briefcase as JobsIcon, LogIn, UserPlus, Key
+import {
+  LayoutDashboard,
+  Users,
+  Briefcase,
+  ShoppingBag,
+  Wallet,
+  UserCircle,
+  Heart,
+  MessageSquare,
+  AlertCircle,
+  ShieldCheck,
+  Home,
+  Info,
+  Briefcase as JobsIcon,
+  LogIn,
+  UserPlus,
+  Key,
+  Bell,
+  Calendar,
+  Settings,
 } from "lucide-react";
+
+// Updated Dashboard
+const UpdatedDashboardLayout = lazy(() => import("../features/updatedDashboard/UpdatedDashboardLayout"));
+const UpdatedDashboard = lazy(() => import("../features/updatedDashboard/pages/Dashboard"));
+const UpdatedMessages = lazy(() => import("../features/updatedDashboard/pages/Messages"));
+const UpdatedNotifications = lazy(() => import("../features/updatedDashboard/pages/SPNotifications"));
+const UpdatedOrders = lazy(() => import("../features/updatedDashboard/pages/Orders"));
+const UpdatedMyServices = lazy(() => import("../features/updatedDashboard/pages/MyServices"));
+const UpdatedMyEvents = lazy(() => import("../features/updatedDashboard/pages/MyEvents"));
+const UpdatedClients = lazy(() => import("../features/updatedDashboard/pages/Clients"));
+const UpdatedFinance = lazy(() => import("../features/updatedDashboard/pages/Finance"));
+const UpdatedProfile = lazy(() => import("../features/updatedDashboard/pages/Profile"));
+const UpdatedVerification = lazy(() => import("../features/updatedDashboard/pages/VerificationCentre"));
+const UpdatedSettings = lazy(() => import("../features/updatedDashboard/pages/Settings"));
 
 // Public Pages
 const Homepage = lazy(() => import("../pages/HomePage"));
 const AboutPage = lazy(() => import("../pages/AboutPage"));
 const JobsPage = lazy(() => import("../pages/JobsPage"));
 const ServicesPage = lazy(() => import("../pages/ServicesPage"));
-const ServiceProfile = lazy(() => import("../features/service/serviceProfile/ServiceProfile"));
-const ServiceProfileAdmin = lazy(() => import("../features/service/serviceProfile/ServiceProfileAdmin"));
-const ServiceViewProvider = lazy(() => import("../features/service/serviceProfile/ServiceViewProvider"));
+const ServiceProfile = lazy(
+  () => import("../features/service/serviceProfile/ServiceProfile"),
+);
+const ServiceProfileAdmin = lazy(
+  () => import("../features/service/serviceProfile/ServiceProfileAdmin"),
+);
+const ServiceViewProvider = lazy(
+  () => import("../features/service/serviceProfile/ServiceViewProvider"),
+);
 const TimelinePage = lazy(() => import("../pages/TimelinePage"));
 const ProviderTimeline = lazy(() => import("../pages/ProviderTimelinePage"));
 const SigninPage = lazy(() => import("../features/auth/pages/SigninPage"));
 const SignupPage = lazy(() => import("../features/auth/pages/SignupPage"));
-const ForgotPasswordPage = lazy(() => import("../features/auth/pages/ForgotPasswordPage"));
+const ForgotPasswordPage = lazy(
+  () => import("../features/auth/pages/ForgotPasswordPage"),
+);
 const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
 
 // Dashboard Layout
 const DashboardPage = lazy(() => import("../pages/DashboardPage"));
 
 // Admin Tabs
-const AdminGeneral = lazy(() => import("../features/Dashboard/tabs/admin/AdminGeneral"));
-const AdminServices = lazy(() => import("../features/Dashboard/tabs/admin/AdminServices"));
-const AdminOrders = lazy(() => import("../features/Dashboard/tabs/admin/AdminOrders"));
-const AdminUsers = lazy(() => import("../features/Dashboard/tabs/admin/AdminUsers"));
-const AdminServiceProviders = lazy(() => import("../features/Dashboard/tabs/admin/AdminServiceProviders"));
-const AdminProfile = lazy(() => import("../features/Dashboard/tabs/admin/AdminProfile"));
-const AdminFinance = lazy(() => import("../features/Dashboard/tabs/admin/AdminFinance"));
-const AdminVerificationRequests = lazy(() => import("../features/Dashboard/tabs/admin/AdminVerificationRequests"));
-const AdminNotifications = lazy(() => import("../features/Dashboard/tabs/admin/AdminNotifications"));
-const CreateNewSP = lazy(() => import("../features/Dashboard/tabs/admin/features/CreateNewSP"));
+const AdminGeneral = lazy(
+  () => import("../features/Dashboard/tabs/admin/AdminGeneral"),
+);
+const AdminServices = lazy(
+  () => import("../features/Dashboard/tabs/admin/AdminServices"),
+);
+const AdminOrders = lazy(
+  () => import("../features/Dashboard/tabs/admin/AdminOrders"),
+);
+const AdminUsers = lazy(
+  () => import("../features/Dashboard/tabs/admin/AdminUsers"),
+);
+const AdminServiceProviders = lazy(
+  () => import("../features/Dashboard/tabs/admin/AdminServiceProviders"),
+);
+const AdminProfile = lazy(
+  () => import("../features/Dashboard/tabs/admin/AdminProfile"),
+);
+const AdminFinance = lazy(
+  () => import("../features/Dashboard/tabs/admin/AdminFinance"),
+);
+const AdminVerificationRequests = lazy(
+  () => import("../features/Dashboard/tabs/admin/AdminVerificationRequests"),
+);
+const AdminNotifications = lazy(
+  () => import("../features/Dashboard/tabs/admin/AdminNotifications"),
+);
+const CreateNewSP = lazy(
+  () => import("../features/Dashboard/tabs/admin/features/CreateNewSP"),
+);
 
 // Client Tabs
-const ClientGeneral = lazy(() => import("../features/Dashboard/tabs/client/ClientGeneral"));
-const ClientServices = lazy(() => import("../features/Dashboard/tabs/client/ClientServices"));
-const ClientOrders = lazy(() => import("../features/Dashboard/tabs/client/ClientOrders"));
-const ClientProfile = lazy(() => import("../features/Dashboard/tabs/client/ClientProfile"));
-const ClientDisputes = lazy(() => import("../features/Dashboard/tabs/client/ClientDisputes"));
-const ClientFavorite = lazy(() => import("../features/Dashboard/tabs/client/ClientFavorite"));
-const ClientNotifications = lazy(() => import("../features/Dashboard/tabs/client/ClientNotifications"));
+const ClientGeneral = lazy(
+  () => import("../features/Dashboard/tabs/client/ClientGeneral"),
+);
+const ClientServices = lazy(
+  () => import("../features/Dashboard/tabs/client/ClientServices"),
+);
+const ClientOrders = lazy(
+  () => import("../features/Dashboard/tabs/client/ClientOrders"),
+);
+const ClientProfile = lazy(
+  () => import("../features/Dashboard/tabs/client/ClientProfile"),
+);
+const ClientDisputes = lazy(
+  () => import("../features/Dashboard/tabs/client/ClientDisputes"),
+);
+const ClientFavorite = lazy(
+  () => import("../features/Dashboard/tabs/client/ClientFavorite"),
+);
+const ClientNotifications = lazy(
+  () => import("../features/Dashboard/tabs/client/ClientNotifications"),
+);
 
 // Service Provider Tabs
-const ServiceProviderGeneral = lazy(() => import("../features/Dashboard/tabs/serviceProvider/ServiceProviderGeneral"));
-const ServiceProviderServices = lazy(() => import("../features/Dashboard/tabs/serviceProvider/ServiceProviderServices"));
-const ServiceProviderFinance = lazy(() => import("../features/Dashboard/tabs/serviceProvider/ServiceProviderFinance"));
-const SPCreateService = lazy(() => import("../features/Dashboard/tabs/serviceProvider/SPCreateService"));
-const SPManageTimelines = lazy(() => import("../features/Dashboard/tabs/serviceProvider/SPManageTimelines"));
-const ServiceProviderVariants = lazy(() => import("../features/Dashboard/tabs/serviceProvider/ServiceProviderVariants"));
-const SPDisputes = lazy(() => import("../features/Dashboard/tabs/serviceProvider/SPDisputes"));
-const ProviderVerification = lazy(() => import("../features/Dashboard/tabs/serviceProvider/ProviderVerification"));
-const SPNotifications = lazy(() => import("../features/Dashboard/tabs/serviceProvider/SPNotifications"));
+const ServiceProviderGeneral = lazy(
+  () =>
+    import("../features/Dashboard/tabs/serviceProvider/ServiceProviderGeneral"),
+);
+const ServiceProviderServices = lazy(
+  () =>
+    import("../features/Dashboard/tabs/serviceProvider/ServiceProviderServices"),
+);
+const ServiceProviderFinance = lazy(
+  () =>
+    import("../features/Dashboard/tabs/serviceProvider/ServiceProviderFinance"),
+);
+const SPCreateService = lazy(
+  () => import("../features/Dashboard/tabs/serviceProvider/SPCreateService"),
+);
+const SPManageTimelines = lazy(
+  () => import("../features/Dashboard/tabs/serviceProvider/SPManageTimelines"),
+);
+const ServiceProviderVariants = lazy(
+  () =>
+    import("../features/Dashboard/tabs/serviceProvider/ServiceProviderVariants"),
+);
+const SPDisputes = lazy(
+  () => import("../features/Dashboard/tabs/serviceProvider/SPDisputes"),
+);
+const ProviderVerification = lazy(
+  () =>
+    import("../features/Dashboard/tabs/serviceProvider/ProviderVerification"),
+);
+const SPNotifications = lazy(
+  () => import("../features/Dashboard/tabs/serviceProvider/SPNotifications"),
+);
 
 export const routesConfig = [
   {
@@ -138,8 +233,12 @@ export const routesConfig = [
         handle: { label: "Users", icon: Users },
         roles: ["admin", "super_admin"],
         children: [
-          { path: "create", element: AdminGeneral, handle: { label: "Create New Admin" } }
-        ]
+          {
+            path: "create",
+            element: AdminGeneral,
+            handle: { label: "Create New Admin" },
+          },
+        ],
       },
       {
         path: "services",
@@ -165,8 +264,12 @@ export const routesConfig = [
         handle: { label: "Service Providers", icon: Users },
         roles: ["admin"],
         children: [
-          { path: "create", element: CreateNewSP, handle: { label: "Create New Service Provider" } }
-        ]
+          {
+            path: "create",
+            element: CreateNewSP,
+            handle: { label: "Create New Service Provider" },
+          },
+        ],
       },
       {
         path: "service-providers",
@@ -174,9 +277,17 @@ export const routesConfig = [
         handle: { label: "Service Providers", icon: Users },
         roles: ["super_admin"],
         children: [
-          { path: "new", element: CreateNewSP, handle: { label: "New Service Provider" } },
-          { path: "verification", element: AdminVerificationRequests, handle: { label: "Verification Requests" } },
-        ]
+          {
+            path: "new",
+            element: CreateNewSP,
+            handle: { label: "New Service Provider" },
+          },
+          {
+            path: "verification",
+            element: AdminVerificationRequests,
+            handle: { label: "Verification Requests" },
+          },
+        ],
       },
       {
         path: "profile",
@@ -248,11 +359,27 @@ export const routesConfig = [
         handle: { label: "Services", icon: Briefcase },
         roles: ["service_provider_root"],
         children: [
-          { path: "service", element: ServiceProviderServices, handle: { label: "Manage Service" } },
-          { path: "variants", element: ServiceProviderVariants, handle: { label: "Manage Variants" } },
-          { path: "timelines", element: SPManageTimelines, handle: { label: "Manage Timelines" } },
-          { path: "create", element: SPCreateService, handle: { label: "Create New Service" } },
-        ]
+          {
+            path: "service",
+            element: ServiceProviderServices,
+            handle: { label: "Manage Service" },
+          },
+          {
+            path: "variants",
+            element: ServiceProviderVariants,
+            handle: { label: "Manage Variants" },
+          },
+          {
+            path: "timelines",
+            element: SPManageTimelines,
+            handle: { label: "Manage Timelines" },
+          },
+          {
+            path: "create",
+            element: SPCreateService,
+            handle: { label: "Create New Service" },
+          },
+        ],
       },
       {
         path: "notifications",
@@ -278,11 +405,75 @@ export const routesConfig = [
         handle: { label: "Verification", icon: ShieldCheck },
         roles: ["service_provider_root"],
       },
-    ]
+    ],
   },
   {
     path: "*",
     element: NotFoundPage,
     handle: { label: "Not Found" },
-  }
+  },
+  // Updated Dashboard (Alternative Layout for Service Providers)
+  {
+    path: "/updated-dashboard",
+    element: UpdatedDashboardLayout,
+    handle: { label: "Dashboard", icon: LayoutDashboard },
+    roles: ["service_provider_root"],
+    children: [
+      {
+        path: "",
+        element: UpdatedDashboard,
+        handle: { label: "Dashboard", icon: LayoutDashboard },
+      },
+      {
+        path: "messages",
+        element: UpdatedMessages,
+        handle: { label: "Messages", icon: MessageSquare },
+      },
+      {
+        path: "notifications",
+        element: UpdatedNotifications,
+        handle: { label: "Notifications", icon: Bell },
+      },
+      {
+        path: "orders",
+        element: UpdatedOrders,
+        handle: { label: "Orders", icon: ShoppingBag },
+      },
+      {
+        path: "services",
+        element: UpdatedMyServices,
+        handle: { label: "My Services", icon: Briefcase },
+      },
+      {
+        path: "events",
+        element: UpdatedMyEvents,
+        handle: { label: "My Events", icon: Calendar },
+      },
+      {
+        path: "clients",
+        element: UpdatedClients,
+        handle: { label: "Clients", icon: Users },
+      },
+      {
+        path: "finance",
+        element: UpdatedFinance,
+        handle: { label: "Finance", icon: Wallet },
+      },
+      {
+        path: "profile",
+        element: UpdatedProfile,
+        handle: { label: "Profile", icon: UserCircle },
+      },
+      {
+        path: "verification",
+        element: UpdatedVerification,
+        handle: { label: "Verification Centre", icon: ShieldCheck },
+      },
+      {
+        path: "settings",
+        element: UpdatedSettings,
+        handle: { label: "Settings", icon: Settings },
+      },
+    ]
+  },
 ];
