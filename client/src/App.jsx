@@ -1,80 +1,46 @@
+import React, { Suspense, useMemo } from "react";
+import { useRoutes } from "react-router-dom";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Homepage from "./pages/HomePage.jsx";
-import AboutPage from "./pages/AboutPage.jsx";
-import DashboardPage from "./pages/DashboardPage.jsx";
-import ServiceProfile from "./features/service/serviceProfile/ServiceProfile.jsx";
-import SigninPage from "./features/auth/pages/SigninPage.jsx";
-import SignupPage from "./features/auth/pages/SignupPage.jsx";
-import ForgotPasswordPage from "./features/auth/pages/ForgotPasswordPage.jsx";
-import ServicesPage from "./pages/ServicesPage.jsx";
-import TimelinePage from "./pages/TimelinePage.jsx";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary.jsx";
-import NotFoundPage from "./pages/NotFoundPage.jsx";
-import JobsPage from "./pages/JobsPage.jsx";
-import SPNotifications from "./features/Dashboard/tabs/serviceProvider/SPNotifications.jsx";
-import DashboardMap from "./features/Dashboard/tabs/index.js";
 import { useProfile } from "./contexts/ProfileContext.jsx";
-import ServiceProfileAdmin from "./features/service/serviceProfile/ServiceProfileAdmin.jsx";
-import ServiceViewProvider from "./features/service/serviceProfile/ServiceViewProvider.jsx";
-import ProviderTimeline from "./pages/ProviderTimelinePage.jsx";
+import { routesConfig } from "./config/routesConfig";
+import { filterRoutesByRole } from "./utils/routeUtils";
+
 function App() {
   const { profile } = useProfile();
   const role = profile?.role;
-  return (
-    <ErrorBoundary>
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/jobs" element={<JobsPage />} />
-        <Route path="/signin" element={<SigninPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/services" element={<ServicesPage />} />
-        <Route path="/service/:serviceId" element={<ServiceProfile />} />
-        <Route path="/admin/service/:id" element={<ServiceProfileAdmin />} />
-        <Route path="/provider/service/:id" element={<ServiceViewProvider />} />
-        <Route path="/timeline/:timelineId" element={<TimelinePage />} />
-        <Route path="/provider/timeline/:id" element={<ProviderTimeline />} />
 
-        {/*  Dashboard Layout */}
-        <Route path="/dashboard" element={<DashboardPage />}>
-          {role &&
-            DashboardMap[role] &&
-            Object.values(DashboardMap[role]).flatMap((item) => {
-              const routes = [];
+  // Filter routes based on user role
+  const filteredRoutes = useMemo(() => {
+    return filterRoutesByRole(routesConfig, role);
+  }, [role]);
 
-              const Component = item.component;
-              routes.push(
-                <Route
-                  key={item.label}
-                  path={item.path === "" ? undefined : item.path}
-                  index={item.path === ""}
-                  element={<Component />}
-                />,
-              );
+  // Recursively wrap route elements in Suspense for lazy loading
+  const prepareRoutes = (routes) => {
+    return routes.map((route) => {
+      const Component = route.element;
+      return {
+        ...route,
+        element: (
+          <Suspense
+            fallback={
+              <div className="min-h-screen flex items-center justify-center">
+                <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+              </div>
+            }
+          >
+            <Component />
+          </Suspense>
+        ),
+        children: route.children ? prepareRoutes(route.children) : undefined,
+      };
+    });
+  };
 
-              if (item.children) {
-                item.children.forEach((child) => {
-                  const ChildComponent = child.component;
-                  routes.push(
-                    <Route
-                      key={`${item.label}-${child.label}`}
-                      path={`${item.path}/${child.path}`}
-                      element={<ChildComponent />}
-                    />,
-                  );
-                });
-              }
+  const finalRoutes = useMemo(() => prepareRoutes(filteredRoutes), [filteredRoutes]);
+  const element = useRoutes(finalRoutes);
 
-              return routes;
-            })}
-        </Route>
-
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </ErrorBoundary>
-  );
+  return <ErrorBoundary>{element}</ErrorBoundary>;
 }
 
 export default App;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ProfileAvatar from "../../components/ui/ProfileAvatar";
 import { useAuth } from "../../contexts/AuthContext";
-import { FiGrid, FiLogOut, FiHome, FiChevronDown } from "react-icons/fi";
+import { FiLogOut, FiHome, FiChevronDown } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "../../contexts/ProfileContext";
 import ThemeSwitch from "../../components/ui/ThemeSwitch";
@@ -51,24 +51,24 @@ export default function DashboardSideBar({
         {/* Navigation */}
         <nav className="relative z-10 flex-1 px-4 py-6 space-y-2 overflow-y-auto no-scrollbar">
           {navElements.map((item, index) => {
+            const { label, icon: Icon } = item.handle || {};
             const hasChildren = item.children?.length > 0;
 
-            const basePath = item.path? `/dashboard/${item.path}`: "/dashboard";
+            const basePath = item.path ? `/dashboard/${item.path}` : "/dashboard";
 
             const isExpanded =
-              expandedMenus[item.label] ||
-              location.pathname.startsWith(basePath); 
+              expandedMenus[label] ||
+              location.pathname.startsWith(basePath);
 
             const isActive = item.path === ""
-          ? location.pathname === "/dashboard"
-          : location.pathname.startsWith(basePath);
+              ? location.pathname === "/dashboard"
+              : location.pathname.startsWith(basePath);
 
             return (
               <div key={index} className="space-y-1">
-                
                 {/*  Parent */}
                 <div
-                  onClick={() => hasChildren && toggleMenu(item.label)}
+                  onClick={() => hasChildren && toggleMenu(label)}
                   className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl transition-all duration-300 group cursor-pointer
                     ${
                       isActive
@@ -77,8 +77,8 @@ export default function DashboardSideBar({
                     }`}
                 >
                   <NavLink to={basePath} className="flex items-center gap-3 w-full">
-                    {item.icon && <item.icon />}
-                    <span>{item.label}</span>
+                    {Icon && <Icon size={18} />}
+                    <span>{label}</span>
                   </NavLink>
 
                   {hasChildren && (
@@ -94,7 +94,8 @@ export default function DashboardSideBar({
                 {hasChildren && isExpanded && (
                   <div className="ml-9 border-l border-zinc-200 dark:border-white/10 space-y-1 mt-1">
                     {item.children.map((child, idx) => {
-                      const childPath = `${basePath}/${child.path}`; // ✅ مهم
+                      const { label: childLabel } = child.handle || {};
+                      const childPath = item.path === "" ? `/dashboard/${child.path}` : `${basePath}/${child.path}`;
 
                       const isChildActive = location.pathname.startsWith(childPath);
 
@@ -109,7 +110,7 @@ export default function DashboardSideBar({
                                 : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                             }`}
                         >
-                          {child.label}
+                          {childLabel}
                         </NavLink>
                       );
                     })}
