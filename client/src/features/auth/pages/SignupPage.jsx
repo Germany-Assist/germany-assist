@@ -53,11 +53,6 @@ const SignupPage = () => {
     }
   }, [currentStep, hasSentInitialCode]);
 
-  const downloadImageAsFile = async (url) => {
-    // Not used anymore - URL is sent directly to backend
-    return null;
-  };
-
   const triggerAnimation = () => {
     setAnimKey((prev) => prev + 1);
   };
@@ -338,20 +333,20 @@ const SignupPage = () => {
 
         <main className="flex-1 overflow-y-auto bg-white">
           <div className="min-h-full flex flex-col items-center px-4 sm:px-10 py-12">
-            <div className="w-full max-w-xl">
+            <div
+              key={animKey}
+              className="w-full max-w-xl animate-fade-up"
+              style={{
+                animationDuration: "0.4s",
+                animationTimingFunction: "ease-out",
+              }}
+            >
               {currentStep === 1 && (
                 <QuickQuestions
                   role={role}
                   subRole={subRole}
                   onRoleChange={(r) => {
                     setRole(r);
-                    if (r === "service") {
-                      setRole("provider");
-                    } else if (r === "work") {
-                      setRole("individual");
-                    } else if (r === "relocate") {
-                      setRole("relocate");
-                    }
                   }}
                   onSubRoleChange={setSubRole}
                   onContinue={handleStep1Complete}
