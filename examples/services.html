@@ -299,15 +299,10 @@ tbody td{padding:11px 10px;border-bottom:1px solid var(--border);vertical-align:
 tbody tr:last-child td{border-bottom:none;}
 .t-svc{font-size:12.5px;font-weight:600;color:var(--text);}
 .t-sub{font-size:11px;color:var(--muted);margin-top:2px;}
-.t-act{display:inline-flex;align-items:center;padding:4px 11px;border-radius:7px;font-size:11.5px;font-weight:600;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:all 0.13s;}
-.t-act.blue{background:var(--bs);color:var(--blue);}
-.t-act.blue:hover{background:var(--bm);}
-.t-act.green{background:rgba(5,150,105,0.08);color:#059669;}
-.t-act.green:hover{background:rgba(5,150,105,0.15);}
-.t-act.red{background:rgba(220,38,38,0.08);color:#DC2626;}
-.t-act.red:hover{background:rgba(220,38,38,0.15);}
-.t-act.amber{background:rgba(217,119,6,0.08);color:#D97706;}
-.t-act.amber:hover{background:rgba(217,119,6,0.15);}
+.t-act{display:inline-flex;align-items:center;padding:4px 11px;border-radius:7px;font-size:11.5px;font-weight:600;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:all 0.13s;background:var(--bs);color:var(--blue);}
+.t-act:hover{background:var(--bm);}
+.t-act.blue,.t-act.green,.t-act.red,.t-act.amber{background:var(--bs);color:var(--blue);}
+.t-act.blue:hover,.t-act.green:hover,.t-act.red:hover,.t-act.amber:hover{background:var(--bm);}
 .pagination{display:flex;align-items:center;justify-content:space-between;padding-top:12px;font-size:12px;color:var(--muted);}
 .pag-btns{display:flex;gap:4px;}
 .pag-btn{padding:5px 10px;border-radius:7px;border:1px solid var(--border);background:#fff;font-size:12px;font-family:'Outfit',sans-serif;cursor:pointer;color:var(--muted);transition:all 0.13s;}
@@ -441,12 +436,11 @@ tbody tr:last-child td{border-bottom:none;}
       <div class="svc-fd-sec-lbl">Status</div>
       <div class="svc-fd-chips">
         <div class="svc-fd-chip sel" data-fstatus="all" onclick="selFStatus(this)">All</div>
-        <div class="svc-fd-chip" data-fstatus="draft" onclick="selFStatus(this)">Draft</div>
-        <div class="svc-fd-chip" data-fstatus="under_review" onclick="selFStatus(this)">Under Review</div>
-        <div class="svc-fd-chip" data-fstatus="approved" onclick="selFStatus(this)">Approved</div>
-        <div class="svc-fd-chip" data-fstatus="rejected" onclick="selFStatus(this)">Rejected</div>
         <div class="svc-fd-chip" data-fstatus="online" onclick="selFStatus(this)">Online</div>
-        <div class="svc-fd-chip" data-fstatus="unpublished" onclick="selFStatus(this)">Unpublished</div>
+        <div class="svc-fd-chip" data-fstatus="under_review" onclick="selFStatus(this)">Under Review</div>
+        <div class="svc-fd-chip" data-fstatus="rejected" onclick="selFStatus(this)">Rejected</div>
+        <div class="svc-fd-chip" data-fstatus="draft" onclick="selFStatus(this)">Draft</div>
+        <div class="svc-fd-chip" data-fstatus="unpublished" onclick="selFStatus(this)">Archived</div>
         <div class="svc-fd-chip" data-fstatus="offline" onclick="selFStatus(this)">Offline</div>
       </div>
     </div>
@@ -595,41 +589,36 @@ tbody tr:last-child td{border-bottom:none;}
   <div class="content">
 
     <!-- KPI -->
-    <div class="kpi-strip" style="grid-template-columns:repeat(8,1fr);">
+    <div class="kpi-strip" style="grid-template-columns:repeat(7,1fr);">
       <div class="kc primary">
         <div class="kl">Total</div>
         <div class="kv" id="kv-total">7</div>
         <div class="ks"><span style="background:rgba(255,255,255,0.18);color:#fff;font-size:10px;font-weight:600;padding:2px 6px;border-radius:5px;">All listings</span></div>
-      </div>
-      <div class="kc" style="border-color:rgba(107,114,128,0.25);background:rgba(107,114,128,0.03);">
-        <div class="kl" style="color:#6b7280;display:flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Draft</div>
-        <div class="kv" style="color:#6b7280;" id="kv-draft">1</div>
-        <div class="ks" style="color:#6b7280;opacity:0.8;">Not submitted</div>
-      </div>
-      <div class="kc" style="border-color:rgba(124,58,237,0.25);background:rgba(124,58,237,0.03);">
-        <div class="kl" style="color:#7C3AED;display:flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>Under Review</div>
-        <div class="kv" style="color:#7C3AED;" id="kv-under_review">1</div>
-        <div class="ks" style="color:#7C3AED;opacity:0.8;">Being checked</div>
-      </div>
-      <div class="kc" style="border-color:rgba(2,132,199,0.25);background:rgba(2,132,199,0.03);">
-        <div class="kl" style="color:#0284C7;display:flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Approved</div>
-        <div class="kv" style="color:#0284C7;" id="kv-approved">1</div>
-        <div class="ks" style="color:#0284C7;opacity:0.8;">Ready to publish</div>
-      </div>
-      <div class="kc" style="border-color:rgba(220,38,38,0.25);background:rgba(220,38,38,0.03);">
-        <div class="kl" style="color:#DC2626;display:flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Rejected</div>
-        <div class="kv" style="color:#DC2626;" id="kv-rejected">1</div>
-        <div class="ks" style="color:#DC2626;opacity:0.8;">Needs changes</div>
       </div>
       <div class="kc" style="border-color:rgba(5,150,105,0.25);background:rgba(5,150,105,0.03);">
         <div class="kl" style="color:#059669;display:flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="9 12 11 14 15 10"/></svg>Online</div>
         <div class="kv" style="color:#059669;" id="kv-online">1</div>
         <div class="ks" style="color:#059669;opacity:0.8;">Live &amp; visible</div>
       </div>
+      <div class="kc" style="border-color:rgba(124,58,237,0.25);background:rgba(124,58,237,0.03);">
+        <div class="kl" style="color:#7C3AED;display:flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>Under Review</div>
+        <div class="kv" style="color:#7C3AED;" id="kv-under_review">1</div>
+        <div class="ks" style="color:#7C3AED;opacity:0.8;">Being checked</div>
+      </div>
+      <div class="kc" style="border-color:rgba(220,38,38,0.25);background:rgba(220,38,38,0.03);">
+        <div class="kl" style="color:#DC2626;display:flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Rejected</div>
+        <div class="kv" style="color:#DC2626;" id="kv-rejected">1</div>
+        <div class="ks" style="color:#DC2626;opacity:0.8;">Needs changes</div>
+      </div>
+      <div class="kc" style="border-color:rgba(107,114,128,0.25);background:rgba(107,114,128,0.03);">
+        <div class="kl" style="color:#6b7280;display:flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Draft</div>
+        <div class="kv" style="color:#6b7280;" id="kv-draft">1</div>
+        <div class="ks" style="color:#6b7280;opacity:0.8;">Not submitted</div>
+      </div>
       <div class="kc" style="border-color:rgba(146,64,14,0.25);background:rgba(146,64,14,0.03);">
-        <div class="kl" style="color:#92400E;display:flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/></svg>Unpublished</div>
+        <div class="kl" style="color:#92400E;display:flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/></svg>Archived</div>
         <div class="kv" style="color:#92400E;" id="kv-unpublished">1</div>
-        <div class="ks" style="color:#92400E;opacity:0.8;">Archived</div>
+        <div class="ks" style="color:#92400E;opacity:0.8;">Was published</div>
       </div>
       <div class="kc" style="border-color:rgba(217,119,6,0.25);background:rgba(217,119,6,0.03);">
         <div class="kl" style="color:#D97706;display:flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>Offline</div>
@@ -647,9 +636,8 @@ tbody tr:last-child td{border-bottom:none;}
           <button class="ftab" onclick="setTab(this,'offline')">Offline <span style="opacity:0.55;font-size:10px;" id="cnt-offline">(0)</span></button>
           <button class="ftab" onclick="setTab(this,'draft')">Draft <span style="opacity:0.55;font-size:10px;" id="cnt-draft">(0)</span></button>
           <button class="ftab" onclick="setTab(this,'under_review')">Under Review <span style="opacity:0.55;font-size:10px;" id="cnt-under_review">(0)</span></button>
-          <button class="ftab" onclick="setTab(this,'approved')">Approved <span style="opacity:0.55;font-size:10px;" id="cnt-approved">(0)</span></button>
           <button class="ftab" onclick="setTab(this,'rejected')">Rejected <span style="opacity:0.55;font-size:10px;" id="cnt-rejected">(0)</span></button>
-          <button class="ftab" onclick="setTab(this,'unpublished')">Unpublished <span style="opacity:0.55;font-size:10px;" id="cnt-unpublished">(0)</span></button>
+          <button class="ftab" onclick="setTab(this,'unpublished')">Archived <span style="opacity:0.55;font-size:10px;" id="cnt-unpublished">(0)</span></button>
         </div>
         <div style="display:flex;align-items:center;gap:7px;margin-left:auto;flex-shrink:0;">
           <div class="search-wrap" style="max-width:200px;">
@@ -674,6 +662,7 @@ tbody tr:last-child td{border-bottom:none;}
             <th class="sortable" onclick="sortTable(4,this)"><span class="th-inner">Orders<span class="sort-icon"><svg class="arr-up" width="7" height="5" viewBox="0 0 8 5"><path d="M4 0L8 5H0z" fill="currentColor"/></svg><svg class="arr-dn" width="7" height="5" viewBox="0 0 8 5"><path d="M4 5L0 0H8z" fill="currentColor"/></svg></span></span></th>
             <th class="sortable" onclick="sortTable(5,this)"><span class="th-inner">Rating<span class="sort-icon"><svg class="arr-up" width="7" height="5" viewBox="0 0 8 5"><path d="M4 0L8 5H0z" fill="currentColor"/></svg><svg class="arr-dn" width="7" height="5" viewBox="0 0 8 5"><path d="M4 5L0 0H8z" fill="currentColor"/></svg></span></span></th>
             <th class="sortable" onclick="sortTable(6,this)"><span class="th-inner">Status<span class="sort-icon"><svg class="arr-up" width="7" height="5" viewBox="0 0 8 5"><path d="M4 0L8 5H0z" fill="currentColor"/></svg><svg class="arr-dn" width="7" height="5" viewBox="0 0 8 5"><path d="M4 5L0 0H8z" fill="currentColor"/></svg></span></span></th>
+            <th>Approved Date</th>
             <th>Action</th>
           </tr></thead>
           <tbody id="servicesBody"></tbody>
@@ -681,7 +670,12 @@ tbody tr:last-child td{border-bottom:none;}
       </div>
       <div class="pagination">
         <span id="pag-info">Showing 7 of 7 services</span>
-        <div class="pag-btns"><button class="pag-btn active">1</button></div>
+        <div class="pag-btns">
+          <button class="pag-btn active">1</button>
+          <button class="pag-btn">2</button>
+          <button class="pag-btn">3</button>
+          <button class="pag-btn">Next</button>
+        </div>
       </div>
     </div>
 
@@ -771,7 +765,7 @@ const SERVICES = [
   },
   {
     id:6, name:'Doc Translation', type:'Service', category:'service',
-    status:'unpublished', statusLabel:'Unpublished',
+    status:'unpublished', statusLabel:'Archived',
     color:'#92400E', iconBg:'rgba(146,64,14,0.08)', iconColor:'#92400E',
     typeClass:'type-service',
     photo:'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&q=80',
@@ -851,12 +845,12 @@ let searchQuery = '';
 
 const STATUS_CFG = {
   draft:        {cls:'b-draft',    label:'Draft',        act:'blue',  actLabel:'Edit'},
-  under_review: {cls:'b-review',   label:'Under Review', act:'amber', actLabel:'View'},
-  approved:     {cls:'b-approved', label:'Approved',     act:'green', actLabel:'Publish'},
-  rejected:     {cls:'b-rejected', label:'Rejected',     act:'red',   actLabel:'Fix'},
+  under_review: {cls:'b-review',   label:'Under Review', act:'blue', actLabel:'View'},
+  approved:     {cls:'b-approved', label:'Approved',     act:'blue',  actLabel:'Publish'},
+  rejected:     {cls:'b-rejected', label:'Rejected',     act:'blue',   actLabel:'Fix'},
   online:       {cls:'b-online',   label:'Online',       act:'blue',  actLabel:'Manage'},
-  unpublished:  {cls:'b-unpublished',label:'Unpublished',act:'blue',  actLabel:'Republish'},
-  offline:      {cls:'b-offline',  label:'Offline',      act:'amber', actLabel:'Go Online'},
+  unpublished:  {cls:'b-unpublished',label:'Archived',   act:'blue',  actLabel:'Republish'},
+  offline:      {cls:'b-offline',  label:'Offline',      act:'blue', actLabel:'Go Online'},
 };
 const TYPE_CFG = {
   course:   {bg:'rgba(220,38,38,0.08)',color:'#DC2626'},
@@ -879,7 +873,7 @@ function renderTable() {
   if (info) info.textContent = `Showing ${list.length} of ${SERVICES.length} services`;
 
   if (!list.length) {
-    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--muted);">No services match your filters.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--muted);">No services match your filters.</td></tr>`;
     return;
   }
 
@@ -902,6 +896,7 @@ function renderTable() {
       <td>${ord}</td>
       <td>${rat}</td>
       <td><span class="badge ${st.cls}"><span class="bd"></span>${st.label}</span></td>
+      <td><span style="color:var(--muted);font-size:12px;">${s.approvedDate ? s.approvedDate : '—'}</span></td>
       <td><button class="t-act ${st.act}" onclick="event.stopPropagation()">${st.actLabel}</button></td>
     </tr>`;
   }).join('');
@@ -911,10 +906,10 @@ function updateCounts() {
   const cnt = s => SERVICES.filter(x => x.status === s).length;
   const el = id => document.getElementById(id);
   if(el('kv-total')) el('kv-total').textContent = SERVICES.length;
-  ['draft','under_review','approved','rejected','online','unpublished','offline'].forEach(s => {
+  ['draft','under_review','rejected','online','unpublished','offline'].forEach(s => {
     if(el('kv-'+s)) el('kv-'+s).textContent = cnt(s);
   });
-  const statuses = ['all','online','offline','draft','under_review','approved','rejected','unpublished'];
+  const statuses = ['all','online','offline','draft','under_review','rejected','unpublished'];
   statuses.forEach(s => {
     const el2 = el('cnt-'+s);
     if(el2) el2.textContent = `(${s==='all' ? SERVICES.length : cnt(s)})`;

@@ -306,26 +306,15 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
         <div class="page-sub">Answer a few quick questions and we'll take you to the right signup — takes under 30 seconds.</div>
         <div style="font-size:0.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px;">What's your main goal on Germany Assists?</div>
         <div class="actor-grid">
-          <div class="actor-card" onclick="answerQ1(this,'work')">
-            <div class="aicon" style="background:#EBF1FD;">💼</div>
-            <div class="atext"><h3>Find work or study in Germany</h3><p class="adesc">I'm looking for jobs, Ausbildung, scholarships, or university programmes.</p></div>
-            <div class="aradio"></div>
-          </div>
           <div class="actor-card" onclick="answerQ1(this,'relocate')">
             <div class="aicon" style="background:#EAF7FC;">✈️</div>
-            <div class="atext"><h3>Plan my move to Germany</h3><p class="adesc">I need help with visa, language courses, certificate recognition, or relocation.</p></div>
+            <div class="atext"><h3>My goal is to travel to Germany for work, or study.</h3><p class="adesc">I need a clear roadmap to start my life in Germany. I am looking for help with my Visa, University applications, translating my documents, or getting my certificates recognized. I want to find the right job or training and improve my German language skills to succeed in my new career.</p></div>
             <div class="aradio"></div>
           </div>
           <div class="actor-card" onclick="answerQ1(this,'service')">
             <div class="aicon" style="background:#F0FFF4;">⚡</div>
-            <div class="atext"><h3>Offer services to people moving to Germany</h3><p class="adesc">I'm a coach, translator, language school, visa consultant, or relocation specialist.</p></div>
+            <div class="atext"><h3>I offer services for people seeking to travel to Germany.</h3><p class="adesc">I am an expert or a company providing expertise in areas like Language teaching, Certified translation, Career coaching, Visa consulting, or Relocation support, and I want to showcase my services on this platform.</p></div>
             <div class="aradio"></div>
-          </div>
-          <div class="actor-card" onclick="answerQ1(this,'hire')" style="opacity:0.6;pointer-events:none;position:relative;">
-            <div class="aicon" style="background:#F9FAFB;">🏢</div>
-            <div class="atext"><h3>Hire international talent for my company</h3><p class="adesc">I'm a German employer, university, or Ausbildung centre looking for candidates.</p></div>
-            <div class="aradio"></div>
-            <div class="cs-overlay"><div class="cs-badge">🚧 Coming Soon</div></div>
           </div>
         </div>
       </div>
@@ -340,16 +329,16 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
           <div class="actor-card" onclick="answerQ2(this,'freelancer')">
             <div class="aicon" style="background:#EBF1FD;">🧑‍💻</div>
             <div class="atext">
-              <h3>Independently / Freelance</h3>
-              <p class="adesc">I work solo — as an individual coach, consultant, teacher, or specialist.</p>
+              <h3>Independent Freelancer</h3>
+              <p class="adesc">I am a self-employed professional providing services directly to clients. Whether I am a tutor, translator, or consultant, I rely on my personal expertise and certifications to deliver high-quality support.</p>
             </div>
             <div class="aradio"></div>
           </div>
           <div class="actor-card" onclick="answerQ2(this,'office')">
             <div class="aicon" style="background:#F0FFF4;">🏛️</div>
             <div class="atext">
-              <h3>As a company or organisation</h3>
-              <p class="adesc">I represent a registered company, language school, agency, or organisation with staff.</p>
+              <h3>Registered Company</h3>
+              <p class="adesc">We are an official business or a licensed organization. We operate as a professional team with a registered trade license to provide various services at a corporate or agency level.</p>
             </div>
             <div class="aradio"></div>
           </div>
@@ -415,12 +404,22 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
           <label>Company Name <span class="req-star">*</span></label>
           <input type="text" id="companyName" placeholder="Official registered company name" oninput="checkReady()">
         </div>
-        <div class="field">
-          <label>Country <span class="req-star">*</span></label>
-          <div class="cwrap" id="basicCountryWrap">
-            <input type="text" id="basicCountrySearch" placeholder="🔍  Search your country..." oninput="filterBasicCountries(this)" onfocus="showBasicCountries()" autocomplete="off" oninput="filterBasicCountries(this);checkReady()">
-            <input type="hidden" id="basicCountryVal">
-            <div class="country-dropdown" id="basicCdd" style="display:none;"></div>
+        <div class="field-row-2">
+          <div class="field">
+            <label>Nationality <span class="req-star">*</span></label>
+            <div class="cwrap" id="natWrap">
+              <input type="text" id="natSearch" placeholder="🔍  Your nationality..." oninput="filterNatCountries(this)" onfocus="showNatCountries()" autocomplete="off">
+              <input type="hidden" id="natVal">
+              <div class="country-dropdown" id="natCdd" style="display:none;"></div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Country of Residence <span class="req-star">*</span></label>
+            <div class="cwrap" id="basicCountryWrap">
+              <input type="text" id="basicCountrySearch" placeholder="🔍  Country of residence..." oninput="filterBasicCountries(this);checkReady()" onfocus="showBasicCountries()" autocomplete="off">
+              <input type="hidden" id="basicCountryVal">
+              <div class="country-dropdown" id="basicCdd" style="display:none;"></div>
+            </div>
           </div>
         </div>
         <div class="field"><label>Email Address <span class="req-star">*</span></label><input type="email" id="emailInput" placeholder="your@email.com" oninput="checkReady()"></div>
@@ -493,7 +492,7 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
       <div id="p3s1" class="fadein">
         <button class="btn-back" onclick="sp('pageSkip',2.5)">&larr; Back</button>
         <div class="page-title">Profile Setup</div>
-        <div class="page-sub">Add a photo and a short bio so clients know who they're working with.</div>
+        <div class="page-sub">Add a photo and a short about so clients know who they're working with.</div>
         <div class="form-section">
           <div class="field">
             <label>Profile Image / Logo <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">— Square 1:1, high resolution</span></label>
@@ -508,7 +507,7 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
             </div>
           </div>
           <div class="field">
-            <label>Bio <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">— 80 to 600 characters</span></label>
+            <label>About <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">— 80 to 600 characters</span></label>
             <textarea id="bioInput" rows="4" oninput="checkBio(this)" placeholder="Tell clients about your experience, qualifications, and what makes you the right choice…" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Outfit',sans-serif;font-size:0.86rem;color:var(--text);background:#fff;outline:none;resize:vertical;transition:border-color 0.2s;line-height:1.5;" onfocus="this.style.borderColor='var(--blue)';this.style.boxShadow='0 0 0 3px rgba(2,76,238,0.07)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"></textarea>
             <div style="display:flex;justify-content:space-between;margin-top:4px;align-items:center;">
               <div id="bioMsg" style="font-size:0.69rem;color:var(--muted);"></div>
@@ -602,9 +601,43 @@ input:checked~.cb{background:var(--blue);border-color:var(--blue);}
         <button class="btn-secondary" onclick="goToVerify()">Skip for now &mdash; verify my email</button>
       </div>
 
-    </div>
+      <!-- INDIVIDUAL ONLY: Single step — Profile Pic + Passport -->
+      <div id="p3IndStep" style="display:none;">
+        <button class="btn-back" onclick="sp('pageSkip',2.5)">&larr; Back</button>
+        <div class="page-title">Add Profile Details</div>
+        <div class="page-sub">Upload your profile photo and ID to activate your account.</div>
+        <div class="form-section">
+          <!-- Profile Photo -->
+          <div class="field">
+            <label>Profile Photo <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">— Square 1:1</span></label>
+            <div class="img-upload-wrap" style="position:relative;border:1.5px dashed var(--border);border-radius:12px;padding:20px;text-align:center;cursor:pointer;background:var(--bg);transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'">
+              <input type="file" accept=".jpg,.jpeg,.png" style="position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;" onchange="previewProfileImg(this)">
+              <div id="imgUploadInner">
+                <div style="font-size:26px;margin-bottom:5px;">&#x1F5BC;&#xFE0F;</div>
+                <p style="font-size:0.77rem;color:var(--muted);"><span style="color:var(--blue);font-weight:500;">Click to upload</span> your photo</p>
+                <p style="font-size:0.68rem;color:#9CA3AF;margin-top:2px;">JPG or PNG &middot; Square (1:1) &middot; min 400&times;400px</p>
+              </div>
+              <img id="imgPreview" style="display:none;width:80px;height:80px;border-radius:12px;object-fit:cover;margin:0 auto;" alt="Preview">
+            </div>
+          </div>
+          <!-- Passport / National ID -->
+          <div class="buc">
+            <div class="buc-meta">
+              <div class="buc-icon">&#x1FA96;</div>
+              <div>
+                <div class="buc-title">Passport or National ID <span class="buc-req-tag">Required</span></div>
+                <div class="buc-desc">Upload a clear scan or photo — PDF, JPG, or PNG. Reviewed securely and never shared publicly.</div>
+              </div>
+            </div>
+            <label class="buc-upload-btn"><input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="markUploaded(this)"><span>Upload</span></label>
+            <div class="buc-done-tag">&#10003; Uploaded</div>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="goToVerify()">Submit &amp; Verify Email &rarr;</button>
+        <button class="btn-secondary" onclick="goToVerify()">Skip for now &mdash; verify my email</button>
+      </div>
 
-    <!-- PAGE 4: CODE -->
+    </div>
     <div class="page" id="page4">
       <div class="verify-wrap fadein">
         <div class="verify-icon">📬</div>
@@ -667,6 +700,10 @@ function showCountries(){renderC(COUNTRIES);document.getElementById('cdd').style
 function filterCountries(inp){var q=inp.value.toLowerCase();renderC(COUNTRIES.filter(function(c){return c.n.toLowerCase().includes(q);}));document.getElementById('cdd').style.display='block';}
 function renderC(list){document.getElementById('cdd').innerHTML=list.map(function(c){return '<div class="country-opt" onclick="pickC(\''+c.f+' '+c.n+'\')"><span class="cflag">'+c.f+'</span>'+c.n+'</div>';}).join('');}
 function pickC(v){document.getElementById('csearch').value=v;document.getElementById('cdd').style.display='none';}
+function showNatCountries(){renderNatC(COUNTRIES);document.getElementById('natCdd').style.display='block';}
+function filterNatCountries(inp){var q=inp.value.toLowerCase();renderNatC(COUNTRIES.filter(function(c){return c.n.toLowerCase().includes(q);}));document.getElementById('natCdd').style.display='block';}
+function renderNatC(list){document.getElementById('natCdd').innerHTML=list.map(function(c){return '<div class="country-opt" onclick="pickNatC(\''+c.f+' '+c.n+'\',\''+c.n+'\')"><span class="cflag">'+c.f+'</span>'+c.n+'</div>';}).join('');}
+function pickNatC(display,val){document.getElementById('natSearch').value=display;document.getElementById('natVal').value=val;document.getElementById('natCdd').style.display='none';checkReady();}
 function showBasicCountries(){renderBasicC(COUNTRIES);document.getElementById('basicCdd').style.display='block';}
 function filterBasicCountries(inp){var q=inp.value.toLowerCase();renderBasicC(COUNTRIES.filter(function(c){return c.n.toLowerCase().includes(q);}));document.getElementById('basicCdd').style.display='block';}
 function renderBasicC(list){document.getElementById('basicCdd').innerHTML=list.map(function(c){return '<div class="country-opt" onclick="pickBasicC(\''+c.f+' '+c.n+'\',\''+c.n+'\')"><span class="cflag">'+c.f+'</span>'+c.n+'</div>';}).join('');}
@@ -675,6 +712,7 @@ document.addEventListener('click',function(e){
   if(!e.target.closest('.cwrap')){
     var d=document.getElementById('cdd');if(d)d.style.display='none';
     var d2=document.getElementById('basicCdd');if(d2)d2.style.display='none';
+    var d3=document.getElementById('natCdd');if(d3)d3.style.display='none';
   }
 });
 
@@ -783,9 +821,11 @@ function backToQs(){
 
 function goToPage2(){
   var isOffice=actor==='employer'||(actor==='provider'&&sub==='office');
-  var isIndividual=actor==='individual'||(actor==='provider'&&sub==='freelancer');
+  var isProvider=(actor==='provider');
   var dnField=document.getElementById('displayNameField');
-  if(dnField)dnField.style.display=isIndividual?'none':'block';
+  // Display Name for freelancer and employer; not for individual or company
+  var showDn=(actor==='employer')||(actor==='provider'&&sub==='freelancer');
+  if(dnField)dnField.style.display=showDn?'block':'none';
   var t={individual:'Individual Account',employer:'Employer Account',provider:sub==='freelancer'?'Freelancer Account':'Company / Organization Account'};
   var s={individual:'Free access · No transaction fees · Full platform access',employer:'Verified employer profile',provider:sub==='freelancer'?'Independent professional · Badge verification':'Company or organization · Business verification'};
   document.getElementById('formTitle').textContent=t[actor];
@@ -810,12 +850,23 @@ function setP3Step(n){
   document.getElementById('p3StepLabel').textContent=labels[n]||'';
 }
 function goToP3S1(){
+  var isInd=(actor==='individual');
+  // For individual: hide sub-step bar, show only the combined profile+ID step
+  var stepBar=document.getElementById('p3StepBar');
+  if(stepBar) stepBar.style.display=isInd?'none':'flex';
+  if(isInd){
+    document.getElementById('p3s1').style.display='none';
+    document.getElementById('p3s2').style.display='none';
+    document.getElementById('p3s3').style.display='none';
+    document.getElementById('p3IndStep').style.display='block';
+    return;
+  }
+  document.getElementById('p3IndStep').style.display='none';
   document.getElementById('p3s1').style.display='block';
   document.getElementById('p3s2').style.display='none';
   document.getElementById('p3s3').style.display='none';
   setP3Step(1);
-  var isInd=(actor==='individual');
-  document.getElementById('p3s1NextBtn').textContent=isInd?'Next: Your Certificates →':'Next: Choose Category →';
+  document.getElementById('p3s1NextBtn').textContent='Next: Choose Category →';
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function goToP3S2(){
@@ -921,6 +972,7 @@ function checkReady(){
     ln=document.getElementById('lastName').value.trim(),
     dn=document.getElementById('displayName').value.trim(),
     country=document.getElementById('basicCountryVal').value.trim(),
+    nat=(document.getElementById('natVal')?document.getElementById('natVal').value.trim():'x'),
     em=document.getElementById('emailInput').value.trim(),
     ph=document.getElementById('phoneInput').value.trim(),
     pw=document.getElementById('pwInput').value,
@@ -934,7 +986,7 @@ function checkReady(){
     var cn=document.getElementById('companyName').value.trim();
     compOk=cn.length>0;
   }
-  var ready=fn&&ln&&dnOk&&country&&em&&ph&&pw.length>=8&&pw===cpw&&terms&&compOk;
+  var ready=fn&&ln&&dnOk&&country&&nat&&em&&ph&&pw.length>=8&&pw===cpw&&terms&&compOk;
   document.getElementById('submitBasicBtn').disabled=!ready;
 }
 function setupCode(){
@@ -990,34 +1042,64 @@ var SUB_CATS={
 };
 var BADGE_CARDS={
   german_language:[
-    {icon:'📜',title:'Teaching Certificate',badge:'Certified Teacher / Certified Examiner',desc:'Are you a Goethe/TELC/TestDaF teacher? Upload your teaching certificate to earn the "Certified Teacher" or "Certified Examiner" badge.'},
-    {icon:'🎓',title:'Germanistics Degree',badge:'Expert Teacher',desc:'Do you have a University Degree in Germanistics? Upload it to earn the "Expert Teacher" badge.'},
-    {icon:'🏫',title:'Exam Center Accreditation',badge:'Certified Exam Center',req:true,desc:'Are you an Official Exam Center? Upload your Exam Center Accreditation to be listed as a "Certified Exam Center." Required to publish.'}
+    {icon:'📜',badge:'Certified Teacher / Certified Examiner',subs:['Exam Preparation (Goethe, TELC, TestDaF, ÖSD, DTZ, DSH, ECL, DSD)'],
+      reqDoc:'Teaching Certificate',reqDesc:'Are you a Goethe/TELC/TestDaF teacher? Upload your teaching certificate to earn the "Certified Teacher" or "Certified Examiner" badge.'},
+    {icon:'🎓',badge:'Expert Teacher',subs:['General German (A1–C2)','Business German','Medical German','Vocational German'],
+      reqDoc:'Germanistics / University Degree',reqDesc:'Do you have a University Degree in Germanistics? Upload it to earn the "Expert Teacher" badge.'},
+    {icon:'🏫',badge:'Certified Exam Center',subs:['Group Courses','Integration Courses'],req:true,
+      reqDoc:'Exam Center Accreditation',reqDesc:'Are you an Official Exam Center? Upload your Exam Center Accreditation. Required to be listed as a "Certified Exam Center."'},
+    {icon:'📁',badge:null,subs:[],
+      reqDoc:'Other Documents',reqDesc:'Also accepted: student reviews, client testimonials, screenshots/links of educational social media accounts, portfolio, or other.'}
   ],
   career_coaching:[
-    {icon:'🏅',title:'Coaching Credentials (ICF, EMCC, or similar)',badge:'Certified Coach',desc:'Are you a Professional Coach? Upload your credentials to earn the "Certified Coach" badge.'},
-    {icon:'📊',title:'Anonymized Case Studies / Proof of Experience',badge:'German Market Expert',desc:'Expert in the German Market? Upload anonymized case studies or proof of experience to earn the "German Market Expert" badge.'}
+    {icon:'🏅',badge:'Certified Coach',subs:['Career Coaching','Industry-Specific Coaching'],
+      reqDoc:'Coaching Credentials (ICF, EMCC, or similar)',reqDesc:'Are you a Professional Coach? Upload your credentials (ICF, EMCC, or similar) to earn the "Certified Coach" badge.'},
+    {icon:'📊',badge:'German Market Expert',subs:['CV & Cover Letter Writing','Job Interview Preparation','Job Search Strategy'],
+      reqDoc:'Anonymized Case Studies / Proof of Experience',reqDesc:'Expert in the German Market? Upload anonymized case studies or proof of experience to earn the "German Market Expert" badge.'},
+    {icon:'📁',badge:null,subs:[],
+      reqDoc:'Other Documents',reqDesc:'Also accepted: client reviews, LinkedIn recommendations, screenshots of professional social media accounts, a portfolio, or other.'}
   ],
   translation:[
-    {icon:'📝',title:'Translation Degree',badge:'Certified Translator',desc:'General Translator? Upload your degree to earn the "Certified Translator" badge.'},
-    {icon:'⚖️',title:'Court Appointment (Bestallungsurkunde) + Official Stamp',badge:'Sworn Translator',req:true,desc:'Sworn Translator? Upload your Court Appointment and Official Stamp. Required to be verified and published as a "Sworn Translator."'}
+    {icon:'⚖️',badge:'Sworn Translator',subs:['Sworn Translation (Beglaubigte Übersetzung)'],req:true,
+      reqDoc:'Court Appointment (Bestallungsurkunde) + Official Stamp',reqDesc:'Sworn Translator? Upload your Court Appointment and Official Stamp. Required to be verified and published as a "Sworn Translator."'},
+    {icon:'📝',badge:'Certified Translator',subs:['Document Translation for Recognition','Legal Translation','Medical Translation','Technical Translation','General Translation'],
+      reqDoc:'Translation Degree',reqDesc:'General Translator? Upload your degree to earn the "Certified Translator" badge.'},
+    {icon:'📁',badge:null,subs:[],
+      reqDoc:'Other Documents',reqDesc:'Also accepted: client testimonials, letters of recommendation, screenshots of professional social media accounts, translation portfolio/work samples, or other.'}
   ],
   recruitment:[
-    {icon:'💼',title:'Track Record or Portfolio',badge:'Certified Recruiter',desc:'Individual Recruiter? Upload your track record or portfolio to earn the "Certified Recruiter" badge.'},
-    {icon:'🏢',title:'Recruitment License',badge:'Licensed Agency',req:true,desc:'Are you an Agency? Upload your Recruitment License to publish your agency profile and earn the "Licensed Agency" badge.'}
+    {icon:'🏢',badge:'Licensed Agency',subs:['Recruitment Agency','Employer Partnerships'],req:true,
+      reqDoc:'Recruitment License',reqDesc:'Are you an Agency? Upload your Recruitment License to publish your agency profile and earn the "Licensed Agency" badge.'},
+    {icon:'💼',badge:'Certified Recruiter',subs:['Freelance Recruiter'],
+      reqDoc:'Track Record or Portfolio',reqDesc:'Individual Recruiter? Upload your track record or portfolio to earn the "Certified Recruiter" badge.'},
+    {icon:'📁',badge:null,subs:[],
+      reqDoc:'Other Documents',reqDesc:'Also accepted: feedback from hired candidates or companies, screenshots of professional social media accounts, case studies of successful placements, or other.'}
   ],
   visa:[
-    {icon:'✅',title:'Anonymized "Visa Granted" Documents',badge:'Certified Consultant',desc:'Have a high success rate? Upload anonymized "Visa Granted" documents to earn the "Certified Consultant" badge and build client trust.'}
+    {icon:'✅',badge:'Certified Consultant',subs:['Visa Counseling (Work, Study, Job Seeker, Ausbildung)','Embassy Interview Training','Visa File Preparation'],
+      reqDoc:'Anonymized "Visa Granted" Documents',reqDesc:'Have a high success rate? Upload anonymized "Visa Granted" documents to earn the "Certified Consultant" badge and build client trust.'},
+    {icon:'📁',badge:null,subs:[],
+      reqDoc:'Other Documents',reqDesc:'Also accepted: client success reviews, documented feedback, screenshots of professional social media channels, a documented track record portfolio, or other.'}
   ],
   recognition:[
-    {icon:'🏥',title:'Successful Defizitbescheid or Approbation Cases',badge:'Recognition Expert',desc:'Expert in Medical or Engineering Recognition? Upload successful "Defizitbescheid" or "Approbation" cases to earn the "Recognition Expert" badge.'}
+    {icon:'🏥',badge:'Recognition Expert',subs:['Certificate Recognition Consulting','Medical Recognition','Bachelor Recognition','Baccalaureate Recognition','Engineering Recognition'],
+      reqDoc:'Successful Defizitbescheid or Approbation Cases',reqDesc:'Expert in Medical or Engineering Recognition? Upload successful "Defizitbescheid" or "Approbation" cases to earn the "Recognition Expert" badge.'},
+    {icon:'📁',badge:null,subs:[],
+      reqDoc:'Other Documents',reqDesc:'Also accepted: client reviews and feedback, screenshots of professional social media pages, a consulting portfolio showing successful outcomes, or other.'}
   ],
   university:[
-    {icon:'🎓',title:'Proof of Student Placements',badge:'Admission Expert',desc:'Successful Admission History? Upload proof of student placements to earn the "Admission Expert" badge.'},
-    {icon:'📄',title:'C1 / TestDaF Certificate',badge:'Academic Language Expert',desc:'Advanced German Skills? Upload your C1/TestDaF certificate to show clients you understand academic requirements.'}
+    {icon:'🎓',badge:'Admission Expert',subs:['University Admission','APS Preparation','DAAD Application Support','UNI-Assist'],
+      reqDoc:'Proof of Student Placements',reqDesc:'Successful Admission History? Upload proof of student placements to earn the "Admission Expert" badge.'},
+    {icon:'📄',badge:'Advanced German Skills',subs:['APS Preparation','Student Visa Support'],
+      reqDoc:'C1 / TestDaF Certificate',reqDesc:'Advanced German Skills? Upload your C1/TestDaF certificate to show clients you understand academic requirements.'},
+    {icon:'📁',badge:null,subs:[],
+      reqDoc:'Other Documents',reqDesc:'Also accepted: student ratings and reviews, recommendation letters, screenshots of relevant social media accounts, a student placement portfolio, or other.'}
   ],
   relocation:[
-    {icon:'📍',title:'Proof of Local Residency or Anmeldung Experience',badge:'Local Relocation Expert',desc:'Local Expert? Upload proof of your local residency or experience in city registration (Anmeldung) to earn the "Local Relocation Expert" badge.'}
+    {icon:'📍',badge:'Local Relocation Expert',subs:['Housing Search in Germany','Anmeldung Support','Bureaucracy Support'],
+      reqDoc:'Proof of Local Residency or Anmeldung Experience',reqDesc:'Local Expert? Upload proof of your local residency or experience in city registration (Anmeldung) to earn the "Local Relocation Expert" badge.'},
+    {icon:'📁',badge:null,subs:[],
+      reqDoc:'Other Documents',reqDesc:'Also accepted: client testimonials, reviews from assisted expats, screenshots of community/social media accounts demonstrating local expertise, a completed relocation portfolio, or other.'}
   ]
 };
 
@@ -1088,35 +1170,35 @@ function renderBadgeCards(){
     var cards=BADGE_CARDS[cat]||[];
     if(!cards.length)return;
     var catId='cred_'+cat;
-
-    // Category header
     html+='<div style="margin-bottom:14px;border:1.5px solid var(--border);border-radius:14px;overflow:hidden;">';
-
-    // Header bar
+    // Header
     html+='<div style="background:var(--bg);padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">'
       +'<div style="font-size:18px;">'+CAT_ICONS[cat]+'</div>'
       +'<div style="font-size:0.88rem;font-weight:700;color:var(--text);">'+getMainCatLabel(cat)+'</div>'
       +'</div>';
-
-    // Text list of accepted credentials
     html+='<div style="padding:14px 16px;">';
     html+='<div style="font-size:0.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">Accepted credentials &amp; files</div>';
-    html+='<ul style="list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:7px;">';
+    html+='<ul style="list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:10px;">';
     cards.forEach(function(c){
-    cards.forEach(function(c){
-      html+='<li style="display:flex;align-items:flex-start;gap:9px;">'
-        +'<span style="width:7px;height:7px;border-radius:50%;background:#93C5FD;flex-shrink:0;margin-top:5px;"></span>'
-        +'<div>'
-        +'<div style="font-size:0.82rem;font-weight:600;color:var(--text);">'+c.icon+' '+c.title
-        +' <span style="font-size:0.63rem;font-weight:600;padding:1px 6px;border-radius:20px;background:var(--bl);color:var(--blue);border:1px solid rgba(2,76,238,0.2);vertical-align:middle;">&#x1F3C5; '+c.badge+'</span>'
-        +'</div>'
-        +'<div style="font-size:0.75rem;color:var(--muted);margin-top:2px;line-height:1.5;">'+c.desc+'</div>'
-        +'</div></li>';
-    });
+      var isOther=!c.badge;
+      html+='<li style="border:1px solid var(--border);border-radius:10px;padding:11px 13px;">';
+      html+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">';
+      html+='<span style="font-size:0.82rem;font-weight:600;color:var(--text);">'+c.icon+' '+c.reqDoc+'</span>';
+      html+='</div>';
+      // Sub-services list
+      if(c.subs&&c.subs.length){
+        html+='<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;">';
+        c.subs.forEach(function(s){
+          html+='<span style="font-size:0.68rem;padding:2px 8px;border-radius:20px;background:var(--bs);color:var(--blue);border:1px solid rgba(2,76,238,0.1);">'+s+'</span>';
+        });
+        html+='</div>';
+      }
+      // Description
+      html+='<div style="font-size:0.75rem;color:var(--muted);line-height:1.5;">'+c.reqDesc+'</div>';
+      html+='</li>';
     });
     html+='</ul>';
-
-    // Single multi-file upload area
+    // Upload area
     html+='<div class="cred-upload-area" id="'+catId+'" onclick="document.getElementById(\'fi_'+cat+'\').click()">'
       +'<input type="file" id="fi_'+cat+'" accept=".pdf,.jpg,.jpeg,.png" multiple style="display:none;" onchange="handleCredUpload(this,\''+catId+'\')">'
       +'<div class="cred-upload-inner" id="'+catId+'_inner">'
@@ -1126,7 +1208,6 @@ function renderBadgeCards(){
       +'</div>'
       +'<div class="cred-file-list" id="'+catId+'_files" style="display:none;"></div>'
       +'</div>';
-
     html+='</div></div>';
   });
   container.innerHTML=html;

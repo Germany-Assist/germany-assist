@@ -103,7 +103,8 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
 
 /* SECTION CARD */
 .vc-card{background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
-.vc-ch{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);user-select:none;}
+.vc-ch{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;user-select:none;transition:background 0.13s;}
+.vc-ch:hover{background:rgba(2,76,238,0.02);}
 .vc-ch-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .vc-ch-info{flex:1;}
 .vc-ch-title{font-size:13px;font-weight:600;color:var(--text);}
@@ -114,7 +115,10 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
 .vsb-warn{background:rgba(217,119,6,0.08);color:var(--amber);}
 .vsb-err{background:rgba(220,38,38,0.08);color:var(--red);}
 .vsb-none{background:var(--bs);color:var(--blue);}
-.vc-body{display:block;padding:16px;}
+.vc-caret{width:18px;height:18px;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:transform 0.2s;}
+.vc-caret.open{transform:rotate(180deg);}
+.vc-body{display:none;padding:16px;border-top:1px solid var(--border);}
+.vc-body.open{display:block;}
 
 /* DOC ROWS */
 .doc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -147,39 +151,50 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--text);min-heigh
 
 /* CATEGORY CARDS */
 .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.cat-card{border:1px solid var(--border);border-radius:10px;padding:13px 14px;transition:all 0.15s;cursor:pointer;}
+.cat-card{border:1px solid var(--border);border-radius:10px;padding:14px;transition:all 0.15s;cursor:pointer;min-height:70px;display:flex;flex-direction:column;justify-content:flex-start;}
 .cat-card:hover{border-color:rgba(2,76,238,0.25);box-shadow:0 2px 12px rgba(2,76,238,0.08);transform:translateY(-1px);}
 .cat-card.cc-selected{border-color:var(--blue);background:rgba(2,76,238,0.02);}
-.cc-top{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
-.cc-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.cc-name{font-size:12.5px;font-weight:600;color:var(--text);flex:1;}
-.cc-pill{font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px;}
+.cc-top{display:flex;align-items:center;gap:10px;}
+.cc-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cc-name{font-size:13px;font-weight:600;color:var(--text);flex:1;line-height:1.3;}
+.cc-pill{font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px;white-space:nowrap;align-self:center;margin-left:auto;}
+.cc-desc{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5;}
 .ccp-active{background:rgba(5,150,105,0.1);color:var(--green);}
 .ccp-pending{background:rgba(217,119,6,0.1);color:var(--amber);}
 .ccp-inactive{background:var(--bs);color:var(--blue);}
-.cc-subs{display:flex;flex-wrap:wrap;gap:4px;}
-.cc-sub-tag{font-size:10.5px;padding:2px 7px;border-radius:5px;background:var(--light);color:var(--muted);}
-.cc-sub-tag.cst-on{background:rgba(5,150,105,0.08);color:var(--green);}
-.cc-sub-tag.cst-pending{background:rgba(217,119,6,0.08);color:var(--amber);}
+/* ALL CATEGORIES ROWS */
+.allcat-row{display:flex;align-items:center;gap:10px;padding:10px 13px;border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all 0.14s;}
+.allcat-row:hover{border-color:rgba(2,76,238,0.25);background:rgba(2,76,238,0.01);box-shadow:0 1px 6px rgba(2,76,238,0.06);}
+.allcat-emoji{font-size:18px;flex-shrink:0;width:28px;text-align:center;}
+.allcat-info{flex:1;min-width:0;}
+.allcat-name{font-size:12.5px;font-weight:600;color:var(--text);}
+.allcat-type{font-size:11px;color:var(--muted);margin-top:1px;}
+.allcat-status{font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px;flex-shrink:0;}
+.ast-active{background:rgba(5,150,105,0.1);color:var(--green);}
+.ast-pending{background:rgba(217,119,6,0.1);color:var(--amber);}
+.allcat-btn{font-size:11px;font-weight:600;padding:4px 11px;border-radius:7px;border:1px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;transition:all 0.13s;flex-shrink:0;}
+.allcat-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--bs);}
+.allcat-btn-request{border-color:rgba(2,76,238,0.25);color:var(--blue);background:rgba(2,76,238,0.04);}
+.allcat-btn-request:hover{background:rgba(2,76,238,0.10);}
 
 /* BADGE GRID */
-.badge-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
-.badge-card{border:1px solid var(--border);border-radius:10px;padding:13px 14px;transition:all 0.15s;position:relative;}
-.badge-card:hover{border-color:rgba(2,76,238,0.20);box-shadow:0 2px 12px rgba(2,76,238,0.06);}
-.badge-card.bc-locked{opacity:0.6;}
-.badge-card.bc-earned{border-color:rgba(5,150,105,0.25);background:rgba(5,150,105,0.02);}
-.bc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
-.bc-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;}
-.bc-status-pill{font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px;}
-.bsp-earned{background:rgba(5,150,105,0.10);color:var(--green);}
-.bsp-upload{background:rgba(2,76,238,0.08);color:var(--blue);}
-.bsp-required{background:rgba(220,38,38,0.08);color:var(--red);}
+.badge-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.badge-card{border:1px solid var(--border);border-radius:12px;padding:16px;transition:all 0.15s;position:relative;display:flex;flex-direction:column;gap:10px;}
+.badge-card:hover{border-color:rgba(2,76,238,0.20);box-shadow:0 4px 16px rgba(2,76,238,0.07);}
+.badge-card.bc-locked{opacity:0.55;}
+.badge-card.bc-earned{border-color:rgba(5,150,105,0.3);background:rgba(5,150,105,0.025);}
+.bc-top{display:flex;align-items:flex-start;justify-content:space-between;}
+.bc-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.bc-status-pill{font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;letter-spacing:0.02em;}
+.bsp-earned{background:rgba(5,150,105,0.12);color:var(--green);}
+.bsp-upload{background:rgba(2,76,238,0.09);color:var(--blue);}
+.bsp-required{background:rgba(220,38,38,0.09);color:var(--red);}
 .bsp-locked{background:rgba(107,114,128,0.10);color:var(--muted);}
-.bc-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;}
-.bc-desc{font-size:11px;color:var(--muted);line-height:1.4;}
-.bc-upload-link{font-size:11px;font-weight:600;color:var(--blue);cursor:pointer;margin-top:7px;display:inline-flex;align-items:center;gap:3px;}
-.bc-upload-link:hover{text-decoration:underline;}
-.bc-earned-check{position:absolute;top:10px;right:10px;width:18px;height:18px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;}
+.bc-name{font-size:12.5px;font-weight:700;color:var(--text);}
+.bc-desc{font-size:11.5px;color:var(--muted);line-height:1.5;flex:1;}
+.bc-upload-link{font-size:11px;font-weight:600;color:var(--blue);cursor:pointer;display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:7px;background:rgba(2,76,238,0.06);border:1px solid rgba(2,76,238,0.12);transition:all 0.13s;width:fit-content;}
+.bc-upload-link:hover{background:rgba(2,76,238,0.12);}
+.bc-earned-check{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--green);border:2px solid #fff;display:flex;align-items:center;justify-content:center;}
 
 /* BADGE CATEGORY FILTER */
 .badge-cat-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
@@ -472,36 +487,37 @@ input[type=file]{display:none;}
             <div class="vc-ch-sub">Government ID, Proof of Residence</div>
           </div>
           
+          <div class="vc-caret open" id="caret-identity"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
         </div>
         <div class="vc-body open" id="body-identity">
-          <div class="doc-grid">
-            <div class="doc-row dr-ok">
-              <div class="dr-icon" style="background:rgba(5,150,105,0.10);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              </div>
-              <div class="dr-content">
-                <div class="dr-title">Personal Identification <span style="color:var(--red);font-size:10.5px;">*</span></div>
-                <div class="dr-sub">Passport or National ID · Freelancer & Company</div>
-                <div class="dr-status ds-ok"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Verified</div>
-                <div class="dr-actions">
-                  <div class="dr-file-chip"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>passport_2024.pdf</span></div>
-                  <button class="dr-upload-btn dub-outline" onclick="triggerUpload('personal-id')">Replace</button>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+
+            <div class="cat-card cc-selected" style="cursor:default;">
+              <div class="cc-top">
+                <div class="cc-icon" style="background:rgba(5,150,105,0.10);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>
+                <div class="cc-name">Personal Identification <span style="color:var(--red);font-size:10px;">*</span></div>
+                <div class="cc-pill ccp-active">Verified</div>
+              </div>
+              <div class="cc-desc">Passport or National ID · Freelancer &amp; Company</div>
+              <div class="dr-file-chip" style="margin-top:8px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>passport_2024.pdf</span></div>
+            </div>
+
+            <div class="cat-card" style="border-color:rgba(220,38,38,0.35);background:rgba(220,38,38,0.02);cursor:default;">
+              <div class="cc-top">
+                <div class="cc-icon" style="background:rgba(220,38,38,0.10);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </div>
+                <div class="cc-name">Proof of Residence <span style="color:var(--red);font-size:10px;">*</span></div>
+                <div class="cc-pill" style="background:rgba(220,38,38,0.10);color:#DC2626;">Rejected</div>
+              </div>
+              <div class="cc-desc">Utility bill or bank statement (last 3 months)</div>
+              <div class="dr-actions" style="margin-top:8px;">
+                <button class="dr-upload-btn dub-red" onclick="triggerUpload('residence')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>Re-upload</button>
               </div>
             </div>
-            <div class="doc-row dr-error">
-              <div class="dr-icon" style="background:rgba(220,38,38,0.10);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-              </div>
-              <div class="dr-content">
-                <div class="dr-title">Proof of Residence <span style="color:var(--red);font-size:10.5px;">*</span></div>
-                <div class="dr-sub">Utility bill or bank statement (last 3 months)</div>
-                <div class="dr-status ds-err"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg> Rejected — document expired</div>
-                <div class="dr-actions">
-                  <button class="dr-upload-btn dub-red" onclick="triggerUpload('residence')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>Re-upload</button>
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
@@ -517,35 +533,37 @@ input[type=file]{display:none;}
             <div class="vc-ch-sub">Commercial license, Freelance permit, or School registration</div>
           </div>
           
+          <div class="vc-caret open" id="caret-business"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
         </div>
         <div class="vc-body open" id="body-business">
-          <div class="doc-grid">
-            <div class="doc-row">
-              <div class="dr-icon" style="background:rgba(2,76,238,0.08);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              </div>
-              <div class="dr-content">
-                <div class="dr-title">Business Registration <span style="color:var(--red);font-size:10.5px;">*</span></div>
-                <div class="dr-sub">Official commercial license · Company only</div>
-                <div class="dr-status ds-rev"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Under review · up to 48h</div>
-                <div class="dr-actions">
-                  <div class="dr-file-chip"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>business_reg.pdf</span></div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+
+            <div class="cat-card cc-selected" style="cursor:default;">
+              <div class="cc-top">
+                <div class="cc-icon" style="background:rgba(2,76,238,0.08);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 </div>
+                <div class="cc-name">Business Registration <span style="color:var(--red);font-size:10px;">*</span></div>
+                <div class="cc-pill" style="background:rgba(2,76,238,0.10);color:var(--blue);">Under Review</div>
+              </div>
+              <div class="cc-desc">Official commercial license · Company only</div>
+              <div class="dr-file-chip" style="margin-top:8px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>business_reg.pdf</span></div>
+            </div>
+
+            <div class="cat-card" style="cursor:default;">
+              <div class="cc-top">
+                <div class="cc-icon" style="background:rgba(107,114,128,0.08);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+                </div>
+                <div class="cc-name">Freelance License <span style="color:var(--muted);font-size:10px;">(Optional)</span></div>
+                <div class="cc-pill" style="background:var(--bs);color:var(--muted);">Not Uploaded</div>
+              </div>
+              <div class="cc-desc">Valid professional permit · Freelancer only</div>
+              <div class="dr-actions" style="margin-top:8px;">
+                <button class="dr-upload-btn dub-primary" onclick="triggerUpload('freelance')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>Upload</button>
               </div>
             </div>
-            <div class="doc-row">
-              <div class="dr-icon" style="background:rgba(107,114,128,0.08);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
-              </div>
-              <div class="dr-content">
-                <div class="dr-title">Freelance License <span style="color:var(--muted);font-size:10.5px;">(Optional)</span></div>
-                <div class="dr-sub">Valid professional permit · Freelancer only</div>
-                <div class="dr-status" style="color:var(--muted);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Not uploaded</div>
-                <div class="dr-actions">
-                  <button class="dr-upload-btn dub-primary" onclick="triggerUpload('freelance')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>Upload</button>
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
@@ -571,12 +589,13 @@ input[type=file]{display:none;}
             <div class="vc-ch-sub">Active and pending categories</div>
           </div>
           
+          <div class="vc-caret open" id="caret-mycats"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
         </div>
         <div class="vc-body open" id="body-mycats">
           <div class="cat-grid">
 
             <!-- German Language - Approved -->
-            <div class="cat-card cc-selected" onclick="openCatModalFor('german')" style="cursor:pointer;">
+            <div class="cat-card cc-selected" onclick="openCatInfo('german')" style="cursor:pointer;">
               <div class="cc-top">
                 <div class="cc-icon" style="background:rgba(5,150,105,0.10);">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
@@ -584,16 +603,11 @@ input[type=file]{display:none;}
                 <div class="cc-name">German Language</div>
                 <div class="cc-pill ccp-active">Active</div>
               </div>
-              <div class="cc-subs">
-                <span class="cc-sub-tag cst-on">General German A1–C2</span>
-                <span class="cc-sub-tag cst-on">Exam Prep Goethe</span>
-                <span class="cc-sub-tag cst-on">Business German</span>
-                <span class="cc-sub-tag cst-on">Online Courses</span>
-              </div>
+              <div class="cc-desc">Language courses and tutoring services for all levels.</div>
             </div>
 
             <!-- Career Coaching - Pending -->
-            <div class="cat-card cc-selected" onclick="openCatModalFor('coaching')" style="cursor:pointer;">
+            <div class="cat-card cc-selected" onclick="openCatInfo('coaching')" style="cursor:pointer;">
               <div class="cc-top">
                 <div class="cc-icon" style="background:rgba(217,119,6,0.10);">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -601,15 +615,11 @@ input[type=file]{display:none;}
                 <div class="cc-name">Career Coaching</div>
                 <div class="cc-pill ccp-pending">Pending</div>
               </div>
-              <div class="cc-subs">
-                <span class="cc-sub-tag cst-pending">CV & Cover Letter</span>
-                <span class="cc-sub-tag cst-pending">LinkedIn Optimization</span>
-                <span class="cc-sub-tag cst-pending">Job Interview Prep</span>
-              </div>
+              <div class="cc-desc">CV writing, interview prep, and job market guidance.</div>
             </div>
 
             <!-- Translation - Approved -->
-            <div class="cat-card cc-selected" onclick="openCatModalFor('translation')" style="cursor:pointer;">
+            <div class="cat-card cc-selected" onclick="openCatInfo('translation')" style="cursor:pointer;">
               <div class="cc-top">
                 <div class="cc-icon" style="background:rgba(5,150,105,0.10);">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>
@@ -617,11 +627,7 @@ input[type=file]{display:none;}
                 <div class="cc-name">Translation Services</div>
                 <div class="cc-pill ccp-active">Active</div>
               </div>
-              <div class="cc-subs">
-                <span class="cc-sub-tag cst-on">Sworn Translation</span>
-                <span class="cc-sub-tag cst-on">Legal Translation</span>
-                <span class="cc-sub-tag cst-on">Document Translation</span>
-              </div>
+              <div class="cc-desc">Document translation and certified interpretation support.</div>
             </div>
 
             <!-- Add Category -->
@@ -639,7 +645,7 @@ input[type=file]{display:none;}
 
       <!-- All 8 Categories Catalog -->
       <div class="vc-card">
-        <div class="vc-ch" onclick="toggleSection('allcats')">
+        <div class="vc-ch" style="cursor:default;pointer-events:none;">
           <div class="vc-ch-icon" style="background:rgba(107,114,128,0.08);">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
           </div>
@@ -647,59 +653,61 @@ input[type=file]{display:none;}
             <div class="vc-ch-title">All Available Categories</div>
             <div class="vc-ch-sub">8 main categories on Germany Assists</div>
           </div>
-          
         </div>
-        <div class="vc-body" id="body-allcats">
+        <div class="vc-body open" id="body-allcats">
           <div style="display:flex;flex-direction:column;gap:6px;">
-            <!-- each row -->
-            <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:9px;">
-              <div style="width:7px;height:7px;border-radius:50%;background:#059669;flex-shrink:0;"></div>
-              <div style="flex:1;font-size:12.5px;font-weight:500;color:var(--text);">German Language</div>
-              <div style="font-size:11px;color:var(--muted);">Freelancer / School</div>
-              <span style="font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:5px;background:rgba(5,150,105,0.08);color:#059669;">Active</span>
+
+            <div class="allcat-row" onclick="openCatInfo('german')">
+              <div class="allcat-emoji">🇩🇪</div>
+              <div class="allcat-info"><div class="allcat-name">German Language</div><div class="allcat-type">Freelancer / School</div></div>
+              <span class="allcat-status ast-active">Active</span>
+              <button class="allcat-btn" onclick="event.stopPropagation();openCatInfo('german')">View</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:9px;">
-              <div style="width:7px;height:7px;border-radius:50%;background:#D97706;flex-shrink:0;"></div>
-              <div style="flex:1;font-size:12.5px;font-weight:500;color:var(--text);">Career Coaching</div>
-              <div style="font-size:11px;color:var(--muted);">Freelancer / Company</div>
-              <span style="font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:5px;background:rgba(217,119,6,0.08);color:#D97706;">Pending</span>
+
+            <div class="allcat-row" onclick="openCatInfo('coaching')">
+              <div class="allcat-emoji">💼</div>
+              <div class="allcat-info"><div class="allcat-name">Career Coaching</div><div class="allcat-type">Freelancer / Company</div></div>
+              <span class="allcat-status ast-pending">Pending</span>
+              <button class="allcat-btn" onclick="event.stopPropagation();openCatInfo('coaching')">View</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:9px;">
-              <div style="width:7px;height:7px;border-radius:50%;background:#059669;flex-shrink:0;"></div>
-              <div style="flex:1;font-size:12.5px;font-weight:500;color:var(--text);">Translation Services</div>
-              <div style="font-size:11px;color:var(--muted);">Freelancer / Company</div>
-              <span style="font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:5px;background:rgba(5,150,105,0.08);color:#059669;">Active</span>
+
+            <div class="allcat-row" onclick="openCatInfo('translation')">
+              <div class="allcat-emoji">📝</div>
+              <div class="allcat-info"><div class="allcat-name">Translation Services</div><div class="allcat-type">Freelancer / Company</div></div>
+              <span class="allcat-status ast-active">Active</span>
+              <button class="allcat-btn" onclick="event.stopPropagation();openCatInfo('translation')">View</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all 0.15s;">
-              <div style="width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;"></div>
-              <div style="flex:1;font-size:12.5px;font-weight:500;color:var(--text);">Certificate Recognition</div>
-              <div style="font-size:11px;color:var(--muted);">Company only</div>
-              <button onclick="openCatModalFor('recognition')" style="font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:5px;background:var(--bs);color:var(--blue);border:none;cursor:pointer;">Request</button>
+
+            <div class="allcat-row" onclick="openCatInfo('recognition')">
+              <div class="allcat-emoji">🏅</div>
+              <div class="allcat-info"><div class="allcat-name">Certificate Recognition</div><div class="allcat-type">Company only</div></div>
+              <button class="allcat-btn allcat-btn-request" onclick="event.stopPropagation();openCatInfo('recognition')">Request</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all 0.15s;">
-              <div style="width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;"></div>
-              <div style="flex:1;font-size:12.5px;font-weight:500;color:var(--text);">Visa & Immigration</div>
-              <div style="font-size:11px;color:var(--muted);">Freelancer / Company</div>
-              <button onclick="openCatModalFor('visa')" style="font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:5px;background:var(--bs);color:var(--blue);border:none;cursor:pointer;">Request</button>
+
+            <div class="allcat-row" onclick="openCatInfo('visa')">
+              <div class="allcat-emoji">✈️</div>
+              <div class="allcat-info"><div class="allcat-name">Visa &amp; Immigration</div><div class="allcat-type">Freelancer / Company</div></div>
+              <button class="allcat-btn allcat-btn-request" onclick="event.stopPropagation();openCatInfo('visa')">Request</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all 0.15s;">
-              <div style="width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;"></div>
-              <div style="flex:1;font-size:12.5px;font-weight:500;color:var(--text);">Recruitment Services</div>
-              <div style="font-size:11px;color:var(--muted);">Company / Freelancer</div>
-              <button onclick="openCatModalFor('recruitment')" style="font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:5px;background:var(--bs);color:var(--blue);border:none;cursor:pointer;">Request</button>
+
+            <div class="allcat-row" onclick="openCatInfo('recruitment')">
+              <div class="allcat-emoji">🤝</div>
+              <div class="allcat-info"><div class="allcat-name">Recruitment Services</div><div class="allcat-type">Company / Freelancer</div></div>
+              <button class="allcat-btn allcat-btn-request" onclick="event.stopPropagation();openCatInfo('recruitment')">Request</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all 0.15s;">
-              <div style="width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;"></div>
-              <div style="flex:1;font-size:12.5px;font-weight:500;color:var(--text);">Relocation Services</div>
-              <div style="font-size:11px;color:var(--muted);">Freelancer / Company</div>
-              <button onclick="openCatModalFor('relocation')" style="font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:5px;background:var(--bs);color:var(--blue);border:none;cursor:pointer;">Request</button>
+
+            <div class="allcat-row" onclick="openCatInfo('relocation')">
+              <div class="allcat-emoji">🏙️</div>
+              <div class="allcat-info"><div class="allcat-name">Relocation Services</div><div class="allcat-type">Freelancer / Company</div></div>
+              <button class="allcat-btn allcat-btn-request" onclick="event.stopPropagation();openCatInfo('relocation')">Request</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all 0.15s;">
-              <div style="width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;"></div>
-              <div style="flex:1;font-size:12.5px;font-weight:500;color:var(--text);">University Student Services</div>
-              <div style="font-size:11px;color:var(--muted);">Freelancer / Company</div>
-              <button onclick="openCatModalFor('university')" style="font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:5px;background:var(--bs);color:var(--blue);border:none;cursor:pointer;">Request</button>
+
+            <div class="allcat-row" onclick="openCatInfo('university')">
+              <div class="allcat-emoji">🎓</div>
+              <div class="allcat-info"><div class="allcat-name">University Student Services</div><div class="allcat-type">Freelancer / Company</div></div>
+              <button class="allcat-btn allcat-btn-request" onclick="event.stopPropagation();openCatInfo('university')">Request</button>
             </div>
+
           </div>
         </div>
       </div>
@@ -733,6 +741,7 @@ input[type=file]{display:none;}
             <div class="vc-ch-sub">1 earned · 2 available</div>
           </div>
           
+          <div class="vc-caret open" id="caret-b-german"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
         </div>
         <div class="vc-body open" id="body-b-german">
           <div class="badge-grid">
@@ -786,6 +795,7 @@ input[type=file]{display:none;}
             <div class="vc-ch-sub">1 earned · pending category approval</div>
           </div>
           
+          <div class="vc-caret open" id="caret-b-coaching"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
         </div>
         <div class="vc-body open" id="body-b-coaching">
           <div class="vc-callout" style="margin-bottom:12px;">
@@ -839,6 +849,7 @@ input[type=file]{display:none;}
             <div class="vc-ch-sub">0 earned · 3 available</div>
           </div>
           
+          <div class="vc-caret open" id="caret-b-translation"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
         </div>
         <div class="vc-body open" id="body-b-translation">
           <div class="badge-grid">
@@ -888,8 +899,8 @@ input[type=file]{display:none;}
 <style>
 .cat-modal-overlay{position:fixed;inset:0;background:rgba(10,15,30,0.35);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
 .cat-modal-overlay.open{display:flex;}
-.cat-modal{background:#fff;border-radius:14px;width:480px;max-width:calc(100vw - 32px);box-shadow:0 20px 60px rgba(2,76,238,0.14);animation:fadeUp 0.22s ease both;overflow:hidden;}
-.cm-head{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.cat-modal{background:#fff;border-radius:14px;width:520px;max-width:calc(100vw - 32px);max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(2,76,238,0.14);animation:fadeUp 0.22s ease both;}
+.cm-head{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;position:sticky;top:0;background:#fff;z-index:1;}
 .cm-head-icon{width:32px;height:32px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .cm-title{font-size:14px;font-weight:700;color:var(--text);flex:1;}
 .cm-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all 0.13s;}
@@ -900,27 +911,66 @@ input[type=file]{display:none;}
 .cm-label span{color:var(--red);}
 .cm-select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:9px;font-size:13px;font-family:'Outfit',sans-serif;color:var(--text);background:#fff;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:border-color 0.13s;}
 .cm-select:focus{border-color:var(--blue);}
-.cm-doc-list{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
-.cm-doc-item{border:1px solid var(--border);border-radius:9px;padding:10px 12px;display:flex;align-items:flex-start;gap:10px;transition:border-color 0.13s;}
-.cm-doc-item.has-file{border-color:rgba(5,150,105,0.3);background:rgba(5,150,105,0.02);}
-.cdi-info{flex:1;}
-.cdi-name{font-size:12.5px;font-weight:600;color:var(--text);}
-.cdi-desc{font-size:11px;color:var(--muted);margin-top:1px;}
-.cdi-req{font-size:10.5px;font-weight:600;margin-top:3px;}
-.cdi-req.req{color:var(--red);}
-.cdi-req.opt{color:var(--muted);}
-.cdi-upload{font-size:11px;font-weight:600;color:var(--blue);cursor:pointer;display:flex;align-items:center;gap:3px;margin-top:6px;}
-.cdi-upload:hover{text-decoration:underline;}
-.cdi-file-chip{display:flex;align-items:center;gap:5px;background:var(--light);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:10.5px;color:var(--text);margin-top:6px;max-width:160px;overflow:hidden;}
-.cdi-file-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+/* signup-style credential block */
+.cm-cred-block{border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-top:4px;}
+.cm-cred-header{background:var(--bs);padding:11px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.cm-cred-header-icon{font-size:18px;}
+.cm-cred-header-title{font-size:13px;font-weight:700;color:var(--text);flex:1;}
+.cm-cred-body{padding:14px;}
+.cm-cred-list-label{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:9px;}
+.cm-cred-list{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:6px;}
+.cm-cred-list li{display:flex;align-items:flex-start;gap:9px;}
+.cm-cred-list li .cm-dot{width:7px;height:7px;border-radius:50%;background:#93C5FD;flex-shrink:0;margin-top:5px;}
+.cm-cred-list li .cm-cred-name{font-size:12.5px;font-weight:600;color:var(--text);}
+.cm-cred-list li .cm-cred-desc{font-size:11.5px;color:var(--muted);margin-top:1px;line-height:1.45;}
+.cm-cred-list li .cm-req-tag{font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;background:#FEF3C7;color:#92400E;border:1px solid #FCD34D;vertical-align:middle;margin-left:5px;white-space:nowrap;}
+.cm-cred-list li .cm-opt-tag{font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;background:var(--bs);color:var(--blue);border:1px solid rgba(2,76,238,0.2);vertical-align:middle;margin-left:5px;white-space:nowrap;}
+/* dashed upload area */
+.cm-upload-area{border:2px dashed var(--border);border-radius:10px;padding:16px;text-align:center;cursor:pointer;background:var(--bg);transition:border-color 0.2s,background 0.2s;}
+.cm-upload-area:hover{border-color:var(--blue);background:var(--bs);}
+.cm-upload-area.has-files{border-color:var(--green);background:#F0FFF4;}
+.cm-upload-inner{pointer-events:none;}
+.cm-file-list{display:none;text-align:left;}
+.cm-file-list.show{display:block;}
+.cm-file-row{display:flex;align-items:center;gap:8px;padding:7px 9px;border:1px solid var(--border);border-radius:8px;background:#fff;margin-bottom:6px;}
+.cm-file-row:last-child{margin-bottom:0;}
+.cm-file-ext{width:28px;height:28px;border-radius:6px;background:var(--bs);border:1px solid rgba(2,76,238,0.15);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--blue);flex-shrink:0;}
+.cm-file-name{flex:1;font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cm-file-size{font-size:10.5px;color:var(--muted);flex-shrink:0;}
+.cm-file-del{background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;padding:2px 4px;flex-shrink:0;line-height:1;}
+.cm-file-del:hover{color:var(--red);}
 .cm-foot{padding:14px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:8px;}
 .cm-note{flex:1;font-size:11px;color:var(--muted);}
 .cm-btn{font-size:12.5px;font-weight:600;padding:8px 18px;border-radius:8px;cursor:pointer;border:none;transition:all 0.13s;}
-.cm-btn-cancel{background:#fff;color:var(--muted);border:1px solid var(--border)!important;border:none;}
+.cm-btn-cancel{background:#fff;color:var(--muted);border:1px solid var(--border)!important;}
 .cm-btn-cancel:hover{background:var(--bs);color:var(--blue);}
 .cm-btn-submit{background:var(--blue);color:#fff;}
 .cm-btn-submit:hover{background:#013bc0;}
 .cm-btn-submit:disabled{opacity:0.4;cursor:not-allowed;}
+
+/* CAT INFO MODAL */
+.catinfo-overlay{position:fixed;inset:0;background:rgba(10,15,30,0.35);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
+.catinfo-overlay.open{display:flex;}
+.catinfo-modal{background:#fff;border-radius:14px;width:500px;max-width:calc(100vw - 32px);max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(2,76,238,0.14);animation:fadeUp 0.22s ease both;}
+.ci-head{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;position:sticky;top:0;background:#fff;z-index:1;}
+.ci-head-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ci-title{font-size:14px;font-weight:700;color:var(--text);flex:1;}
+.ci-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all 0.13s;}
+.ci-close:hover{border-color:var(--red);color:var(--red);}
+.ci-body{padding:18px 20px;}
+.ci-desc{font-size:12.5px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
+.ci-section{margin-bottom:16px;}
+.ci-sec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:8px;}
+.ci-list{display:flex;flex-direction:column;gap:5px;}
+.ci-list-item{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--text);padding:7px 10px;background:var(--bs);border-radius:7px;}
+.ci-list-item svg{flex-shrink:0;margin-top:1px;}
+.ci-list-item span{flex:1;line-height:1.45;}
+.ci-doc-item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;}
+.ci-doc-item + .ci-doc-item{margin-top:5px;}
+.ci-doc-req{font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;flex-shrink:0;margin-top:1px;}
+.ci-doc-req.req{background:rgba(220,38,38,0.08);color:var(--red);}
+.ci-doc-req.opt{background:var(--bs);color:var(--muted);}
+.ci-foot{padding:14px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:8px;}
 </style>
 
 <div class="cat-modal-overlay" id="catModalOverlay" onclick="closeCatModalOutside(event)">
@@ -946,14 +996,39 @@ input[type=file]{display:none;}
         </select>
       </div>
       <div id="catDocSection" style="display:none;">
-        <div class="cm-label">Required documents</div>
-        <div class="cm-doc-list" id="catDocList"></div>
+        <div class="cm-cred-block" id="catCredBlock"></div>
       </div>
     </div>
     <div class="cm-foot">
       <div class="cm-note" id="catModalNote">Select a category to see required documents.</div>
       <button class="cm-btn cm-btn-cancel" onclick="closeCatModal()">Cancel</button>
       <button class="cm-btn cm-btn-submit" id="catSubmitBtn" disabled onclick="submitCatRequest()">Submit Request</button>
+    </div>
+  </div>
+</div>
+
+<!-- Category Info Modal -->
+<div class="catinfo-overlay" id="catInfoOverlay" onclick="closeCatInfoOutside(event)">
+  <div class="catinfo-modal" id="catInfoModal">
+    <div class="ci-head">
+      <div class="ci-head-icon" id="ciHeadIcon"></div>
+      <div class="ci-title" id="ciTitle">Category Info</div>
+      <div class="ci-close" onclick="closeCatInfo()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+    </div>
+    <div class="ci-body">
+      <div class="ci-desc" id="ciDesc"></div>
+      <div class="ci-section" id="ciSubsSection">
+        <div class="ci-sec-title">Sub-categories included</div>
+        <div class="ci-list" id="ciSubsList"></div>
+      </div>
+      <div class="ci-section">
+        <div class="ci-sec-title">Required documents</div>
+        <div id="ciDocsList"></div>
+      </div>
+    </div>
+    <div class="ci-foot">
+      <button class="cm-btn cm-btn-cancel" onclick="closeCatInfo()">Close</button>
+      <button class="cm-btn cm-btn-submit" id="ciRequestBtn" style="display:none;" onclick="closeCatInfo();openCatModalFor(currentCatInfo)">Request Access</button>
     </div>
   </div>
 </div>
@@ -992,7 +1067,7 @@ function toggleSection(id){
   if(!body)return;
   const isOpen=body.classList.contains('open');
   body.classList.toggle('open',!isOpen);
-  caret.classList.toggle('open',!isOpen);
+  if(caret) caret.classList.toggle('open',!isOpen);
 }
 function switchTab(tab){
   ['profile','categories','badges'].forEach(t=>{
@@ -1111,48 +1186,182 @@ function closeCatModalOutside(e){
 function onCatChange(){
   const cat = document.getElementById('catSelect').value;
   const section = document.getElementById('catDocSection');
-  const list = document.getElementById('catDocList');
   if(!cat){section.style.display='none';document.getElementById('catSubmitBtn').disabled=true;return;}
   const docs = CAT_DOCS[cat]||[];
-  list.innerHTML = docs.map((d,i)=>`
-    <div class="cm-doc-item" id="cdi-${i}">
-      <div class="cdi-info">
-        <div class="cdi-name">${d.name}</div>
-        <div class="cdi-desc">${d.desc}</div>
-        <div class="cdi-req ${d.req?'req':'opt'}">${d.req?'* Required':'Optional'}</div>
-        <div id="cdi-file-${i}"></div>
-        <div class="cdi-upload" onclick="triggerCatUpload(${i},'${cat}')">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/></svg>
-          Upload document
-        </div>
+  const info = CAT_INFO[cat]||{};
+  const areaId = 'cm_upload_'+cat;
+  // Build signup-style block: header + credential list + single upload area
+  const listItems = docs.map(d=>`
+    <li>
+      <span class="cm-dot"></span>
+      <div>
+        <div class="cm-cred-name">${d.name}<span class="${d.req?'cm-req-tag':'cm-opt-tag'}">${d.req?'Required':'Optional'}</span></div>
+        <div class="cm-cred-desc">${d.desc}</div>
       </div>
+    </li>`).join('');
+  document.getElementById('catCredBlock').innerHTML = `
+    <div class="cm-cred-header">
+      <div class="cm-cred-header-icon">${info.emoji||'📁'}</div>
+      <div class="cm-cred-header-title">${info.title||cat}</div>
     </div>
-  `).join('');
+    <div class="cm-cred-body">
+      <div class="cm-cred-list-label">Accepted credentials &amp; files</div>
+      <ul class="cm-cred-list">${listItems}</ul>
+      <div class="cm-upload-area" id="${areaId}" onclick="document.getElementById('cm_fi_${cat}').click()">
+        <input type="file" id="cm_fi_${cat}" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" multiple style="display:none;" onchange="handleCmUpload(this,'${areaId}')">
+        <div class="cm-upload-inner" id="${areaId}_inner">
+          <div style="font-size:22px;margin-bottom:6px;">📎</div>
+          <div style="font-size:12.5px;font-weight:500;color:var(--blue);">Click to upload files</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px;">PDF, JPG, PNG, DOC · multiple files allowed · max 10MB each</div>
+        </div>
+        <div class="cm-file-list" id="${areaId}_files"></div>
+      </div>
+    </div>`;
   section.style.display='block';
-  checkCatReady(cat, docs);
+  document.getElementById('catSubmitBtn').disabled=true;
+  document.getElementById('catModalNote').textContent='Upload your supporting documents below.';
 }
-function triggerCatUpload(idx, cat){
-  const inp = document.createElement('input');
-  inp.type='file';inp.accept='.pdf,.jpg,.jpeg,.png';
-  inp.onchange=function(){
-    if(this.files&&this.files[0]){
-      const fname=this.files[0].name;
-      catUploadedFiles[idx]=fname;
-      const fileDiv=document.getElementById('cdi-file-'+idx);
-      fileDiv.innerHTML=`<div class="cdi-file-chip"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>${fname}</span></div>`;
-      document.getElementById('cdi-'+idx).classList.add('has-file');
-      const cat2=document.getElementById('catSelect').value;
-      checkCatReady(cat2, CAT_DOCS[cat2]||[]);
-    }
-  };
-  inp.click();
+function handleCmUpload(input, areaId){
+  if(!input.files||!input.files.length)return;
+  const listEl = document.getElementById(areaId+'_files');
+  const innerEl = document.getElementById(areaId+'_inner');
+  const areaEl = document.getElementById(areaId);
+  const existing = Array.from(listEl.querySelectorAll('.cm-file-row')).map(el=>el.dataset.name);
+  Array.from(input.files).forEach(f=>{
+    if(existing.includes(f.name)) return;
+    const ext = f.name.split('.').pop().toUpperCase();
+    const kb = Math.round(f.size/1024);
+    const row = document.createElement('div');
+    row.className='cm-file-row'; row.dataset.name=f.name;
+    row.innerHTML=`<div class="cm-file-ext">${ext}</div>
+      <div style="flex:1;min-width:0;"><div class="cm-file-name">${f.name}</div><div class="cm-file-size">${kb} KB</div></div>
+      <div style="color:#34D399;font-size:13px;flex-shrink:0;">✓</div>
+      <button class="cm-file-del" onclick="removeCmFile(this,'${areaId}')" title="Remove">✕</button>`;
+    listEl.appendChild(row);
+    existing.push(f.name);
+  });
+  innerEl.style.display='none';
+  listEl.classList.add('show');
+  areaEl.classList.add('has-files');
+  document.getElementById('catSubmitBtn').disabled=false;
+  const count = listEl.querySelectorAll('.cm-file-row').length;
+  document.getElementById('catModalNote').textContent=`${count} file${count>1?'s':''} ready to submit`;
 }
-function checkCatReady(cat, docs){
-  const requiredUploaded = docs.filter(d=>d.req).every((_,i)=>catUploadedFiles[i]);
-  document.getElementById('catSubmitBtn').disabled=!requiredUploaded;
-  const req = docs.filter(d=>d.req).length;
-  const uploaded = Object.keys(catUploadedFiles).length;
-  document.getElementById('catModalNote').textContent=`${uploaded} of ${docs.length} documents uploaded`;
+function removeCmFile(btn, areaId){
+  btn.closest('.cm-file-row').remove();
+  const listEl = document.getElementById(areaId+'_files');
+  const innerEl = document.getElementById(areaId+'_inner');
+  const areaEl = document.getElementById(areaId);
+  const remaining = listEl.querySelectorAll('.cm-file-row').length;
+  if(!remaining){
+    innerEl.style.display='block';
+    listEl.classList.remove('show');
+    areaEl.classList.remove('has-files');
+    document.getElementById('catSubmitBtn').disabled=true;
+    document.getElementById('catModalNote').textContent='Upload your supporting documents below.';
+  } else {
+    document.getElementById('catModalNote').textContent=`${remaining} file${remaining>1?'s':''} ready to submit`;
+  }
+}
+
+/* CAT INFO DATA */
+const CAT_INFO = {
+  german:{emoji:'🇩🇪',
+    title:'German Language',
+    color:'#059669',bg:'rgba(5,150,105,0.10)',
+    icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>',
+    desc:'Provide German language courses and training to individuals, professionals, and companies. Covers all CEFR levels from A1 to C2.',
+    subs:['General German A1–C2','Exam Prep (Goethe, TELC, ÖSD)','Business German','Online Courses','German for Kids','Conversation Classes'],
+  },
+  coaching:{emoji:"💼",
+    title:'Career Coaching',
+    color:'#D97706',bg:'rgba(217,119,6,0.10)',
+    icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+    desc:'Support job seekers and professionals navigating the German job market. Includes CV writing, interview coaching, and LinkedIn optimization.',
+    subs:['CV & Cover Letter Writing','LinkedIn Optimization','Job Interview Preparation','Salary Negotiation','German Work Culture Guidance','Career Change Consulting'],
+  },
+  translation:{emoji:"📝",
+    title:'Translation Services',
+    color:'#059669',bg:'rgba(5,150,105,0.10)',
+    icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>',
+    desc:'Provide certified and non-certified translation services between German and other languages. Sworn translations may be required for official documents.',
+    subs:['Sworn Translation (Beglaubigte Übersetzung)','Legal Document Translation','Medical Translation','Business & Contract Translation','Personal Document Translation','Interpreting Services'],
+  },
+  recognition:{emoji:"🏅",
+    title:'Certificate Recognition',
+    color:'var(--blue)',bg:'rgba(2,76,238,0.10)',
+    icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>',
+    desc:'Assist individuals in getting their foreign qualifications and degrees recognized by German authorities (Anabin, KMK, ZAB).',
+    subs:['Academic Degree Recognition','Vocational Qualification Recognition','Professional License Assessment','Deficiency Notice Consulting','Application Preparation'],
+  },
+  visa:{emoji:"✈️",
+    title:'Visa & Immigration',
+    color:'var(--blue)',bg:'rgba(2,76,238,0.10)',
+    icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>',
+    desc:'Support clients through German visa applications, residence permit extensions, citizenship pathways, and family reunification processes.',
+    subs:['Job Seeker Visa','Work & Employment Visa','Family Reunification','Residence Permit Extension','Citizenship Application','Student Visa Consulting'],
+  },
+  recruitment:{emoji:"🤝",
+    title:'Recruitment Services',
+    color:'var(--blue)',bg:'rgba(2,76,238,0.10)',
+    icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
+    desc:'Connect companies with skilled talent for roles in Germany. Covers headhunting, pre-screening, and onboarding support for international candidates.',
+    subs:['Talent Sourcing & Headhunting','Candidate Pre-screening','Employer of Record (EOR)','International Hiring Support','Onboarding Consulting'],
+  },
+  relocation:{emoji:"🏙️",
+    title:'Relocation Services',
+    color:'var(--blue)',bg:'rgba(2,76,238,0.10)',
+    icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>',
+    desc:'Help individuals and families settle into Germany — finding housing, registering at the Einwohnermeldeamt, opening bank accounts, and more.',
+    subs:['Housing Search & Rental Assistance','Anmeldung (Registration) Support','Bank Account Opening','Health Insurance Guidance','City Orientation Tours','School Enrollment for Children'],
+  },
+  university:{emoji:"🎓",
+    title:'University Student Services',
+    color:'var(--blue)',bg:'rgba(2,76,238,0.10)',
+    icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>',
+    desc:'Guide international students through the German university application process, enrollment, and student life setup.',
+    subs:['University Application Support','Blocked Account (Sperrkonto) Help','Student Visa Consulting','Dormitory & Housing Search','APS Certificate Guidance','DAAD Scholarship Applications'],
+  },
+};
+
+const ACTIVE_CATS = ['german','translation']; // already active
+const PENDING_CATS = ['coaching']; // pending
+let currentCatInfo = null;
+
+function openCatInfo(cat){
+  const data = CAT_INFO[cat];
+  if(!data) return;
+  currentCatInfo = cat;
+  document.getElementById('ciHeadIcon').innerHTML = data.icon;
+  document.getElementById('ciHeadIcon').style.background = data.bg;
+  document.getElementById('ciTitle').textContent = data.title;
+  document.getElementById('ciDesc').textContent = data.desc;
+  const subsList = document.getElementById('ciSubsList');
+  subsList.innerHTML = data.subs.map(s=>`
+    <div class="ci-list-item">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="${data.color}" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      <span>${s}</span>
+    </div>`).join('');
+  const docsList = document.getElementById('ciDocsList');
+  const docs = CAT_DOCS[cat]||[];
+  docsList.innerHTML = docs.map(d=>`
+    <div class="ci-doc-item">
+      <span class="ci-doc-req ${d.req?'req':'opt'}">${d.req?'Required':'Optional'}</span>
+      <div>
+        <div style="font-size:12.5px;font-weight:600;color:var(--text);">${d.name}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px;">${d.desc}</div>
+      </div>
+    </div>`).join('');
+  const isJoined = ACTIVE_CATS.includes(cat) || PENDING_CATS.includes(cat);
+  const reqBtn = document.getElementById('ciRequestBtn');
+  reqBtn.style.display = isJoined ? 'none' : 'inline-flex';
+  document.getElementById('catInfoOverlay').classList.add('open');
+}
+function closeCatInfo(){
+  document.getElementById('catInfoOverlay').classList.remove('open');
+}
+function closeCatInfoOutside(e){
+  if(e.target===document.getElementById('catInfoOverlay')) closeCatInfo();
 }
 function submitCatRequest(){
   closeCatModal();

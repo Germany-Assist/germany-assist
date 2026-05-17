@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Add Listing — Germany Assists Provider Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --blue:#024CEE;--sky:#49B7DF;
+  --bs:rgba(2,76,238,0.07);--bm:rgba(2,76,238,0.13);
+  --text:#0a0f1e;--muted:#6b7280;--light:#f7f9ff;--border:rgba(2,76,238,0.10);--w:#fff;
+}
+body{font-family:'Outfit',sans-serif;background:#f7f9ff;color:var(--text);min-height:100vh;}
+.shell{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:220px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;flex-shrink:0;}
+.logo-area{padding:16px 14px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.ga-mark{width:32px;height:32px;border-radius:8px;overflow:hidden;background:#fff;border:1px solid var(--border);flex-shrink:0;}
+.ga-flag{display:flex;flex-direction:column;width:100%;height:100%;}
+.ga-flag-b{flex:1;background:#000;}.ga-flag-r{flex:1;background:#d60d2e;}.ga-flag-g{flex:1;background:#f6ce17;}
+.ga-logo-text{display:flex;flex-direction:column;}
+.ga-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.1;}
+.ga-sub{font-size:10px;color:var(--muted);}
+.nav{flex:1;padding:10px 8px;overflow-y:auto;}
+.nav-label{font-size:9.5px;font-weight:600;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;padding:8px 8px 3px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;font-size:13px;color:var(--muted);cursor:pointer;transition:all 0.13s;margin-bottom:1px;}
+.nav-item:hover{background:var(--bs);color:var(--blue);}
+.nav-item.active{background:var(--bs);color:var(--blue);font-weight:500;}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;}
+.nb{margin-left:auto;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;color:#fff;}
+.nb-red{background:#E53E3E;}.nb-blue{background:var(--blue);}.nb-sky{background:var(--sky);}
+.sidebar-footer{padding:10px 8px 14px;border-top:1px solid var(--border);}
+.sp-profile{display:flex;align-items:center;gap:9px;padding:9px;border-radius:9px;cursor:pointer;transition:background 0.13s;}
+.sp-profile:hover{background:var(--bs);}
+.s-av{width:32px;height:32px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0;}
+.sp-nm{font-size:12.5px;font-weight:600;color:var(--text);}.sp-rl{font-size:10.5px;color:var(--muted);}
+.pf-arrow{margin-left:auto;color:var(--muted);}
+
+/* MAIN */
+.main{flex:1;overflow:auto;min-width:0;display:flex;flex-direction:column;}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:10px;height:52px;position:sticky;top:0;z-index:20;flex-shrink:0;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);flex:1;}
+.breadcrumb a{color:var(--blue);text-decoration:none;font-weight:500;}
+.ti-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;flex-shrink:0;}
+.n-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;border:1.5px solid #fff;}
+.ham{display:none;width:32px;height:32px;border:1px solid var(--border);border-radius:8px;background:#fff;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+
+/* CONTENT */
+.content{padding:24px;flex:1;}
+.page-header{margin-bottom:22px;}
+.page-header h1{font-size:20px;font-weight:700;margin-bottom:3px;}
+.page-header p{font-size:13px;color:var(--muted);}
+
+/* TYPE SWITCHER */
+.type-switcher{display:flex;gap:10px;margin-bottom:24px;}
+.type-btn{flex:1;padding:14px 12px;border:2px solid var(--border);border-radius:12px;cursor:pointer;text-align:center;transition:all 0.15s;background:#fff;}
+.type-btn:hover{border-color:rgba(2,76,238,0.3);background:var(--bs);}
+.type-btn.active{border-color:var(--blue);background:var(--bs);}
+.tb-icon{width:36px;height:36px;border-radius:9px;background:var(--light);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;transition:background 0.13s;}
+.type-btn.active .tb-icon{background:var(--blue);}
+.tb-icon svg{width:16px;height:16px;stroke:var(--blue);transition:stroke 0.13s;}
+.type-btn.active .tb-icon svg{stroke:#fff;}
+.tb-label{font-size:13px;font-weight:600;color:var(--text);}
+.tb-sub{font-size:10.5px;color:var(--muted);margin-top:2px;}
+
+/* LAYOUT */
+.form-layout{display:grid;grid-template-columns:1fr 300px;gap:18px;align-items:start;}
+
+/* CARD */
+.card{background:#fff;border:1px solid var(--border);border-radius:13px;padding:20px 22px;margin-bottom:14px;}
+.card-title{font-size:13px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:var(--text);}
+.card-title svg{width:15px;height:15px;color:var(--blue);}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-size:11.5px;font-weight:600;color:var(--text);}
+.form-label .req{color:#E53E3E;margin-left:2px;}
+.form-label .opt{color:var(--muted);font-weight:400;font-size:10.5px;margin-left:4px;}
+.form-hint{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.5;}
+.form-input,.form-select,.form-textarea{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'Outfit',sans-serif;color:var(--text);outline:none;background:#fff;transition:border-color 0.13s,box-shadow 0.13s;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(2,76,238,0.08);}
+.form-input.error,.form-select.error,.form-textarea.error{border-color:#DC2626;box-shadow:0 0 0 3px rgba(220,38,38,0.07);}
+.form-input::placeholder,.form-textarea::placeholder{color:#b0b7c3;}
+.form-textarea{resize:vertical;line-height:1.6;}
+.form-select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px;}
+.char-row{display:flex;justify-content:space-between;margin-top:3px;align-items:center;min-height:16px;}
+.char-count{font-size:10px;color:var(--muted);flex-shrink:0;}
+.field-error{font-size:11px;color:#DC2626;display:none;}
+.field-error.show{display:block;}
+
+/* PRICE */
+.price-wrap{position:relative;}
+.price-prefix{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;font-weight:600;color:var(--muted);pointer-events:none;}
+.price-wrap .form-input{padding-left:26px;}
+
+/* THUMBNAIL */
+.thumb-upload{border:2px dashed var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color 0.15s;position:relative;background:#fff;}
+.thumb-upload:hover{border-color:var(--blue);}
+.thumb-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;}
+.thumb-placeholder{aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+.thumb-preview-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:none;}
+.thumb-icon{width:44px;height:44px;border-radius:12px;background:var(--bs);display:flex;align-items:center;justify-content:center;}
+.thumb-upload-title{font-size:13px;font-weight:500;}
+.thumb-upload-sub{font-size:11px;color:var(--muted);}
+.thumb-ratio-badge{font-size:9.5px;font-weight:600;color:var(--blue);background:var(--bs);padding:2px 7px;border-radius:4px;margin-top:2px;}
+.thumb-change{position:absolute;bottom:10px;right:10px;z-index:3;background:rgba(0,0,0,0.55);color:#fff;font-size:11px;padding:4px 10px;border-radius:7px;display:none;}
+.thumb-upload:hover .thumb-change{display:block;}
+
+/* TAGS POOL */
+.tags-pool{display:flex;flex-wrap:wrap;gap:6px;position:relative;}
+.tag-limit-msg{font-size:11.5px;color:#DC2626;font-weight:500;width:100%;margin-top:6px;display:none;}
+.tag-limit-msg.show{display:block;}
+.tag-option{font-size:11.5px;font-weight:500;padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);cursor:pointer;color:var(--muted);transition:all 0.13s;user-select:none;}
+.tag-option:hover{border-color:var(--blue);color:var(--blue);}
+.tag-option.sel{background:var(--blue);color:#fff;border-color:var(--blue);}
+
+/* DELIVERY MODE */
+.mode-chips{display:flex;gap:8px;}
+.mode-chip{flex:1;padding:10px 8px;border:2px solid var(--border);border-radius:10px;cursor:pointer;text-align:center;transition:all 0.13s;background:#fff;}
+.mode-chip:hover{border-color:rgba(2,76,238,0.3);}
+.mode-chip.sel{border-color:var(--blue);background:var(--bs);}
+.mode-chip svg{width:17px;height:17px;stroke:var(--muted);margin-bottom:5px;transition:stroke 0.13s;display:block;margin-left:auto;margin-right:auto;}
+.mode-chip.sel svg{stroke:var(--blue);}
+.mode-chip-label{font-size:11.5px;font-weight:500;color:var(--muted);}
+.mode-chip.sel .mode-chip-label{color:var(--blue);}
+
+/* SUB TABS */
+.sub-tabs{display:flex;background:var(--light);border:1px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:14px;}
+.sub-tab{flex:1;font-size:12px;font-weight:500;padding:8px 10px;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--muted);background:transparent;border:none;transition:all 0.13s;text-align:center;}
+.sub-tab.active{background:var(--blue);color:#fff;}
+
+/* DATE RANGE */
+.date-range-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* SCHEDULE TAG */
+.schedule-tag{display:inline-flex;align-items:center;gap:5px;background:var(--bs);color:var(--blue);font-size:11.5px;font-weight:500;padding:4px 9px;border-radius:6px;}
+.schedule-tag button{background:none;border:none;cursor:pointer;color:var(--blue);line-height:1;font-size:14px;padding:0;}
+
+/* DOC UPLOAD */
+.doc-upload{border:2px dashed var(--border);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:border-color 0.15s;position:relative;background:#fff;}
+.doc-upload:hover{border-color:var(--blue);}
+.doc-upload input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.doc-upload-icon{width:36px;height:36px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;}
+.doc-name{font-size:12px;color:var(--blue);font-weight:500;margin-top:8px;word-break:break-all;}
+
+/* PREVIEW */
+.preview-panel{position:sticky;top:70px;}
+.pv-label{font-size:10px;font-weight:700;letter-spacing:0.09em;color:var(--muted);text-transform:uppercase;margin-bottom:10px;}
+.preview-card{background:#fff;border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:14px;}
+.preview-thumb-wrap{background:linear-gradient(135deg,var(--blue) 0%,var(--sky) 100%);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.preview-thumb-wrap img{width:100%;height:100%;object-fit:cover;display:none;position:absolute;inset:0;}
+.preview-thumb-ph{text-align:center;color:rgba(255,255,255,0.6);}
+.preview-thumb-ph svg{opacity:0.5;margin-bottom:5px;display:block;margin-left:auto;margin-right:auto;}
+.preview-thumb-ph span{font-size:11px;display:block;}
+.preview-card-body{padding:14px;}
+.pv-type-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--bs);color:var(--blue);display:inline-block;margin-bottom:8px;}
+.pv-title{font-size:14px;font-weight:700;margin-bottom:4px;color:var(--text);}
+.pv-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px;}
+.pv-meta-row{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);margin-bottom:5px;}
+.pv-meta-row svg{width:12px;height:12px;flex-shrink:0;}
+.pv-price{font-size:18px;font-weight:700;color:var(--blue);margin-top:10px;}
+.pv-price span{font-size:11.5px;font-weight:400;color:var(--muted);}
+.tips-card{background:rgba(2,76,238,0.03);border:1px solid rgba(2,76,238,0.12);border-radius:13px;padding:14px 16px;}
+.tips-title{font-size:11.5px;font-weight:600;color:var(--blue);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.tip-item{display:flex;gap:8px;align-items:flex-start;margin-bottom:7px;font-size:11.5px;color:var(--muted);line-height:1.5;}
+.tip-item:last-child{margin-bottom:0;}
+.tip-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:6px;}
+
+/* BOTTOM BAR */
+.bottom-bar{background:rgba(255,255,255,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;bottom:0;z-index:10;height:64px;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}
+.bottom-hint{display:flex;flex-direction:column;gap:3px;}
+.bottom-step-label{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:0.3px;}
+.bottom-step-dots{display:flex;gap:5px;align-items:center;}
+.bottom-dot{width:7px;height:7px;border-radius:50%;background:var(--border);transition:all 0.2s;}
+.bottom-dot.active{background:var(--blue);width:20px;border-radius:4px;}
+.bottom-dot.done{background:#059669;}
+.bottom-actions{display:flex;gap:8px;align-items:center;}
+.btn{padding:9px 20px;border-radius:9px;font-size:13px;font-weight:500;font-family:'Outfit',sans-serif;cursor:pointer;border:1px solid var(--border);transition:all 0.13s;white-space:nowrap;}
+.btn-ghost{background:#fff;color:var(--muted);}.btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
+.btn-outline{background:#fff;color:var(--blue);border-color:rgba(2,76,238,0.3);}.btn-outline:hover{background:var(--bs);}
+.btn-primary{background:var(--blue);color:#fff;border-color:var(--blue);}.btn-primary:hover{background:#013cc0;}
+
+/* SUCCESS */
+.success-overlay{display:none;position:fixed;inset:0;background:rgba(10,15,30,0.5);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.success-overlay.show{display:flex;}
+.success-modal{background:#fff;border-radius:16px;padding:36px 40px;text-align:center;max-width:380px;width:90%;animation:popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both;}
+@keyframes popIn{from{transform:scale(0.85);opacity:0}to{transform:scale(1);opacity:1}}
+.success-icon{width:60px;height:60px;border-radius:50%;background:rgba(5,150,105,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.success-title{font-size:18px;font-weight:700;margin-bottom:8px;}
+.success-sub{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px;}
+.success-actions{display:flex;gap:8px;justify-content:center;}
+
+/* MOBILE */
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:99;}
+.mob-overlay.show{display:block;}
+@media(max-width:1100px){.form-layout{grid-template-columns:1fr;}.preview-panel{display:none;}}
+@media(max-width:768px){
+  .sidebar{position:fixed;left:-220px;z-index:100;transition:left 0.25s;}.sidebar.open{left:0;}
+  .ham{display:flex!important;}.content{padding:14px 16px;}.topbar{padding:0 16px;}
+  .form-grid{grid-template-columns:1fr;}.type-switcher{flex-wrap:wrap;}
+  .type-btn{min-width:calc(50% - 5px);}.tb-sub{display:none;}
+  .bottom-bar{padding:0 16px;height:60px;}.mode-chips{flex-wrap:wrap;}
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{animation:fadeUp 0.25s ease both;}
+
+/* PROGRESS STEPS */
+.steps-bar{display:flex;align-items:center;margin-bottom:24px;background:#fff;border:1px solid var(--border);border-radius:13px;padding:16px 20px;gap:0;}
+.step-item{display:flex;align-items:center;flex:1;min-width:0;}
+.step-item:last-child{flex:none;}
+.step-circle{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;transition:all 0.2s;border:2px solid var(--border);background:#fff;color:var(--muted);}
+.step-item.done .step-circle{background:var(--blue);border-color:var(--blue);color:#fff;}
+.step-item.active .step-circle{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 4px rgba(2,76,238,0.15);}
+.step-info{margin-left:9px;min-width:0;}
+.step-label{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap;}
+.step-item.active .step-label{color:var(--blue);}
+.step-item.done .step-label{color:var(--text);}
+.step-sub{font-size:10px;color:var(--muted);white-space:nowrap;}
+.step-line{flex:1;height:2px;background:var(--border);margin:0 10px;border-radius:2px;transition:background 0.3s;min-width:20px;}
+.step-line.done{background:var(--blue);}
+.step-panel{display:none;}
+.step-panel.active{display:block;}
+
+/* SERVICE OPTIONS CARD */
+.svc-opt-list{display:flex;flex-direction:column;gap:10px;}
+.svc-opt-item{display:flex;align-items:flex-start;gap:12px;padding:13px 14px;border:1.5px solid var(--border);border-radius:11px;cursor:pointer;transition:all 0.15s;background:#fff;user-select:none;}
+.svc-opt-item:hover{border-color:rgba(2,76,238,0.3);background:var(--bs);}
+.svc-opt-item.on{border-color:var(--blue);background:var(--bs);}
+.svc-opt-icon{width:34px;height:34px;border-radius:9px;background:var(--light);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s;}
+.svc-opt-item.on .svc-opt-icon{background:var(--blue);}
+.svc-opt-icon svg{width:15px;height:15px;stroke:var(--blue);transition:stroke 0.15s;}
+.svc-opt-item.on .svc-opt-icon svg{stroke:#fff;}
+.svc-opt-body{flex:1;min-width:0;}
+.svc-opt-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.svc-opt-desc{font-size:11.5px;color:var(--muted);line-height:1.5;}
+.svc-opt-toggle{width:36px;height:20px;border-radius:10px;background:var(--border);flex-shrink:0;position:relative;transition:background 0.2s;margin-top:2px;}
+.svc-opt-item.on .svc-opt-toggle{background:var(--blue);}
+.svc-opt-toggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.15);}
+.svc-opt-item.on .svc-opt-toggle::after{transform:translateX(16px);}
+
+/* FILE UPLOAD AREA */
+.file-upload-zone{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.15s;position:relative;background:#fff;}
+.file-upload-zone:hover,.file-upload-zone.drag{border-color:var(--blue);background:var(--bs);}
+.file-upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.fuz-icon{width:44px;height:44px;border-radius:12px;background:var(--bs);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;}
+.fuz-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.fuz-sub{font-size:11.5px;color:var(--muted);}
+.fuz-types{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap;}
+.fuz-type{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:var(--bs);color:var(--blue);}
+.uploaded-files{display:flex;flex-direction:column;gap:7px;margin-top:10px;}
+.uploaded-file{display:flex;align-items:center;gap:9px;padding:8px 12px;background:var(--light);border:1px solid var(--border);border-radius:8px;}
+.uf-icon{width:28px;height:28px;border-radius:6px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.uf-name{font-size:12px;font-weight:500;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.uf-size{font-size:10.5px;color:var(--muted);flex-shrink:0;}
+.uf-remove{width:20px;height:20px;border-radius:50%;background:rgba(220,38,38,0.1);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#DC2626;font-size:13px;line-height:1;flex-shrink:0;}
+
+/* REVIEW SUMMARY */
+.review-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.review-row:last-child{border-bottom:none;}
+.review-label{font-size:11.5px;color:var(--muted);width:120px;flex-shrink:0;padding-top:1px;}
+.review-val{font-size:13px;font-weight:500;color:var(--text);flex:1;}
+
+@media(max-width:768px){
+  .steps-bar{padding:12px 14px;gap:0;}
+  .step-info{display:none;}
+  .step-line{min-width:12px;}
+}
+/* ── HELP PANEL ── */
+.help-overlay{position:fixed;inset:0;background:rgba(10,15,30,0.3);z-index:400;opacity:0;pointer-events:none;transition:opacity 0.25s;backdrop-filter:blur(2px);}
+.help-overlay.open{opacity:1;pointer-events:all;}
+.help-panel{position:fixed;top:0;right:0;height:100vh;width:380px;background:#fff;z-index:401;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);box-shadow:-12px 0 40px rgba(2,76,238,0.10);border-left:1px solid var(--border);}
+.help-panel.open{transform:translateX(0);}
+.hp-head{padding:18px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.hp-icon{width:34px;height:34px;border-radius:9px;background:var(--bs);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--blue);}
+.hp-title{font-size:14px;font-weight:700;color:var(--text);flex:1;}
+.hp-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all 0.13s;}
+.hp-close:hover{border-color:var(--blue);color:var(--blue);}
+.hp-body{flex:1;overflow-y:auto;padding:20px 18px;}
+.hp-intro{font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:22px;}
+.hp-section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted);margin-bottom:12px;}
+.hp-flow{display:flex;flex-direction:column;gap:0;margin-bottom:24px;}
+.hp-step{display:flex;gap:14px;padding-bottom:18px;position:relative;}
+.hp-step:last-child{padding-bottom:0;}
+.hp-step:not(:last-child)::before{content:'';position:absolute;left:17px;top:36px;bottom:0;width:2px;background:var(--border);}
+.hp-step-num{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700;color:#fff;background:var(--blue);z-index:1;}
+.hp-step-body{flex:1;padding-top:5px;}
+.hp-step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.hp-step-desc{font-size:12px;color:var(--muted);line-height:1.55;}
+.hp-step-tag{display:inline-flex;align-items:center;gap:3px;margin-top:5px;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:5px;}
+.hp-glossary{display:flex;flex-direction:column;gap:7px;margin-bottom:24px;}
+.hp-gl-row{display:flex;align-items:flex-start;gap:10px;padding:9px 11px;border-radius:9px;border:1px solid var(--border);}
+.hp-gl-badge{flex-shrink:0;margin-top:1px;}
+.hp-gl-text{font-size:12px;color:var(--muted);line-height:1.5;}
+.hp-gl-text strong{color:var(--text);font-weight:600;}
+.hp-tips{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+.hp-tip{display:flex;gap:10px;padding:10px 12px;border-radius:9px;background:var(--light);border:1px solid var(--border);}
+.hp-tip-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+.hp-tip-text{font-size:12px;color:var(--muted);line-height:1.5;}
+.hp-tip-text strong{color:var(--text);}
+.hp-footer{padding:14px 18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.hp-dismiss{font-size:12px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:5px;transition:color 0.13s;}
+.hp-dismiss:hover{color:#DC2626;}
+.hp-docs-link{font-size:12px;font-weight:600;color:var(--blue);cursor:pointer;display:flex;align-items:center;gap:4px;text-decoration:none;}
+.hp-docs-link:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="success-overlay" id="successOverlay">
+  <div class="success-modal">
+    <div class="success-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <div class="success-title" id="successTitle">Published! 🎉</div>
+    <div class="success-sub" id="successSub">Your listing is now live on Germany Assists.</div>
+    <div class="success-actions">
+      <button class="btn btn-ghost" onclick="closeSuccess()">Add Another</button>
+      <button class="btn btn-primary" onclick="closeSuccess()">View My Services →</button>
+    </div>
+  </div>
+</div>
+
+<div class="mob-overlay" id="overlay" onclick="closeSidebar()"></div>
+<div class="help-overlay" id="helpOverlay" onclick="toggleHelp()"></div>
+<div class="help-panel" id="helpPanel">
+  <div class="hp-head">
+    <div class="hp-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+    <div class="hp-title">Add Service Guide</div>
+    <div class="hp-close" onclick="toggleHelp()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+  </div>
+  <div class="hp-body">
+    <p class="hp-intro">Create a new service listing in a few steps. A well-crafted listing ranks higher and converts more visitors into paying clients.</p>
+    <div class="hp-section">How to create a listing</div>
+    <div class="hp-flow">
+      <div class="hp-step">
+        <div class="hp-step-num">1</div>
+        <div class="hp-step-body">
+          <div class="hp-step-title">Choose a Category</div>
+          <div class="hp-step-desc">Select the most relevant category and subcategory. This determines where your service appears in search results.</div>
+        </div>
+      </div>
+      <div class="hp-step">
+        <div class="hp-step-num">2</div>
+        <div class="hp-step-body">
+          <div class="hp-step-title">Write Title & Description</div>
+          <div class="hp-step-desc">Use a clear, specific title. In the description, explain exactly what the client gets, the process, and any requirements from their side.</div>
+        </div>
+      </div>
+      <div class="hp-step">
+        <div class="hp-step-num">3</div>
+        <div class="hp-step-body">
+          <div class="hp-step-title">Set Pricing & Delivery Time</div>
+          <div class="hp-step-desc">Price your service fairly based on complexity and your market. Set a realistic delivery time — missing deadlines hurts your ranking.</div>
+        </div>
+      </div>
+      <div class="hp-step">
+        <div class="hp-step-num" style="background:#059669;">4</div>
+        <div class="hp-step-body">
+          <div class="hp-step-title">Publish</div>
+          <div class="hp-step-desc">Your listing goes live immediately after publishing (subject to a brief review for new providers). Clients can order right away.</div>
+          <span class="hp-step-tag" style="background:rgba(5,150,105,0.10);color:#059669;">✅ Live</span>
+        </div>
+      </div>
+    </div>
+    <div class="hp-section">Pro tips</div>
+    <div class="hp-tips">
+      <div class="hp-tip"><div class="hp-tip-icon">🖼️</div><div class="hp-tip-text"><strong>Add a cover image.</strong> Listings with images get far more clicks. Use something relevant and high quality.</div></div>
+      <div class="hp-tip"><div class="hp-tip-icon">💡</div><div class="hp-tip-text"><strong>Offer packages.</strong> Basic / Standard / Premium tiers increase average order value and appeal to a wider range of clients.</div></div>
+    </div>
+  </div>
+  <div class="hp-footer" style="justify-content:flex-end;">
+    <a class="hp-docs-link" href="guide.html">Full Documentation <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+  </div>
+</div>
+<div class="shell">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo-area">
+    <div class="ga-mark"><div class="ga-flag"><div class="ga-flag-b"></div><div class="ga-flag-r"></div><div class="ga-flag-g"></div></div></div>
+    <div class="ga-logo-text"><div class="ga-name">Germany Assists</div><div class="ga-sub">Provider Portal</div></div>
+  </div>
+  <nav class="nav">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item" onclick="window.location.href='Dashborad.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Dashboard</div>
+    <div class="nav-item" onclick="window.location.href='Message.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messages<span class="nb nb-red">5</span></div>
+    <div class="nav-item" onclick="window.location.href='notifications.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Notifications<span class="nb nb-red">3</span></div>
+    <div class="nav-label" style="margin-top:6px;">Work</div>
+    <div class="nav-item" onclick="window.location.href='orders.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>Orders<span class="nb nb-blue">14</span></div>
+    <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>My Services</div>
+    <div class="nav-item" onclick="window.location.href='events.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>My Events</div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Clients</div>
+    <div class="nav-label" style="margin-top:6px;">Finance</div>
+    <div class="nav-item" onclick="window.location.href='Finance.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>Finance</div>
+    <div class="nav-label" style="margin-top:6px;">Account</div>
+    <div class="nav-item" onclick="window.location.href='profile.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</div>
+    <div class="nav-item" onclick="window.location.href='verification_centre.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Verification Centre<span class="nb nb-sky">!</span></div>
+    <div class="nav-item" onclick="window.location.href='settings.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings</div>
+    <div class="nav-label" style="margin-top:6px;">Help</div>
+    <div class="nav-item" onclick="window.location.href='guide.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      <span class="nav-text">Guide</span>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sp-profile" onclick="window.location.href='profile.html'">
+      <div class="s-av">GA</div>
+      <div><div class="sp-nm">Germany Assists</div><div class="sp-rl">Service Provider</div></div>
+      <div class="pf-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="ham" onclick="toggleSidebar()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
+    <div class="breadcrumb"><a href="#">My Services</a><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span>Add New Listing</span></div>
+    <div class="ti-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><div class="n-dot" style="background:#E53E3E;"></div></div>
+    <div class="ti-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><div class="n-dot" style="background:var(--blue);"></div></div>
+    <div class="ti-btn" id="helpBtn" title="Help & Guide" onclick="toggleHelp()" style="color:var(--blue);border-color:rgba(2,76,238,0.2);background:var(--bs);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg></div>
+    <div class="ti-btn" style="border-radius:50%;background:var(--blue);border:none;"><span style="color:#fff;font-size:10px;font-weight:700;">GA</span></div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <h1>Add New Listing</h1>
+      <p>Complete all steps to publish your listing.</p>
+    </div>
+
+    <!-- PROGRESS STEPS -->
+    <div class="steps-bar" id="stepsBar">
+      <div class="step-item active" id="s1">
+        <div class="step-circle">1</div>
+        <div class="step-info"><div class="step-label">Listing Type</div><div class="step-sub">Choose category</div></div>
+      </div>
+      <div class="step-line" id="sl1"></div>
+      <div class="step-item" id="s2">
+        <div class="step-circle">2</div>
+        <div class="step-info"><div class="step-label">Details</div><div class="step-sub">Info & pricing</div></div>
+      </div>
+      <div class="step-line" id="sl2"></div>
+      <div class="step-item" id="s3">
+        <div class="step-circle">3</div>
+        <div class="step-info"><div class="step-label">Review</div><div class="step-sub">Publish</div></div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;flex-shrink:0;">
+        <button class="btn btn-ghost" id="btnBack" style="display:none;" onclick="goStep(currentStep-1)">← Back</button>
+        <button class="btn btn-primary" id="btnNext" onclick="handleNextStep()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- STEP PANELS WRAPPER -->
+    <div id="stepPanels">
+
+    <!-- STEP 1: TYPE SWITCHER -->
+    <div class="step-panel active" id="panel1">
+    <div class="type-switcher">
+      <div class="type-btn active" data-type="service" onclick="switchType('service',this)">
+        <div class="tb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg></div>
+        <div class="tb-label">Service</div>
+        <div class="tb-sub">One-time or recurring</div>
+      </div>
+      <div class="type-btn" data-type="course" onclick="switchType('course',this)">
+        <div class="tb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+        <div class="tb-label">Course</div>
+        <div class="tb-sub">Multi-session program</div>
+      </div>
+
+
+    </div>
+    </div><!-- /panel1 -->
+
+    <!-- STEP 2: DETAILS -->
+    <div class="step-panel" id="panel2">
+    <div class="form-layout">
+      <div id="formWrap">
+
+        <!-- ══ SERVICE FORM ══ -->
+        <div id="form-service">
+          <div class="card">
+            <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>Service Information</div>
+            <div class="form-group" style="margin-bottom:18px;">
+              <label class="form-label">Thumbnail <span class="req">*</span></label>
+              <div style="display:flex;align-items:center;gap:14px;">
+                <div class="thumb-upload" id="svc-tw" style="width:120px;flex-shrink:0;border-radius:10px;">
+                  <input type="file" accept="image/*" onchange="previewThumb(event,'svc-img','svc-ph')"/>
+                  <img class="thumb-preview-img" id="svc-img" style="border-radius:8px;"/>
+                  <div class="thumb-placeholder" id="svc-ph" style="aspect-ratio:4/3;gap:4px;">
+                    <div class="thumb-icon" style="width:30px;height:30px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+                    <div class="thumb-upload-title" style="font-size:11px;">Upload</div>
+                  </div>
+                  <div class="thumb-change">Change</div>
+                </div>
+                <div>
+                  <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px;">Add a cover image</div>
+                  <div style="font-size:12px;color:var(--muted);line-height:1.6;">A 4:3 thumbnail helps your listing stand out and gets <strong style="color:var(--blue);">60% more clicks</strong>.<br/>JPG or PNG · Max 5MB · 4:3 ratio recommended</div>
+                </div>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-group full">
+                <label class="form-label">Service Title <span class="req">*</span></label>
+                <input class="form-input" id="svc-title" type="text" placeholder="e.g. German A1 Language Course for Beginners" maxlength="80" oninput="onTitleInput('svc-title','svc-tc');syncPreview()"/>
+                <div class="char-row"><div class="field-error" id="err-svc-title">Title is required.</div><div class="char-count" id="svc-tc">0 / 80</div></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Main Category <span class="req">*</span></label>
+                <select class="form-select" id="svc-mainCat" onchange="populateSub('svc-mainCat','svc-subCat')">
+                  <option value="">Select category…</option>
+                  <option>Language Learning</option><option>Integration Support</option><option>Legal &amp; Visa</option>
+                  <option>Translation &amp; Interpretation</option><option>Employment &amp; Career</option>
+                  <option>Education &amp; Tutoring</option><option>Health &amp; Wellbeing</option><option>Housing &amp; Relocation</option>
+                </select>
+                <div class="field-error" id="err-svc-mainCat">Please select a category.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Sub Category <span class="req">*</span></label>
+                <select class="form-select" id="svc-subCat"><option value="">Select main category first…</option></select>
+                <div class="field-error" id="err-svc-subCat">Please select a sub-category.</div>
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Delivery Mode <span class="req">*</span></label>
+                <div class="mode-chips" id="svc-modes">
+                  <div class="mode-chip sel" data-mode="Online" onclick="selectMode(this,'svc-modes')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                    <div class="mode-chip-label">Online</div>
+                  </div>
+                  <div class="mode-chip" data-mode="In-Person" onclick="selectMode(this,'svc-modes')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <div class="mode-chip-label">In-Person</div>
+                  </div>
+                  <div class="mode-chip" data-mode="Hybrid" onclick="selectMode(this,'svc-modes')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+                    <div class="mode-chip-label">Hybrid</div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Price (€) <span class="req">*</span></label>
+                <div class="price-wrap"><span class="price-prefix">€</span>
+                  <input class="form-input" id="svc-price" type="number" min="0" step="0.01" placeholder="0.00" oninput="syncPreview()"/>
+                </div>
+                <div class="field-error" id="err-svc-price">Please enter a valid price.</div>
+                <div class="form-hint" style="margin-top:5px;">⚠️ This is the price shown to clients. Your payout will be this amount minus the platform commission.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Delivery Deadline <span class="req">*</span></label>
+                <div style="position:relative;">
+                  <input class="form-input" id="svc-deadline" type="number" min="1" placeholder="e.g. 3" style="padding-right:46px;"/>
+                  <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--muted);">days</span>
+                </div>
+                <div class="form-hint">Days to complete this service after booking.</div>
+                <div class="field-error" id="err-svc-deadline">Please enter a deadline.</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Description</div>
+            <div class="form-group">
+              <label class="form-label">Service Description <span class="req">*</span></label>
+              <textarea class="form-textarea" id="svc-desc" placeholder="Describe what clients get, who it's for, what's included, and what makes your service unique…" style="min-height:130px;" maxlength="2000" oninput="charCount('svc-desc','svc-dc',100,2000);syncPreview()"></textarea>
+              <div class="char-row"><div class="field-error" id="err-svc-desc">Minimum 100 characters required.</div><div class="char-count" id="svc-dc">0 / 2000 · min 100</div></div>
+            </div>
+            <div class="form-group" style="margin-top:14px;">
+              <label class="form-label">Required Client Files / Documents <span class="opt">(optional)</span></label>
+              <textarea class="form-textarea" id="svc-docs" placeholder="List documents needed from the client before you start, e.g.:&#10;• Valid passport copy&#10;• Residence permit&#10;• Previous test results" style="min-height:90px;"></textarea>
+              <div class="form-hint">Shown to clients when they place an order.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Tags <span style="font-size:11px;font-weight:400;color:var(--muted);margin-left:4px;">Select up to 3</span></div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5;">💡 Tags help clients discover your service in search. Choose the ones that best describe what you offer.</div>
+            <div class="tags-pool">
+              <div class="tag-option" onclick="this.classList.toggle('sel')">German A1</div><div class="tag-option" onclick="this.classList.toggle('sel')">German A2</div>
+              <div class="tag-option" onclick="this.classList.toggle('sel')">German B1</div><div class="tag-option" onclick="this.classList.toggle('sel')">German B2</div>
+              <div class="tag-option" onclick="this.classList.toggle('sel')">Language Learning</div><div class="tag-option" onclick="this.classList.toggle('sel')">Beginner</div>
+              <div class="tag-option" onclick="this.classList.toggle('sel')">Intermediate</div><div class="tag-option" onclick="this.classList.toggle('sel')">Advanced</div>
+              <div class="tag-option" onclick="this.classList.toggle('sel')">Visa Support</div><div class="tag-option" onclick="this.classList.toggle('sel')">Translation</div>
+              <div class="tag-option" onclick="this.classList.toggle('sel')">Integration</div><div class="tag-option" onclick="this.classList.toggle('sel')">Job Search</div>
+              <div class="tag-option" onclick="this.classList.toggle('sel')">1-on-1</div><div class="tag-option" onclick="this.classList.toggle('sel')">Group</div>
+              <div class="tag-option" onclick="this.classList.toggle('sel')">Certificate</div><div class="tag-option" onclick="this.classList.toggle('sel')">Children</div>
+              <div class="tag-option" onclick="this.classList.toggle('sel')">Adults</div><div class="tag-option" onclick="this.classList.toggle('sel')">Online</div><div class="tag-option" onclick="this.classList.toggle('sel')">In-Person</div>
+              <div class="tag-limit-msg">Maximum 3 tags allowed. Remove one to select another.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ COURSE / WORKSHOP FORM ══ -->
+        <div id="form-course" style="display:none;">
+          <div class="card">
+            <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg><span id="crs-hdr">Course</span> Information</div>
+            <div class="form-group" style="margin-bottom:18px;">
+              <label class="form-label">Thumbnail <span class="req">*</span></label>
+              <div style="display:flex;align-items:center;gap:14px;">
+                <div class="thumb-upload" id="crs-tw" style="width:120px;flex-shrink:0;border-radius:10px;">
+                  <input type="file" accept="image/*" onchange="previewThumb(event,'crs-img','crs-ph')"/>
+                  <img class="thumb-preview-img" id="crs-img" style="border-radius:8px;"/>
+                  <div class="thumb-placeholder" id="crs-ph" style="aspect-ratio:4/3;gap:4px;">
+                    <div class="thumb-icon" style="width:30px;height:30px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+                    <div class="thumb-upload-title" style="font-size:11px;">Upload</div>
+                  </div>
+                  <div class="thumb-change">Change</div>
+                </div>
+                <div>
+                  <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px;">Add a cover image</div>
+                  <div style="font-size:12px;color:var(--muted);line-height:1.6;">A 4:3 thumbnail helps your listing stand out and gets <strong style="color:var(--blue);">60% more clicks</strong>.<br/>JPG or PNG · Max 5MB · 4:3 ratio recommended</div>
+                </div>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-group full">
+                <label class="form-label"><span id="crs-lbl">Course</span> Title <span class="req">*</span></label>
+                <input class="form-input" id="crs-title" type="text" placeholder="e.g. German B1 Intensive Course — Spring 2026" maxlength="80" oninput="onTitleInput('crs-title','crs-tc');syncPreview()"/>
+                <div class="char-row"><div class="field-error" id="err-crs-title">Title is required.</div><div class="char-count" id="crs-tc">0 / 80</div></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Main Category <span class="req">*</span></label>
+                <select class="form-select" id="crs-mainCat" onchange="populateSub('crs-mainCat','crs-subCat')">
+                  <option value="">Select category…</option>
+                  <option>Language Learning</option><option>Integration Support</option><option>Legal &amp; Visa</option>
+                  <option>Translation &amp; Interpretation</option><option>Employment &amp; Career</option>
+                  <option>Education &amp; Tutoring</option><option>Health &amp; Wellbeing</option><option>Housing &amp; Relocation</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Sub Category <span class="req">*</span></label>
+                <select class="form-select" id="crs-subCat"><option value="">Select main category first…</option></select>
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Delivery Mode <span class="req">*</span></label>
+                <div class="mode-chips" id="crs-modes">
+                  <div class="mode-chip sel" data-mode="Online" onclick="selectMode(this,'crs-modes')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                    <div class="mode-chip-label">Online</div>
+                  </div>
+                  <div class="mode-chip" data-mode="In-Person" onclick="selectMode(this,'crs-modes')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <div class="mode-chip-label">In-Person</div>
+                  </div>
+                  <div class="mode-chip" data-mode="Hybrid" onclick="selectMode(this,'crs-modes')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+                    <div class="mode-chip-label">Hybrid</div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Price (€) <span class="req">*</span></label>
+                <div class="price-wrap"><span class="price-prefix">€</span>
+                  <input class="form-input" id="crs-price" type="number" min="0" step="0.01" placeholder="0.00" oninput="syncPreview()"/>
+                </div>
+                <div class="form-hint" style="margin-top:5px;">⚠️ This is the price shown to clients. Your payout will be this amount minus the platform commission.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- GENERAL INFO CARD -->
+          <div class="card">
+            <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>General Info</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Max Participants <span class="req">*</span></label>
+                <input class="form-input" id="crs-max" type="number" min="1" placeholder="e.g. 20"/>
+                <div class="field-error" id="err-crs-max">This field is required.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Registration Deadline <span class="req">*</span></label>
+                <input class="form-input" id="crs-regDL" type="date"/>
+                <div class="field-error" id="err-crs-regDL">Please set a registration deadline.</div>
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Start &amp; End Date <span class="req">*</span></label>
+                <div class="date-range-row">
+                  <div>
+                    <input class="form-input" id="crs-start" type="date"/>
+                    <div style="font-size:10.5px;color:var(--muted);margin-top:3px;">Start date</div>
+                  </div>
+                  <div>
+                    <input class="form-input" id="crs-end" type="date"/>
+                    <div style="font-size:10.5px;color:var(--muted);margin-top:3px;">End date</div>
+                  </div>
+                </div>
+                <div class="field-error" id="err-crs-dates">Please set both start and end dates.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SESSIONS & SCHEDULE CARD -->
+          <div class="card">
+            <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Sessions &amp; Schedule</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Total Sessions <span class="req">*</span></label>
+                <div style="position:relative;">
+                  <input class="form-input" id="crs-sessions" type="number" min="1" placeholder="e.g. 12" style="padding-right:66px;"/>
+                  <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--muted);">sessions</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Total Hours <span class="req">*</span></label>
+                <div style="position:relative;">
+                  <input class="form-input" id="crs-hours" type="number" min="1" placeholder="e.g. 24" style="padding-right:42px;"/>
+                  <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--muted);">hrs</span>
+                </div>
+                <div class="form-hint" style="margin-top:5px;">Total hours = number of sessions × duration per session.</div>
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Schedule <span class="req">*</span></label>
+                <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;align-items:center;">
+                  <input class="form-input" id="schedDate" type="date" style="width:155px;flex-shrink:0;"/>
+                  <input class="form-input" id="schedFrom" type="time" value="18:00" style="width:110px;flex-shrink:0;"/>
+                  <select class="form-select" id="schedDur" style="width:130px;flex-shrink:0;">
+                    <option value="30">30 min</option>
+                    <option value="60" selected>1 hour</option>
+                    <option value="90">1.5 hours</option>
+                    <option value="120">2 hours</option>
+                    <option value="150">2.5 hours</option>
+                    <option value="180">3 hours</option>
+                  </select>
+                  <button class="btn btn-outline" style="padding:8px 14px;font-size:12px;" onclick="addSchedTag()">+ Add</button>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;" id="schedTags"></div>
+                <div class="form-hint">Pick a date, start time, and session duration. Add multiple sessions.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Description</div>
+            <div class="form-group">
+              <label class="form-label">Description <span class="req">*</span></label>
+              <textarea class="form-textarea" id="crs-desc" placeholder="Objectives, what participants will learn, prerequisites, what's included…" style="min-height:130px;" maxlength="2000" oninput="charCount('crs-desc','crs-dc',100,2000);syncPreview()"></textarea>
+              <div class="char-row"><div class="field-error" id="err-crs-desc">Minimum 100 characters required.</div><div class="char-count" id="crs-dc">0 / 2000 · min 100</div></div>
+            </div>
+            <div class="form-group" style="margin-top:14px;">
+              <label class="form-label">Required Client Files / Documents <span class="opt">(optional)</span></label>
+              <textarea class="form-textarea" id="crs-docs" placeholder="e.g.:&#10;• ID or passport copy&#10;• Previous language test results" style="min-height:80px;"></textarea>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Tags <span style="font-size:11px;font-weight:400;color:var(--muted);margin-left:4px;">Select up to 3</span></div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5;">💡 Tags help clients discover your service in search. Choose the ones that best describe what you offer.</div>
+            <div class="tags-pool" id="crs-tags-pool">
+              <div class="tag-option" onclick="this.classList.toggle('sel')">German A1</div><div class="tag-option" onclick="this.classList.toggle('sel')">German A2</div>
+              <div class="tag-option" onclick="this.classList.toggle('sel')">German B1</div><div class="tag-option" onclick="this.classList.toggle('sel')">German B2</div>
+              <div class="tag-option" onclick="this.classList.toggle('sel')">Language Learning</div><div class="tag-option" onclick="this.classList.toggle('sel')">Beginner</div>
+              <div class="tag-option" onclick="this.classList.toggle('sel')">Intermediate</div><div class="tag-option" onclick="this.classList.toggle('sel')">Advanced</div>
+              <div class="tag-option" onclick="this.classList.toggle('sel')">Integration</div><div class="tag-option" onclick="this.classList.toggle('sel')">Certificate</div>
+              <div class="tag-option" onclick="this.classList.toggle('sel')">Group</div><div class="tag-option" onclick="this.classList.toggle('sel')">Online</div>
+              <div class="tag-option" onclick="this.classList.toggle('sel')">In-Person</div><div class="tag-option" onclick="this.classList.toggle('sel')">Adults</div><div class="tag-option" onclick="this.classList.toggle('sel')">Children</div>
+              <div class="tag-limit-msg">Maximum 3 tags allowed. Remove one to select another.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ EVENT FORM ══ -->
+        <div id="form-event" style="display:none;">
+          <div class="card">
+            <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Event Thumbnail</div>
+            <div class="thumb-upload">
+              <input type="file" accept="image/*" onchange="previewThumb(event,'evt-img','evt-ph')"/>
+              <img class="thumb-preview-img" id="evt-img"/>
+              <div class="thumb-placeholder" id="evt-ph">
+                <div class="thumb-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+                <div class="thumb-upload-title">Upload event thumbnail</div>
+                <div class="thumb-upload-sub">Click or drag & drop · JPG, PNG</div>
+                <div class="thumb-ratio-badge">4:3 or 5:3 ratio recommended</div>
+              </div>
+              <div class="thumb-change">Change image</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Event Details</div>
+            <div class="form-grid">
+              <div class="form-group full">
+                <label class="form-label">Event Title / Topic <span class="req">*</span></label>
+                <input class="form-input" id="evt-title" type="text" placeholder="e.g. Free Webinar: How to Get Your Visa Approved" maxlength="80" oninput="onTitleInput('evt-title','evt-tc');syncPreview()"/>
+                <div class="char-row"><div class="field-error" id="err-evt-title">Title is required.</div><div class="char-count" id="evt-tc">0 / 80</div></div>
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Description <span class="req">*</span></label>
+                <textarea class="form-textarea" id="evt-desc" placeholder="What attendees will learn, who should attend, agenda…" style="min-height:110px;" maxlength="2000" oninput="charCount('evt-desc','evt-dc',100,2000);syncPreview()"></textarea>
+                <div class="char-row"><div class="field-error" id="err-evt-desc">Minimum 100 characters required.</div><div class="char-count" id="evt-dc">0 / 2000 · min 100</div></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Date <span class="req">*</span></label>
+                <input class="form-input" id="evt-date" type="date"/>
+                <div class="field-error" id="err-evt-date">Please select a date.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Time <span class="req">*</span></label>
+                <input class="form-input" id="evt-time" type="time"/>
+                <div class="field-error" id="err-evt-time">Please select a time.</div>
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Timezone</label>
+                <select class="form-select" id="evt-tz">
+                  <option value="Europe/Berlin">Europe/Berlin (CET/CEST)</option>
+                  <option value="Europe/London">Europe/London (GMT/BST)</option>
+                  <option value="Europe/Paris">Europe/Paris (CET/CEST)</option>
+                  <option value="America/New_York">America/New_York (EST/EDT)</option>
+                  <option value="Asia/Dubai">Asia/Dubai (GST)</option>
+                  <option value="UTC">UTC</option>
+                </select>
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Price</label>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div class="price-wrap" style="width:140px;flex-shrink:0;">
+                    <span class="price-prefix">€</span>
+                    <input class="form-input" value="0.00" readonly style="background:#f7f9ff;cursor:not-allowed;color:var(--muted);padding-left:26px;"/>
+                  </div>
+                  <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>
+                    Events on Germany Assists are always free to attend.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Event Tool <span class="req">*</span></label>
+                <select class="form-select" id="evt-tool">
+                  <option value="">Select platform…</option>
+                  <option value="google-meet">Google Meet</option>
+                  <option value="zoom">Zoom</option>
+                  <option value="teams">Microsoft Teams</option>
+                </select>
+                <div class="field-error" id="err-evt-tool">Please select an event tool.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Event Link <span class="req">*</span></label>
+                <input class="form-input" id="evt-link" type="url" placeholder="https://meet.google.com/…"/>
+                <div class="field-error" id="err-evt-link">Please enter the event link.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /formWrap -->
+
+      <!-- PREVIEW PANEL -->
+      <div class="preview-panel">
+        <div class="pv-label">Live Preview</div>
+        <div class="preview-card">
+          <div class="preview-thumb-wrap" id="pvThumbWrap">
+            <img id="pvThumbImg"/>
+            <div class="preview-thumb-ph">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <span>Thumbnail preview</span>
+            </div>
+          </div>
+          <div class="preview-card-body">
+            <div class="pv-type-badge" id="pvBadge">Service</div>
+            <div class="pv-title" id="pvTitle">Your listing title</div>
+            <div class="pv-desc" id="pvDesc">Description will appear here…</div>
+            <div style="border-top:1px solid var(--border);margin:10px 0 10px;"></div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:11px;color:var(--muted);">Category</span>
+                <span style="font-size:11.5px;font-weight:500;color:var(--text);" id="pvCat">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:11px;color:var(--muted);">Delivery</span>
+                <span style="font-size:11.5px;font-weight:500;color:var(--text);" id="pvModeText">Online</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:11px;color:var(--muted);">Provider</span>
+                <span style="font-size:11.5px;font-weight:500;color:var(--text);">Germany Assists</span>
+              </div>
+            </div>
+            <div style="border-top:1px solid var(--border);margin:10px 0 8px;"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="pv-price" id="pvPrice" style="margin-top:0;">€— <span id="pvPriceSub">/ service</span></div>
+              <div style="font-size:11px;padding:5px 12px;border-radius:8px;background:var(--blue);color:#fff;font-weight:600;">Book Now</div>
+            </div>
+          </div>
+        </div>
+        <div class="tips-card">
+          <div class="tips-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Tips for better visibility</div>
+          <div class="tip-item"><div class="tip-dot"></div>Include the level (A1, B2…) or topic in the title</div>
+          <div class="tip-item"><div class="tip-dot"></div>A 4:3 thumbnail gets 60% more clicks than no image</div>
+          <div class="tip-item"><div class="tip-dot"></div>Write at least 200 characters in the description</div>
+          <div class="tip-item"><div class="tip-dot"></div>Select relevant tags to improve search ranking</div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /panel2 -->
+
+    <!-- STEP 3: REVIEW -->
+    <div class="step-panel" id="panel3">
+      <!-- LIVE PREVIEW in Review -->
+      <div class="card" style="margin-bottom:16px;">
+
+        <div style="max-width:340px;margin:0 auto;">
+          <div class="preview-card" style="margin-bottom:0;box-shadow:0 4px 24px rgba(2,76,238,0.10);">
+            <div class="preview-thumb-wrap" id="rvThumbWrap">
+              <img id="rvThumbImg" src="" style="width:100%;height:100%;object-fit:cover;display:none;position:absolute;inset:0;"/>
+              <div class="preview-thumb-ph" id="rvThumbPh">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span>Thumbnail preview</span>
+              </div>
+            </div>
+            <div class="preview-card-body">
+              <div class="pv-type-badge" id="rvPvType">Service</div>
+              <div class="pv-title" id="rvPvTitle">Your listing title will appear here</div>
+              <div class="pv-desc" id="rvPvDesc">Description will appear here…</div>
+              <div style="border-top:1px solid var(--border);margin:10px 0 10px;"></div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-size:11px;color:var(--muted);">Category</span>
+                  <span style="font-size:11.5px;font-weight:500;color:var(--text);" id="rvPvCat">—</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-size:11px;color:var(--muted);">Delivery</span>
+                  <span style="font-size:11.5px;font-weight:500;color:var(--text);" id="rvPvMode">Online</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-size:11px;color:var(--muted);">Provider</span>
+                  <span style="font-size:11.5px;font-weight:500;color:var(--text);">Germany Assists</span>
+                </div>
+              </div>
+              <div style="border-top:1px solid var(--border);margin:10px 0 8px;"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div class="pv-price" id="rvPvPrice" style="margin-top:0;">€—</div>
+                <div style="font-size:11px;padding:5px 12px;border-radius:8px;background:var(--blue);color:#fff;font-weight:600;">Book Now</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Review Your Listing
+        </div>
+        <div style="color:var(--muted);font-size:12.5px;margin-bottom:16px;line-height:1.6;">Please review all details below. You can go back to edit any section before publishing.</div>
+        <div id="reviewContent">
+          <div class="review-row"><div class="review-label">Type</div><div class="review-val" id="rv-type">Service</div></div>
+          <div class="review-row"><div class="review-label">Title</div><div class="review-val" id="rv-title">German A1 Language Course for Beginners</div></div>
+          <div class="review-row"><div class="review-label">Category</div><div class="review-val" id="rv-cat">Language Learning → German for Beginners (A1)</div></div>
+          <div class="review-row"><div class="review-label">Price</div><div class="review-val" id="rv-price">€49.00 / session</div></div>
+          <div class="review-row"><div class="review-label">Delivery Mode</div><div class="review-val" id="rv-mode">Online</div></div>
+          <div class="review-row"><div class="review-label">Delivery Deadline</div><div class="review-val">3 days after booking</div></div>
+          <div class="review-row"><div class="review-label">Tags</div><div class="review-val"><span style="display:inline-flex;flex-wrap:wrap;gap:5px;"><span style="font-size:11px;padding:2px 9px;border-radius:20px;background:var(--bs);color:var(--blue);font-weight:500;">German A1</span><span style="font-size:11px;padding:2px 9px;border-radius:20px;background:var(--bs);color:var(--blue);font-weight:500;">Beginner</span><span style="font-size:11px;padding:2px 9px;border-radius:20px;background:var(--bs);color:var(--blue);font-weight:500;">Online</span><span style="font-size:11px;padding:2px 9px;border-radius:20px;background:var(--bs);color:var(--blue);font-weight:500;">1-on-1</span></span></div></div>
+
+          <div class="review-row"><div class="review-label">Files Attached</div><div class="review-val" id="rv-files"><span style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>German_A1_Curriculum.pdf</span></div></div>
+          <div class="review-row"><div class="review-label">Thumbnail</div><div class="review-val"><span style="display:inline-flex;align-items:center;gap:7px;"><span style="width:40px;height:30px;border-radius:6px;background:linear-gradient(135deg,var(--blue),var(--sky));display:inline-flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span><span style="color:var(--muted);font-size:12px;">course-thumbnail.jpg</span></span></div></div>
+        </div>
+      </div>
+      <div class="card" style="background:rgba(2,76,238,0.03);border-color:rgba(2,76,238,0.15);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(5,150,105,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;">Ready to publish!</div><div style="font-size:12px;color:var(--muted);">Your listing will be live immediately and visible to clients searching Germany Assists.</div></div>
+        </div>
+      </div>
+    </div><!-- /panel3 -->
+
+    </div><!-- /stepPanels -->
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <div class="bottom-hint">
+      <div class="bottom-step-label" id="stepHint">Step 1 of 3 — Choose your listing type</div>
+      <div class="bottom-step-dots">
+        <div class="bottom-dot active" id="dot1"></div>
+        <div class="bottom-dot" id="dot2"></div>
+        <div class="bottom-dot" id="dot3"></div>
+      </div>
+    </div>
+    <button class="btn btn-outline" onclick="saveDraft()">Save Draft</button>
+  </div>
+</main>
+</div>
+
+<script>
+let currentType = 'service';
+
+/* SIDEBAR */
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('show');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');}
+
+/* TYPE SWITCH */
+function switchType(type, el) {
+  currentType = type;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('form-service').style.display = type === 'service' ? 'block' : 'none';
+  document.getElementById('form-course').style.display  = (type === 'course' || type === 'workshop') ? 'block' : 'none';
+  document.getElementById('form-event').style.display   = type === 'event'   ? 'block' : 'none';
+  if (type === 'course' || type === 'workshop') {
+    const lbl = type === 'course' ? 'Course' : 'Workshop';
+    document.getElementById('crs-hdr').textContent = lbl;
+    document.getElementById('crs-lbl').textContent = lbl;
+  }
+  const badges = {service:'Service',course:'Course',workshop:'Workshop',event:'Event'};
+  document.getElementById('pvBadge').textContent = badges[type];
+  document.getElementById('pvPriceSub').textContent = '/ ' + type;
+  if (type === 'event') {
+    document.getElementById('pvPrice').innerHTML = '<span style="color:#059669;font-weight:600;">Free</span>';
+    document.getElementById('pvMode').style.display = 'none';
+  } else {
+    document.getElementById('pvPrice').innerHTML = '€— <span id="pvPriceSub">/ ' + type + '</span>';
+    document.getElementById('pvMode').style.display = 'flex';
+  }
+  syncPreview();
+}
+
+/* SUB TABS */
+function setSubTab(el, showId) {
+  const card = el.closest('.card');
+  card.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  ['stab-a','stab-b'].forEach(id => { document.getElementById(id).style.display = id === showId ? 'block' : 'none'; });
+}
+
+/* THUMBNAIL */
+function previewThumb(e, imgId, phId) {
+  const file = e.target.files[0]; if (!file) return;
+  const url = URL.createObjectURL(file);
+  const img = document.getElementById(imgId);
+  if (img) { img.src = url; img.style.display = 'block'; }
+  const ph = document.getElementById(phId);
+  if (ph) ph.style.display = 'none';
+  // update preview panel
+  const pvImg = document.getElementById('pvThumbImg');
+  pvImg.src = url; pvImg.style.display = 'block';
+  pvImg.closest('.preview-thumb-wrap').querySelector('.preview-thumb-ph').style.display = 'none';
+}
+
+/* DOC */
+function previewDoc(e, nameId) {
+  const file = e.target.files[0]; if (!file) return;
+  document.getElementById(nameId).textContent = '📄 ' + file.name;
+}
+
+/* MODE */
+function selectMode(el, containerId) {
+  document.getElementById(containerId).querySelectorAll('.mode-chip').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  const modeEl = document.getElementById('pvModeText');
+  if (modeEl) modeEl.textContent = el.dataset.mode;
+}
+
+/* SCHEDULE TAG */
+function addSchedTag() {
+  const date = document.getElementById('schedDate').value;
+  const from = document.getElementById('schedFrom').value;
+  const dur  = parseInt(document.getElementById('schedDur').value);
+  if (!date || !from) return;
+  // Calculate end time
+  const [h, m] = from.split(':').map(Number);
+  const endMin = h * 60 + m + dur;
+  const endH = String(Math.floor(endMin / 60) % 24).padStart(2,'0');
+  const endM = String(endMin % 60).padStart(2,'0');
+  const to = `${endH}:${endM}`;
+  const label = new Date(date).toLocaleDateString('en-DE',{weekday:'short',day:'2-digit',month:'short'});
+  const durLabel = dur < 60 ? `${dur}min` : (dur % 60 === 0 ? `${dur/60}h` : `${Math.floor(dur/60)}h${dur%60}m`);
+  const c = document.getElementById('schedTags');
+  const div = document.createElement('div');
+  div.className = 'schedule-tag';
+  div.innerHTML = `${label} ${from}–${to} (${durLabel})<button onclick="this.parentElement.remove()">×</button>`;
+  c.appendChild(div);
+}
+
+/* CHAR COUNT */
+function charCount(inputId, countId, min, max) {
+  const len = document.getElementById(inputId).value.length;
+  const el = document.getElementById(countId);
+  el.textContent = len + ' / ' + max + ' · min ' + min;
+  el.style.color = len < min ? '#DC2626' : 'var(--muted)';
+}
+
+/* TITLE CHAR COUNT */
+function onTitleInput(inputId, countId) {
+  const len = document.getElementById(inputId).value.length;
+  document.getElementById(countId).textContent = len + ' / 80';
+}
+
+/* SUB CATEGORY */
+const subCats = {
+  'Language Learning':['German for Beginners (A1)','German Elementary (A2)','German Intermediate (B1)','German Upper-Intermediate (B2)','German Advanced (C1/C2)','Business German','German for Kids','Other Language'],
+  'Integration Support':['Social Integration','Cultural Orientation','Community Program','Administrative Help','Housing Support','Other'],
+  'Legal & Visa':['Visa Application','Residence Permit','Citizenship','Work Permit','Family Reunification','Other'],
+  'Translation & Interpretation':['Document Translation','Certified Translation','Live Interpretation','Proofreading','Other'],
+  'Employment & Career':['CV & Cover Letter','Job Search Strategy','Interview Preparation','LinkedIn Coaching','Career Change','Other'],
+  'Education & Tutoring':['School Subjects','University Prep','Test Prep','Special Needs','Other'],
+  'Health & Wellbeing':['Mental Health','Nutrition','Fitness','Other'],
+  'Housing & Relocation':['Apartment Search','Moving Support','Neighbourhood Guide','Other'],
+};
+function populateSub(mainId, subId) {
+  const val = document.getElementById(mainId).value;
+  const sel = document.getElementById(subId);
+  sel.innerHTML = '<option value="">Select sub-category…</option>';
+  (subCats[val] || []).forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sel.appendChild(o); });
+}
+
+/* SYNC PREVIEW */
+function syncPreview() {
+  const maps = {service:['svc-title','svc-desc','svc-price'],course:['crs-title','crs-desc','crs-price'],workshop:['crs-title','crs-desc','crs-price'],event:['evt-title','evt-desc',null]};
+  const [tId, dId, pId] = maps[currentType] || [];
+  const tEl = tId ? document.getElementById(tId) : null;
+  const dEl = dId ? document.getElementById(dId) : null;
+  const pEl = pId ? document.getElementById(pId) : null;
+  if (tEl) document.getElementById('pvTitle').textContent = tEl.value || 'Your listing title';
+  if (dEl) {
+    const d = dEl.value;
+    document.getElementById('pvDesc').textContent = d ? (d.length > 100 ? d.substring(0,100)+'…' : d) : 'Description will appear here…';
+  }
+  if (pEl && currentType !== 'event') {
+    const p = pEl.value;
+    document.getElementById('pvPrice').innerHTML = (p ? '€'+p : '€—') + ' <span id="pvPriceSub">/ '+currentType+'</span>';
+  }
+  // update category
+  const catId = currentType === 'service' ? 'svc-mainCat' : currentType === 'course' || currentType === 'workshop' ? 'crs-mainCat' : null;
+  const catEl = catId ? document.getElementById(catId) : null;
+  const pvCat = document.getElementById('pvCat');
+  if (pvCat) pvCat.textContent = (catEl && catEl.value) || '—';
+  // update delivery mode
+  const modeId = currentType === 'service' ? 'svc-modes' : currentType === 'course' || currentType === 'workshop' ? 'crs-modes' : null;
+  const modeEl = modeId ? document.getElementById(modeId) : null;
+  const selMode = modeEl ? modeEl.querySelector('.mode-chip.sel') : null;
+  const pvModeEl = document.getElementById('pvModeText');
+  if (pvModeEl) pvModeEl.textContent = selMode ? selMode.dataset.mode : 'Online';
+}
+
+/* VALIDATION */
+function reqField(id, errId) {
+  const el = document.getElementById(id); const err = document.getElementById(errId);
+  const ok = el && el.value.trim();
+  if (el) el.classList.toggle('error', !ok);
+  if (err) err.classList.toggle('show', !ok);
+  return !!ok;
+}
+function reqDesc(id, errId, min) {
+  const el = document.getElementById(id); const err = document.getElementById(errId);
+  const ok = el && el.value.length >= min;
+  if (el) el.classList.toggle('error', !ok);
+  if (err) err.classList.toggle('show', !ok);
+  return ok;
+}
+
+function validate() {
+  let ok = true;
+  if (currentType === 'service') {
+    if (!reqField('svc-title','err-svc-title')) ok=false;
+    if (!reqField('svc-mainCat','err-svc-mainCat')) ok=false;
+    if (!reqField('svc-subCat','err-svc-subCat')) ok=false;
+    if (!reqField('svc-price','err-svc-price')) ok=false;
+    if (!reqField('svc-deadline','err-svc-deadline')) ok=false;
+    if (!reqDesc('svc-desc','err-svc-desc',100)) ok=false;
+  }
+  if (currentType === 'course' || currentType === 'workshop') {
+    if (!reqField('crs-title','err-crs-title')) ok=false;
+    if (!reqField('crs-max','err-crs-max')) ok=false;
+    if (!reqField('crs-regDL','err-crs-regDL')) ok=false;
+    if (!reqField('crs-start','err-crs-dates')) ok=false;
+    if (!reqDesc('crs-desc','err-crs-desc',100)) ok=false;
+  }
+  if (currentType === 'event') {
+    if (!reqField('evt-title','err-evt-title')) ok=false;
+    if (!reqField('evt-date','err-evt-date')) ok=false;
+    if (!reqField('evt-time','err-evt-time')) ok=false;
+    if (!reqField('evt-tool','err-evt-tool')) ok=false;
+    if (!reqField('evt-link','err-evt-link')) ok=false;
+    if (!reqDesc('evt-desc','err-evt-desc',100)) ok=false;
+  }
+  return ok;
+}
+
+/* PUBLISH */
+function publishListing() {
+  if (!validate()) {
+    document.getElementById('bottomHint').innerHTML = '<span style="color:#DC2626;font-weight:500;">⚠ Please fix the highlighted fields above.</span>';
+    window.scrollTo({top:0,behavior:'smooth'}); return;
+  }
+  const labels = {service:'Service Published! 🎉',course:'Course Published! 🎉',workshop:'Workshop Published! 🎉',event:'Event Published! 🎉'};
+  const subs = {service:'Your service is now live and visible to clients seeking help.',course:'Your course is now open for registration.',workshop:'Your workshop is now open for registration.',event:'Your event is live — attendees can register now.'};
+  document.getElementById('successTitle').textContent = labels[currentType];
+  document.getElementById('successSub').textContent   = subs[currentType];
+  document.getElementById('successOverlay').classList.add('show');
+}
+
+function saveDraft() {
+  const btn = event.target; const orig = btn.textContent;
+  btn.textContent = '✓ Draft Saved'; btn.style.color = '#059669'; btn.style.borderColor = 'rgba(5,150,105,0.3)';
+  setTimeout(() => { btn.textContent = orig; btn.style.color = ''; btn.style.borderColor = ''; }, 2500);
+}
+
+function closeSuccess() { document.getElementById('successOverlay').classList.remove('show'); }
+
+/* ── STEP NAVIGATION ── */
+let currentStep = 1;
+const stepHints = ['Step 1 of 3 — Choose your listing type','Step 2 of 3 — Fill in service details','Step 3 of 3 — Review and publish'];
+
+function goStep(n) {
+  const prev = currentStep;
+  currentStep = Math.max(1, Math.min(3, n));
+  // panels
+  for (let i = 1; i <= 3; i++) {
+    const p = document.getElementById('panel'+i);
+    if (p) p.classList.toggle('active', i === currentStep);
+  }
+  // step indicators
+  for (let i = 1; i <= 3; i++) {
+    const s = document.getElementById('s'+i);
+    if (!s) continue;
+    s.classList.remove('active','done');
+    if (i < currentStep) s.classList.add('done');
+    if (i === currentStep) s.classList.add('active');
+    const circ = s.querySelector('.step-circle');
+    if (i < currentStep) circ.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+    else circ.textContent = i;
+  }
+  // step lines
+  for (let i = 1; i <= 2; i++) {
+    const l = document.getElementById('sl'+i);
+    if (l) l.classList.toggle('done', i < currentStep);
+  }
+  // buttons
+  document.getElementById('btnBack').style.display = currentStep > 1 ? '' : 'none';
+  const btnNext = document.getElementById('btnNext');
+  btnNext.textContent = currentStep === 3 ? 'Publish Listing 🎉' : 'Continue →';
+  document.getElementById('stepHint').textContent = stepHints[currentStep-1];
+  // dot progress
+  for (let i = 1; i <= 3; i++) {
+    const d = document.getElementById('dot'+i);
+    if (!d) continue;
+    d.classList.remove('active','done');
+    if (i < currentStep) d.classList.add('done');
+    if (i === currentStep) d.classList.add('active');
+  }
+  if (currentStep === 3) buildReview();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function handleNextStep() {
+  if (currentStep === 1) { goStep(2); return; }
+  if (currentStep === 2) {
+    if (!validate()) {
+      document.getElementById('bottomHint').innerHTML = '<span style="color:#DC2626;font-weight:500;">⚠ Please fix the highlighted fields above.</span>';
+      window.scrollTo({top:0,behavior:'smooth'}); return;
+    }
+    goStep(3); return;
+  }
+  if (currentStep === 3) { publishListing(); }
+}
+
+function buildReview() {
+  const typeLabels = {service:'Service',course:'Course',workshop:'Workshop',event:'Event'};
+  document.getElementById('rv-type').textContent = typeLabels[currentType] || currentType;
+  const titleId = currentType === 'service' ? 'svc-title' : currentType === 'event' ? 'evt-title' : 'crs-title';
+  const titleEl = document.getElementById(titleId);
+  document.getElementById('rv-title').textContent = (titleEl && titleEl.value) || '—';
+  const catId = currentType === 'service' ? 'svc-mainCat' : 'crs-mainCat';
+  const catEl = document.getElementById(catId);
+  document.getElementById('rv-cat').textContent = (catEl && catEl.value) || '—';
+  const priceId = currentType === 'service' ? 'svc-price' : 'crs-price';
+  const priceEl = document.getElementById(priceId);
+  document.getElementById('rv-price').textContent = (priceEl && priceEl.value) ? '€' + priceEl.value : (currentType === 'event' ? 'Free' : '—');
+  const modeEls = document.querySelectorAll('#' + (currentType === 'service' ? 'svc-modes' : 'crs-modes') + ' .mode-chip.sel');
+  const modes = Array.from(modeEls).map(m => m.dataset.mode).join(', ');
+  document.getElementById('rv-mode').textContent = modes || '—';
+  const onOpts = Array.from(document.querySelectorAll('.svc-opt-item.on .svc-opt-title')).map(t => t.textContent);
+  document.getElementById('rv-opts').textContent = onOpts.length ? onOpts.join(' · ') : 'None selected';
+  document.getElementById('rv-files').textContent = uploadedFileList.length ? uploadedFileList.map(f=>f.name).join(', ') : 'None';
+  // populate review preview card
+  const rvPvTitle = document.getElementById('rvPvTitle');
+  const rvPvPrice = document.getElementById('rvPvPrice');
+  const rvPvType = document.getElementById('rvPvType');
+  const rvPvMode = document.getElementById('rvPvMode');
+  const rvPvCat = document.getElementById('rvPvCat');
+  const rvPvDesc = document.getElementById('rvPvDesc');
+  const rvThumbImg = document.getElementById('rvThumbImg');
+  const rvThumbPh = document.getElementById('rvThumbPh');
+  const typeLabels2 = {service:'Service',course:'Course',workshop:'Workshop',event:'Event'};
+  if (rvPvTitle) rvPvTitle.textContent = (titleEl && titleEl.value) || 'Your listing title will appear here';
+  if (rvPvType) rvPvType.textContent = typeLabels2[currentType] || currentType;
+  if (rvPvMode) rvPvMode.textContent = modes || '—';
+  if (rvPvCat) rvPvCat.textContent = (catEl && catEl.value) || '—';
+  const descId = currentType === 'service' ? 'svc-desc' : currentType === 'event' ? 'evt-desc' : 'crs-desc';
+  const descEl = document.getElementById(descId);
+  if (rvPvDesc) rvPvDesc.textContent = (descEl && descEl.value) ? descEl.value.slice(0,90) + (descEl.value.length > 90 ? '…' : '') : 'Description will appear here…';
+  if (rvPvPrice) rvPvPrice.textContent = (priceEl && priceEl.value) ? '€' + parseFloat(priceEl.value).toFixed(2) : (currentType === 'event' ? 'Free' : '€—');
+  // thumb
+  const thumbImgId = currentType === 'service' ? 'svc-img' : currentType === 'event' ? 'evt-img' : 'crs-img';
+  const srcImg = document.getElementById(thumbImgId);
+  if (srcImg && srcImg.src && srcImg.style.display !== 'none') {
+    rvThumbImg.src = srcImg.src; rvThumbImg.style.display = 'block'; if(rvThumbPh) rvThumbPh.style.display='none';
+  } else {
+    rvThumbImg.style.display = 'none'; if(rvThumbPh) rvThumbPh.style.display='';
+  }
+}
+
+/* ── FILE UPLOAD ── */
+let uploadedFileList = [];
+function formatBytes(b){if(b<1024)return b+'B';if(b<1048576)return (b/1024).toFixed(1)+'KB';return (b/1048576).toFixed(1)+'MB';}
+function renderFiles(){
+  const c=document.getElementById('uploadedFiles'); c.innerHTML='';
+  uploadedFileList.forEach((f,i)=>{
+    const ext = f.name.split('.').pop().toUpperCase();
+    c.innerHTML+=`<div class="uploaded-file"><div class="uf-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><span class="uf-name" title="${f.name}">${f.name}</span><span class="uf-size">${ext} · ${formatBytes(f.size)}</span><button class="uf-remove" onclick="removeFile(${i})">×</button></div>`;
+  });
+}
+function addFiles(files){
+  for(const f of files){
+    if(f.size>20971520){alert(f.name+' exceeds 20MB limit.');continue;}
+    if(!uploadedFileList.find(x=>x.name===f.name)) uploadedFileList.push(f);
+  }
+  renderFiles();
+}
+function handleFileSelect(e){addFiles(e.target.files);e.target.value='';}
+function handleFileDrop(e){e.preventDefault();document.getElementById('fileDropZone').classList.remove('drag');addFiles(e.dataTransfer.files);}
+function removeFile(i){uploadedFileList.splice(i,1);renderFiles();}
+
+syncPreview();
+function toggleHelp(){
+  const panel=document.getElementById('helpPanel');
+  const overlay=document.getElementById('helpOverlay');
+  const btn=document.getElementById('helpBtn');
+  const isOpen=panel.classList.toggle('open');
+  overlay.classList.toggle('open',isOpen);
+  btn.style.background=isOpen?'var(--blue)':'var(--bs)';
+  btn.style.color=isOpen?'#fff':'var(--blue)';
+}
+function dismissHelp(){
+  try{localStorage.setItem('ga_add_service_help_dismissed','1');}catch(e){}
+  toggleHelp();
+  document.getElementById('helpBtn').style.display='none';
+}
+function toggleTag(el) {
+  const pool = el.closest('.tags-pool');
+  const msg = pool.querySelector('.tag-limit-msg');
+  const sel = pool.querySelectorAll('.tag-option.sel');
+  if (!el.classList.contains('sel') && sel.length >= 3) {
+    if (msg) msg.classList.add('show');
+    return;
+  }
+  el.classList.toggle('sel');
+  // update message visibility
+  if (msg) {
+    const nowSel = pool.querySelectorAll('.tag-option.sel').length;
+    msg.classList.toggle('show', nowSel >= 3);
+  }
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.tag-option').forEach(t => { t.setAttribute('onclick','toggleTag(this)'); });
+  try{if(!localStorage.getItem('ga_add_service_help_dismissed'))setTimeout(()=>toggleHelp(),600);}catch(e){}
+});
+</script>
+</body>
+</html>
