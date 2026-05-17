@@ -8,6 +8,7 @@ const QuickQuestions = ({
   onContinue,
 }) => {
   const [step, setStep] = useState(1);
+  const [animKey, setAnimKey] = useState(0);
   const [selectedGoal, setSelectedGoal] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
 
@@ -52,7 +53,7 @@ const QuickQuestions = ({
     } else {
       onRoleChange("relocate");
       onSubRoleChange(null);
-      setTimeout(() => setStep(3), 300);
+      setStep(3);
     }
   };
 
@@ -153,6 +154,7 @@ const QuickQuestions = ({
         <div key="step2" className="animate-fade-up">
           <button
             onClick={() => {
+              setAnimKey((k) => k + 1);
               setStep(1);
               setSelectedGoal(null);
             }}
