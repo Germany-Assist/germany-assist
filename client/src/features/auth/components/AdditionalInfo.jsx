@@ -141,7 +141,7 @@ const AdditionalInfo = ({
       <div className="fade-in">
         {currentSubStep === 1 && (
           <>
-            <h2 className="text-xl font-bold mb-1">Add Profile Details</h2>
+            <h2 className="text-xl font-bold mb-1">Profile Setup</h2>
             <p className="text-sm text-gray-500 mb-6">
               {role === "provider"
                 ? "Add a photo and description so clients can learn more about you."
@@ -209,9 +209,10 @@ const AdditionalInfo = ({
 
         {currentSubStep === 2 && (
           <>
-            <h2 className="text-xl font-bold mb-1">Your Categories</h2>
+            <h2 className="text-xl font-bold mb-1">Your Category</h2>
             <p className="text-sm text-gray-500 mb-6">
-              Select the services you offer and upload required credentials.
+              Select the service(s) you offer. We'll show you which credentials
+              to upload to earn verified badges.
             </p>
             <div className="mb-6">
               <CategorySelect
@@ -226,13 +227,14 @@ const AdditionalInfo = ({
           <>
             <h2 className="text-xl font-bold mb-1">Identity Verification</h2>
             <p className="text-sm text-gray-500 mb-6">
-              Securely upload your documents for account activation.
+              Upload your ID to activate your provider account. Documents are
+              reviewed securely by our team and never shared publicly.
             </p>
             <div className="flex flex-col gap-4 mb-6">
               <FileUpload
                 icon="🪖"
                 title="Passport or National ID"
-                subtitle="Required for all providers."
+                subtitle="Required for all providers to publish services on the platform. Upload a clear photo or scan — PDF, JPG, or PNG."
                 badge
                 badgeText="Required"
                 files={formData.idDocument ? [formData.idDocument] : []}
@@ -247,7 +249,7 @@ const AdditionalInfo = ({
               <FileUpload
                 icon="🏠"
                 title="Proof of Residence"
-                subtitle="Utility bill or official document."
+                subtitle="Utility bill or official document (last 3 months) — PDF, JPG, or PNG."
                 badge
                 badgeText="Optional"
                 files={
@@ -261,27 +263,25 @@ const AdditionalInfo = ({
                 }
                 onRemove={() => updateField("proofOfResidence", null)}
               />
-              {subRole === "company" && (
-                <FileUpload
-                  icon="📋"
-                  title="Business Registration"
-                  subtitle="Official company registration document."
-                  badge
-                  badgeText="Required"
-                  files={
-                    formData.businessRegistration
-                      ? [formData.businessRegistration]
-                      : []
-                  }
-                  onUpload={(files) =>
-                    updateField(
-                      "businessRegistration",
-                      Array.isArray(files) ? files[0] : files,
-                    )
-                  }
-                  onRemove={() => updateField("businessRegistration", null)}
-                />
-              )}
+              <FileUpload
+                icon="📋"
+                title="Business Registration"
+                subtitle="Upload your official company registration document (Gewerbeanmeldung or equivalent) ."
+                badge
+                badgeText="Required for Company"
+                files={
+                  formData.businessRegistration
+                    ? [formData.businessRegistration]
+                    : []
+                }
+                onUpload={(files) =>
+                  updateField(
+                    "businessRegistration",
+                    Array.isArray(files) ? files[0] : files,
+                  )
+                }
+                onRemove={() => updateField("businessRegistration", null)}
+              />
             </div>
           </>
         )}
@@ -308,7 +308,7 @@ const AdditionalInfo = ({
             disabled={isSubmitting}
             className="w-full py-3 border border-gray-200 text-gray-500 rounded-xl font-medium hover:border-blue-300 hover:text-gray-900 transition-all disabled:opacity-50"
           >
-            Skip for now
+            Skip for now &mdash; verify my email
           </button>
         </div>
       </div>

@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect, use } from "react";
 import { fetchCategoriesForRegister } from "../../../api/meta.api";
 
-const MAX_FILES_PER_CATEGORY = 3;
+const MAX_FILES_PER_CATEGORY = 10;
+const MAX_CATEGORIES = 1;
 
 const CategorySelect = ({
   selectedCategories,
@@ -13,7 +14,6 @@ const CategorySelect = ({
   const [categories, setCategories] = useState([]);
   const dropdownRef = useRef(null);
   useEffect(() => {
-    //call the categories
     const fetchCategories = async () => {
       try {
         const response = await fetchCategoriesForRegister();
@@ -44,17 +44,22 @@ const CategorySelect = ({
   }, [categoryFiles, selectedCategories, onValidationChange]);
 
   const toggleCategory = (categoryId) => {
-    const newCategories = selectedCategories.includes(categoryId)
-      ? selectedCategories.filter((c) => c !== categoryId)
-      : [...selectedCategories, categoryId];
-    onChange(newCategories);
-
-    if (!selectedCategories.includes(categoryId)) {
-      setCategoryFiles((prev) => ({ ...prev, [categoryId]: [] }));
-    } else {
+    if (selectedCategories.includes(categoryId)) {
+      const newCategories = selectedCategories.filter((c) => c !== categoryId);
+      onChange(newCategories);
       setCategoryFiles((prev) => {
         const newFiles = { ...prev };
         delete newFiles[categoryId];
+        return newFiles;
+      });
+    } else {
+      const oldCategoryId = selectedCategories[0] || null;
+      const newCategories = [categoryId];
+      onChange(newCategories);
+      setCategoryFiles((prev) => {
+        const newFiles = { ...prev };
+        if (oldCategoryId) delete newFiles[oldCategoryId];
+        newFiles[categoryId] = prev[categoryId] || [];
         return newFiles;
       });
     }
@@ -105,7 +110,7 @@ const CategorySelect = ({
         <label className="block text-sm font-medium text-[#111827] mb-2">
           Main Category{" "}
           <span className="text-[#6B7280] font-normal text-xs">
-            (choose one or more)
+            (choose one)
           </span>
         </label>
 
@@ -115,7 +120,7 @@ const CategorySelect = ({
         >
           <div className="flex-1 flex flex-wrap gap-1.5">
             {selectedCategories.length === 0 ? (
-              <span className="text-[#C4C9D4] text-sm">Select categories…</span>
+              <span className="text-[#C4C9D4] text-sm">Select category…</span>
             ) : (
               selectedCategories.map((id) => {
                 const cat = getCategoryById(id);
@@ -139,21 +144,34 @@ const CategorySelect = ({
 
         {isDropdownOpen && (
           <div className="absolute top-full left-0 right-0 mt-1 bg-white border-2 border-[#024CEE] rounded-xl z-50 max-h-[220px] overflow-y-auto shadow-lg">
-            {categories.map((category) => (
-              <label
-                key={category.id}
-                className="flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-[#EBF1FD] transition-colors"
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedCategories.includes(category.id)}
-                  onChange={() => toggleCategory(category.id)}
-                  className="w-4 h-4 accent-[#024CEE] cursor-pointer"
-                />
-                <span className="text-lg">{category.icon}</span>
-                <span className="text-sm text-[#111827]">{category.label}</span>
-              </label>
-            ))}
+            {categories.map((category) => {
+              const isSelected = selectedCategories.includes(category.id);
+              return (
+                <div
+                  key={category.id}
+                  onClick={() => toggleCategory(category.id)}
+                  className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors ${
+                    isSelected 
+                      ? "bg-[#EBF1FD] hover:bg-[#dbe8fd]" 
+                      : "hover:bg-[#EBF1FD]"
+                  }`}
+                >
+                  <div
+                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${
+                      isSelected 
+                        ? "border-[#024CEE] bg-[#024CEE]" 
+                        : "border-[#E5E7EB]"
+                    }`}
+                  >
+                    {isSelected && (
+                      <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                    )}
+                  </div>
+                  <span className="text-lg">{category.icon}</span>
+                  <span className="text-sm text-[#111827]">{category.label}</span>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

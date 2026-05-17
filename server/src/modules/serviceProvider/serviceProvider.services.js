@@ -17,6 +17,9 @@ import hashIdUtil from "../../utils/hashId.util.js";
 
 const getFile = (files, field) => files?.[field]?.[0] || null;
 
+const MAX_CATEGORIES = 1;
+const MAX_FILES_PER_CATEGORY = 10;
+
 // Helper to process category files - parses categoryEntries and maps files to categories
 // categoryEntries: [{"categoryId": "german_language", "fileIndices": [0, 1]}, ...]
 // files: array of uploaded files from req.files?.categoryFiles
@@ -30,12 +33,28 @@ const processCategoryFiles = (body, files) => {
   try {
     const categoryEntries = JSON.parse(body.categoryEntries);
 
+    if (categoryEntries.length > MAX_CATEGORIES) {
+      throw new AppError(
+        400,
+        `Only ${MAX_CATEGORIES} category is allowed`,
+        true,
+      );
+    }
+
     categoryEntries.forEach(({ categoryId, fileIndices }) => {
+      if (fileIndices.length > MAX_FILES_PER_CATEGORY) {
+        throw new AppError(
+          400,
+          `Maximum ${MAX_FILES_PER_CATEGORY} files allowed per category`,
+          true,
+        );
+      }
       categoryFilesMap[categoryId] = fileIndices
         .filter((idx) => files[idx])
         .map((idx) => files[idx]);
     });
   } catch (e) {
+    if (e instanceof AppError) throw e;
     console.error("Error parsing categoryEntries:", e);
   }
 

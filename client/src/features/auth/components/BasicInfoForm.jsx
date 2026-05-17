@@ -251,7 +251,7 @@ const BasicInfoForm = ({
       </div>
 
       <div className="text-sm text-[#6B7280] mb-5.5">
-        Free access · No transaction fees · Full platform access
+        Independent professional · Badge verification
       </div>
 
       {(error || errors.general) && (
