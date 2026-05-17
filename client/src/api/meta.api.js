@@ -6,6 +6,6 @@ export const fetchMetadata = async () => {
 };
 
 export const fetchCategoriesForRegister = async () => {
-  const data = await api.get("/category");
+  const data = await api.get("/meta/register/categories");
   return data.data;
 };

@@ -17,7 +17,7 @@ const CategorySelect = ({
     const fetchCategories = async () => {
       try {
         const response = await fetchCategoriesForRegister();
-        setCategories(response.data.categories);
+        setCategories(response.categories);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
