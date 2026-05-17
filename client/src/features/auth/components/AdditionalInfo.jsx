@@ -191,6 +191,8 @@ const AdditionalInfo = ({
                   icon="🪖"
                   title="Passport or National ID "
                   subtitle="Upload a clear scan or photo — PDF, JPG, or PNG. Reviewed securely and never shared publicly."
+                  badge
+                  badgeText="Required"
                   files={formData.idDocument ? [formData.idDocument] : []}
                   onUpload={(files) =>
                     updateField(
