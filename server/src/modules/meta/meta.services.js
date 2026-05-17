@@ -18,7 +18,17 @@ export const initCall = async () => {
   }));
   return { categories };
 };
-
-const metaServices = { initCall };
+export const metaCategoriesForRegister = async () => {
+  const allCat = await categoryRepository.getCategoriesForRegister();
+  const categories = allCat.map((i) => ({
+    title: i.title,
+    label: i.label,
+    id: hashIdUtil.hashIdEncode(i.id),
+    icon: i.icon,
+    requirements: i.requirements,
+  }));
+  return { categories };
+};
+const metaServices = { initCall, metaCategoriesForRegister };
 
 export default metaServices;

@@ -8,7 +8,15 @@ export const initCall = async (req, res, next) => {
     next(error);
   }
 };
+export const metaCategoriesForRegister = async (req, res, next) => {
+  try {
+    const data = await metaServices.metaCategoriesForRegister();
+    res.status(200).json(data);
+  } catch (error) {
+    next(error);
+  }
+};
 
-const metaController = { initCall };
+const metaController = { initCall, metaCategoriesForRegister };
 
 export default metaController;

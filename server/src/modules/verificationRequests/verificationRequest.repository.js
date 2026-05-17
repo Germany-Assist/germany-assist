@@ -1,8 +1,5 @@
 import db from "../../database/index.js";
 
-async function createProvider(data, t) {
-  return db.VerificationRequest.create(data, { transaction: t });
-}
 async function createRequest(data, t) {
   return db.VerificationRequest.create(data, { transaction: t });
 }
@@ -61,7 +58,6 @@ async function updateAdmin(requestId, updates, t) {
 }
 
 const verificationRequestRepository = {
-  createProvider,
   countRequests,
   createRequest,
   getAllProvider,

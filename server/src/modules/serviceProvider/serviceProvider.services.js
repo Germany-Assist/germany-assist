@@ -13,6 +13,7 @@ import userMapper from "../user/user.mapper.js";
 import AssetService from "../../services/assts.services.js";
 import verificationRequestRepository from "../verificationRequests/verificationRequest.repository.js";
 import { PROVIDER_TYPES } from "../../configs/constants.js";
+import hashIdUtil from "../../utils/hashId.util.js";
 
 const getFile = (files, field) => files?.[field]?.[0] || null;
 
@@ -52,7 +53,7 @@ export const registerFreelancer = async (body, files) => {
       password,
       nationality,
       countryOfResidence,
-      bio,
+      about,
     } = body;
 
     const userExists = await userRepository.getUserByEmail(email);
@@ -126,12 +127,12 @@ export const registerFreelancer = async (body, files) => {
 
     const idDocument = getFile(files, "idDocument");
     if (idDocument) {
-      const request = await verificationRequestRepository.createProvider(
+      const request = await verificationRequestRepository.createRequest(
         {
-          auth: user,
           userId: user.id,
-          relatedId: sp.id,
+          serviceProviderId: sp.id,
           type: "identity",
+          relatedId: sp.id,
         },
         t,
       );
@@ -157,13 +158,12 @@ export const registerFreelancer = async (body, files) => {
     for (const [categoryId, catFiles] of Object.entries(categoryFilesMap)) {
       if (catFiles && catFiles.length > 0) {
         const categoryRequest =
-          await verificationRequestRepository.createProvider(
+          await verificationRequestRepository.createRequest(
             {
-              auth: user,
               userId: user.id,
-              relatedId: sp.id,
+              serviceProviderId: sp.id,
               type: "category",
-              categoryId: categoryId, // Store which category this file belongs to
+              relatedId: hashIdUtil.hashIdDecode(categoryId),
             },
             t,
           );
@@ -171,7 +171,7 @@ export const registerFreelancer = async (body, files) => {
           files: catFiles,
           ownerId: categoryRequest.id,
           typeKey: "verificationDocument",
-          label: `Category: ${categoryId}`,
+          label: `Category: ${hashIdUtil.hashIdDecode(categoryId)}`,
           userId: user.id,
           transaction: t,
         });
@@ -283,14 +283,13 @@ export const registerCompany = async (body, files) => {
     const idDocument = getFile(files, "idDocument");
     const proofOfResidence = getFile(files, "proofOfResidence");
     const businessRegistration = getFile(files, "businessRegistration");
-
     if (idDocument || proofOfResidence || businessRegistration) {
-      const request = await verificationRequestRepository.createProvider(
+      const request = await verificationRequestRepository.createRequest(
         {
-          auth: user,
           userId: user.id,
-          relatedId: sp.id,
+          serviceProviderId: sp.id,
           type: "identity",
+          relatedId: sp.id,
         },
         t,
       );
@@ -345,13 +344,12 @@ export const registerCompany = async (body, files) => {
     for (const [categoryId, catFiles] of Object.entries(categoryFilesMap)) {
       if (catFiles && catFiles.length > 0) {
         const categoryRequest =
-          await verificationRequestRepository.createProvider(
+          await verificationRequestRepository.createRequest(
             {
-              auth: user,
               userId: user.id,
-              relatedId: sp.id,
+              serviceProviderId: sp.id,
               type: "category",
-              categoryId: categoryId,
+              relatedId: hashIdUtil.hashIdDecode(categoryId),
             },
             t,
           );
@@ -359,7 +357,7 @@ export const registerCompany = async (body, files) => {
           files: catFiles,
           ownerId: categoryRequest.id,
           typeKey: "verificationDocument",
-          label: `Category: ${categoryId}`,
+          label: `Category: ${hashIdUtil.hashIdDecode(categoryId)}`,
           userId: user.id,
           transaction: t,
         });
@@ -377,47 +375,6 @@ export const registerCompany = async (body, files) => {
       accessToken,
       refreshToken,
     };
-  } catch (error) {
-    await t.rollback();
-    throw error;
-  }
-};
-
-export const createServiceProvider = async (profileData) => {
-  const t = await sequelize.transaction();
-  try {
-    // first create sp
-    const sp = await serviceProviderRepository.createServiceProvider(
-      profileData,
-      t,
-    );
-    let password = bcryptUtil.hashPassword(profileData.password);
-    // then set the domain
-    const domain = userDomain.setRoleAndType("serviceProvider");
-    const { rootRole, rootRelatedType, firstName, lastName } = domain;
-    // create root account
-    const user = await userRepository.createUser(
-      {
-        firstName,
-        lastName,
-        email: profileData.email,
-        password,
-        UserRole: {
-          role: rootRole,
-          relatedType: rootRelatedType,
-          relatedId: sp.id,
-        },
-      },
-      t,
-    );
-    await permissionServices.initPermissions(
-      user.id,
-      roleTemplates[rootRole],
-      t,
-    );
-    await authServices.sendVerificationEmail(profileData.email, user.id, t);
-    await t.commit();
-    return sp;
   } catch (error) {
     await t.rollback();
     throw error;
@@ -543,7 +500,6 @@ export const updateServiceProviderRating = async (id, newRating) => {
   });
 };
 const serviceProviderService = {
-  createServiceProvider,
   getAllServiceProvider,
   getServiceProviderById,
   updateServiceProvider,

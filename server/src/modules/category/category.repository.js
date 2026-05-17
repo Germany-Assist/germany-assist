@@ -6,6 +6,11 @@ export const getAllCategories = async () => {
     include: [{ model: db.Subcategory, attributes: ["title", "label", "id"] }],
   });
 };
+export const getCategoriesForRegister = async () => {
+  return await db.Category.findAll({
+    attributes: ["id", "title", "label", "requirements", "icon"],
+  });
+};
 export const createCategory = async (data) => {
   return await db.Category.create(data);
 };
@@ -16,6 +21,7 @@ export const updateCategory = async (id, data) => {
 const categoryRepository = {
   getAllCategories,
   createCategory,
+  getCategoriesForRegister,
   updateCategory,
 };
 export default categoryRepository;

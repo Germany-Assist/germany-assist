@@ -60,6 +60,14 @@ VerificationRequest.init(
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
+    relatedId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      validate: {
+        isInt: { msg: "RelatedId must be an integer" },
+        min: { args: [1], msg: "RelatedId must be greater than 0" },
+      },
+    },
   },
   {
     sequelize,

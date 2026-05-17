@@ -35,12 +35,20 @@ Category.init(
         },
       },
     },
+    requirements: {
+      type: DataTypes.JSON,
+      allowNull: false,
+    },
+    icon: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
     sequelize,
     paranoid: true,
     tableName: "categories",
-  }
+  },
 );
 
 export default Category;
