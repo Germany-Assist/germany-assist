@@ -3,6 +3,7 @@ import { fetchCategoriesForRegister } from "../../../api/meta.api";
 
 const MAX_FILES_PER_CATEGORY = 10;
 const MAX_CATEGORIES = 1;
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
 const CategorySelect = ({
   selectedCategories,
@@ -79,6 +80,12 @@ const CategorySelect = ({
       return;
     }
 
+    const oversizedFiles = files.filter((file) => file.size > MAX_FILE_SIZE);
+    if (oversizedFiles.length > 0) {
+      alert(`File size must be less than 2MB`);
+      return;
+    }
+
     const newFiles = [...currentFiles, ...files].slice(
       0,
       MAX_FILES_PER_CATEGORY,
@@ -151,15 +158,15 @@ const CategorySelect = ({
                   key={category.id}
                   onClick={() => toggleCategory(category.id)}
                   className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors ${
-                    isSelected 
-                      ? "bg-[#EBF1FD] hover:bg-[#dbe8fd]" 
+                    isSelected
+                      ? "bg-[#EBF1FD] hover:bg-[#dbe8fd]"
                       : "hover:bg-[#EBF1FD]"
                   }`}
                 >
                   <div
                     className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${
-                      isSelected 
-                        ? "border-[#024CEE] bg-[#024CEE]" 
+                      isSelected
+                        ? "border-[#024CEE] bg-[#024CEE]"
                         : "border-[#E5E7EB]"
                     }`}
                   >
@@ -168,7 +175,9 @@ const CategorySelect = ({
                     )}
                   </div>
                   <span className="text-lg">{category.icon}</span>
-                  <span className="text-sm text-[#111827]">{category.label}</span>
+                  <span className="text-sm text-[#111827]">
+                    {category.label}
+                  </span>
                 </div>
               );
             })}
@@ -181,7 +190,7 @@ const CategorySelect = ({
           <div className="text-xs font-semibold text-[#6B7280] uppercase tracking-wider mb-3 pb-2 border-b border-[#E5E7EB]">
             🏅 Credentials to Upload{" "}
             <span className="font-normal text-[#9CA3AF] text-[10px]">
-              — earn verified badges · PDF, JPG, PNG · max 5MB
+              — earn verified badges · PDF, JPG, PNG · max 2MB
             </span>
           </div>
 
@@ -261,7 +270,7 @@ const CategorySelect = ({
                             Click to upload files
                           </div>
                           <div className="text-xs text-[#9CA3AF] mt-1">
-                            PDF, JPG, PNG · max 5MB each
+                            PDF, JPG, PNG · max 2MB each
                           </div>
                         </label>
                       ) : (

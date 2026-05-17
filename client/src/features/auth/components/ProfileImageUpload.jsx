@@ -1,6 +1,17 @@
 import React from "react";
 
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+
 const ProfileImageUpload = ({ file, onUpload, onRemove }) => {
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile && selectedFile.size > MAX_FILE_SIZE) {
+      alert("File size must be less than 2MB");
+      return;
+    }
+    onUpload(selectedFile);
+  };
+
   const handleRemove = () => {
     if (onRemove) {
       onRemove();
@@ -25,7 +36,7 @@ const ProfileImageUpload = ({ file, onUpload, onRemove }) => {
           type="file"
           accept=".jpg,.jpeg,.png"
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-          onChange={(e) => onUpload(e.target.files[0])}
+          onChange={handleFileChange}
         />
         {file ? (
           <div className="flex flex-col items-center">
@@ -58,7 +69,7 @@ const ProfileImageUpload = ({ file, onUpload, onRemove }) => {
               <span className="font-semibold">Click to upload</span> your photo
             </p>
             <p className="text-xs text-[#9CA3AF] mt-0.5">
-              JPG or PNG — Square (1:1) — min 400×400px
+              JPG or PNG — Square (1:1) — min 400×400px — max 2MB
             </p>
           </div>
         )}

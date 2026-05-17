@@ -1,6 +1,7 @@
 import React from "react";
 
 const MAX_FILES = 3;
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
 const FileUpload = ({
   name,
@@ -21,7 +22,13 @@ const FileUpload = ({
 
   const handleFileChange = (e) => {
     const newFiles = Array.from(e.target.files);
-    
+
+    const oversizedFiles = newFiles.filter((file) => file.size > MAX_FILE_SIZE);
+    if (oversizedFiles.length > 0) {
+      alert(`File size must be less than 2MB`);
+      return;
+    }
+
     if (multiple) {
       const currentCount = fileList.length;
       if (currentCount + newFiles.length > MAX_FILES) {
