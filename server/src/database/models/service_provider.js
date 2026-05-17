@@ -28,7 +28,6 @@ ServiceProvider.init(
       type: DataTypes.TEXT,
       allowNull: true,
       validate: {
-        notEmpty: { msg: "about cannot be empty" },
         len: {
           args: [0, 600],
           msg: "about must be between 80 and 600 characters",

@@ -40,7 +40,7 @@ const IndividualSignupPage = () => {
       setError("Please complete the previous step first.");
       return;
     }
-
+    console.log("additionalData", additionalData);
     setIsSubmitting(true);
     setError("");
 
