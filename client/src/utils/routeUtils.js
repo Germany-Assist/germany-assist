@@ -37,10 +37,8 @@ export function useActiveRoute() {
  * Recursively filters children as well.
  */
 export const filterRoutesByRole = (routes, role) => {
-  if (!role) return [];
-  
   return routes
-    .filter((route) => !route.roles || route.roles.includes(role))
+    .filter((route) => !route.roles || (role && route.roles.includes(role)))
     .map((route) => ({
       ...route,
       children: route.children ? filterRoutesByRole(route.children, role) : undefined,
