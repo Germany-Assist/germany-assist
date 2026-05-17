@@ -18,7 +18,7 @@ const SkipPage = ({
 
       <button
         onClick={onBack}
-        className="flex items-center gap-1.5 p-3 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-5 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex p-3 items-center gap-1.5 p-3 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-5 disabled:opacity-50 disabled:cursor-not-allowed"
         disabled={isSubmitting}
       >
         ← Back

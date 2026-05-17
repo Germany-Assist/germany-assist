@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import SignupLayout from "../components/SignupLayout";
 import BasicInfoForm from "../components/BasicInfoForm";
 import AdditionalInfo from "../components/AdditionalInfo";
@@ -11,7 +11,7 @@ import {
   resendVerificationEmail,
 } from "../../../api/authService";
 import { getErrorMessage } from "../../../api/errorMessages";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const ProviderSignupPage = () => {
   const {
@@ -35,17 +35,18 @@ const ProviderSignupPage = () => {
   const [searchParams] = useSearchParams();
   const subRole = searchParams.get("subRole");
 
-  // --- Helpers ---
   const getValue = (source, key) => {
     if (source instanceof FormData) return source.get(key);
     return source?.[key];
   };
 
   const getSidebarStep = () => {
-    return currentStep;
+    if (currentStep === 1) return 2;
+    if (currentStep === 2) return 2.5;
+    if (currentStep === 3) return 3;
+    return 4;
   };
 
-  // --- Core Submission ---
   const submitProviderSignup = async (additionalData = {}) => {
     if (!basicInfoData) return setError("Please complete basic info first.");
 
@@ -55,7 +56,6 @@ const ProviderSignupPage = () => {
     try {
       const fd = new FormData();
 
-      // 1. Map Step 2 (Basic Info)
       const keys =
         basicInfoData instanceof FormData
           ? Array.from(basicInfoData.keys())
@@ -66,7 +66,6 @@ const ProviderSignupPage = () => {
           fd.append(key, getValue(basicInfoData, key));
       });
 
-      // 2. Handle Profile Image (Google URL vs File)
       const initialImg = getValue(basicInfoData, "profileImage");
       if (typeof initialImg === "string" && initialImg.startsWith("http")) {
         fd.append("profileImageUrl", initialImg);
@@ -82,7 +81,6 @@ const ProviderSignupPage = () => {
         }
       }
 
-      // 3. Handle Step 3 (Additional Docs & Categories)
       [
         "idDocument",
         "proofOfResidence",
@@ -130,7 +128,7 @@ const ProviderSignupPage = () => {
           ? await signUpCompany(fd)
           : await signUpFreelancer(fd);
       if (result) {
-        setCurrentStep(3);
+        setCurrentStep(4);
         startResendCooldown(180);
       }
     } catch (err) {
@@ -164,7 +162,6 @@ const ProviderSignupPage = () => {
       sidebarOpen={sidebarOpen}
       setSidebarOpen={setSidebarOpen}
     >
-      {/* Step 2: Basic Info */}
       {currentStep === 1 && (
         <BasicInfoForm
           role="provider"
@@ -184,12 +181,54 @@ const ProviderSignupPage = () => {
         />
       )}
 
-      {/* Step 3: Additional Info */}
       {currentStep === 2 && (
+        <div className="w-full max-w-[560px] px-4 sm:px-0">
+          <button
+            onClick={() => setCurrentStep(1)}
+            className="flex items-center p-3 gap-1.5 bg-none border border-[#E5E7EB] text-[#6B7280] text-[0.79rem] py-1.5 px-2.75 rounded-lg cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-4"
+          >
+            ← Back
+          </button>
+          <div className="text-[1.35rem] font-bold text-[#111827] mb-1">
+            Almost there! 🎉
+          </div>
+          <div className="text-[0.83rem] text-[#6B7280] mb-5 leading-relaxed">
+            Your basic account is ready. Would you like to add location and
+            documents now?
+          </div>
+          <div className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-[13px] p-5 mb-4.5 text-center">
+            <div className="text-[34px] mb-2.5">📋</div>
+            <h3 className="text-[0.95rem] font-semibold text-[#111827] mb-1">
+              Add Profile Details
+            </h3>
+            <p className="text-[0.8rem] text-[#6B7280] leading-relaxed mb-4">
+              Adding your location and documents helps verify your account
+              faster and unlocks all features. It only takes 2 minutes.
+            </p>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => setCurrentStep(3)}
+                className="w-full py-3 rounded-[10px] bg-[#024CEE] text-white font-semibold text-[0.9rem] cursor-pointer transition-all hover:bg-[#0341cc] hover:-translate-y-0.5"
+                style={{ boxShadow: "0 2px 10px rgba(2,76,238,0.18)" }}
+              >
+                Yes, add details →
+              </button>
+              <button
+                onClick={() => submitProviderSignup()}
+                className="w-full py-[11px] border border-[#E5E7EB] rounded-[10px] bg-white text-[#6B7280] text-[0.9rem] font-medium cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827]"
+              >
+                Skip for now — verify my email
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {currentStep === 3 && (
         <AdditionalInfo
           role="provider"
           subRole={subRole}
-          onBack={() => setCurrentStep(1)}
+          onBack={() => setCurrentStep(2)}
           onSkip={() => submitProviderSignup()}
           onComplete={(data) => submitProviderSignup(data)}
           initialProfileImage={getValue(basicInfoData, "profileImage")}
@@ -198,8 +237,7 @@ const ProviderSignupPage = () => {
         />
       )}
 
-      {/* Step 4: Email Verification */}
-      {currentStep === 3 && (
+      {currentStep === 4 && (
         <EmailVerification
           email={email}
           onVerify={handleVerify}

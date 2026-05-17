@@ -30,13 +30,11 @@ const IndividualSignupPage = () => {
 
   const [formData, setFormData] = useState(null);
 
-  // --- Helper: Data Extraction ---
   const getValue = (source, key) => {
     if (source instanceof FormData) return source.get(key);
     return source?.[key];
   };
 
-  // --- Core Submission Logic ---
   const handleSignUpSubmit = async (additionalData = {}) => {
     if (!formData) {
       setError("Please complete the previous step first.");
@@ -49,7 +47,6 @@ const IndividualSignupPage = () => {
     try {
       const fd = new FormData();
 
-      // 1. Map base data (Step 1)
       const keys =
         formData instanceof FormData
           ? Array.from(formData.keys())
@@ -61,20 +58,18 @@ const IndividualSignupPage = () => {
         }
       });
 
-      // 2. Handle Profile Image (Google URL check)
       const profileImage = getValue(formData, "profileImage");
       if (typeof profileImage === "string" && profileImage.startsWith("http")) {
         fd.append("profileImageUrl", profileImage);
       }
 
-      // 3. Handle Additional Info (Step 2)
       if (additionalData.profileImage) {
         const pImg = Array.isArray(additionalData.profileImage)
           ? additionalData.profileImage[0]
           : additionalData.profileImage;
 
         if (pImg instanceof File) {
-          fd.delete("profileImageUrl"); // New file replaces Google URL
+          fd.delete("profileImageUrl");
           fd.append("profileImage", pImg);
         } else if (typeof pImg === "string" && !pImg.startsWith("http")) {
           fd.append("profileImageUrl", pImg);
@@ -88,13 +83,12 @@ const IndividualSignupPage = () => {
       fd.append("role", "individual");
       fd.append("subRole", "");
 
-      // Capture email for verification step
       const userEmail = fd.get("email");
       setEmail(userEmail);
 
       const result = await signUpClient(fd);
       if (result) {
-        setCurrentStep(3);
+        setCurrentStep(4);
         startResendCooldown(180);
       }
     } catch (err) {
@@ -124,9 +118,10 @@ const IndividualSignupPage = () => {
   };
 
   const getSidebarStep = () => {
-    if (currentStep === 1) return 2; // Basic Info
-    if (currentStep === 2) return 3; // Additional Info
-    return 4; // Verification
+    if (currentStep === 1) return 2;
+    if (currentStep === 2) return 2.5;
+    if (currentStep === 3) return 3;
+    return 4;
   };
 
   return (
@@ -154,9 +149,52 @@ const IndividualSignupPage = () => {
       )}
 
       {currentStep === 2 && (
+        <div className="w-full max-w-[560px] px-4 sm:px-0 text-left animate-fade-up">
+          <button
+            onClick={() => setCurrentStep(1)}
+            className="flex items-center p-3 gap-1.5 bg-none border border-[#E5E7EB] text-[#6B7280] text-[0.79rem] py-1.5 px-2.75 rounded-lg cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-4"
+          >
+            ← Back
+          </button>
+          <div className="text-[1.35rem] font-bold text-[#111827] mb-1">
+            Almost there! 🎉
+          </div>
+          <div className="text-[0.83rem] text-[#6B7280] mb-5 leading-relaxed">
+            Your basic account is ready. Would you like to add location and
+            documents now?
+          </div>
+          <div className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-[13px] p-5 mb-4.5 text-center">
+            <div className="text-[34px] mb-2.5">📋</div>
+            <h3 className="text-[0.95rem] font-semibold text-[#111827] mb-1">
+              Add Profile Details
+            </h3>
+            <p className="text-[0.8rem] text-[#6B7280] leading-relaxed mb-4">
+              Adding your location and documents helps verify your account
+              faster and unlocks all features. It only takes 2 minutes.
+            </p>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => setCurrentStep(3)}
+                className="w-full py-3 rounded-[10px] bg-[#024CEE] text-white font-semibold text-[0.9rem] cursor-pointer transition-all hover:bg-[#0341cc] hover:-translate-y-0.5"
+                style={{ boxShadow: "0 2px 10px rgba(2,76,238,0.18)" }}
+              >
+                Yes, add details →
+              </button>
+              <button
+                onClick={() => handleSignUpSubmit()}
+                className="w-full py-[11px] border border-[#E5E7EB] rounded-[10px] bg-white text-[#6B7280] text-[0.9rem] font-medium cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827]"
+              >
+                Skip for now — verify my email
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {currentStep === 3 && (
         <AdditionalInfo
           role="individual"
-          onBack={() => setCurrentStep(1)}
+          onBack={() => setCurrentStep(2)}
           onSkip={() => handleSignUpSubmit()}
           onComplete={(data) => handleSignUpSubmit(data)}
           initialProfileImage={getValue(formData, "profileImage")}
@@ -165,7 +203,7 @@ const IndividualSignupPage = () => {
         />
       )}
 
-      {currentStep === 3 && (
+      {currentStep === 4 && (
         <EmailVerification
           email={email}
           onVerify={handleVerify}

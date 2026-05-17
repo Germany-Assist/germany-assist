@@ -14,10 +14,10 @@ const ProfileImageUpload = ({ file, onUpload, onRemove }) => {
   return (
     <div>
       <label className="block text-sm font-medium text-[#111827] mb-1">
-        Profile Image / Logo
+        Profile Photo
         <span className="text-[#6B7280] font-normal text-xs">
           {" "}
-          — Square 1:1, high resolution
+          — Square 1:1
         </span>
       </label>
       <div className="relative border-2 border-dashed border-[#E5E7EB] rounded-xl py-5 text-center cursor-pointer bg-[#F9FAFB] transition-all hover:border-[#024CEE]">
