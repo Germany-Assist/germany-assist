@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProfileImageUpload from "./ProfileImageUpload";
 import FileUpload from "./FileUpload";
-import SectionHeader from "./SectionHeader";
 import CategorySelect from "./CategorySelect";
 
 const AdditionalInfo = ({
@@ -25,22 +24,18 @@ const AdditionalInfo = ({
     businessRegistration: null,
   });
 
-  // Set initial profile image from BasicInfoForm (Google signup)
   useEffect(() => {
     if (initialProfileImage && !formData.profileImage) {
       setFormData((prev) => ({ ...prev, profileImage: initialProfileImage }));
     }
   }, [initialProfileImage]);
 
-  const inputBaseStyle =
-    "w-full py-2.5 px-3 border-2 border-[#E5E7EB] rounded-xl text-sm text-[#111827] bg-white outline-none transition-colors duration-300 focus:border-[#024CEE] focus:shadow-[0_0_0_3px_rgba(2,76,238,0.07)]";
-
   const updateField = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleCategoriesChange = (newCategories, uploadData = null) => {
-    if (uploadData && uploadData.files) {
+    if (uploadData?.files) {
       setFormData((prev) => ({
         ...prev,
         categoryUploads: {
@@ -49,49 +44,43 @@ const AdditionalInfo = ({
         },
       }));
     } else if (newCategories) {
-      if (
-        JSON.stringify(newCategories) !== JSON.stringify(formData.categories)
-      ) {
-        const removedCategories = formData.categories.filter(
-          (c) => !newCategories.includes(c),
-        );
-        const newCategoryUploads = { ...formData.categoryUploads };
-        removedCategories.forEach((catId) => {
-          delete newCategoryUploads[catId];
-        });
-        setFormData((prev) => ({
-          ...prev,
-          categories: newCategories,
-          categoryUploads: newCategoryUploads,
-        }));
-      } else {
-        setFormData((prev) => ({ ...prev, categories: newCategories }));
-      }
+      const removedCategories = formData.categories.filter((c) => !newCategories.includes(c));
+      const newCategoryUploads = { ...formData.categoryUploads };
+      removedCategories.forEach((catId) => delete newCategoryUploads[catId]);
+      
+      setFormData((prev) => ({
+        ...prev,
+        categories: newCategories,
+        categoryUploads: newCategoryUploads,
+      }));
     }
   };
 
-  const [isCategoryValid, setIsCategoryValid] = useState(true);
-
   const canProceedFromCategories = () => {
     if (formData.categories.length === 0) return true;
-    const hasFiles = Object.values(formData.categoryUploads).some(
-      (files) => files && files.length > 0,
-    );
-    return hasFiles;
+    return Object.values(formData.categoryUploads).some((files) => files?.length > 0);
   };
 
-  const handleNextSubStep = () => {
-    if (currentSubStep < 3) {
+  const handleNext = () => {
+    const maxSteps = role === "provider" ? 3 : 1;
+    if (currentSubStep < maxSteps) {
       setCurrentSubStep(currentSubStep + 1);
     } else {
       onComplete(formData);
     }
   };
 
+  const handleBack = () => {
+    if (currentSubStep === 1) onBack();
+    else setCurrentSubStep(currentSubStep - 1);
+  };
+
+  const inputBaseStyle = "w-full py-2.5 px-3 border-2 border-[#E5E7EB] rounded-xl text-sm text-[#111827] bg-white outline-none transition-colors duration-300 focus:border-[#024CEE] focus:shadow-[0_0_0_3px_rgba(2,76,238,0.07)]";
+
   return (
     <div className="w-full max-w-[560px] text-left px-4 sm:px-0">
       {error && (
-        <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-sm mb-3.5 animate-shake">
+        <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-sm mb-4 animate-shake">
           <span>⚠</span>
           <span>{error}</span>
         </div>
@@ -99,335 +88,166 @@ const AdditionalInfo = ({
 
       {role === "provider" && (
         <div className="flex items-center gap-2 mb-6">
-          <div
-            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold ${
-              currentSubStep == 1
-                ? "bg-[#024CEE] outline outline-3 outline-[#cfe9f3] border-[#024CEE] text-white "
-                : currentSubStep > 1
-                  ? "bg-[#eaf7fc] border-[#49b7df] text-[#49b7df]"
-                  : "bg-white border-[#E5E7EB] text-[#6B7280]"
-            }`}
-          >
-            1
-          </div>
-          <div
-            className={`flex-1 h-0.5 rounded ${currentSubStep >= 2 ? "bg-[#49B7DF]" : "bg-[#E5E7EB]"}`}
-          />
-          <div
-            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold ${
-              currentSubStep == 2
-                ? "bg-[#024CEE] outline outline-3 outline-[#cfe9f3] border-[#024CEE] text-white "
-                : currentSubStep > 2
-                  ? "bg-[#eaf7fc] border-[#49b7df] text-[#49b7df]"
-                  : "bg-white border-[#E5E7EB] text-[#6B7280]"
-            }`}
-          >
-            2
-          </div>
-          <div
-            className={`flex-1 h-0.5 rounded ${currentSubStep >= 3 ? "bg-[#49B7DF]" : "bg-[#E5E7EB]"}`}
-          />
-          <div
-            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold ${
-              currentSubStep == 3
-                ? "bg-[#024CEE] outline outline-3 outline-[#cfe9f3] border-[#024CEE] text-white "
-                : currentSubStep > 3
-                  ? "bg-[#eaf7fc] border-[#49b7df] text-[#49b7df]"
-                  : "bg-white border-[#E5E7EB] text-[#6B7280]"
-            }`}
-          >
-            3
-          </div>
-          <span className="text-sm text-[#6B7280] ml-2">
-            {currentSubStep === 1 && "Profile Setup"}
-            {currentSubStep === 2 && "Category & Credentials"}
-            {currentSubStep === 3 && "Identity Verification"}
+          {[1, 2, 3].map((step) => (
+            <React.Fragment key={step}>
+              <div
+                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold transition-all ${
+                  currentSubStep === step
+                    ? "bg-[#024CEE] border-[#024CEE] text-white ring-4 ring-blue-50"
+                    : currentSubStep > step
+                      ? "bg-blue-50 border-blue-400 text-blue-400"
+                      : "bg-white border-gray-200 text-gray-400"
+                }`}
+              >
+                {step}
+              </div>
+              {step < 3 && (
+                <div className={`flex-1 h-0.5 rounded ${currentSubStep > step ? "bg-blue-400" : "bg-gray-200"}`} />
+              )}
+            </React.Fragment>
+          ))}
+          <span className="text-sm text-gray-500 ml-2">
+            {currentSubStep === 1 && "Profile"}
+            {currentSubStep === 2 && "Categories"}
+            {currentSubStep === 3 && "Verification"}
           </span>
         </div>
       )}
 
       <button
-        onClick={
-          currentSubStep === 1
-            ? onBack
-            : () => setCurrentSubStep(currentSubStep - 1)
-        }
+        onClick={handleBack}
         disabled={isSubmitting}
-        className="flex items-center p-3 gap-1.5 border border-[#E5E7EB] rounded-lg py-1.5 px-2.75 text-sm text-[#6B7280] cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] mb-5 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex items-center gap-1.5 border border-gray-200 rounded-lg py-1.5 px-3 text-sm text-gray-500 hover:border-blue-300 hover:text-gray-900 mb-6 disabled:opacity-50"
       >
         ← Back
       </button>
 
       {isSubmitting && (
-        <div className="flex flex-col items-center justify-center gap-2 p-4 mb-4 bg-blue-50 rounded-lg border border-blue-500">
-          {/* Loader Circle */}
-          <div className="w-5 h-5 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
-
-          {/* Text */}
-          <span className="font-medium text-blue-600 text-sm">
-            Processing your request...
-          </span>
+        <div className="flex flex-col items-center justify-center gap-2 p-4 mb-6 bg-blue-50 rounded-xl border border-blue-200">
+          <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <span className="text-sm font-medium text-blue-600">Processing...</span>
         </div>
       )}
 
-      {currentSubStep === 1 && (
-        <div className="fade-in">
-          <div className="text-[1.375rem] font-bold text-[#111827] mb-1">
-            Profile Setup
-          </div>
-          <div className="text-sm text-[#6B7280] mb-5">
-            {role != "provider"
-              ? "Add a photo and identity proof optional."
-              : "Add a photo and a short about so clients know who they're working with."}
-          </div>
+      <div className="fade-in">
+        {currentSubStep === 1 && (
+          <>
+            <h2 className="text-xl font-bold mb-1">Profile Setup</h2>
+            <p className="text-sm text-gray-500 mb-6">
+              {role === "provider" 
+                ? "Add a photo and description so clients can learn more about you."
+                : "Add a profile photo (optional)."}
+            </p>
 
-          <div className="mb-5">
-            <ProfileImageUpload
-              file={formData.profileImage}
-              onUpload={(file) => updateField("profileImage", file)}
-              onRemove={() => updateField("profileImage", null)}
-            />
-          </div>
-          {role == "individual" && (
-            <>
-              <div className="text-[1.375rem] font-bold text-[#111827] mb-1">
-                Identity Verification
-              </div>
-              <div className="text-sm text-[#6B7280] mb-5">
-                Upload your ID to activate your provider account. Documents are
-                reviewed securely by our team and never shared publicly.
-              </div>
-
-              <div className="mb-5">
-                <FileUpload
-                  icon="🪖"
-                  title="Passport or National ID"
-                  subtitle="Required for all providers to publish services on the platform. Upload a clear photo or scan — PDF, JPG, or PNG."
-                  badge
-                  badgeText="Required"
-                  files={formData.idDocument ? [formData.idDocument] : []}
-                  onUpload={(files) =>
-                    updateField(
-                      "idDocument",
-                      Array.isArray(files) ? files[0] : files,
-                    )
-                  }
-                  onRemove={() => updateField("idDocument", null)}
-                  accept=".pdf,.jpg,.jpeg,.png"
-                  multiple={false}
-                />
-              </div>
-            </>
-          )}
-          {role == "provider" && (
-            <div className="mb-5">
-              <label className="block text-sm font-medium text-[#111827] mb-2">
-                About{" "}
-                <span className="text-[#6B7280] font-normal text-xs">
-                  — 80 to 600 characters
-                </span>
-              </label>
-              <textarea
-                value={formData.about}
-                onChange={(e) => updateField("about", e.target.value)}
-                placeholder="Tell clients about your experience, qualifications, and what makes you the right choice…"
-                rows={4}
-                className={`${inputBaseStyle} resize-none`}
-                maxLength={600}
+            <div className="mb-6">
+              <ProfileImageUpload
+                file={formData.profileImage}
+                onUpload={(file) => updateField("profileImage", file)}
+                onRemove={() => updateField("profileImage", null)}
               />
-              <div className="flex justify-between mt-1 ml-1">
-                <span className="text-[11px] text-[#6B7280]">
-                  {formData.about.length < 80
-                    ? "Minimum 80 characters recommended"
-                    : ""}
-                </span>
-                <span className="text-xs text-[#9CA3AF]">
-                  {formData.about.length}/600
-                </span>
-              </div>
             </div>
-          )}
-          {role === "individual" ? (
-            <>
-              <button
-                onClick={() => onComplete(formData)}
-                disabled={isSubmitting}
-                className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? "Processing..." : "Submit & Verify Email →"}
-              </button>
-              <button
-                onClick={() => onSkip(formData)}
-                disabled={isSubmitting}
-                className="w-full p-4 py-2.75 mt-2 rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? "Processing..." : "Skip — verify my email"}
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                onClick={handleNextSubStep}
-                disabled={isSubmitting}
-                className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? "Processing..." : "Next: Choose Category →"}
-              </button>
-              <button
-                onClick={() => onSkip(formData)}
-                disabled={isSubmitting}
-                className="w-full py-2.75 p-4 mt-2 rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? "Processing..." : "Skip all — verify my email"}
-              </button>
-            </>
-          )}
-        </div>
-      )}
-
-      {currentSubStep === 2 && (
-        <div className="fade-in">
-          <div className="text-[1.375rem] font-bold text-[#111827] mb-1">
-            Your Category
-          </div>
-          <div className="text-sm text-[#6B7280] mb-5">
-            Select the service(s) you offer. Click on a category to see
-            requirements and upload credentials.
-          </div>
-
-          <div className="mb-5">
-            <CategorySelect
-              selectedCategories={formData.categories}
-              onChange={handleCategoriesChange}
-              onValidationChange={setIsCategoryValid}
-            />
-          </div>
-
-          {formData.categories.length > 0 && !canProceedFromCategories() && (
-            <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600 font-medium">
-                ⚠️ Please upload at least one credential file for each selected
-                category to continue.
-              </p>
-            </div>
-          )}
-
-          <button
-            onClick={handleNextSubStep}
-            disabled={
-              isSubmitting ||
-              (formData.categories.length > 0 && !canProceedFromCategories())
-            }
-            className={`w-full py-3 rounded-xl font-semibold text-sm cursor-pointer transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed ${
-              formData.categories.length > 0 && !canProceedFromCategories()
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-[#024CEE] text-white hover:bg-[#0341cc]"
-            }`}
-          >
-            {isSubmitting ? "Processing..." : "Next: Identity Verification →"}
-          </button>
-          <button
-            onClick={() => onSkip(formData)}
-            disabled={isSubmitting}
-            className="w-full py-2.75 p-4 mt-2 rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? "Processing..." : "Skip all — verify my email"}
-          </button>
-        </div>
-      )}
-
-      {currentSubStep === 3 && (
-        <div className="fade-in">
-          <div className="text-[1.375rem] font-bold text-[#111827] mb-1">
-            Identity Verification
-          </div>
-          <div className="text-sm text-[#6B7280] mb-5">
-            Upload your ID to activate your provider account. Documents are
-            reviewed securely by our team and never shared publicly.
-          </div>
-
-          <div className="mb-5">
-            <FileUpload
-              icon="🪖"
-              title="Passport or National ID"
-              subtitle="Required for all providers to publish services on the platform. Upload a clear photo or scan — PDF, JPG, or PNG."
-              badge
-              badgeText="Required"
-              files={formData.idDocument ? [formData.idDocument] : []}
-              onUpload={(files) =>
-                updateField(
-                  "idDocument",
-                  Array.isArray(files) ? files[0] : files,
-                )
-              }
-              onRemove={() => updateField("idDocument", null)}
-              accept=".pdf,.jpg,.jpeg,.png"
-              multiple={false}
-            />
 
             {role === "provider" && (
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-2">About <span className="text-gray-400 font-normal">(80-600 chars)</span></label>
+                <textarea
+                  value={formData.about}
+                  onChange={(e) => updateField("about", e.target.value)}
+                  placeholder="Share your experience and qualifications..."
+                  rows={4}
+                  className={`${inputBaseStyle} resize-none`}
+                  maxLength={600}
+                />
+                <div className="flex justify-between mt-1">
+                  <span className="text-[11px] text-gray-400">{formData.about.length < 80 ? "Min 80 characters recommended" : ""}</span>
+                  <span className="text-xs text-gray-400">{formData.about.length}/600</span>
+                </div>
+              </div>
+            )}
+
+            {role === "individual" && (
+              <div className="mb-6">
+                <FileUpload
+                  icon="🪖"
+                  title="ID Verification"
+                  subtitle="Upload passport or national ID (optional but recommended)."
+                  files={formData.idDocument ? [formData.idDocument] : []}
+                  onUpload={(files) => updateField("idDocument", Array.isArray(files) ? files[0] : files)}
+                  onRemove={() => updateField("idDocument", null)}
+                />
+              </div>
+            )}
+          </>
+        )}
+
+        {currentSubStep === 2 && (
+          <>
+            <h2 className="text-xl font-bold mb-1">Your Categories</h2>
+            <p className="text-sm text-gray-500 mb-6">Select the services you offer and upload required credentials.</p>
+            <div className="mb-6">
+              <CategorySelect
+                selectedCategories={formData.categories}
+                onChange={handleCategoriesChange}
+              />
+            </div>
+          </>
+        )}
+
+        {currentSubStep === 3 && (
+          <>
+            <h2 className="text-xl font-bold mb-1">Identity Verification</h2>
+            <p className="text-sm text-gray-500 mb-6">Securely upload your documents for account activation.</p>
+            <div className="flex flex-col gap-4 mb-6">
+              <FileUpload
+                icon="🪖"
+                title="Passport or National ID"
+                subtitle="Required for all providers."
+                badge badgeText="Required"
+                files={formData.idDocument ? [formData.idDocument] : []}
+                onUpload={(files) => updateField("idDocument", Array.isArray(files) ? files[0] : files)}
+                onRemove={() => updateField("idDocument", null)}
+              />
               <FileUpload
                 icon="🏠"
                 title="Proof of Residence"
-                subtitle="Document proving your current address."
-                badge
-                badgeText="Optional"
-                files={
-                  formData.proofOfResidence ? [formData.proofOfResidence] : []
-                }
-                onUpload={(files) =>
-                  updateField(
-                    "proofOfResidence",
-                    Array.isArray(files) ? files[0] : files,
-                  )
-                }
+                subtitle="Utility bill or official document."
+                badge badgeText="Optional"
+                files={formData.proofOfResidence ? [formData.proofOfResidence] : []}
+                onUpload={(files) => updateField("proofOfResidence", Array.isArray(files) ? files[0] : files)}
                 onRemove={() => updateField("proofOfResidence", null)}
-                accept=".pdf,.jpg,.jpeg,.png"
-                multiple={false}
               />
-            )}
+              {subRole === "company" && (
+                <FileUpload
+                  icon="📋"
+                  title="Business Registration"
+                  subtitle="Official company registration document."
+                  badge badgeText="Required"
+                  files={formData.businessRegistration ? [formData.businessRegistration] : []}
+                  onUpload={(files) => updateField("businessRegistration", Array.isArray(files) ? files[0] : files)}
+                  onRemove={() => updateField("businessRegistration", null)}
+                />
+              )}
+            </div>
+          </>
+        )}
 
-            {role === "provider" && (
-              <FileUpload
-                icon="📋"
-                title="Business Registration"
-                subtitle="Upload your official company registration document (Gewerbeanmeldung or equivalent) ."
-                badge
-                badgeText="Required for Company"
-                files={
-                  formData.businessRegistration
-                    ? [formData.businessRegistration]
-                    : []
-                }
-                onUpload={(files) =>
-                  updateField(
-                    "businessRegistration",
-                    Array.isArray(files) ? files[0] : files,
-                  )
-                }
-                onRemove={() => updateField("businessRegistration", null)}
-                accept=".pdf,.jpg,.jpeg,.png"
-                multiple={false}
-              />
-            )}
-          </div>
-
+        <div className="flex flex-col gap-2">
           <button
-            onClick={() => onComplete(formData)}
-            disabled={isSubmitting}
-            className="w-full py-3 rounded-xl bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+            onClick={handleNext}
+            disabled={isSubmitting || (currentSubStep === 2 && formData.categories.length > 0 && !canProceedFromCategories())}
+            className="w-full py-3 bg-[#024CEE] text-white rounded-xl font-bold hover:bg-blue-700 transition-all disabled:opacity-50"
           >
-            {isSubmitting ? "Processing..." : "Submit & Verify Email →"}
+            {isSubmitting ? "Processing..." : (currentSubStep === (role === "provider" ? 3 : 1) ? "Submit & Continue →" : "Next Step →")}
           </button>
           <button
             onClick={() => onSkip(formData)}
             disabled={isSubmitting}
-            className="w-full p-4 py-2.75 mt-2 rounded-xl border border-[#E5E7EB] text-[#6B7280] font-medium text-sm cursor-pointer transition-all hover:border-[#93b4f7] hover:text-[#111827] disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full py-3 border border-gray-200 text-gray-500 rounded-xl font-medium hover:border-blue-300 hover:text-gray-900 transition-all disabled:opacity-50"
           >
-            {isSubmitting ? "Processing..." : "Skip all — verify my email"}
+            Skip for now
           </button>
         </div>
-      )}
+      </div>
     </div>
   );
 };

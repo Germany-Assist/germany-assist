@@ -53,6 +53,8 @@ const TimelinePage = lazy(() => import("../pages/TimelinePage"));
 const ProviderTimeline = lazy(() => import("../pages/ProviderTimelinePage"));
 const SigninPage = lazy(() => import("../features/auth/pages/SigninPage"));
 const SignupPage = lazy(() => import("../features/auth/pages/SignupPage"));
+const IndividualSignupPage = lazy(() => import("../features/auth/pages/IndividualSignupPage"));
+const ProviderSignupPage = lazy(() => import("../features/auth/pages/ProviderSignupPage"));
 const ForgotPasswordPage = lazy(
   () => import("../features/auth/pages/ForgotPasswordPage"),
 );
@@ -175,6 +177,16 @@ export const routesConfig = [
     path: "/signup",
     element: SignupPage,
     handle: { label: "Sign Up", icon: UserPlus },
+  },
+  {
+    path: "/signup/individual",
+    element: IndividualSignupPage,
+    handle: { label: "Individual Sign Up", icon: UserPlus },
+  },
+  {
+    path: "/signup/provider",
+    element: ProviderSignupPage,
+    handle: { label: "Provider Sign Up", icon: UserPlus },
   },
   {
     path: "/forgot-password",
