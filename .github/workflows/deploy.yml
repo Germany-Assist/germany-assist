@@ -11,19 +11,45 @@ jobs:
     environment: production
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install server dependencies
+        run: npm install --prefix server
+
+      - name: Install client dependencies
+        run: npm install --prefix client
+
+      - name: Build frontend
+        run: npm run build --prefix client
       - name: Deploy via SSH
-        uses: appleboy/ssh-action@v0.1.8
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ vars.SERVER_DOMAIN }}
           username: deploy
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
+            set -e
+
             cd /var/www/germany-assist
-            git reset --hard
-            git pull origin main
-            npm run install-all
-            npm run build
-            # restart backend
+
+            echo "Pulling latest code..."
+            git fetch origin
+            git reset --hard origin/main
+
+            echo "Installing root dependencies..."
+            npm install
+
+            echo "Installing client dependencies..."
+            npm install --prefix client
+
+            echo "Installing server dependencies..."
+            npm install --prefix server
+
+            echo "Building frontend..."
+            npm run build --prefix client
+
+            echo "Restarting PM2..."
             pm2 reload ecosystem.config.cjs || pm2 start ecosystem.config.cjs
+
+            echo "Deployment completed successfully."

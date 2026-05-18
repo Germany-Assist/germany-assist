@@ -18,8 +18,5 @@
   "type": "commonjs",
   "devDependencies": {
     "concurrently": "^9.2.1"
-  },
-  "dependencies": {
-    "resend": "^6.12.2"
   }
 }
