@@ -14,7 +14,6 @@ const SigninRightPanel = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -33,7 +32,7 @@ const SigninRightPanel = () => {
     }
     try {
       setIsLoading(true);
-      await login({ email, password });
+      await login({ email, password, rememberMe });
     } catch (error) {
       setError(getErrorMessage(error));
     } finally {
@@ -42,13 +41,17 @@ const SigninRightPanel = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center py-9 px-5 overflow-y-auto">
+    <div className="flex-1 flex flex-col justify-center items-center py-9 px-5 overflow-y-auto text-left">
       <div className="w-full max-w-[560px]">
+        <div className="text-[0.6rem] font-bold  text-[#3f75e7] tracking-widest mb-1">
+          WELCOME BACK
+        </div>
         <div className="text-[1.35rem] font-bold text-[#111827] tracking-tight mb-1">
           Sign in to your account
         </div>
         <div className="text-[0.83rem] text-[#6B7280] mb-5 leading-relaxed">
-          Welcome back! Sign in to access your dashboard and connect with services.
+          Welcome back! Sign in to access your dashboard and connect with
+          services.
         </div>
 
         {/* Social Buttons */}
@@ -58,6 +61,8 @@ const SigninRightPanel = () => {
             authStyle={
               "flex items-center justify-center gap-2.5 w-full py-[11px] border border-[#E5E7EB] rounded-[10px] bg-white text-[0.86rem] font-medium text-[#111827] cursor-pointer transition-all hover:bg-[#F9FAFB] hover:-translate-y-0.5"
             }
+            setError={setError}
+            rememberMe={rememberMe}
           />
         </div>
 
@@ -124,7 +129,7 @@ const SigninRightPanel = () => {
               />
               <span
                 className={`w-4 h-4 rounded flex items-center justify-center text-[9px] text-white transition-all ${rememberMe ? "bg-[#024CEE] border-[#024CEE]" : "border border-[#E5E7EB] bg-white"}`}
-                style={{ borderWidth: '1.5px', borderStyle: 'solid' }}
+                style={{ borderWidth: "1.5px", borderStyle: "solid" }}
               >
                 {rememberMe && "✓"}
               </span>
@@ -142,7 +147,7 @@ const SigninRightPanel = () => {
             type="submit"
             disabled={isLoading}
             className="w-full py-3 rounded-lg bg-[#024CEE] text-white font-semibold text-sm cursor-pointer transition-all hover:bg-[#0341cc] hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            style={{ boxShadow: '0 2px 10px rgba(2,76,238,0.18)' }}
+            style={{ boxShadow: "0 2px 10px rgba(2,76,238,0.18)" }}
           >
             {isLoading ? (
               <>

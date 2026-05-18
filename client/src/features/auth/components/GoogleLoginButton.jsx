@@ -2,11 +2,14 @@ import { useEffect, useRef } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import { GOOGLE_CLIENT_ID } from "../../../config/api";
 import { googleRetrieveInfo } from "../../../api/authService";
+import { getErrorMessage } from "../../../api/errorMessages";
 
 export default function GoogleLoginButton({
   authStyle,
   handleGoogleResponse,
   signin = false,
+  setError,
+  rememberMe = true,
 }) {
   const { googleLogin } = useAuth();
   const callbackRef = useRef(handleGoogleResponse);
@@ -33,7 +36,11 @@ export default function GoogleLoginButton({
     const handleCredentialResponse = async (response) => {
       try {
         if (signin) {
-          await googleLogin(response.credential);
+          const payload = {
+            credential: response.credential,
+            rememberMe, // This will now correctly pull the fresh prop value
+          };
+          await googleLogin(payload);
         } else {
           const resp = await googleRetrieveInfo(response.credential);
           if (callbackRef.current) {
@@ -41,7 +48,7 @@ export default function GoogleLoginButton({
           }
         }
       } catch (err) {
-        console.error("Google operation failed", err);
+        setError(getErrorMessage(err));
         if (callbackRef.current) {
           callbackRef.current({
             success: false,
@@ -60,7 +67,9 @@ export default function GoogleLoginButton({
       );
       script?.addEventListener("load", initializeGoogle);
     }
-  }, [signin, googleLogin]);
+
+    // Adding rememberMe here ensures the effect re-runs and captures the new state
+  }, [signin, googleLogin, rememberMe]);
 
   /**
    * This function triggers the actual Google Account Picker.
@@ -90,11 +99,6 @@ export default function GoogleLoginButton({
       onClick={handleCustomClick}
       className={authStyle}
       style={{
-        /* 
-           Below is a base style that mimics Google's clean look. 
-           Since this is a real <button>, your 'authStyle' (Tailwind/CSS) 
-           will now actually work! 
-        */
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

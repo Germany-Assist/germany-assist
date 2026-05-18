@@ -112,8 +112,8 @@ export const AuthProvider = ({ children }) => {
     return { user, accessToken };
   };
 
-  const googleLogin = async (idToken) => {
-    const { user, accessToken } = await googleLoginRequest(idToken);
+  const googleLogin = async (payload) => {
+    const { user, accessToken } = await googleLoginRequest(payload);
     setUser(user);
     setAccessToken(accessToken);
     scheduleRefresh(accessToken);

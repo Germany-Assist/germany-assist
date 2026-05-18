@@ -29,12 +29,23 @@ async function googleAuthRetrieveInfo(req, res, next) {
 }
 async function googleAuthSignin(req, res, next) {
   try {
-    const result = await authServices.googleAuthSignin(req.body);
+    const result = await authServices.googleAuthSignin(req.body.payload);
+    const rememberMe = req.body.payload.rememberMe;
     const { refreshToken, accessToken, user, status } = result;
-    res
-      .cookie("refreshToken", refreshToken, authDomain.cookieOptions)
-      .status(status)
-      .json({ accessToken, user });
+    if (rememberMe) {
+      res
+        .cookie("refreshToken", refreshToken, authDomain.cookieOptions)
+        .status(status)
+        .json({ accessToken, user });
+      return;
+    } else {
+      console.log("im going to forget him");
+      res
+        .cookie("refreshToken", refreshToken, authDomain.forgetMeCookieOptions)
+        .status(status)
+        .json({ accessToken, user });
+      return;
+    }
   } catch (error) {
     next(error);
   }
@@ -82,10 +93,22 @@ export async function resendVerificationEmail(req, res, next) {
 export async function login(req, res, next) {
   try {
     const results = await authServices.loginUser(req.body);
-    res
-      .cookie("refreshToken", results.refreshToken, authDomain.cookieOptions)
-      .status(200)
-      .json({ accessToken: results.accessToken, user: results.user });
+    const rememberMe = req.body.rememberMe;
+    const { refreshToken, accessToken, user, status } = result;
+
+    if (rememberMe) {
+      res
+        .cookie("refreshToken", refreshToken, authDomain.cookieOptions)
+        .status(200)
+        .json({ accessToken: accessToken, user });
+      return;
+    } else {
+      res
+        .cookie("refreshToken", refreshToken, authDomain.forgetMeCookieOptions)
+        .status(200)
+        .json({ accessToken, user });
+      return;
+    }
   } catch (error) {
     next(error);
   }

@@ -6,6 +6,11 @@ const cookieOptions = {
   maxAge: REFRESH_COOKIE_AGE,
   path: "/",
 };
-
-const authDomain = { cookieOptions };
+const forgetMeCookieOptions = {
+  httpOnly: true,
+  secure: NODE_ENV === "production" ? true : false,
+  sameSite: "lax",
+  path: "/",
+};
+const authDomain = { cookieOptions, forgetMeCookieOptions };
 export default authDomain;

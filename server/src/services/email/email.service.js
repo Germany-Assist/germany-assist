@@ -1,4 +1,3 @@
-import nodemailer from "nodemailer";
 import { errorLogger, infoLogger } from "../../utils/loggers.js";
 import {
   EMAIL_HOST,

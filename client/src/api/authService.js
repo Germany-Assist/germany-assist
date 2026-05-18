@@ -1,9 +1,13 @@
 import { api } from "./client";
 
 export const checkEmailExists = async (email) => {
-  const res = await api.post("/auth/check-email", { email }, {
-    skipAuthRefresh: true,
-  });
+  const res = await api.post(
+    "/auth/check-email",
+    { email },
+    {
+      skipAuthRefresh: true,
+    },
+  );
   return res.data; // { exists: boolean }
 };
 
@@ -38,9 +42,9 @@ export const signUpCompany = async (data) => {
   return res.data;
 };
 
-export const googleLoginRequest = async (credential) => {
+export const googleLoginRequest = async (payload) => {
   const res = await api.post("/auth/google/signin", {
-    credential,
+    payload,
   });
   return res.data; // { user, accessToken }
 };
@@ -64,16 +68,28 @@ export const resendVerificationEmail = async (email) => {
 };
 
 export const forgotPassword = async (email) => {
-  const res = await api.post(`/auth/password-reset`, { email }, { skipAuthRefresh: true });
+  const res = await api.post(
+    `/auth/password-reset`,
+    { email },
+    { skipAuthRefresh: true },
+  );
   return res.data;
 };
 
 export const verifyResetCode = async (code) => {
-  const res = await api.post(`/auth/verify-reset-code`, { code }, { skipAuthRefresh: true });
+  const res = await api.post(
+    `/auth/verify-reset-code`,
+    { code },
+    { skipAuthRefresh: true },
+  );
   return res.data;
 };
 
 export const resetPassword = async ({ token, password }) => {
-  const res = await api.post(`/auth/password-reset/confirm`, { token, password }, { skipAuthRefresh: true });
+  const res = await api.post(
+    `/auth/password-reset/confirm`,
+    { token, password },
+    { skipAuthRefresh: true },
+  );
   return res.data;
 };
