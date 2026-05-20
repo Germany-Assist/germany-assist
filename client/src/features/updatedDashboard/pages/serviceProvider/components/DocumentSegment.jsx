@@ -148,7 +148,7 @@ export default function DocumentSegment({
                           onClick={() => onUploadTrigger(categoryKey, doc)}
                           className="text-[11px] font-semibold px-2.5 py-1 rounded-md border border-[#e0e7ff] bg-white text-[#024CEE] cursor-pointer hover:bg-gray-50 transition-colors"
                         >
-                          Replace
+                          Upload
                         </button>
                       </>
                     ) : (
