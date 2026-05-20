@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Messages() {
+export default function SPMessages() {
   return (
     <div>
       <h2>Messages</h2>

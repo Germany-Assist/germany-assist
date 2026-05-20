@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function MyServices() {
+export default function SPMyServices() {
   return (
     <div>
-      <h2>My Servi rrerrces</h2>
+      <h2>My Services</h2>
       <p>My Services placeholder</p>
     </div>
   );

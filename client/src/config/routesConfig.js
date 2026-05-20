@@ -23,17 +23,31 @@ import {
 
 // Updated Dashboard
 const UpdatedDashboardLayout = lazy(() => import("../features/updatedDashboard/UpdatedDashboardLayout"));
-const UpdatedDashboard = lazy(() => import("../features/updatedDashboard/pages/Dashboard"));
-const UpdatedMessages = lazy(() => import("../features/updatedDashboard/pages/Messages"));
-const UpdatedNotifications = lazy(() => import("../features/updatedDashboard/pages/SPNotifications"));
-const UpdatedOrders = lazy(() => import("../features/updatedDashboard/pages/Orders"));
-const UpdatedMyServices = lazy(() => import("../features/updatedDashboard/pages/MyServices"));
-const UpdatedMyEvents = lazy(() => import("../features/updatedDashboard/pages/MyEvents"));
-const UpdatedClients = lazy(() => import("../features/updatedDashboard/pages/Clients"));
-const UpdatedFinance = lazy(() => import("../features/updatedDashboard/pages/Finance"));
-const UpdatedProfile = lazy(() => import("../features/updatedDashboard/pages/Profile"));
-const UpdatedVerification = lazy(() => import("../features/updatedDashboard/pages/VerificationCentre"));
-const UpdatedSettings = lazy(() => import("../features/updatedDashboard/pages/Settings"));
+const SPDashboard = lazy(() => import("../features/updatedDashboard/pages/serviceProvider/Dashboard"));
+const SPMessages = lazy(() => import("../features/updatedDashboard/pages/serviceProvider/Messages"));
+const SPNotifications = lazy(() => import("../features/updatedDashboard/pages/serviceProvider/Notifications"));
+const SPOrders = lazy(() => import("../features/updatedDashboard/pages/serviceProvider/Orders"));
+const SPMyServices = lazy(() => import("../features/updatedDashboard/pages/serviceProvider/MyServices"));
+const SPMyEvents = lazy(() => import("../features/updatedDashboard/pages/serviceProvider/MyEvents"));
+const SPClients = lazy(() => import("../features/updatedDashboard/pages/serviceProvider/Clients"));
+const SPFinance = lazy(() => import("../features/updatedDashboard/pages/serviceProvider/Finance"));
+const SPProfile = lazy(() => import("../features/updatedDashboard/pages/serviceProvider/Profile"));
+const SPVerificationCentre = lazy(() => import("../features/updatedDashboard/pages/serviceProvider/VerificationCentre"));
+const SPSettings = lazy(() => import("../features/updatedDashboard/pages/serviceProvider/Settings"));
+
+// Updated Dashboard Client
+const ClientDashboard = lazy(() => import("../features/updatedDashboard/pages/client/ClientDashboard"));
+
+// Updated Dashboard Admin
+const UpdatedAdminDashboard = lazy(() => import("../features/updatedDashboard/pages/admin/AdminDashboard"));
+const UpdatedAdminUsers = lazy(() => import("../features/updatedDashboard/pages/admin/AdminUsers"));
+const UpdatedAdminProviders = lazy(() => import("../features/updatedDashboard/pages/admin/AdminProviders"));
+const UpdatedAdminOrders = lazy(() => import("../features/updatedDashboard/pages/admin/AdminOrders"));
+const UpdatedAdminFinance = lazy(() => import("../features/updatedDashboard/pages/admin/AdminFinance"));
+const UpdatedAdminVerification = lazy(() => import("../features/updatedDashboard/pages/admin/AdminVerification"));
+const UpdatedAdminNotifications = lazy(() => import("../features/updatedDashboard/pages/admin/AdminNotifications"));
+const UpdatedAdminProfile = lazy(() => import("../features/updatedDashboard/pages/admin/AdminProfile"));
+const UpdatedAdminSettings = lazy(() => import("../features/updatedDashboard/pages/admin/AdminSettings"));
 
 // Public Pages
 const Homepage = lazy(() => import("../pages/HomePage"));
@@ -148,10 +162,6 @@ const ProviderVerification = lazy(
   () =>
     import("../features/Dashboard/tabs/serviceProvider/ProviderVerification"),
 );
-const SPNotifications = lazy(
-  () => import("../features/Dashboard/tabs/serviceProvider/SPNotifications"),
-);
-
 export const routesConfig = [
   {
     path: "/",
@@ -424,68 +434,166 @@ export const routesConfig = [
     element: NotFoundPage,
     handle: { label: "Not Found" },
   },
-  // Updated Dashboard (Alternative Layout for Service Providers)
+  // Updated Dashboard - Service Provider
   {
-    path: "/updated-dashboard",
+    path: "/updated-dashboard/sp",
     element: UpdatedDashboardLayout,
     handle: { label: "Dashboard", icon: LayoutDashboard },
     roles: ["service_provider_root"],
     children: [
       {
         path: "",
-        element: UpdatedDashboard,
+        element: SPDashboard,
         handle: { label: "Dashboard", icon: LayoutDashboard },
       },
       {
         path: "messages",
-        element: UpdatedMessages,
+        element: SPMessages,
         handle: { label: "Messages", icon: MessageSquare },
       },
       {
         path: "notifications",
-        element: UpdatedNotifications,
+        element: SPNotifications,
         handle: { label: "Notifications", icon: Bell },
       },
       {
         path: "orders",
-        element: UpdatedOrders,
+        element: SPOrders,
         handle: { label: "Orders", icon: ShoppingBag },
       },
       {
         path: "services",
-        element: UpdatedMyServices,
+        element: SPMyServices,
         handle: { label: "My Services", icon: Briefcase },
       },
       {
         path: "events",
-        element: UpdatedMyEvents,
+        element: SPMyEvents,
         handle: { label: "My Events", icon: Calendar },
       },
       {
         path: "clients",
-        element: UpdatedClients,
+        element: SPClients,
         handle: { label: "Clients", icon: Users },
       },
       {
         path: "finance",
-        element: UpdatedFinance,
+        element: SPFinance,
         handle: { label: "Finance", icon: Wallet },
       },
       {
         path: "profile",
-        element: UpdatedProfile,
+        element: SPProfile,
         handle: { label: "Profile", icon: UserCircle },
       },
       {
         path: "verification",
-        element: UpdatedVerification,
+        element: SPVerificationCentre,
         handle: { label: "Verification Centre", icon: ShieldCheck },
       },
       {
         path: "settings",
-        element: UpdatedSettings,
+        element: SPSettings,
         handle: { label: "Settings", icon: Settings },
       },
-    ]
+    ],
+  },
+  // Updated Dashboard - Client
+  {
+    path: "/updated-dashboard/client",
+    element: UpdatedDashboardLayout,
+    handle: { label: "Dashboard", icon: LayoutDashboard },
+    roles: ["client"],
+    children: [
+      {
+        path: "",
+        element: ClientDashboard,
+        handle: { label: "Dashboard", icon: LayoutDashboard },
+      },
+      {
+        path: "messages",
+        element: ClientDashboard,
+        handle: { label: "Messages", icon: MessageSquare },
+      },
+      {
+        path: "notifications",
+        element: ClientDashboard,
+        handle: { label: "Notifications", icon: Bell },
+      },
+      {
+        path: "orders",
+        element: ClientDashboard,
+        handle: { label: "Orders", icon: ShoppingBag },
+      },
+      {
+        path: "favorites",
+        element: ClientDashboard,
+        handle: { label: "Favorites", icon: Heart },
+      },
+      {
+        path: "profile",
+        element: ClientDashboard,
+        handle: { label: "Profile", icon: UserCircle },
+      },
+      {
+        path: "disputes",
+        element: ClientDashboard,
+        handle: { label: "Disputes", icon: AlertCircle },
+      },
+    ],
+  },
+  // Updated Dashboard - Admin
+  {
+    path: "/updated-dashboard/admin",
+    element: UpdatedDashboardLayout,
+    handle: { label: "Dashboard", icon: LayoutDashboard },
+    roles: ["admin", "super_admin"],
+    children: [
+      {
+        path: "",
+        element: UpdatedAdminDashboard,
+        handle: { label: "Dashboard", icon: LayoutDashboard },
+      },
+      {
+        path: "notifications",
+        element: UpdatedAdminNotifications,
+        handle: { label: "Notifications", icon: Bell },
+      },
+      {
+        path: "users",
+        element: UpdatedAdminUsers,
+        handle: { label: "Users", icon: Users },
+      },
+      {
+        path: "providers",
+        element: UpdatedAdminProviders,
+        handle: { label: "Service Providers", icon: Briefcase },
+      },
+      {
+        path: "orders",
+        element: UpdatedAdminOrders,
+        handle: { label: "Orders", icon: ShoppingBag },
+      },
+      {
+        path: "finance",
+        element: UpdatedAdminFinance,
+        handle: { label: "Finance", icon: Wallet },
+      },
+      {
+        path: "verification",
+        element: UpdatedAdminVerification,
+        handle: { label: "Verification", icon: ShieldCheck },
+      },
+      {
+        path: "profile",
+        element: UpdatedAdminProfile,
+        handle: { label: "Profile", icon: UserCircle },
+      },
+      {
+        path: "settings",
+        element: UpdatedAdminSettings,
+        handle: { label: "Settings", icon: Settings },
+      },
+    ],
   },
 ];

@@ -1,10 +1,10 @@
 import React from "react";
 
-export default function Finance() {
+export default function AdminFinance() {
   return (
     <div>
       <h2>Finance</h2>
-      <p>Finance placeholder</p>
+      <p>Admin Finance placeholder</p>
     </div>
   );
 }

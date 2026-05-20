@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Clients() {
+export default function SPClients() {
   return (
     <div>
       <h2>Clients</h2>

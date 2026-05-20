@@ -1,10 +1,10 @@
 import React from "react";
 
-export default function Orders() {
+export default function AdminOrders() {
   return (
     <div>
       <h2>Orders</h2>
-      <p>Orders placeholder</p>
+      <p>Admin Orders placeholder</p>
     </div>
   );
 }

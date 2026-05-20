@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Profile() {
+export default function SPProfile() {
   return (
     <div>
       <h2>Profile</h2>

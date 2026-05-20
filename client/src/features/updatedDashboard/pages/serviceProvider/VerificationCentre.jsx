@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { 
-  AlertCircle, Search, User, Building2, LayoutGrid, Award, 
-  CheckCircle, XCircle, Clock, Upload, FileText, Shield, 
+import {
+  AlertCircle, Search, User, Building2, LayoutGrid, Award,
+  CheckCircle, XCircle, Clock, Upload, FileText, Shield,
   HelpCircle, ChevronRight, ChevronDown, ExternalLink
 } from "lucide-react";
 
@@ -40,7 +40,7 @@ const badges = [
   { id: 4, name: "Quick Responder", desc: "Respond to 95% of inquiries within 2h", status: "locked", icon: "⚡" },
 ];
 
-export default function VerificationCentre() {
+export default function SPVerificationCentre() {
   const [activeTab, setActiveTab] = useState("profile");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -67,20 +67,17 @@ export default function VerificationCentre() {
     }
   };
 
-  const TabIcon = activeTab === "profile" ? User : activeTab === "categories" ? LayoutGrid : Award;
-
   return (
     <div style={{ animation: "fadeUp 0.3s ease both" }}>
-      {/* Alert Banner */}
       {verificationData.alert.show && (
-        <div className="vc-alert" style={{
+        <div style={{
           display: "flex", alignItems: "center", gap: "10px",
           background: "rgba(220,38,38,0.06)", border: "1px solid rgba(220,38,38,0.20)",
           borderRadius: "10px", padding: "11px 14px", marginBottom: "20px"
         }}>
           <div style={{
-            width: "28px", height: "28px", borderRadius: "7px", 
-            background: "rgba(220,38,38,0.10)", display: "flex", 
+            width: "28px", height: "28px", borderRadius: "7px",
+            background: "rgba(220,38,38,0.10)", display: "flex",
             alignItems: "center", justifyContent: "center", flexShrink: 0
           }}>
             <AlertCircle size={14} color="#DC2626" />
@@ -99,31 +96,29 @@ export default function VerificationCentre() {
         </div>
       )}
 
-      {/* Search */}
       <div style={{
         display: "flex", alignItems: "center", gap: "7px", background: "#f7f9ff",
-        border: "1px solid rgba(2,76,238,0.10)", borderRadius: "8px", 
+        border: "1px solid rgba(2,76,238,0.10)", borderRadius: "8px",
         padding: "8px 13px", marginBottom: "16px", maxWidth: "100%"
       }}>
         <Search size={13} color="#6b7280" />
-        <input 
-          type="text" 
-          placeholder="Search documents, categories, badges…" 
+        <input
+          type="text"
+          placeholder="Search documents, categories, badges…"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
-            border: "none", background: "transparent", fontSize: "13px", 
-            fontFamily: "'Outfit', sans-serif", color: "#0a0f1e", width: "100%", 
+            border: "none", background: "transparent", fontSize: "13px",
+            fontFamily: "'Outfit', sans-serif", color: "#0a0f1e", width: "100%",
             outline: "none"
           }}
         />
       </div>
 
-      {/* Progress Cards */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10px", marginBottom: "20px" }}>
         <div style={{
-          background: "#fff", border: "1px solid rgba(2,76,238,0.10)", 
-          borderRadius: "12px", padding: "14px 16px", display: "flex", 
+          background: "#fff", border: "1px solid rgba(2,76,238,0.10)",
+          borderRadius: "12px", padding: "14px 16px", display: "flex",
           flexDirection: "column", gap: "8px", cursor: "pointer",
           borderColor: activeTab === "profile" ? "#024CEE" : "rgba(2,76,238,0.10)",
           boxShadow: activeTab === "profile" ? "0 0 0 3px rgba(2,76,238,0.07)" : "none"
@@ -142,8 +137,8 @@ export default function VerificationCentre() {
         </div>
 
         <div style={{
-          background: "#fff", border: "1px solid rgba(2,76,238,0.10)", 
-          borderRadius: "12px", padding: "14px 16px", display: "flex", 
+          background: "#fff", border: "1px solid rgba(2,76,238,0.10)",
+          borderRadius: "12px", padding: "14px 16px", display: "flex",
           flexDirection: "column", gap: "8px", cursor: "pointer",
           borderColor: activeTab === "categories" ? "#024CEE" : "rgba(2,76,238,0.10)",
           boxShadow: activeTab === "categories" ? "0 0 0 3px rgba(2,76,238,0.07)" : "none"
@@ -162,8 +157,8 @@ export default function VerificationCentre() {
         </div>
 
         <div style={{
-          background: "#fff", border: "1px solid rgba(2,76,238,0.10)", 
-          borderRadius: "12px", padding: "14px 16px", display: "flex", 
+          background: "#fff", border: "1px solid rgba(2,76,238,0.10)",
+          borderRadius: "12px", padding: "14px 16px", display: "flex",
           flexDirection: "column", gap: "8px", cursor: "pointer",
           borderColor: activeTab === "badges" ? "#024CEE" : "rgba(2,76,238,0.10)",
           boxShadow: activeTab === "badges" ? "0 0 0 3px rgba(2,76,238,0.07)" : "none"
@@ -182,9 +177,8 @@ export default function VerificationCentre() {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="vc-tabs" style={{
-        display: "flex", gap: "2px", background: "rgba(2,76,238,0.07)", 
+      <div style={{
+        display: "flex", gap: "2px", background: "rgba(2,76,238,0.07)",
         borderRadius: "10px", padding: "3px", marginBottom: "18px"
       }}>
         {[
@@ -199,9 +193,9 @@ export default function VerificationCentre() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               style={{
-                flex: 1, padding: "8px 12px", borderRadius: "8px", fontSize: "12.5px", 
+                flex: 1, padding: "8px 12px", borderRadius: "8px", fontSize: "12.5px",
                 fontWeight: 500, color: isActive ? "#024CEE" : "#6b7280", cursor: "pointer",
-                textAlign: "center", transition: "all 0.18s", display: "flex", 
+                textAlign: "center", transition: "all 0.18s", display: "flex",
                 alignItems: "center", justifyContent: "center", gap: "6px", userSelect: "none",
                 background: isActive ? "#fff" : "transparent",
                 boxShadow: isActive ? "0 1px 6px rgba(2,76,238,0.10)" : "none",
@@ -220,22 +214,18 @@ export default function VerificationCentre() {
         })}
       </div>
 
-      {/* Tab Content */}
       <div style={{ animation: "fadeUp 0.25s ease both" }}>
-        
-        {/* Profile Verification Tab */}
         {activeTab === "profile" && (
           <div>
             <div style={{
               display: "flex", alignItems: "flex-start", gap: "9px", background: "#f7f9ff",
-              border: "1px solid rgba(2,76,238,0.10)", borderRadius: "9px", 
+              border: "1px solid rgba(2,76,238,0.10)", borderRadius: "9px",
               padding: "11px 13px", marginBottom: "14px", fontSize: "12px", color: "#6b7280"
             }}>
               <HelpCircle size={13} color="#024CEE" style={{ flexShrink: 0, marginTop: "1px" }} />
               <span>Accepted formats: <strong style={{ color: "#0a0f1e", margin: "0 3px" }}>PDF · JPG · PNG</strong> · Max 5 MB · English, German, or Arabic only</span>
             </div>
 
-            {/* Identity Documents Section */}
             <div style={{ background: "#fff", border: "1px solid rgba(2,76,238,0.10)", borderRadius: "12px", marginBottom: "12px", overflow: "hidden" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "14px 16px", borderBottom: "1px solid rgba(2,76,238,0.10)" }}>
                 <div style={{ width: "30px", height: "30px", borderRadius: "8px", background: "rgba(220,38,38,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -295,7 +285,6 @@ export default function VerificationCentre() {
               </div>
             </div>
 
-            {/* Business Registration Section */}
             <div style={{ background: "#fff", border: "1px solid rgba(2,76,238,0.10)", borderRadius: "12px", marginBottom: "12px", overflow: "hidden" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "14px 16px", borderBottom: "1px solid rgba(2,76,238,0.10)" }}>
                 <div style={{ width: "30px", height: "30px", borderRadius: "8px", background: "rgba(2,76,238,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -354,19 +343,17 @@ export default function VerificationCentre() {
           </div>
         )}
 
-        {/* Categories Tab */}
         {activeTab === "categories" && (
           <div>
             <div style={{
               display: "flex", alignItems: "flex-start", gap: "9px", background: "#f7f9ff",
-              border: "1px solid rgba(2,76,238,0.10)", borderRadius: "9px", 
+              border: "1px solid rgba(2,76,238,0.10)", borderRadius: "9px",
               padding: "11px 13px", marginBottom: "14px", fontSize: "12px", color: "#6b7280"
             }}>
               <HelpCircle size={13} color="#024CEE" style={{ flexShrink: 0, marginTop: "1px" }} />
               <span>Select the service categories you operate in. Each category requires admin approval before you can publish services in it.</span>
             </div>
 
-            {/* My Service Categories */}
             <div style={{ background: "#fff", border: "1px solid rgba(2,76,238,0.10)", borderRadius: "12px", marginBottom: "12px", overflow: "hidden" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "14px 16px", borderBottom: "1px solid rgba(2,76,238,0.10)" }}>
                 <div style={{ width: "30px", height: "30px", borderRadius: "8px", background: "rgba(2,76,238,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -383,7 +370,7 @@ export default function VerificationCentre() {
                     const isActive = cat.status === "active";
                     return (
                       <div key={cat.id} style={{
-                        border: "1px solid rgba(2,76,238,0.10)", borderRadius: "10px", 
+                        border: "1px solid rgba(2,76,238,0.10)", borderRadius: "10px",
                         padding: "13px 14px", transition: "all 0.15s", cursor: "pointer",
                         borderColor: "#024CEE", background: "rgba(2,76,238,0.02)"
                       }}>
@@ -392,9 +379,9 @@ export default function VerificationCentre() {
                             <LayoutGrid size={14} color={isActive ? "#059669" : "#D97706"} />
                           </div>
                           <span style={{ fontSize: "12.5px", fontWeight: 600, color: "#0a0f1e", flex: 1 }}>{cat.name}</span>
-                          <span style={{ 
+                          <span style={{
                             fontSize: "10px", fontWeight: 600, padding: "2px 7px", borderRadius: "99px",
-                            background: isActive ? "rgba(5,150,105,0.1)" : "rgba(217,119,6,0.1)", 
+                            background: isActive ? "rgba(5,150,105,0.1)" : "rgba(217,119,6,0.1)",
                             color: isActive ? "#059669" : "#D97706"
                           }}>{isActive ? "Active" : "Pending"}</span>
                         </div>
@@ -410,7 +397,6 @@ export default function VerificationCentre() {
                       </div>
                     );
                   })}
-                  {/* Add Category Card */}
                   <div style={{
                     border: "2px dashed rgba(2,76,238,0.20)", borderRadius: "10px",
                     padding: "20px", display: "flex", flexDirection: "column",
@@ -427,7 +413,6 @@ export default function VerificationCentre() {
               </div>
             </div>
 
-            {/* All Available Categories */}
             <div style={{ background: "#fff", border: "1px solid rgba(2,76,238,0.10)", borderRadius: "12px", marginBottom: "12px", overflow: "hidden" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "14px 16px", borderBottom: "1px solid rgba(2,76,238,0.10)" }}>
                 <div style={{ width: "30px", height: "30px", borderRadius: "8px", background: "rgba(107,114,128,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -449,8 +434,8 @@ export default function VerificationCentre() {
                     { name: "Recruitment Services", type: "Company / Freelancer", status: "inactive", color: "#6b7280" },
                   ].map((cat, idx) => (
                     <div key={idx} style={{
-                      display: "flex", alignItems: "center", gap: "10px", 
-                      padding: "9px 12px", border: "1px solid rgba(2,76,238,0.10)", 
+                      display: "flex", alignItems: "center", gap: "10px",
+                      padding: "9px 12px", border: "1px solid rgba(2,76,238,0.10)",
                       borderRadius: "9px"
                     }}>
                       <div style={{ width: "7px", height: "7px", borderRadius: "50%", background: cat.color, flexShrink: 0 }}></div>
@@ -473,10 +458,8 @@ export default function VerificationCentre() {
           </div>
         )}
 
-        {/* Badges Tab */}
         {activeTab === "badges" && (
           <div>
-            {/* Badge Category Filter */}
             <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "14px" }}>
               {["All", "Verification", "Performance", "Engagement"].map((cat, idx) => (
                 <button key={idx} style={{
@@ -488,7 +471,6 @@ export default function VerificationCentre() {
               ))}
             </div>
 
-            {/* Badge Grid */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10px" }}>
               {badges.map((badge) => {
                 const isEarned = badge.status === "earned";
@@ -503,7 +485,7 @@ export default function VerificationCentre() {
                     {isEarned && (
                       <div style={{
                         position: "absolute", top: "10px", right: "10px", width: "18px", height: "18px",
-                        borderRadius: "50%", background: "#059669", display: "flex", 
+                        borderRadius: "50%", background: "#059669", display: "flex",
                         alignItems: "center", justifyContent: "center"
                       }}>
                         <CheckCircle size={10} color="#fff" />

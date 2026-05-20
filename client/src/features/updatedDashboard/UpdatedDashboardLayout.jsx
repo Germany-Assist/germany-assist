@@ -1,42 +1,42 @@
 import React, { useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { useProfile } from "../../contexts/ProfileContext";
 import UpdatedDashboardSidebar from "./UpdatedDashboardSidebar";
 import UpdatedDashboardTopbar from "./UpdatedDashboardTopbar";
-import { Outlet } from "react-router-dom";
+import { serviceProviderNav } from "./sidebar/configs/serviceProviderSidebar";
+import { clientNav } from "./sidebar/configs/clientSidebar";
+import { adminNav } from "./sidebar/configs/adminSidebar";
+
+const navConfigs = {
+  service_provider_root: serviceProviderNav,
+  client: clientNav,
+  admin: adminNav,
+  super_admin: adminNav,
+};
 
 export default function UpdatedDashboardLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+  const { profile } = useProfile();
 
   const toggleCollapse = () => setSidebarCollapsed(!sidebarCollapsed);
-  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+
+  const navItems = navConfigs[profile?.role] || clientNav;
 
   return (
-    <div className="shell" style={{ display: "flex", minHeight: "100vh", fontFamily: "'Outfit', sans-serif", background: "#fff", color: "#0a0f1e" }}>
-      {/* Mobile Overlay */}
-      <div 
-        className={`mob-overlay ${sidebarOpen ? 'show' : ''}`}
-        style={{
-          display: sidebarOpen ? 'block' : 'none',
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0,0,0,0.3)',
-          zIndex: 99
-        }}
-        onClick={() => setSidebarOpen(false)}
-      />
-
-      {/* Sidebar */}
-      <UpdatedDashboardSidebar 
+    <div className="flex min-h-screen font-['Outfit',_sans-serif] bg-white text-[#0a0f1e]">
+      {/* Sidebar - Always visible, handles its own collapse width */}
+      <UpdatedDashboardSidebar
+        navItems={navItems}
         collapsed={sidebarCollapsed}
-        open={sidebarOpen}
         onToggleCollapse={toggleCollapse}
-        onCloseMobile={() => setSidebarOpen(false)}
       />
 
-      {/* Main Content */}
-      <main className="main" style={{ flex: 1, overflow: "auto", background: "#f7f9ff", minWidth: 0 }}>
-        <UpdatedDashboardTopbar onToggleSidebar={toggleSidebar} />
-        <div className="content" style={{ padding: "22px 24px 32px" }}>
+      {/* Main Framework Content Body */}
+      <main className="flex-1 min-w-0 bg-[#f7f9ff] flex flex-col h-screen overflow-y-auto">
+        {/* Pass down toggleCollapse to Topbar if you want a topbar burger button to collapse it too */}
+        <UpdatedDashboardTopbar onToggleSidebar={toggleCollapse} />
+        <div className="flex-1 p-[22px_24px_32px]">
           <Outlet />
         </div>
       </main>
