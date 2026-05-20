@@ -94,7 +94,7 @@ export async function login(req, res, next) {
   try {
     const results = await authServices.loginUser(req.body);
     const rememberMe = req.body.rememberMe;
-    const { refreshToken, accessToken, user, status } = result;
+    const { refreshToken, accessToken, user, status } = results;
 
     if (rememberMe) {
       res

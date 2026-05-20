@@ -39,11 +39,24 @@ export default function UpdatedDashboardSidebar({
   };
 
   const isActive = (path) => {
+    const currentPath = window.location.pathname;
+
+    // 1. Exact match fallback for your dashboard landing/base routes
+    // (Prevents the root dashboard item from lighting up on every sub-route)
+    if (
+      path === "/updated-dashboard/sp" ||
+      path === "/dashboard" ||
+      path === "/"
+    ) {
+      return currentPath === path;
+    }
+
+    // 2. Handle deep path matching for sub-sections
     const base = path.replace(/\/[^/]+$/, "");
     if (path === base || base === "") {
-      return window.location.pathname === path;
+      return currentPath === path;
     }
-    return window.location.pathname.startsWith(path);
+    return currentPath.startsWith(path);
   };
 
   return (
@@ -103,11 +116,11 @@ export default function UpdatedDashboardSidebar({
       )}
 
       {/* Main Navigation Track Link List */}
-      <nav className="flex-1 px-2 py-2.5 overflow-y-auto overflow-x-hidden space-y-0.5">
+      <nav className="flex-1 px-2 py-3.5 overflow-y-auto overflow-x-hidden space-y-0.5 text-left">
         {navItems?.map((section, idx) => (
           <div key={idx} className={idx > 0 ? "pt-2" : ""}>
             <div
-              className={`text-[9.5px] font-semibold tracking-wide text-gray-500 uppercase px-2 pb-1 whitespace-nowrap ${collapsed ? "hidden" : "block"}`}
+              className={`text-[0.7rem] font-semibold tracking-wide text-gray-500 uppercase px-2 pb-1 whitespace-nowrap ${collapsed ? "hidden" : "block"}`}
             >
               {section.section}
             </div>
@@ -123,21 +136,39 @@ export default function UpdatedDashboardSidebar({
                   to={item.path}
                   title={item.label}
                   className={`
-                    flex items-center rounded-lg text-[13px] transition-all duration-150 mb-0.5 no-underline h-9
-                    ${collapsed ? "justify-center px-0" : "justify-start gap-2.5 px-2.5"}
+                    flex items-center rounded-lg text-[0.7rem] transition-all duration-150 mb-0.2 no-underline h-9
+                    ${collapsed ? "justify-center px-0 relative" : "justify-start gap-2.5 px-2.5"}
                     ${active ? "bg-blue-50 text-blue-600 font-medium" : "text-gray-500 hover:bg-gray-50"}
                   `}
                 >
-                  <Icon className="shrink-0" size={15} />
+                  {/* Icon wrapper to assist absolute alignment for collapsed badges */}
+                  <div className="relative flex items-center justify-center">
+                    <Icon className="shrink-0" size={18} />
+
+                    {/* Collapsed View Badge (Floating dot or small counter) */}
+                    {collapsed && item.badgeKey && count > 0 && (
+                      <span
+                        className={`
+                          absolute -top-1.5 -right-2.5 flex items-center justify-center
+                          text-[8px] font-bold rounded-full text-white shrink-0 min-w-[18px] h-[18px] px-1
+                          ${badgeBg} border border-white
+                        `}
+                      >
+                        {count > 9 ? "9+" : count}
+                      </span>
+                    )}
+                  </div>
+
                   <span
                     className={`flex-1 truncate ${collapsed ? "hidden" : "block"}`}
                   >
                     {item.label}
                   </span>
 
-                  {item.badgeKey && count > 0 && (
+                  {/* Expanded View Badge */}
+                  {!collapsed && item.badgeKey && count > 0 && (
                     <span
-                      className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full text-white shrink-0 ${badgeBg} ${collapsed ? "hidden" : "ml-auto"}`}
+                      className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full text-white shrink-0 ml-auto ${badgeBg}`}
                     >
                       {count > 99 ? "99+" : count}
                     </span>

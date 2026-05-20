@@ -7,7 +7,7 @@ export const fetchBadgeCounts = async () => {
 
 export const dummyBadgeCounts = async () => {
   return {
-    messages: 5,
+    messages: 2,
     notifications: 3,
     orders: 14,
     verification: 1,
