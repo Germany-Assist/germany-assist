@@ -1,15 +1,22 @@
 import React from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useProfile } from "../../contexts/ProfileContext";
+import { useBadges } from "../../contexts/BadgeContext";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
+const badgeColorMap = {
+  "nb-red": "bg-red-500",
+  "nb-blue": "bg-blue-600",
+  "nb-sky": "bg-sky-400",
+};
 
 export default function UpdatedDashboardSidebar({
   navItems,
   collapsed,
   onToggleCollapse,
 }) {
-  const location = useLocation();
   const { profile } = useProfile();
+  const { getCount } = useBadges();
 
   const getInitials = (name) => {
     if (!name) return "GA";
@@ -32,98 +39,83 @@ export default function UpdatedDashboardSidebar({
   };
 
   const isActive = (path) => {
-    if (
-      path === "/updated-dashboard/client" ||
-      path === "/updated-dashboard/sp"
-    ) {
-      return location.pathname === path;
+    const base = path.replace(/\/[^/]+$/, "");
+    if (path === base || base === "") {
+      return window.location.pathname === path;
     }
-    return location.pathname.startsWith(path);
-  };
-
-  const badgeColorMap = {
-    "nb-red": "bg-[#E53E3E]",
-    "nb-blue": "bg-[#024CEE]",
-    "nb-cyan": "bg-[#49B7DF]",
+    return window.location.pathname.startsWith(path);
   };
 
   return (
-    <div
+    <aside
       className={`
-        sticky top-0 h-screen z-[100] flex flex-col bg-white border-r border-[#024CEE]/10 overflow-hidden transition-all duration-200 ease-in-out
+        /* Base structure: Locks it to full height, handles borders, backgrounds, and smooth tracking animations */
+        flex flex-col border-r border-blue-100 bg-white h-screen shrink-0 transition-all duration-200 ease-in-out sticky top-0
         
         /* 
-          FIX: Let JavaScript state dictate width values across ALL screen variants! 
-          When 'collapsed' is true, it scales down everywhere. 
-          When 'collapsed' is false, it stretches out completely everywhere.
+          FIX: Responsive layout widths driven strictly by state 
+          This forces it to ALWAYS stay visible, dropping to a compact 56px size on mobile 
+          regardless of layout states unless explicitly expanded.
         */
         ${collapsed ? "w-14 min-w-14 max-w-14" : "w-[220px] min-w-[220px] max-w-[220px]"}
       `}
     >
       {/* Brand Header Logo Panel */}
       <div
-        className={`
-          flex items-center border-b border-[#024CEE]/10 px-3 h-[65px] shrink-0 gap-2
-          ${collapsed ? "justify-center" : "justify-start"}
-        `}
+        className={`flex items-center gap-2 px-3.5 py-4 border-b border-blue-100 ${collapsed ? "justify-center" : "justify-start"}`}
       >
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-white border border-[#024CEE]/10">
-          <div className="flex flex-col w-full h-full">
-            <div className="flex-1 bg-black" />
-            <div className="flex-1 bg-[#d60d2e]" />
-            <div className="flex-1 bg-[#f6ce17]" />
-          </div>
+        <div className="w-8 h-8 rounded-lg border border-blue-100 overflow-hidden shrink-0 flex flex-col">
+          <div className="flex-1 bg-black" />
+          <div className="flex-1 bg-red-600" />
+          <div className="flex-1 bg-yellow-400" />
         </div>
 
-        {/* Text Area Description Panel */}
-        <div
-          className={`flex-col min-w-0 flex-1 ${collapsed ? "hidden" : "flex"}`}
-        >
-          <span className="text-[13px] font-bold text-[#0a0f1e] leading-tight truncate">
+        <div className={`flex flex-col ${collapsed ? "hidden" : "flex"}`}>
+          <span className="text-[13px] font-bold text-gray-950 leading-tight whitespace-nowrap">
             Germany Assists
           </span>
-          <span className="text-[10px] text-gray-500 truncate">
-            Provider Portal
+          <span className="text-[10px] text-gray-500 whitespace-nowrap">
+            {getRoleLabel(profile?.role)}
           </span>
         </div>
 
-        {/* Collapse Minimize Trigger Icon - Shows only when sidebar is wide */}
-        {!collapsed && (
-          <button
-            onClick={onToggleCollapse}
-            className="w-5.5 h-5.5 ml-auto rounded-md border border-[#024CEE]/10 bg-white flex items-center justify-center cursor-pointer shrink-0 text-gray-500 hover:bg-gray-50 transition-colors duration-150"
-          >
-            <ChevronLeft size={12} />
-          </button>
-        )}
+        <button
+          onClick={onToggleCollapse}
+          className={`
+            w-5.5 h-5.5 rounded-md border border-blue-100 bg-white flex items-center justify-center shrink-0 text-gray-500 hover:bg-gray-50 transition-colors
+            ${collapsed ? "hidden" : "ml-auto"}
+          `}
+        >
+          <ChevronLeft size={12} />
+        </button>
       </div>
 
-      {/* Expand Bar Segment Trigger - Shows only when sidebar is narrow */}
+      {/* Expand Bar Segment Trigger Button (Shows up explicitly when track is thin) */}
       {collapsed && (
-        <div className="flex justify-center py-2.5 bg-gray-50/30 border-b border-[#024CEE]/5 shrink-0">
+        <div className="flex justify-center py-2 bg-gray-50/50 border-b border-blue-50 shrink-0">
           <button
             onClick={onToggleCollapse}
-            className="w-5.5 h-5.5 rounded-md border border-[#024CEE]/10 bg-white flex items-center justify-center cursor-pointer text-gray-500 hover:bg-gray-50 transition-colors"
+            className="w-5.5 h-5.5 rounded-md border border-blue-100 bg-white flex items-center justify-center cursor-pointer text-gray-500 hover:bg-gray-50 transition-colors"
           >
             <ChevronRight size={12} />
           </button>
         </div>
       )}
 
-      {/* Main Track Navigation List */}
-      <nav className="flex-1 px-1.5 py-2.5 overflow-y-auto overflow-x-hidden space-y-1 text-left">
+      {/* Main Navigation Track Link List */}
+      <nav className="flex-1 px-2 py-2.5 overflow-y-auto overflow-x-hidden space-y-0.5">
         {navItems?.map((section, idx) => (
           <div key={idx} className={idx > 0 ? "pt-2" : ""}>
             <div
-              className={`text-[9.5px] font-semibold tracking-wider text-gray-500 uppercase px-2 pb-1 whitespace-nowrap ${collapsed ? "hidden" : "block"}`}
+              className={`text-[9.5px] font-semibold tracking-wide text-gray-500 uppercase px-2 pb-1 whitespace-nowrap ${collapsed ? "hidden" : "block"}`}
             >
               {section.section}
             </div>
-
             {section.items.map((item, itemIdx) => {
               const Icon = item.icon;
               const active = isActive(item.path);
-              const badgeBg = badgeColorMap[item.badgeColor] || "bg-[#49B7DF]";
+              const count = item.badgeKey ? getCount(item.badgeKey) : 0;
+              const badgeBg = badgeColorMap[item.badgeColor] || "bg-sky-400";
 
               return (
                 <NavLink
@@ -131,24 +123,23 @@ export default function UpdatedDashboardSidebar({
                   to={item.path}
                   title={item.label}
                   className={`
-                    flex items-center rounded-lg text-[13px] cursor-pointer transition-all duration-150 relative no-underline h-7
-                    ${collapsed ? "justify-center px-0" : "justify-start gap-1 px-2.5"}
-                    ${active ? "text-[#024CEE] bg-[#024CEE]/7 font-medium" : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"}
+                    flex items-center rounded-lg text-[13px] transition-all duration-150 mb-0.5 no-underline h-9
+                    ${collapsed ? "justify-center px-0" : "justify-start gap-2.5 px-2.5"}
+                    ${active ? "bg-blue-50 text-blue-600 font-medium" : "text-gray-500 hover:bg-gray-50"}
                   `}
                 >
-                  <Icon size={15} className="shrink-0" />
-
+                  <Icon className="shrink-0" size={15} />
                   <span
-                    className={`flex-1 truncate ml-2.5 ${collapsed ? "hidden" : "block"}`}
+                    className={`flex-1 truncate ${collapsed ? "hidden" : "block"}`}
                   >
                     {item.label}
                   </span>
 
-                  {item.badge && (
+                  {item.badgeKey && count > 0 && (
                     <span
-                      className={`ml-auto text-[10px] font-semibold px-1.5 py-0.5 rounded-full text-white ${badgeBg} ${collapsed ? "hidden" : "block"}`}
+                      className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full text-white shrink-0 ${badgeBg} ${collapsed ? "hidden" : "ml-auto"}`}
                     >
-                      {item.badge}
+                      {count > 99 ? "99+" : count}
                     </span>
                   )}
                 </NavLink>
@@ -158,30 +149,30 @@ export default function UpdatedDashboardSidebar({
         ))}
       </nav>
 
-      {/* Base Account Dashboard Grid Footer */}
-      <div className="p-1.5 border-t border-[#024CEE]/10 shrink-0 flex justify-center">
-        <div
-          onClick={() => {
-            const base =
-              profile?.role === "client"
-                ? "/updated-dashboard/client"
-                : "/updated-dashboard/sp";
-            window.location.href = `${base}/profile`;
-          }}
+      {/* Base Profile Footer Session Section */}
+      <div className="px-2 py-2.5 border-t border-blue-100 shrink-0">
+        <NavLink
+          to={`${
+            profile?.role === "client"
+              ? "/updated-dashboard/client"
+              : profile?.role === "admin" || profile?.role === "super_admin"
+                ? "/updated-dashboard/admin"
+                : "/updated-dashboard/sp"
+          }/profile`}
           className={`
-            flex items-center rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-150 w-full h-10
-            ${collapsed ? "justify-center p-0" : "justify-start gap-2.5 p-2"}
+            flex items-center rounded-lg transition-colors hover:bg-gray-50 no-underline h-12
+            ${collapsed ? "justify-center p-0" : "justify-start gap-2 p-2"}
           `}
         >
-          <div className="w-8 h-8 rounded-lg bg-[#024CEE] flex items-center justify-center text-white text-[11px] font-bold shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white text-[11px] font-bold shrink-0">
             {getInitials(profile?.name)}
           </div>
 
           <div
-            className={`flex-1 min-w-0 items-center justify-between ml-2.5 ${collapsed ? "hidden" : "flex"}`}
+            className={`flex-1 min-w-0 items-center justify-between ${collapsed ? "hidden" : "flex"}`}
           >
             <div className="min-w-0 flex-1">
-              <div className="text-[12.5px] font-semibold text-[#0a0f1e] truncate">
+              <div className="text-[12.5px] font-semibold text-gray-950 truncate">
                 {profile?.name || "Germany Assists"}
               </div>
               <div className="text-[10.5px] text-gray-500 truncate">
@@ -192,8 +183,8 @@ export default function UpdatedDashboardSidebar({
               <ChevronRight size={13} />
             </div>
           </div>
-        </div>
+        </NavLink>
       </div>
-    </div>
+    </aside>
   );
 }
