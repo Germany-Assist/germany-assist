@@ -7,17 +7,17 @@ import {
   Award,
   HelpCircle,
   Upload,
+  CheckCircle,
+  ExternalLink,
 } from "lucide-react";
 import { fetchCategoriesForRegister } from "../../../../api/meta.api";
 import DocumentSegment from "./components/DocumentSegment";
 import UploadModal from "./components/UploadFileModal";
-import CategoryCard, { AddCategoryCard } from "./components/CategoryCard";
-import BadgeCard from "./components/BadgeCard";
 
 export default function SPVerificationCentre() {
   const [activeTab, setActiveTab] = useState("profile");
   const [searchQuery, setSearchQuery] = useState("");
-  const [tabs, setTabs] = useState([
+  const tabs = [
     {
       id: "profile",
       label: "Profile Verification",
@@ -39,7 +39,7 @@ export default function SPVerificationCentre() {
       badge: "Coming soon",
       badgeType: "ok",
     },
-  ]);
+  ];
 
   const [requests, setRequests] = useState({
     identity: [
@@ -65,7 +65,8 @@ export default function SPVerificationCentre() {
         id: "business-reg",
         title: "Business Registration",
         subtitle: "Official commercial license • Company only",
-        status: "pending",
+        status: "active",
+        expDate: "2025-08-15",
         fileName: "business_reg.pdf",
         required: true,
       },
@@ -78,8 +79,21 @@ export default function SPVerificationCentre() {
       },
     ],
     categories: [
-      { id: "cat-1", title: "German Language", icon: "🇩🇪", status: "active" },
-      { id: "cat-2", title: "Career Coaching", icon: "💼", status: "pending" },
+      {
+        id: "cat-1",
+        title: "German Language",
+        subtitle: "Teaching & exam preparation",
+        icon: "🇩🇪",
+        status: "active",
+        expDate: "2025-08-15",
+      },
+      {
+        id: "cat-2",
+        title: "Career Coaching",
+        subtitle: "CV, LinkedIn & interview prep",
+        icon: "💼",
+        status: "pending",
+      },
     ],
   });
 
@@ -100,18 +114,17 @@ export default function SPVerificationCentre() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContext, setModalContext] = useState(null);
 
-  const handleOpenUploadModal = (categoryKey, doc) => {
-    setModalContext({ categoryKey, doc });
+  const handleOpenUploadModal = (doc) => {
+    setModalContext(doc);
     setIsModalOpen(true);
   };
 
   const handleConfirmUpload = (file) => {
     if (!modalContext || !file) return;
-    const { categoryKey, doc } = modalContext;
     setRequests((prev) => ({
       ...prev,
-      [categoryKey]: prev[categoryKey].map((item) =>
-        item.id === doc.id
+      identity: prev.identity.map((item) =>
+        item.id === modalContext.id
           ? { ...item, fileName: file.name, status: "pending", reason: null }
           : item,
       ),
@@ -205,7 +218,6 @@ export default function SPVerificationCentre() {
             <DocumentSegment
               title="Identity Documents"
               subtitle="Government ID, Proof of Residence"
-              categoryKey="identity"
               icon={User}
               iconBgColor="bg-red-50"
               iconTextColor="text-red-600"
@@ -216,7 +228,6 @@ export default function SPVerificationCentre() {
             <DocumentSegment
               title="Business Registration"
               subtitle="Commercial license, Freelance permit, or School registration"
-              categoryKey="business"
               icon={Building2}
               iconBgColor="bg-blue-50"
               iconTextColor="text-[#024CEE]"
@@ -240,33 +251,16 @@ export default function SPVerificationCentre() {
               </span>
             </div>
 
-            <div className="bg-white border border-[#e0e7ff] rounded-xl mb-3 overflow-hidden">
-              <div className="flex items-center gap-2.5 px-4 py-3.5 border-b border-[#e0e7ff]">
-                <div className="w-[30px] h-[30px] rounded-lg bg-blue-50 flex items-center justify-center">
-                  <LayoutGrid size={15} className="text-[#024CEE]" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-[13px] font-semibold text-[#0a0f1e]">
-                    My Service Categories
-                  </div>
-                  <div className="text-[11px] text-gray-500 mt-0.5">
-                    Active and pending categories
-                  </div>
-                </div>
-              </div>
-              <div className="p-4">
-                <div className="grid grid-cols-2 gap-[10px]">
-                  {requests.categories.map((cat) => (
-                    <CategoryCard
-                      key={cat.id}
-                      category={cat}
-                      status={cat.status || "pending"}
-                    />
-                  ))}
-                  <AddCategoryCard />
-                </div>
-              </div>
-            </div>
+            <DocumentSegment
+              title="My Service Categories"
+              subtitle="Active and pending categories"
+              icon={LayoutGrid}
+              iconBgColor="bg-blue-50"
+              iconTextColor="text-[#024CEE]"
+              documents={requests.categories}
+              onUploadTrigger={handleOpenUploadModal}
+              gridCols="grid-cols-1 md:grid-cols-2"
+            />
 
             <div className="bg-white border border-[#e0e7ff] rounded-xl mb-3 overflow-hidden">
               <div className="flex items-center gap-2.5 px-4 py-3.5 border-b border-[#e0e7ff]">
@@ -297,9 +291,9 @@ export default function SPVerificationCentre() {
                       <div className="text-[11px] text-gray-500">
                         {cat.categoryType || ""}
                       </div>
-                      <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-600">
-                        Available
-                      </span>
+                      <button className="text-[10.5px] font-semibold px-2 py-0.5 rounded bg-blue-50 text-[#024CEE] border-none cursor-pointer hover:bg-blue-100 transition-colors">
+                        Request
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -328,7 +322,41 @@ export default function SPVerificationCentre() {
             </div>
             <div className="grid grid-cols-3 gap-[10px]">
               {badges.map((badge) => (
-                <BadgeCard key={badge.id} badge={badge} />
+                <div
+                  key={badge.id}
+                  className={`border rounded-lg p-3.5 transition-all relative ${badge.status === "earned" ? "border-emerald-200 bg-emerald-50/5" : "border-[#e0e7ff] bg-transparent"} ${badge.status === "locked" ? "opacity-60" : ""}`}
+                >
+                  {badge.status === "earned" && (
+                    <div className="absolute top-2.5 right-2.5 w-[18px] h-[18px] rounded-full bg-emerald-600 flex items-center justify-center">
+                      <CheckCircle size={10} className="text-white" />
+                    </div>
+                  )}
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-lg">
+                      {badge.icon}
+                    </div>
+                    <span
+                      className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${badge.status === "earned" ? "bg-emerald-100 text-emerald-600" : badge.status === "locked" ? "bg-gray-200 text-gray-500" : "bg-blue-50 text-blue-600"}`}
+                    >
+                      {badge.status === "earned"
+                        ? "Earned"
+                        : badge.status === "locked"
+                          ? "Locked"
+                          : "Upload"}
+                    </span>
+                  </div>
+                  <div className="text-[12px] font-semibold text-[#0a0f1e] mb-0.5">
+                    {badge.name}
+                  </div>
+                  <div className="text-[11px] text-gray-500 leading-relaxed">
+                    {badge.desc}
+                  </div>
+                  {badge.status !== "earned" && badge.status !== "locked" && (
+                    <div className="text-[11px] font-semibold text-[#024CEE] cursor-pointer mt-1.5 inline-flex items-center gap-0.5 hover:underline">
+                      Upload <ExternalLink size={11} />
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           </div>
@@ -338,7 +366,7 @@ export default function SPVerificationCentre() {
       <UploadModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        documentConfig={modalContext?.doc}
+        documentConfig={modalContext}
         onConfirmUpload={handleConfirmUpload}
       />
 
