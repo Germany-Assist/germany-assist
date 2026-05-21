@@ -13,10 +13,13 @@ import {
 import { fetchCategoriesForRegister } from "../../../../api/meta.api";
 import DocumentSegment from "./components/DocumentSegment";
 import UploadModal from "./components/UploadFileModal";
+import CategoryModal from "./components/CategoryModal";
 
 export default function SPVerificationCentre() {
   const [activeTab, setActiveTab] = useState("profile");
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Tab configuration
   const tabs = [
     {
       id: "profile",
@@ -41,6 +44,7 @@ export default function SPVerificationCentre() {
     },
   ];
 
+  // Document & category requests state
   const [requests, setRequests] = useState({
     identity: [
       {
@@ -65,8 +69,7 @@ export default function SPVerificationCentre() {
         id: "business-reg",
         title: "Business Registration",
         subtitle: "Official commercial license • Company only",
-        status: "active",
-        expDate: "2025-08-15",
+        status: "pending",
         fileName: "business_reg.pdf",
         required: true,
       },
@@ -83,24 +86,38 @@ export default function SPVerificationCentre() {
         id: "cat-1",
         title: "German Language",
         subtitle: "Teaching & exam preparation",
+        fileName: "business_reg.pdf",
+        expDate: "2024-12-31",
         icon: "🇩🇪",
         status: "active",
-        expDate: "2025-08-15",
       },
       {
         id: "cat-2",
         title: "Career Coaching",
         subtitle: "CV, LinkedIn & interview prep",
         icon: "💼",
+        expDate: "2024-12-31",
+        fileName: "business_reg.pdf",
         status: "pending",
       },
     ],
   });
 
+  // Available categories from API
   const [availableCategories, setAvailableCategories] = useState([]);
 
+  // Upload modal state
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [uploadModalContext, setUploadModalContext] = useState(null);
+
+  // Category modal state
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [categoryModalMode, setCategoryModalMode] = useState("request");
+  const [preselectedCategoryId, setPreselectedCategoryId] = useState(null);
+
+  // Fetch available categories from API on mount
   useEffect(() => {
-    const fetchCategories = async () => {
+    const loadCategories = async () => {
       try {
         const response = await fetchCategoriesForRegister();
         setAvailableCategories(response.categories || []);
@@ -108,29 +125,100 @@ export default function SPVerificationCentre() {
         console.error("Error fetching categories:", error);
       }
     };
-    fetchCategories();
+    loadCategories();
   }, []);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContext, setModalContext] = useState(null);
+  // Get full category data by ID
+  const getCategoryById = (id) => availableCategories.find((c) => c.id === id);
 
-  const handleOpenUploadModal = (doc) => {
-    setModalContext(doc);
-    setIsModalOpen(true);
+  // Get request status for a category ID
+  const getCategoryRequestStatus = (categoryId) => {
+    const request = requests.categories.find((r) => r.id === categoryId);
+    return request?.status || null;
   };
 
+  // Check if a category is already requested (active, pending, or rejected)
+  const isCategoryRequested = (categoryId) => {
+    return requests.categories.some((r) => r.id === categoryId);
+  };
+
+  // Get status badge styles
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case "active":
+      case "verified":
+        return {
+          bg: "bg-emerald-100",
+          color: "text-emerald-600",
+          label: "Active",
+        };
+      case "pending":
+        return {
+          bg: "bg-amber-100",
+          color: "text-amber-600",
+          label: "Pending",
+        };
+      case "rejected":
+        return { bg: "bg-red-100", color: "text-red-600", label: "Rejected" };
+      default:
+        return { bg: "bg-gray-100", color: "text-gray-500", label: "Unknown" };
+    }
+  };
+
+  // Open upload modal for documents
+  const handleOpenUploadModal = (doc) => {
+    setUploadModalContext(doc);
+    setIsUploadModalOpen(true);
+  };
+
+  // Handle document upload confirmation
   const handleConfirmUpload = (file) => {
-    if (!modalContext || !file) return;
+    if (!uploadModalContext || !file) return;
     setRequests((prev) => ({
       ...prev,
       identity: prev.identity.map((item) =>
-        item.id === modalContext.id
+        item.id === uploadModalContext.id
           ? { ...item, fileName: file.name, status: "pending", reason: null }
           : item,
       ),
     }));
   };
 
+  // Open category modal in "request" mode (for available categories not yet requested)
+  const handleOpenRequestModal = (categoryId) => {
+    setCategoryModalMode("request");
+    setPreselectedCategoryId(categoryId);
+    setIsCategoryModalOpen(true);
+  };
+
+  // Open category modal in "info" mode (for viewing requested categories)
+  const handleOpenInfoModal = (categoryId) => {
+    setCategoryModalMode("info");
+    setPreselectedCategoryId(categoryId);
+    setIsCategoryModalOpen(true);
+  };
+
+  // Handle category request submission
+  const handleSubmitCategoryRequest = ({ categoryId, files }) => {
+    if (!categoryId || files.length === 0) return;
+    const category = getCategoryById(categoryId);
+    setRequests((prev) => ({
+      ...prev,
+      categories: [
+        ...prev.categories,
+        {
+          id: categoryId,
+          title: category?.title || category?.label || categoryId,
+          subtitle: "Pending review",
+          icon: category?.icon || "📁",
+          status: "pending",
+          files: files.map((f) => f.name),
+        },
+      ],
+    }));
+  };
+
+  // Badges data
   const badges = [
     {
       id: 1,
@@ -164,6 +252,7 @@ export default function SPVerificationCentre() {
 
   return (
     <div className="animate-[fadeUp_0.3s_ease_both]">
+      {/* Search Bar */}
       <div className="flex items-center gap-[7px] bg-[#f7f9ff] border border-[#e0e7ff] rounded-lg p-2 mb-4 max-w-full">
         <Search size={13} className="text-gray-500 shrink-0" />
         <input
@@ -175,7 +264,8 @@ export default function SPVerificationCentre() {
         />
       </div>
 
-      <div className="flex gap-[2px] bg-blue-50 rounded-lg p-[3px] mb-4">
+      {/* Tab Navigation */}
+      <div className="grid grid-cols-1 gap-2 mb-4 md:grid-cols-3 bg-[#ebf0ff] border border-[#e0e7ff] rounded-lg p-0.5">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -201,7 +291,9 @@ export default function SPVerificationCentre() {
         })}
       </div>
 
+      {/* Tab Content */}
       <div className="animate-[fadeUp_0.25s_ease_both]">
+        {/* Profile Tab */}
         {activeTab === "profile" && (
           <div>
             <div className="flex items-start gap-2 bg-[#f7f9ff] border border-[#e0e7ff] rounded-lg p-3 mb-3.5 text-xs text-gray-500">
@@ -238,6 +330,7 @@ export default function SPVerificationCentre() {
           </div>
         )}
 
+        {/* Categories Tab */}
         {activeTab === "categories" && (
           <div>
             <div className="flex items-start gap-2 bg-[#f7f9ff] border border-[#e0e7ff] rounded-lg p-3 mb-3.5 text-xs text-gray-500">
@@ -251,6 +344,7 @@ export default function SPVerificationCentre() {
               </span>
             </div>
 
+            {/* My Service Categories */}
             <DocumentSegment
               title="My Service Categories"
               subtitle="Active and pending categories"
@@ -258,10 +352,11 @@ export default function SPVerificationCentre() {
               iconBgColor="bg-blue-50"
               iconTextColor="text-[#024CEE]"
               documents={requests.categories}
-              onUploadTrigger={handleOpenUploadModal}
-              gridCols="grid-cols-1 md:grid-cols-2"
+              onUploadTrigger={(doc) => handleOpenInfoModal(doc.id)}
+              gridCols="grid-cols-2"
             />
 
+            {/* All Available Categories */}
             <div className="bg-white border border-[#e0e7ff] rounded-xl mb-3 overflow-hidden">
               <div className="flex items-center gap-2.5 px-4 py-3.5 border-b border-[#e0e7ff]">
                 <div className="w-[30px] h-[30px] rounded-lg bg-gray-100 flex items-center justify-center">
@@ -279,34 +374,66 @@ export default function SPVerificationCentre() {
               </div>
               <div className="p-4">
                 <div className="flex flex-col gap-1.5">
-                  {availableCategories.map((cat, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center gap-2.5 px-3 py-2 border border-[#e0e7ff] rounded-lg"
-                    >
-                      <span className="text-lg">{cat.icon}</span>
-                      <div className="flex-1 text-[12.5px] font-medium text-[#0a0f1e]">
-                        {cat.title || cat.label}
+                  {availableCategories.map((cat) => {
+                    const requestStatus = getCategoryRequestStatus(cat.id);
+                    const isRequested = isCategoryRequested(cat.id);
+                    const statusBadge = requestStatus
+                      ? getStatusBadge(requestStatus)
+                      : null;
+
+                    return (
+                      <div
+                        key={cat.id}
+                        className="flex items-center gap-2.5 px-3 py-2 border border-[#e0e7ff] rounded-lg"
+                      >
+                        <span className="text-lg">{cat.icon}</span>
+                        <div className="flex-1">
+                          <div className="text-[12.5px] font-medium text-[#0a0f1e]">
+                            {cat.title || cat.label}
+                          </div>
+                          <div className="text-[11px] text-gray-500">
+                            {cat.categoryType || ""}
+                          </div>
+                        </div>
+                        {/* Status badge if category is requested */}
+                        {statusBadge && (
+                          <span
+                            className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${statusBadge.bg} ${statusBadge.color}`}
+                          >
+                            {statusBadge.label}
+                          </span>
+                        )}
+                        {/* Action button - Request if not requested, View if requested */}
+                        {isRequested ? (
+                          <button
+                            onClick={() => handleOpenInfoModal(cat.id)}
+                            className="text-[10.5px] font-semibold px-2 py-0.5 rounded bg-blue-50 text-[#024CEE] border-none cursor-pointer hover:bg-blue-100 transition-colors"
+                          >
+                            View
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleOpenRequestModal(cat.id)}
+                            className="text-[10.5px] font-semibold px-2 py-0.5 rounded bg-blue-50 text-[#024CEE] border-none cursor-pointer hover:bg-blue-100 transition-colors"
+                          >
+                            Request
+                          </button>
+                        )}
                       </div>
-                      <div className="text-[11px] text-gray-500">
-                        {cat.categoryType || ""}
-                      </div>
-                      <button className="text-[10.5px] font-semibold px-2 py-0.5 rounded bg-blue-50 text-[#024CEE] border-none cursor-pointer hover:bg-blue-100 transition-colors">
-                        Request
-                      </button>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
           </div>
         )}
 
+        {/* Badges Tab */}
         {activeTab === "badges" && (
           <div>
             <div className="flex gap-1.5 flex-wrap mb-3.5">
               {["All", "Verification", "Performance", "Engagement"].map(
-                (cat, idx) => (
+                (filter, idx) => (
                   <button
                     key={idx}
                     className={`text-[11.5px] font-medium px-3 py-1.5 rounded-lg border cursor-pointer transition-all ${
@@ -315,7 +442,7 @@ export default function SPVerificationCentre() {
                         : "bg-white text-gray-500 border-[#e0e7ff] hover:bg-gray-50"
                     }`}
                   >
-                    {cat}
+                    {filter}
                   </button>
                 ),
               )}
@@ -363,13 +490,25 @@ export default function SPVerificationCentre() {
         )}
       </div>
 
+      {/* Document Upload Modal */}
       <UploadModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        documentConfig={modalContext}
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        documentConfig={uploadModalContext}
         onConfirmUpload={handleConfirmUpload}
       />
 
+      {/* Category Request/Info Modal */}
+      <CategoryModal
+        isOpen={isCategoryModalOpen}
+        onClose={() => setIsCategoryModalOpen(false)}
+        mode={categoryModalMode}
+        preselectedCategoryId={preselectedCategoryId}
+        categoryRequestStatus={getCategoryRequestStatus(preselectedCategoryId)}
+        onRequestAccess={handleSubmitCategoryRequest}
+      />
+
+      {/* Animation Keyframes */}
       <style>{`
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(6px); }
