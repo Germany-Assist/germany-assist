@@ -16,11 +16,9 @@ import UploadModal from "./components/UploadFileModal";
 import CategoryModal from "./components/CategoryModal";
 
 export default function SPVerificationCentre() {
-  const [activeTab, setActiveTab] = useState("profile");
   const [searchQuery, setSearchQuery] = useState("");
-
-  // Tab configuration
-  const tabs = [
+  const [activeTab, setActiveTab] = useState("profile");
+  const [tabs, setTabs] = useState([
     {
       id: "profile",
       label: "Profile Verification",
@@ -42,7 +40,7 @@ export default function SPVerificationCentre() {
       badge: "Coming soon",
       badgeType: "ok",
     },
-  ];
+  ]);
 
   // Document & category requests state
   const [requests, setRequests] = useState({
@@ -292,10 +290,10 @@ export default function SPVerificationCentre() {
       </div>
 
       {/* Tab Content */}
-      <div className="animate-[fadeUp_0.25s_ease_both]">
+      <div>
         {/* Profile Tab */}
         {activeTab === "profile" && (
-          <div>
+          <div className="animate-[fadeUp_0.50s_ease_both]">
             <div className="flex items-start gap-2 bg-[#f7f9ff] border border-[#e0e7ff] rounded-lg p-3 mb-3.5 text-xs text-gray-500">
               <HelpCircle
                 size={13}
@@ -332,7 +330,7 @@ export default function SPVerificationCentre() {
 
         {/* Categories Tab */}
         {activeTab === "categories" && (
-          <div>
+          <div className="animate-[fadeUp_0.50s_ease_both]">
             <div className="flex items-start gap-2 bg-[#f7f9ff] border border-[#e0e7ff] rounded-lg p-3 mb-3.5 text-xs text-gray-500">
               <HelpCircle
                 size={13}
@@ -430,7 +428,7 @@ export default function SPVerificationCentre() {
 
         {/* Badges Tab */}
         {activeTab === "badges" && (
-          <div>
+          <div className="animate-[fadeUp_0.50s_ease_both]">
             <div className="flex gap-1.5 flex-wrap mb-3.5">
               {["All", "Verification", "Performance", "Engagement"].map(
                 (filter, idx) => (
