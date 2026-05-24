@@ -16,7 +16,12 @@ export const fetchServicesApi = async (query) => {
 };
 export const fetchPaymentIntentApi = async ({ serviceId, optionId, type }) => {
   const data = await api.get(
-    `/order/pay?serviceId=${serviceId}&optionId=${optionId}&type=${type}`
+    `/order/pay?serviceId=${serviceId}&optionId=${optionId}&type=${type}`,
   );
+  return data.data;
+};
+
+export const fetchRequests = async () => {
+  const data = await api.get("/requests/all");
   return data.data;
 };

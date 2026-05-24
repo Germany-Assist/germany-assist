@@ -66,7 +66,6 @@ export const defineConstrains = () => {
     as: "verificationRequests",
   });
 
-  // VerificationRequest belongs to an IdentityRequestType when type is 'identity'
   VerificationRequest.belongsTo(Category, {
     foreignKey: "relatedId",
     constraints: false,
@@ -379,7 +378,7 @@ const db = {
   Post,
   Category,
   Subcategory,
-
+  IdentityRequestTypes,
   ServiceProvider,
   Service,
   Order,

@@ -27,8 +27,21 @@ export const metaCategoriesForRegister = async () => {
     icon: i.icon,
     requirements: i.requirements,
   }));
-  return { categories };
+  return categories;
 };
-const metaServices = { initCall, metaCategoriesForRegister };
+async function getAvailableIdentity() {
+  const types = await metaRepository.getAvailableIdentity();
+  const results = types.map((i) => ({
+    ...i,
+    id: hashIdUtil.hashIdEncode(i.id),
+  }));
+  return results;
+}
+
+const metaServices = {
+  initCall,
+  metaCategoriesForRegister,
+  getAvailableIdentity,
+};
 
 export default metaServices;

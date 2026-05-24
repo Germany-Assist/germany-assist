@@ -9,3 +9,8 @@ export const fetchCategoriesForRegister = async () => {
   const data = await api.get("/meta/register/categories");
   return data.data;
 };
+
+export const fetchIdentityRequests = async () => {
+  const data = await api.get("/meta/requests/identity");
+  return data.data;
+};

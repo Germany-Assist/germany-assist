@@ -1,11 +1,11 @@
 import db from "../../database/index.js";
-export const initCall = async () => {
-  const categories = await db.Category.findAll({
-    raw: true,
-    attributes: ["id", "title", "label"],
-  });
-  return categories;
-};
 
-const metaRepository = { initCall };
+async function getAvailableIdentity() {
+  return db.IdentityRequestTypes.findAll({
+    raw: true,
+    attributes: ["id", "title", "label", "icon", "requirements"],
+  });
+}
+
+const metaRepository = { getAvailableIdentity };
 export default metaRepository;

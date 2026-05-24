@@ -4,6 +4,11 @@ import verificationRequestController from "./verificationRequest.controller.js";
 import multerUpload from "../../configs/multer.config.js";
 const router = express.Router();
 //TODO validation
+router.get(
+  "/all",
+  jwtUtils.authenticateJwt,
+  verificationRequestController.getAll,
+);
 // -------------------- Service Provider --------------------
 router.post(
   "/provider",

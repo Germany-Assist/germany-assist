@@ -7,7 +7,7 @@ import {
   CheckCircle,
   FileText,
 } from "lucide-react";
-import { fetchCategoriesForRegister } from "../../../../../api/meta.api";
+import { useMeta } from "../../../../../contexts/MetadataContext";
 
 const MAX_FILES = 10;
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
@@ -31,23 +31,10 @@ export default function CategoryModal({
   const [uploadedFiles, setUploadedFiles] = useState([]);
   // Error message
   const [error, setError] = useState("");
-  // Available categories from API
-  const [categories, setCategories] = useState([]);
+  const { availableCategoryTypes } = useMeta();
+
   // File input reference
   const fileInputRef = useRef(null);
-
-  // Fetch categories from API on mount
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const response = await fetchCategoriesForRegister();
-        setCategories(response.categories || []);
-      } catch (err) {
-        console.error("Error loading categories:", err);
-      }
-    };
-    loadCategories();
-  }, []);
 
   // Reset state when modal opens/closes or preselected changes
   useEffect(() => {
@@ -61,7 +48,8 @@ export default function CategoryModal({
   if (!isOpen) return null;
 
   // Get full category data by ID
-  const getCategoryById = (id) => categories.find((c) => c.id === id);
+  const getCategoryById = (id) =>
+    (availableCategoryTypes || []).find((c) => c.id === id);
   const selectedCategory = selectedCategoryId
     ? getCategoryById(selectedCategoryId)
     : null;
@@ -212,7 +200,7 @@ export default function CategoryModal({
                 }}
               >
                 <option value="">— Choose a category —</option>
-                {categories.map((cat) => (
+                {(availableCategoryTypes || []).map((cat) => (
                   <option key={cat.id} value={cat.id}>
                     {cat.icon} {cat.title || cat.label}
                   </option>

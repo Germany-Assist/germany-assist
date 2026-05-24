@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, use } from "react";
-import { fetchCategoriesForRegister } from "../../../api/meta.api";
+import React, { useState, useRef, useEffect } from "react";
+import { useMeta } from "../../../contexts/MetadataContext";
 
 const MAX_FILES_PER_CATEGORY = 10;
 const MAX_CATEGORIES = 1;
@@ -12,19 +12,9 @@ const CategorySelect = ({
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [categoryFiles, setCategoryFiles] = useState({});
-  const [categories, setCategories] = useState([]);
   const dropdownRef = useRef(null);
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetchCategoriesForRegister();
-        setCategories(response.categories);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    fetchCategories();
-  }, []);
+
+  const { availableCategoryTypes } = useMeta();
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -66,7 +56,8 @@ const CategorySelect = ({
     }
   };
 
-  const getCategoryById = (id) => categories.find((c) => c.id === id);
+  const getCategoryById = (id) =>
+    (availableCategoryTypes || []).find((c) => c.id === id);
 
   const getSelectedCategoryData = () =>
     selectedCategories.map((id) => getCategoryById(id)).filter(Boolean);
@@ -151,7 +142,7 @@ const CategorySelect = ({
 
         {isDropdownOpen && (
           <div className="absolute top-full left-0 right-0 mt-1 bg-white border-2 border-[#024CEE] rounded-xl z-50 max-h-[220px] overflow-y-auto shadow-lg">
-            {categories.map((category) => {
+            {(availableCategoryTypes || []).map((category) => {
               const isSelected = selectedCategories.includes(category.id);
               return (
                 <div

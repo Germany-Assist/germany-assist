@@ -68,6 +68,10 @@ VerificationRequest.init(
         min: { args: [1], msg: "RelatedId must be greater than 0" },
       },
     },
+    expDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
   },
   {
     sequelize,

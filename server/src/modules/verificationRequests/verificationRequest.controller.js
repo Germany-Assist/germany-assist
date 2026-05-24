@@ -118,13 +118,21 @@ async function updateAdmin(req, res, next) {
     next(error);
   }
 }
-
+async function getAll(req, res, next) {
+  try {
+    const results = await verificationRequestService.getAll(req.auth);
+    res.status(200).json({ success: true, data: results });
+  } catch (error) {
+    next(error);
+  }
+}
 const verificationRequestController = {
   getAllAdmin,
   updateAdmin,
   createProvider,
   getAllProvider,
   updateProvider,
+  getAll,
 };
 
 export default verificationRequestController;

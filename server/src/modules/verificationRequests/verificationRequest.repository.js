@@ -57,12 +57,29 @@ async function updateAdmin(requestId, updates, t) {
   return request.update(updates);
 }
 
+async function getAll(filters = {}) {
+  return db.VerificationRequest.findAll({
+    where: filters,
+    include: [
+      {
+        model: db.Asset,
+        as: "assets",
+        through: {
+          attributes: [],
+        },
+        attributes: ["url", "label"],
+      },
+    ],
+    order: [["updatedAt", "DESC"]],
+  });
+}
 const verificationRequestRepository = {
   countRequests,
   createRequest,
   getAllProvider,
   getAllAdmin,
   updateAdmin,
+  getAll,
 };
 
 export default verificationRequestRepository;

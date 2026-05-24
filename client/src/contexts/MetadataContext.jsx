@@ -1,23 +1,44 @@
 import { useContext, useState, useEffect, createContext } from "react";
-import { fetchMetadata } from "../api/meta.api";
+import {
+  fetchMetadata,
+  fetchCategoriesForRegister,
+  fetchIdentityRequests,
+} from "../api/meta.api";
 
 const MetaContext = createContext(null);
 
 export const MetaContextProvider = ({ children }) => {
   const [meta, setMeta] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [availableCategoryTypes, setAvailableCategoryTypes] = useState(null);
+  const [availableIdentityTypes, setAvailableIdentityTypes] = useState(null);
+
   useEffect(() => {
     (async () => {
-      const resp = await fetchMetadata();
-      if (resp.status !== 200) {
+      const [metaResp, categoriesResp, identitiesResp] = await Promise.all([
+        fetchMetadata(),
+        fetchCategoriesForRegister(),
+        fetchIdentityRequests(),
+      ]);
+      if (metaResp.status !== 200) {
         throw Error("failed to connect to server");
       }
-      setMeta(resp.data);
-      setCategories(resp.data.categories);
+      setMeta(metaResp.data);
+      setCategories(metaResp.data.categories);
+      setAvailableCategoryTypes(categoriesResp.data);
+      setAvailableIdentityTypes(identitiesResp.data);
     })();
   }, []);
+
   return (
-    <MetaContext.Provider value={{ meta, categories }}>
+    <MetaContext.Provider
+      value={{
+        meta,
+        categories,
+        availableCategoryTypes,
+        availableIdentityTypes,
+      }}
+    >
       {children}
     </MetaContext.Provider>
   );

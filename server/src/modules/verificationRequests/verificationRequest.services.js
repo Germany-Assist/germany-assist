@@ -151,12 +151,25 @@ async function updateAdmin(requestId, updates, t) {
       "failed to update request",
     );
 }
+async function getAll(auth) {
+  const filters = {};
+  if (auth.relatedId) {
+    filters.serviceProviderId = auth.relatedId;
+  } else {
+    filters.userId = auth.id;
+  }
+  const requests = await verificationRequestRepository.getAll(filters);
+  if (requests)
+    return await verificationRequestMappers.multiRequestMapper(requests);
+  return null;
+}
 const verificationRequestService = {
   createProvider,
   getAllProvider,
   getAllAdmin,
   updateAdmin,
   updateProvider,
+  getAll,
 };
 
 export default verificationRequestService;
