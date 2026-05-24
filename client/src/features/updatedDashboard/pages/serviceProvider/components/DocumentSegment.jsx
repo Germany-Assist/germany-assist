@@ -3,9 +3,9 @@ import {
   CheckCircle,
   Clock,
   FileText,
-  Upload,
   XCircle,
   ChevronDown,
+  Plus, // Imported Plus for a cleaner dynamic SVG
 } from "lucide-react";
 
 const getStatusColor = (status) => {
@@ -45,6 +45,7 @@ const getStatusColor = (status) => {
         bg: "bg-gray-50",
         color: "text-gray-500",
         border: "border-gray-200",
+        icon: Clock,
       };
   }
 };
@@ -74,6 +75,8 @@ export default function DocumentSegment({
   iconTextColor = "text-[#024CEE]",
   documents = [],
   onUploadTrigger,
+  isCategorySegment = false,
+  openCatModal,
 }) {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -97,16 +100,13 @@ export default function DocumentSegment({
           <div className="text-[11px] text-gray-500 mt-0.5">{subtitle}</div>
         </div>
 
-        {/* Chevron rotates smoothly */}
         <ChevronDown
           size={16}
           className={`text-gray-400 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
 
-      {/* 
-        The layout classes handle visibility seamlessly while animating.
-      */}
+      {/* Expandable Content Container */}
       <div
         className={`transition-all duration-300 ease-in-out overflow-hidden ${
           isOpen
@@ -115,32 +115,29 @@ export default function DocumentSegment({
         }`}
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          {/* Main Documents Mapping */}
           {documents.map((doc) => {
-            const status = getStatusColor(doc.status);
-            const StatusIcon = status.icon;
+            const statusStyle = getStatusColor(doc.status);
+            const StatusIcon = statusStyle.icon;
             const isCategory = !!doc.icon;
+            const hasExistingFile =
+              doc.status === "active" || doc.status === "verified";
+
             return (
               <div
                 key={doc.id}
-                className={`border rounded-xl p-4 grid grid-cols-1 md:grid-cols-2 transition-all ${
-                  doc.status === "verified" || doc.status === "active"
-                    ? "border-emerald-200 bg-emerald-50/5"
-                    : doc.status === "rejected"
-                      ? "border-red-200 bg-red-50/5"
-                      : "border-[#e0e7ff] bg-transparent"
-                }`}
+                className={`border rounded-xl p-4 grid grid-cols-1 md:grid-cols-2 transition-all ${statusStyle.border} ${statusStyle.bg}/30`}
               >
-                {/* Left Side: Meta info and Icon block */}
+                {/* Left Side */}
                 <div className="flex flex-col items-start gap-1">
-                  {/* Title Header with Icon */}
                   <div className="flex gap-2">
                     <div
-                      className={`w-[36px] h-[36px] rounded-lg ${status.bg} flex items-center justify-center shrink-0 `}
+                      className={`w-[36px] h-[36px] rounded-lg ${statusStyle.bg} flex items-center justify-center shrink-0 `}
                     >
                       {isCategory ? (
                         <span className="text-lg">{doc.icon}</span>
                       ) : (
-                        <FileText size={16} className={status.color} />
+                        <FileText size={16} className={statusStyle.color} />
                       )}
                     </div>
                     <div className="text-xs font-semibold text-[#0a0f1e] flex flex-wrap items-center gap-1.5">
@@ -148,13 +145,10 @@ export default function DocumentSegment({
                     </div>
                   </div>
 
-                  {/* file and subtitle */}
                   <div className="flex items-start flex-col">
                     <p className="text-[0.6rem] text-gray-500 mt-0.5 leading-relaxed break-words">
                       {doc.subtitle}
                     </p>
-
-                    {/* File Name */}
                     {doc.fileName && (
                       <div className="flex items-center gap-1.5 mt-2 bg-[#f7f9ff] border border-[#e0e7ff] rounded-lg px-2 py-1.5 text-[11px] text-[#0a0f1e] max-w-[140px] sm:max-w-[160px]">
                         <FileText
@@ -167,14 +161,12 @@ export default function DocumentSegment({
                   </div>
                 </div>
 
-                {/* Right Side: Interactive Actions and File Links */}
+                {/* Right Side */}
                 <div className="flex h-full flex-col justify-between items-start md:items-end mt-2 md:mt-0 gap-1.5">
                   <div
-                    className={`inline-flex items-center gap-1 text-[11px] font-medium ${status.color}`}
+                    className={`inline-flex items-center gap-1 text-[11px] font-medium border ${statusStyle.bg} ${statusStyle.color} ${statusStyle.border} px-2 py-0.5 rounded-full`}
                   >
-                    {StatusIcon && (
-                      <StatusIcon size={12} className="shrink-0" />
-                    )}
+                    <StatusIcon size={12} className="shrink-0" />
                     <span>
                       {getStatusLabel(doc.status)}
                       {doc.status === "rejected" &&
@@ -182,22 +174,43 @@ export default function DocumentSegment({
                         ` — ${doc.reason}`}
                     </span>
                   </div>
+
                   {doc.expDate && (
                     <span className="inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-red-100 text-red-600">
                       Exp: {doc.expDate}
                     </span>
                   )}
+
                   <button
                     type="button"
                     onClick={() => onUploadTrigger(doc)}
                     className="text-[11px] font-semibold px-3 py-1.5 rounded-lg border border-[#e0e7ff] bg-white text-[#024CEE] cursor-pointer hover:bg-gray-50 transition-colors shadow-xs"
                   >
-                    {doc.status === "active" ? "Update" : "Upload"}
+                    {hasExistingFile ? "Update" : "Upload"}
                   </button>
                 </div>
               </div>
             );
           })}
+
+          {/* New Appended "Add Category" Button Element */}
+          {isCategorySegment && (
+            <button
+              type="button"
+              onClick={openCatModal}
+              className="border border-dashed border-[#e0e7ff] bg-gray-50/30 hover:bg-gray-50/80 rounded-xl p-5 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors text-center w-full min-h-[140px] group focus:outline-hidden"
+            >
+              <div className="w-8 h-8 rounded-lg bg-blue-50 group-hover:bg-blue-100 flex items-center justify-center transition-colors">
+                <Plus size={14} className="text-[#024CEE]" strokeWidth={2.5} />
+              </div>
+              <div className="text-xs font-semibold text-[#024CEE]">
+                Add Category
+              </div>
+              <div className="text-[11px] text-gray-500 max-w-[200px]">
+                Request access to a new service category
+              </div>
+            </button>
+          )}
         </div>
       </div>
     </div>

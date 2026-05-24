@@ -15,6 +15,7 @@ import Permission from "./models/permission.js";
 import AssetTypes from "./models/assetTypes.js";
 import Category from "./models/category.js";
 import seedSubcategory from "./seeds/subcategory_seed.js";
+import seedIdentityRequestTypes from "./seeds/IdentityRequestTypes_seed.js";
 
 export async function initDatabase(exit = true) {
   try {
@@ -32,6 +33,7 @@ export async function initDatabase(exit = true) {
       await seedUsers();
       await seedCategory();
       await seedSubcategory();
+      await seedIdentityRequestTypes();
       console.log("finished seeding 👍");
       //Stage 3
       //Apply the constraints

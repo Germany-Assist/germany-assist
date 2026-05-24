@@ -46,10 +46,11 @@ export default function SPVerificationCentre() {
   const [requests, setRequests] = useState({
     identity: [
       {
-        id: "personal-id",
+        id: "12213",
         title: "Personal Identification",
         subtitle: "Passport or National ID • Freelancer & Company",
-        status: "rejected",
+        status: "pending",
+        expDate: "2024-12-31",
         fileName: "passport_2024.pdf",
         required: true,
       },
@@ -166,6 +167,7 @@ export default function SPVerificationCentre() {
   // Open upload modal for documents
   const handleOpenUploadModal = (doc) => {
     setUploadModalContext(doc);
+    console.log(doc);
     setIsUploadModalOpen(true);
   };
 
@@ -323,7 +325,7 @@ export default function SPVerificationCentre() {
               iconTextColor="text-[#024CEE]"
               documents={requests.business}
               onUploadTrigger={handleOpenUploadModal}
-              gridCols="grid-cols-2"
+              gridCols="grid-cols-1"
             />
           </div>
         )}
@@ -352,6 +354,7 @@ export default function SPVerificationCentre() {
               documents={requests.categories}
               onUploadTrigger={(doc) => handleOpenInfoModal(doc.id)}
               gridCols="grid-cols-2"
+              isCategorySegment={true}
             />
 
             {/* All Available Categories */}

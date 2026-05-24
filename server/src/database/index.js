@@ -35,9 +35,44 @@ import PostAsset from "./models/post_asset.js";
 import ServiceAsset from "./models/service_asset.js";
 import UserAsset from "./models/user_asset.js";
 import VerificationRequestAsset from "./models/verification_request_asset.js";
+import IdentityRequestTypes from "./models/IdentityRequestTypes.js";
 export const defineConstrains = () => {
   if (sequelize.associationsDefined) return;
   sequelize.associationsDefined = true;
+
+  //ProfileRequestTypes;
+  IdentityRequestTypes.hasMany(VerificationRequest, {
+    foreignKey: "relatedId",
+    constraints: false,
+    scope: {
+      type: "identity",
+    },
+    as: "verificationRequests",
+  });
+
+  // VerificationRequest belongs to an IdentityRequestType when type is 'identity'
+  VerificationRequest.belongsTo(IdentityRequestTypes, {
+    foreignKey: "relatedId",
+    constraints: false,
+    as: "identityType",
+  });
+
+  Category.hasMany(VerificationRequest, {
+    foreignKey: "relatedId",
+    constraints: false,
+    scope: {
+      type: "category",
+    },
+    as: "verificationRequests",
+  });
+
+  // VerificationRequest belongs to an IdentityRequestType when type is 'identity'
+  VerificationRequest.belongsTo(Category, {
+    foreignKey: "relatedId",
+    constraints: false,
+    as: "categoryType",
+  });
+
   //VerificationRequest
   ServiceProvider.hasMany(VerificationRequest, {
     foreignKey: "serviceProviderId",
