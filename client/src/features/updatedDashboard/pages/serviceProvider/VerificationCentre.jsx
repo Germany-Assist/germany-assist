@@ -361,7 +361,7 @@ export default function SPVerificationCentre() {
                           <div className="flex flex-col items-start">
                             {/* Removed conflicting font-medium */}
                             <div className="text-sm font-semibold text-[#0a0f1e]">
-                              {cat.title || cat.label}
+                              {cat.title}
                             </div>
                             <div className="text-xs text-gray-500">
                               {cat.label}
@@ -371,10 +371,11 @@ export default function SPVerificationCentre() {
 
                         {/* right side */}
                         {/* Added items-center and gap-2 so badge and button don't touch */}
-                        <div className="flex items-center gap-2">
+                        {/* Changed to flex justify-end to push everything right */}
+                        <div className="flex justify-end items-center  gap-2 text-[0.6rem]">
                           {badge && (
                             <div
-                              className={`text-xs font-semibold px-2 py-0.5 rounded-full ${badge.bg} ${badge.color}`}
+                              className={`w-16 text-center font-semibold px-2 py-0.5 rounded-full ${badge.bg} ${badge.color}`}
                             >
                               {badge.label}
                             </div>
@@ -385,10 +386,10 @@ export default function SPVerificationCentre() {
                                 type: "category",
                                 mode: isRequested ? "info" : "request",
                                 id: cat.id,
-                                status: status, // Note: Ensure 'status' is defined in your component's scope
+                                status: status,
                               })
                             }
-                            className="text-[10.5px] font-semibold px-2 py-0.5 rounded bg-blue-50 text-[#024CEE] border-none cursor-pointer hover:bg-blue-100"
+                            className="w-16 font-semibold px-2 py-1 border-1 rounded bg-blue-50 text-[#024CEE]  cursor-pointer hover:bg-blue-100"
                           >
                             {isRequested ? "View" : "Request"}
                           </button>
