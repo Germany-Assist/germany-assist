@@ -4,78 +4,53 @@ import { AppError } from "../../utils/error.class.js";
 import hashIdUtil from "../../utils/hashId.util.js";
 import verificationRequestService from "./verificationRequest.services.js";
 
-async function createProvider(req, res, next) {
+/**
+ * Handle document uploads for verification (Identity, Category, Badge).
+ * Used by both Clients (Identity only) and Providers (All types).
+ */
+async function handleUpload(req, res, next) {
   const t = await sequelize.transaction();
   try {
-    const hasPermission = await authUtil.checkRoleAndPermission(req.auth, [
+    // 1. Basic permission check (must be logged in)
+    await authUtil.checkRoleAndPermission(req.auth, [
+      "client",
       "service_provider_root",
       "service_provider_rep",
     ]);
-    if (!req.files || Object.values(req.files).length < 1)
-      throw new AppError(
-        422,
-        "missing verification files",
-        false,
-        "missing verification files",
-      );
-    const results = await verificationRequestService.createProvider({
+
+    // 2. Validate input
+    const { type, relatedId } = req.body;
+    if (!type || !relatedId) {
+      throw new AppError(422, "Type and relatedId are required", true);
+    }
+
+    if (!req.files || Object.values(req.files).length < 1) {
+      throw new AppError(422, "No files uploaded", true);
+    }
+
+    // 3. Delegate to service
+    await verificationRequestService.handleUserRequest({
       auth: req.auth,
       files: req.files,
-      type: req.body.type,
-      providerId: req.auth.relatedId,
-      relatedId: req.body?.relatedId,
+      body: req.body,
       t,
     });
 
     await t.commit();
-    res
-      .status(201)
-      .json({ success: true, message: "Created request successfully" });
+    res.status(200).json({ success: true, message: "Verification request submitted successfully" });
   } catch (error) {
     await t.rollback();
     next(error);
   }
 }
 
-async function updateProvider(req, res, next) {
-  const t = await sequelize.transaction();
+/**
+ * Get all verification requests for the current user/provider.
+ * Used by the frontend Verification Centre.
+ */
+async function getAll(req, res, next) {
   try {
-    const hasPermission = await authUtil.checkRoleAndPermission(req.auth, [
-      "service_provider_root",
-      "service_provider_rep",
-    ]);
-    if (!req.files || Object.values(req.files).length < 1)
-      throw new AppError(
-        422,
-        "missing verification files",
-        false,
-        "missing verification files",
-      );
-    const results = await verificationRequestService.updateProvider({
-      auth: req.auth,
-      files: req.files,
-      providerId: req.auth.relatedId,
-      type: req.body.type,
-      relatedId: req.body?.relatedId,
-      t,
-    });
-    await t.commit();
-    res.status(200).json({ success: true });
-  } catch (error) {
-    await t.rollback();
-    next(error);
-  }
-}
-
-async function getAllProvider(req, res, next) {
-  try {
-    const hasPermission = await authUtil.checkRoleAndPermission(req.auth, [
-      "service_provider_root",
-      "service_provider_rep",
-    ]);
-    const results = await verificationRequestService.getAllProvider(
-      req.auth.relatedId,
-    );
+    const results = await verificationRequestService.getAll(req.auth);
     res.status(200).json({ success: true, data: results });
   } catch (error) {
     next(error);
@@ -86,13 +61,8 @@ async function getAllProvider(req, res, next) {
 
 async function getAllAdmin(req, res, next) {
   try {
-    const hasPermission = await authUtil.checkRoleAndPermission(req.auth, [
-      "admin",
-      "super_admin",
-    ]);
-    const { data, meta } = await verificationRequestService.getAllAdmin(
-      req.query,
-    );
+    await authUtil.checkRoleAndPermission(req.auth, ["admin", "super_admin"]);
+    const { data, meta } = await verificationRequestService.getAllAdmin(req.query);
     res.status(200).json({ success: true, data, meta });
   } catch (error) {
     next(error);
@@ -101,45 +71,23 @@ async function getAllAdmin(req, res, next) {
 
 async function updateAdmin(req, res, next) {
   const t = await sequelize.transaction();
-
   try {
-    const hasPermission = await authUtil.checkRoleAndPermission(req.auth, [
-      "admin",
-      "super_admin",
-    ]);
+    await authUtil.checkRoleAndPermission(req.auth, ["admin", "super_admin"]);
     const requestId = hashIdUtil.hashIdDecode(req.params.id);
     await verificationRequestService.updateAdmin(requestId, req.body, t);
     await t.commit();
-    res
-      .status(200)
-      .json({ success: true, message: "Successfully updated the request" });
+    res.status(200).json({ success: true, message: "Request updated successfully" });
   } catch (error) {
     await t.rollback();
     next(error);
   }
 }
-async function getAll(req, res, next) {
-  try {
-    await authUtil.checkRoleAndPermission(req.auth, [
-      "admin",
-      "super_admin",
-      "client",
-      "service_provider_root",
-      "service_provider_rep",
-    ]);
-    const results = await verificationRequestService.getAll(req.auth);
-    res.status(200).json({ success: true, data: results });
-  } catch (error) {
-    next(error);
-  }
-}
+
 const verificationRequestController = {
+  handleUpload,
+  getAll,
   getAllAdmin,
   updateAdmin,
-  createProvider,
-  getAllProvider,
-  updateProvider,
-  getAll,
 };
 
 export default verificationRequestController;

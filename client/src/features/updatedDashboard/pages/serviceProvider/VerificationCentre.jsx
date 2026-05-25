@@ -11,7 +11,7 @@ import { useMeta } from "../../../../contexts/MetadataContext";
 import DocumentSegment from "./components/DocumentSegment";
 import UploadModal from "./components/UploadFileModal";
 import CategoryModal from "./components/CategoryModal";
-import { fetchRequests } from "../../../../api/publicApis";
+import { fetchRequests, uploadVerificationFile } from "../../../../api/publicApis";
 
 const TAB_CONFIG = [
   { id: "profile", label: "Profile Verification", icon: User },
@@ -37,32 +37,32 @@ export default function SPVerificationCentre() {
   const [categoryModalMode, setCategoryModalMode] = useState("request");
   const [preselectedCategoryId, setPreselectedCategoryId] = useState(null);
 
+  const loadVerificationData = async (force = false) => {
+    // Return local cache immediately if data has already been fetched inside this instance lifetime
+    if (requestCache && !force) {
+      setRequests(requestCache);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetchRequests();
+      if (response.success && response.data) {
+        requestCache = response.data;
+        setRequests(response.data);
+      }
+    } catch (error) {
+      console.error("Failed to load verification status payloads:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 2. Safely trigger real fetch requests inside mount cycles
   useEffect(() => {
-    const loadVerificationData = async () => {
-      // Return local cache immediately if data has already been fetched inside this instance lifetime
-      if (requestCache) {
-        setRequests(requestCache);
-        return;
-      }
-
-      setLoading(true);
-      try {
-        // Replace with your real endpoints e.g: const response = await fetchVerificationRequests();
-        const response = await fetchRequests();
-        if (response.success && response.data) {
-          requestCache = response.data;
-          setRequests(response.data);
-        }
-      } catch (error) {
-        console.error("Failed to load verification status payloads:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadVerificationData();
   }, []); // Safe dependency lock to execute exactly once
+
   const categoryMetaMap = useMemo(
     () => new Map(availableCategoryTypes.map((c) => [c.id, c])),
     [availableCategoryTypes],
@@ -115,14 +115,16 @@ export default function SPVerificationCentre() {
         const meta = categoryMetaMap.get(req.relatedId);
         return {
           id: req.relatedId,
-          title: meta?.title || meta?.label || "Unknown Category",
+          title: meta?.label || meta?.title || "Unknown Category",
           subtitle:
-            req.status === "pending"
-              ? "Pending review"
-              : "Approved Operational Group",
+            meta?.requirements && meta.requirements.length > 0
+              ? `Accepted: ${meta.requirements.map((r) => r.title || r).join(" · ")}`
+              : meta?.label || meta?.title || "Category Credentials",
           icon: meta?.icon || "📁",
           status: req.status,
           assets: req.assets || [],
+          expDate: req.expDate || null,
+          reason: req.adminNote || null,
         };
       });
   }, [requests, categoryMetaMap]);
@@ -166,49 +168,31 @@ export default function SPVerificationCentre() {
   };
 
   // 5. Update multi-asset array upon local upload actions safely
-  const handleConfirmUpload = (uploadedFiles) => {
+  const handleConfirmUpload = async (uploadedFiles) => {
     if (!uploadModalContext || !uploadedFiles) return;
 
-    // Normalize input to array even if single asset object arrives from modal handlers
-    const incomingAssets = Array.isArray(uploadedFiles)
-      ? uploadedFiles.map((f) => ({
-          url: URL.createObjectURL(f),
-          label: uploadModalContext.title,
-        }))
-      : [
-          {
-            url: URL.createObjectURL(uploadedFiles),
-            label: uploadModalContext.title,
-          },
-        ];
+    const fd = new FormData();
+    fd.append("type", "identity");
+    fd.append("relatedId", uploadModalContext.id);
 
-    setRequests((prev) => {
-      const matchIndex = prev.findIndex(
-        (r) => r.type === "identity" && r.relatedId === uploadModalContext.id,
-      );
-      const updated = [...prev];
-
-      if (matchIndex > -1) {
-        updated[matchIndex] = {
-          ...updated[matchIndex],
-          status: "pending",
-          adminNote: null,
-          assets: [...updated[matchIndex].assets, ...incomingAssets], // append onto array
-        };
-      } else {
-        updated.push({
-          id: String(Date.now()),
-          relatedId: uploadModalContext.id,
-          type: "identity",
-          status: "pending",
-          adminNote: null,
-          assets: incomingAssets,
-        });
-      }
-
-      requestCache = updated; // keep local global sync
-      return updated;
+    const filesArray = Array.isArray(uploadedFiles) ? uploadedFiles : [uploadedFiles];
+    filesArray.forEach((file) => {
+      const fieldName = file.type.startsWith("image/") ? "verificationImage" : "verificationDocument";
+      fd.append(fieldName, file);
     });
+
+    try {
+      setLoading(true);
+      const res = await uploadVerificationFile(fd);
+      if (res.success) {
+        await loadVerificationData(true);
+      }
+    } catch (err) {
+      console.error("Upload failed:", err);
+      alert("Failed to upload document. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleOpenRequestModal = (categoryId) => {
@@ -223,29 +207,30 @@ export default function SPVerificationCentre() {
     setIsCategoryModalOpen(true);
   };
 
-  const handleSubmitCategoryRequest = ({ categoryId, files }) => {
+  const handleSubmitCategoryRequest = async ({ categoryId, files }) => {
     if (!categoryId || files.length === 0) return;
 
-    const newAssets = files.map((file) => ({
-      url: URL.createObjectURL(file),
-      label: "Category Setup Doc",
-    }));
+    const fd = new FormData();
+    fd.append("type", "category");
+    fd.append("relatedId", categoryId);
 
-    setRequests((prev) => {
-      const updated = [
-        ...prev,
-        {
-          id: String(Date.now()),
-          relatedId: categoryId,
-          type: "category",
-          status: "pending",
-          adminNote: null,
-          assets: newAssets,
-        },
-      ];
-      requestCache = updated;
-      return updated;
+    files.forEach((file) => {
+      const fieldName = file.type.startsWith("image/") ? "verificationImage" : "verificationDocument";
+      fd.append(fieldName, file);
     });
+
+    try {
+      setLoading(true);
+      const res = await uploadVerificationFile(fd);
+      if (res.success) {
+        await loadVerificationData(true);
+      }
+    } catch (err) {
+      console.error("Category request failed:", err);
+      alert("Failed to submit category request.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const pendingCount = useMemo(() => {

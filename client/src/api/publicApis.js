@@ -25,3 +25,12 @@ export const fetchRequests = async () => {
   const data = await api.get("/requests/all");
   return data.data;
 };
+
+export const uploadVerificationFile = async (formData) => {
+  const data = await api.post("/requests/upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return data.data;
+};

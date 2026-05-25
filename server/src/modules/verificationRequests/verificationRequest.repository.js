@@ -4,19 +4,21 @@ async function createRequest(data, t) {
   return db.VerificationRequest.create(data, { transaction: t });
 }
 
+async function findExistingRequest(filters) {
+  return db.VerificationRequest.findOne({
+    where: filters,
+  });
+}
+
 async function getAllProvider(serviceProviderId, filters = {}) {
   return db.VerificationRequest.findAll({
     where: { ...filters, serviceProviderId },
     include: [
       {
-        model: db.VerificationRequestAsset,
-        as: "verificationRequestAssets",
-        include: [
-          {
-            model: db.Asset,
-            attributes: ["mediaType", "url"],
-          },
-        ],
+        model: db.Asset,
+        as: "assets",
+        through: { attributes: [] },
+        attributes: ["url", "label", "mediaType"],
       },
     ],
     order: [["updatedAt", "DESC"]],
@@ -37,10 +39,8 @@ async function getAllAdmin({ limit, offset, filters }) {
       {
         model: db.Asset,
         as: "assets",
-        through: {
-          attributes: [],
-        },
-        attributes: ["url", "label"],
+        through: { attributes: [] },
+        attributes: ["url", "label", "mediaType"],
       },
     ],
     order: [["updatedAt", "DESC"]],
@@ -54,7 +54,7 @@ async function updateAdmin(requestId, updates, t) {
     transaction: t,
   });
   if (!request) return null;
-  return request.update(updates);
+  return request.update(updates, { transaction: t });
 }
 
 async function getAll(filters = {}) {
@@ -64,10 +64,8 @@ async function getAll(filters = {}) {
       {
         model: db.Asset,
         as: "assets",
-        through: {
-          attributes: [],
-        },
-        attributes: ["url", "label"],
+        through: { attributes: [] },
+        attributes: ["url", "label", "mediaType"],
       },
     ],
     order: [["updatedAt", "DESC"]],
@@ -76,6 +74,7 @@ async function getAll(filters = {}) {
 const verificationRequestRepository = {
   countRequests,
   createRequest,
+  findExistingRequest,
   getAllProvider,
   getAllAdmin,
   updateAdmin,

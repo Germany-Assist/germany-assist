@@ -2,41 +2,28 @@ import { generateDownloadUrl } from "../../configs/s3Configs.js";
 import hashIdUtil from "../../utils/hashId.util.js";
 
 const singleRequestMapper = async (request) => {
-  const assets = request.verificationRequestAssets?.map((i) => i.Asset) || [];
+  const assets = request.assets || [];
   return {
     id: hashIdUtil.hashIdEncode(request.id),
     serviceProviderId: request.serviceProviderId,
     type: request.type,
     status: request.status,
-    adminNote: request.adminNote,
+    adminNote: request.adminNote || null,
+    expDate: request.expDate || null,
+    relatedId: hashIdUtil.hashIdEncode(request.relatedId),
     assets: await Promise.all(
       assets.filter(Boolean).map(async (i) => ({
         url: await generateDownloadUrl(i.url),
         label: i.label,
+        mediaType: i.mediaType,
       })),
     ),
   };
 };
+
 const multiRequestMapper = async (requests) => {
-  return await Promise.all(
-    requests.map(async (i) => {
-      return {
-        id: hashIdUtil.hashIdEncode(i.id),
-        serviceProviderId: i.serviceProviderId,
-        type: i.type,
-        status: i.status,
-        adminNote: i.adminNote,
-        expDate: i.expDate,
-        relatedId: hashIdUtil.hashIdEncode(i.relatedId),
-        assets: await Promise.all(
-          i.assets.filter(Boolean).map(async (x) => ({
-            url: await generateDownloadUrl(x.url),
-            label: x.label,
-          })),
-        ),
-      };
-    }),
-  );
+  return await Promise.all(requests.map((i) => singleRequestMapper(i)));
 };
+
 const verificationRequestMappers = { multiRequestMapper, singleRequestMapper };
 export default verificationRequestMappers;

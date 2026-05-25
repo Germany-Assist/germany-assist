@@ -1,125 +1,109 @@
-import { generateDownloadUrl } from "../../configs/s3Configs.js";
 import AssetService from "../../services/assts.services.js";
 import { AppError } from "../../utils/error.class.js";
 import hashIdUtil from "../../utils/hashId.util.js";
-import serviceProviderRepository from "../serviceProvider/serviceProvider.repository .js";
 import verificationRequestMappers from "./verificationRequest.mapper.js";
 import verificationRequestRepository from "./verificationRequest.repository.js";
 
-// Create a new verification request
-async function createProvider({ auth, files, providerId, t, relatedId, type }) {
-  const exist = await verificationRequestRepository.getAllProvider(providerId);
-  const unhashedRelatedId = hashIdUtil.hashIdDecode(relatedId);
-  if (
-    exist &&
-    exist.length > 0 &&
-    exist.some((i) => i.relatedId === unhashedRelatedId)
-  )
+/**
+ * Unified handler for creating or updating verification requests.
+ * Handles role-based restrictions and status transitions.
+ */
+async function handleUserRequest({ auth, files, body, t }) {
+  const { type, relatedId } = body;
+  const decodedRelatedId = hashIdUtil.hashIdDecode(relatedId);
+
+  // 1. Role-Based Permissions
+  // Clients can only apply for identity verification
+  if (auth.role === "client" && type !== "identity") {
     throw new AppError(
-      409,
-      "You already have a request for verification",
-      false,
-      "You already have a request for verification",
-    );
-  const identityStatus = exist.some(
-    (i) => i.type === "identity" && i.status == "approved",
-  );
-  if (identityStatus == "pending") {
-    throw new AppError(
-      409,
-      "You already have a request for verification",
-      false,
-      "You already have a request for verification",
+      403,
+      "Clients can only request identity verification",
+      true,
+      "Clients can only request identity verification",
     );
   }
-  if (!identityStatus && type == "category")
-    throw new AppError(
-      404,
-      "You Need to verify you identity first",
-      true,
-      "You Need to verify you identity first",
-    );
 
-  const verificationRequest = {
-    serviceProviderId: providerId,
-    type: type,
-    relatedId: unhashedRelatedId,
-    status: "pending",
+  const userId = auth.id;
+  const serviceProviderId = auth.relatedId || null;
+
+  // 2. Check for existing request
+  const filters = {
+    userId,
+    type,
+    relatedId: decodedRelatedId,
   };
-  const request = await verificationRequestRepository.createProvider(
-    verificationRequest,
-    t,
-  );
+  if (serviceProviderId) filters.serviceProviderId = serviceProviderId;
 
-  // Upload assets using new AssetService
-  const uploadResults = await Promise.all(
-    Object.values(files).map((i) =>
-      AssetService.uploadAsset({
-        files: [i[0]],
-        ownerId: request.id,
-        typeKey: i[0].fieldname,
-        userId: auth.id,
-        transaction: t,
-      }),
-    ),
-  );
+  let request =
+    await verificationRequestRepository.findExistingRequest(filters);
+  if (request && request.status === "pending") {
+    throw new AppError(
+      400,
+      "You already have a pending request for this verification type",
+      true,
+      "You already have a pending request for this verification type",
+    );
+  }
+  if (request) {
+    // 3. Status Transition Logic
+    // If it's already pending, we just add files (or could replace, but usually addition is safe)
+    // If it's approved or rejected, we move it back to pending for re-evaluation
+    if (["approved", "rejected"].includes(request.status)) {
+      await verificationRequestRepository.updateAdmin(
+        request.id,
+        { status: "pending", adminNote: null },
+        t,
+      );
+    }
+  } else {
+    // 4. Create new request
+    request = await verificationRequestRepository.createRequest(
+      {
+        userId,
+        serviceProviderId,
+        type,
+        relatedId: decodedRelatedId,
+        status: "pending",
+      },
+      t,
+    );
+  }
 
-  return { message: "Create request service " };
+  // 5. Upload Assets
+  if (files && Object.values(files).length > 0) {
+    await Promise.all(
+      Object.values(files)
+        .flat()
+        .map((file) =>
+          AssetService.uploadAsset({
+            files: [file],
+            ownerId: request.id,
+            typeKey: file.fieldname,
+            userId: userId,
+            label: file.originalname,
+            transaction: t,
+          }),
+        ),
+    );
+  }
+
+  return { success: true };
 }
+
 async function getAllProvider(providerId) {
   const requests =
     await verificationRequestRepository.getAllProvider(providerId);
-  if (requests)
-    return await verificationRequestMappers.multiRequestMapper(requests);
-  return null;
-}
-async function updateProvider({ auth, files, providerId, relatedId, type, t }) {
-  const unhashedRelatedId = hashIdUtil.hashIdDecode(relatedId);
-  const filters = { type };
-  if (type !== "identity") filters.relatedId = unhashedRelatedId;
-
-  const exist = await verificationRequestRepository.getAllProvider(
-    providerId,
-    filters,
-  );
-
-  if (!exist || !exist[0] || exist[0].status != "adminRequest")
-    throw new AppError(
-      409,
-      "You already have a request for verification",
-      false,
-      "You already have a request for verification",
-    );
-  const request = await verificationRequestRepository.updateAdmin(
-    exist[0].id,
-    { status: "pending" },
-    t,
-  );
-
-  // Upload assets using new AssetService
-  await Promise.all(
-    Object.values(files).map((i) =>
-      AssetService.uploadAsset({
-        files: [i[0]],
-        ownerId: request.id,
-        typeKey: i[0].fieldname,
-        userId: auth.id,
-        transaction: t,
-      }),
-    ),
-  );
-
-  return { message: "Create request service - not implemented" };
+  return await verificationRequestMappers.multiRequestMapper(requests);
 }
 
 // ================== Admin ==================
 
-// Admin: get all requests with optional filters
 async function getAllAdmin(query) {
   const filters = {};
   const page = parseInt(query.page) || 1;
   const limit = parseInt(query.limit) || 10;
   const offset = (page - 1) * limit;
+
   if (query.type) filters.type = query.type;
   if (query.status) filters.status = query.status;
 
@@ -129,28 +113,25 @@ async function getAllAdmin(query) {
     offset,
     filters,
   });
+
   const data = await verificationRequestMappers.multiRequestMapper(rows);
-  const response = {
+  return {
     meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
     data,
   };
-  return response;
 }
 
 async function updateAdmin(requestId, updates, t) {
-  const { adminNote, status } = updates;
-  const update = await verificationRequestRepository.updateAdmin(requestId, {
-    adminNote,
-    status,
-  });
-  if (!update)
-    throw new AppError(
-      404,
-      "failed to update request",
-      true,
-      "failed to update request",
-    );
+  const { adminNote, status, expDate } = updates;
+  const update = await verificationRequestRepository.updateAdmin(
+    requestId,
+    { adminNote, status, expDate },
+    t,
+  );
+  if (!update) throw new AppError(404, "failed to update request", true);
+  return update;
 }
+
 async function getAll(auth) {
   const filters = {};
   if (auth.relatedId) {
@@ -159,16 +140,14 @@ async function getAll(auth) {
     filters.userId = auth.id;
   }
   const requests = await verificationRequestRepository.getAll(filters);
-  if (requests)
-    return await verificationRequestMappers.multiRequestMapper(requests);
-  return null;
+  return await verificationRequestMappers.multiRequestMapper(requests);
 }
+
 const verificationRequestService = {
-  createProvider,
+  handleUserRequest,
   getAllProvider,
   getAllAdmin,
   updateAdmin,
-  updateProvider,
   getAll,
 };
 
