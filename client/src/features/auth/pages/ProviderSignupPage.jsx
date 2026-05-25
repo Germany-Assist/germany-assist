@@ -81,42 +81,64 @@ const ProviderSignupPage = () => {
         }
       }
 
-      [
-        "idDocument",
-        "proofOfResidence",
-        "businessRegistration",
-        "about",
-      ].forEach((field) => {
-        if (additionalData[field]) fd.append(field, additionalData[field]);
-      });
+      if (additionalData.about) fd.append("about", additionalData.about);
 
+      // Handle Dynamic Identity Files
+      if (additionalData.identityUploads) {
+        const identityEntries = [];
+        let idFileIndex = 0;
+
+        Object.keys(additionalData.identityUploads).forEach((typeId) => {
+          const file = additionalData.identityUploads[typeId];
+          if (file instanceof File) {
+            fd.append("identityFiles", file);
+            identityEntries.push({
+              identityTypeId: typeId,
+              fileIndices: [idFileIndex],
+            });
+            idFileIndex++;
+          }
+        });
+
+        if (identityEntries.length > 0) {
+          fd.append("identityEntries", JSON.stringify(identityEntries));
+        }
+      }
+
+      // Handle Dynamic Category Files
       if (additionalData.categories?.length > 0) {
         fd.append("categories", JSON.stringify(additionalData.categories));
 
         const categoryEntries = [];
-        let fileIndex = 0;
+        let catFileIndex = 0;
 
         if (additionalData.categoryUploads) {
           Object.keys(additionalData.categoryUploads).forEach((catId) => {
             const files = additionalData.categoryUploads[catId];
             const fileArray = Array.isArray(files) ? files : [files];
-            const startIndex = fileIndex;
+            const startIndex = catFileIndex;
 
             fileArray.forEach((file) => {
-              fd.append("categoryFiles", file);
-              fileIndex++;
+              if (file instanceof File) {
+                fd.append("categoryFiles", file);
+                catFileIndex++;
+              }
             });
 
-            categoryEntries.push({
-              categoryId: catId,
-              fileIndices: Array.from(
-                { length: fileArray.length },
-                (_, i) => startIndex + i,
-              ),
-            });
+            if (catFileIndex > startIndex) {
+              categoryEntries.push({
+                categoryId: catId,
+                fileIndices: Array.from(
+                  { length: catFileIndex - startIndex },
+                  (_, i) => startIndex + i,
+                ),
+              });
+            }
           });
         }
-        fd.append("categoryEntries", JSON.stringify(categoryEntries));
+        if (categoryEntries.length > 0) {
+          fd.append("categoryEntries", JSON.stringify(categoryEntries));
+        }
       }
 
       fd.append("role", "provider");

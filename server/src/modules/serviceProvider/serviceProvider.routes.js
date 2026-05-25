@@ -17,10 +17,8 @@ serviceProviderRouter.post(
   "/freelancer/signup",
   multerUpload.fields([
     { name: "profileImage", maxCount: 1 },
-    { name: "idDocument", maxCount: 1 },
-    { name: "proofOfResidence", maxCount: 1 },
-    { name: "businessRegistration", maxCount: 1 },
     { name: "categoryFiles", maxCount: 24 },
+    { name: "identityFiles", maxCount: 12 },
   ]),
   createFreelancerValidator,
   validateExpress,
@@ -32,10 +30,8 @@ serviceProviderRouter.post(
   "/company/signup",
   multerUpload.fields([
     { name: "profileImage", maxCount: 1 },
-    { name: "idDocument", maxCount: 1 },
-    { name: "proofOfResidence", maxCount: 1 },
-    { name: "businessRegistration", maxCount: 1 },
     { name: "categoryFiles", maxCount: 24 },
+    { name: "identityFiles", maxCount: 12 },
   ]),
   createCompanyValidator,
   validateExpress,

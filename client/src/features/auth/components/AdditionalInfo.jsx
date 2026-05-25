@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ProfileImageUpload from "./ProfileImageUpload";
 import FileUpload from "./FileUpload";
 import CategorySelect from "./CategorySelect";
+import { useMeta } from "../../../contexts/MetadataContext";
 
 const AdditionalInfo = ({
   role,
@@ -14,14 +15,13 @@ const AdditionalInfo = ({
   error = "",
 }) => {
   const [currentSubStep, setCurrentSubStep] = useState(1);
+  const { availableIdentityTypes } = useMeta();
   const [formData, setFormData] = useState({
     profileImage: null,
     about: "",
     categories: [],
     categoryUploads: {},
-    idDocument: null,
-    proofOfResidence: null,
-    businessRegistration: null,
+    identityUploads: {}, // Dynamic identity uploads
   });
 
   useEffect(() => {
@@ -32,6 +32,16 @@ const AdditionalInfo = ({
 
   const updateField = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleIdentityUpload = (typeId, files) => {
+    setFormData((prev) => ({
+      ...prev,
+      identityUploads: {
+        ...prev.identityUploads,
+        [typeId]: Array.isArray(files) ? files[0] : files,
+      },
+    }));
   };
 
   const handleCategoriesChange = (newCategories, uploadData = null) => {
@@ -184,26 +194,6 @@ const AdditionalInfo = ({
                 </div>
               </div>
             )}
-
-            {role === "individual" && (
-              <div className="mb-6">
-                <FileUpload
-                  icon="🪖"
-                  title="Passport or National ID "
-                  subtitle="Upload a clear scan or photo — PDF, JPG, or PNG. Reviewed securely and never shared publicly."
-                  badge
-                  badgeText="Required"
-                  files={formData.idDocument ? [formData.idDocument] : []}
-                  onUpload={(files) =>
-                    updateField(
-                      "idDocument",
-                      Array.isArray(files) ? files[0] : files,
-                    )
-                  }
-                  onRemove={() => updateField("idDocument", null)}
-                />
-              </div>
-            )}
           </>
         )}
 
@@ -231,57 +221,31 @@ const AdditionalInfo = ({
               reviewed securely by our team and never shared publicly.
             </p>
             <div className="flex flex-col gap-4 mb-6">
-              <FileUpload
-                icon="🪖"
-                title="Passport or National ID"
-                subtitle="Required for all providers to publish services on the platform. Upload a clear photo or scan — PDF, JPG, or PNG."
-                badge
-                badgeText="Required"
-                files={formData.idDocument ? [formData.idDocument] : []}
-                onUpload={(files) =>
-                  updateField(
-                    "idDocument",
-                    Array.isArray(files) ? files[0] : files,
-                  )
-                }
-                onRemove={() => updateField("idDocument", null)}
-              />
-              <FileUpload
-                icon="🏠"
-                title="Proof of Residence"
-                subtitle="Utility bill or official document (last 3 months) — PDF, JPG, or PNG."
-                badge
-                badgeText="Optional"
-                files={
-                  formData.proofOfResidence ? [formData.proofOfResidence] : []
-                }
-                onUpload={(files) =>
-                  updateField(
-                    "proofOfResidence",
-                    Array.isArray(files) ? files[0] : files,
-                  )
-                }
-                onRemove={() => updateField("proofOfResidence", null)}
-              />
-              <FileUpload
-                icon="📋"
-                title="Business Registration"
-                subtitle="Upload your official company registration document (Gewerbeanmeldung or equivalent) ."
-                badge
-                badgeText="Required for Company"
-                files={
-                  formData.businessRegistration
-                    ? [formData.businessRegistration]
-                    : []
-                }
-                onUpload={(files) =>
-                  updateField(
-                    "businessRegistration",
-                    Array.isArray(files) ? files[0] : files,
-                  )
-                }
-                onRemove={() => updateField("businessRegistration", null)}
-              />
+              {availableIdentityTypes?.map((type) => (
+                <FileUpload
+                  key={type.id}
+                  icon={type.icon}
+                  title={type.label}
+                  subtitle={
+                    type.title === "Personal Identification"
+                      ? "Required for all providers to publish services on the platform. Upload a clear photo or scan — PDF, JPG, or PNG."
+                      : type.title === "businessRegistration"
+                        ? "Upload your official company registration document (Gewerbeanmeldung or equivalent)."
+                        : "Upload a clear photo or scan — PDF, JPG, or PNG."
+                  }
+                  badge
+                  badgeText={
+                    type.title === "profOfResidence" ? "Optional" : "Required"
+                  }
+                  files={
+                    formData.identityUploads[type.id]
+                      ? [formData.identityUploads[type.id]]
+                      : []
+                  }
+                  onUpload={(files) => handleIdentityUpload(type.id, files)}
+                  onRemove={() => handleIdentityUpload(type.id, null)}
+                />
+              ))}
             </div>
           </>
         )}

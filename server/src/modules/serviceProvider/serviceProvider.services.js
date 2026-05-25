@@ -19,6 +19,8 @@ const getFile = (files, field) => files?.[field]?.[0] || null;
 
 const MAX_CATEGORIES = 1;
 const MAX_FILES_PER_CATEGORY = 10;
+const MAX_IDENTITY_TYPES = 5;
+const MAX_FILES_PER_IDENTITY = 1;
 
 // Helper to process category files - parses categoryEntries and maps files to categories
 // categoryEntries: [{"categoryId": "german_language", "fileIndices": [0, 1]}, ...]
@@ -59,6 +61,45 @@ const processCategoryFiles = (body, files) => {
   }
 
   return categoryFilesMap;
+};
+
+// Helper to process identity files
+const processIdentityFiles = (body, files) => {
+  const identityFilesMap = {};
+
+  if (!body.identityEntries || !files || files.length === 0) {
+    return identityFilesMap;
+  }
+
+  try {
+    const identityEntries = JSON.parse(body.identityEntries);
+
+    if (identityEntries.length > MAX_IDENTITY_TYPES) {
+      throw new AppError(
+        400,
+        `Maximum ${MAX_IDENTITY_TYPES} identity types allowed`,
+        true,
+      );
+    }
+
+    identityEntries.forEach(({ identityTypeId, fileIndices }) => {
+      if (fileIndices.length > MAX_FILES_PER_IDENTITY) {
+        throw new AppError(
+          400,
+          `Maximum ${MAX_FILES_PER_IDENTITY} files allowed per identity type`,
+          true,
+        );
+      }
+      identityFilesMap[identityTypeId] = fileIndices
+        .filter((idx) => files[idx])
+        .map((idx) => files[idx]);
+    });
+  } catch (e) {
+    if (e instanceof AppError) throw e;
+    console.error("Error parsing identityEntries:", e);
+  }
+
+  return identityFilesMap;
 };
 
 export const registerFreelancer = async (body, files) => {
@@ -144,59 +185,32 @@ export const registerFreelancer = async (body, files) => {
       });
     }
 
-    // adjust the signup to read from the meta and send the request type id with the document
-    // create new request for each document with the related if pointing to the id for the request type
-    const idDocument = getFile(files, "idDocument");
-    const proofOfResidence = getFile(files, "proofOfResidence");
-    const businessRegistration = getFile(files, "businessRegistration");
+    // Process dynamic identity verification files
+    const identityFiles = files?.identityFiles || [];
+    const identityFilesMap = processIdentityFiles(body, identityFiles);
 
-    if (idDocument || proofOfResidence || businessRegistration) {
-      const request = await verificationRequestRepository.createRequest(
-        {
-          userId: user.id,
-          serviceProviderId: sp.id,
-          type: "identity",
-          relatedId: sp.id,
-        },
-        t,
-      );
-
-      if (idDocument) {
+    for (const [identityTypeId, idFiles] of Object.entries(identityFilesMap)) {
+      if (idFiles && idFiles.length > 0) {
+        const decodedId = hashIdUtil.hashIdDecode(identityTypeId);
+        const identityRequest =
+          await verificationRequestRepository.createRequest(
+            {
+              userId: user.id,
+              serviceProviderId: sp.id,
+              type: "identity",
+              relatedId: decodedId,
+            },
+            t,
+          );
         await AssetService.uploadAsset({
-          files: [idDocument],
-          ownerId: request.id,
+          files: idFiles,
+          ownerId: identityRequest.id,
           typeKey:
-            idDocument.mimetype === "application/pdf"
+            idFiles[0].mimetype === "application/pdf"
               ? "verificationDocument"
               : "verificationImage",
           userId: user.id,
-          label: "Identity Document",
-          transaction: t,
-        });
-      }
-      if (proofOfResidence) {
-        await AssetService.uploadAsset({
-          files: [proofOfResidence],
-          ownerId: request.id,
-          typeKey:
-            proofOfResidence.mimetype === "application/pdf"
-              ? "verificationDocument"
-              : "verificationImage",
-          userId: user.id,
-          label: "proofOfResidence",
-          transaction: t,
-        });
-      }
-      if (businessRegistration) {
-        await AssetService.uploadAsset({
-          files: [businessRegistration],
-          ownerId: request.id,
-          typeKey:
-            businessRegistration.mimetype === "application/pdf"
-              ? "verificationDocument"
-              : "verificationImage",
-          userId: user.id,
-          label: "businessRegistration",
+          label: `Identity: ${decodedId}`,
           transaction: t,
         });
       }
@@ -233,14 +247,6 @@ export const registerFreelancer = async (body, files) => {
 
     const { accessToken, refreshToken } = jwtUtils.generateTokens(user);
     const sanitizedUser = await userMapper.sanitizeUser(user);
-    console.log(idDocument);
-
-    throw new AppError(
-      400,
-      "User registered successfully",
-      false,
-      "User registered successfully",
-    );
 
     await t.commit();
     await authServices.sendVerificationEmail(email, user.id);
@@ -342,56 +348,33 @@ export const registerCompany = async (body, files) => {
         transaction: t,
       });
     }
-    const idDocument = getFile(files, "idDocument");
-    const proofOfResidence = getFile(files, "proofOfResidence");
-    const businessRegistration = getFile(files, "businessRegistration");
-    if (idDocument || proofOfResidence || businessRegistration) {
-      const request = await verificationRequestRepository.createRequest(
-        {
-          userId: user.id,
-          serviceProviderId: sp.id,
-          type: "identity",
-          relatedId: sp.id,
-        },
-        t,
-      );
 
-      if (idDocument) {
+    // Process dynamic identity verification files
+    const identityFiles = files?.identityFiles || [];
+    const identityFilesMap = processIdentityFiles(body, identityFiles);
+
+    for (const [identityTypeId, idFiles] of Object.entries(identityFilesMap)) {
+      if (idFiles && idFiles.length > 0) {
+        const decodedId = hashIdUtil.hashIdDecode(identityTypeId);
+        const identityRequest =
+          await verificationRequestRepository.createRequest(
+            {
+              userId: user.id,
+              serviceProviderId: sp.id,
+              type: "identity",
+              relatedId: decodedId,
+            },
+            t,
+          );
         await AssetService.uploadAsset({
-          files: [idDocument],
-          ownerId: request.id,
+          files: idFiles,
+          ownerId: identityRequest.id,
           typeKey:
-            idDocument.mimetype === "application/pdf"
+            idFiles[0].mimetype === "application/pdf"
               ? "verificationDocument"
               : "verificationImage",
           userId: user.id,
-          label: "Identity Document",
-          transaction: t,
-        });
-      }
-      if (proofOfResidence) {
-        await AssetService.uploadAsset({
-          files: [proofOfResidence],
-          ownerId: request.id,
-          typeKey:
-            proofOfResidence.mimetype === "application/pdf"
-              ? "verificationDocument"
-              : "verificationImage",
-          userId: user.id,
-          label: "proofOfResidence",
-          transaction: t,
-        });
-      }
-      if (businessRegistration) {
-        await AssetService.uploadAsset({
-          files: [businessRegistration],
-          ownerId: request.id,
-          typeKey:
-            businessRegistration.mimetype === "application/pdf"
-              ? "verificationDocument"
-              : "verificationImage",
-          userId: user.id,
-          label: "businessRegistration",
+          label: `Identity: ${decodedId}`,
           transaction: t,
         });
       }

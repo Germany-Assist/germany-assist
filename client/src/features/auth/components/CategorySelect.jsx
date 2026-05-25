@@ -13,7 +13,6 @@ const CategorySelect = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [categoryFiles, setCategoryFiles] = useState({});
   const dropdownRef = useRef(null);
-
   const { availableCategoryTypes } = useMeta();
   useEffect(() => {
     const handleClickOutside = (event) => {
