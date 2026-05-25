@@ -179,16 +179,18 @@ export default function DocumentSegment({
                   </div>
                   {doc.expDate && (
                     <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-red-100 text-red-600">
-                      Exp: {doc.expDate}
+                      Exp: {new Date(doc.expDate).toLocaleDateString("en-US")}
                     </span>
                   )}
-                  <button
-                    type="button"
-                    onClick={() => onUploadTrigger(doc)}
-                    className="text-[11px] font-semibold px-3 py-1.5 rounded-lg border border-[#e0e7ff] bg-white text-[#024CEE] cursor-pointer hover:bg-gray-50 transition-colors shadow-xs w-full md:w-auto text-center"
-                  >
-                    {hasExistingAssets ? "Update" : "Upload"}
-                  </button>
+                  {doc.status !== "pending" && (
+                    <button
+                      type="button"
+                      onClick={() => onUploadTrigger(doc)}
+                      className="text-[11px] font-semibold px-3 py-1.5 rounded-lg border border-[#e0e7ff] bg-white text-[#024CEE] cursor-pointer hover:bg-gray-50 transition-colors shadow-xs w-full md:w-auto text-center"
+                    >
+                      {hasExistingAssets ? "Update" : "Upload"}
+                    </button>
+                  )}
                 </div>
               </div>
             );
