@@ -9,9 +9,11 @@ import {
 } from "lucide-react";
 import { useMeta } from "../../../../contexts/MetadataContext";
 import DocumentSegment from "./components/DocumentSegment";
-import UploadModal from "./components/UploadFileModal";
-import CategoryModal from "./components/CategoryModal";
-import { fetchRequests, uploadVerificationFile } from "../../../../api/publicApis";
+import VerificationRequestModal from "./components/VerificationRequestModal";
+import {
+  fetchRequests,
+  uploadVerificationFile,
+} from "../../../../api/publicApis";
 
 const TAB_CONFIG = [
   { id: "profile", label: "Profile Verification", icon: User },
@@ -31,11 +33,14 @@ export default function SPVerificationCentre() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [uploadModalContext, setUploadModalContext] = useState(null);
-  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-  const [categoryModalMode, setCategoryModalMode] = useState("request");
-  const [preselectedCategoryId, setPreselectedCategoryId] = useState(null);
+  // Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalConfig, setModalConfig] = useState({
+    type: "category",
+    mode: "request",
+    id: null,
+    status: null,
+  });
 
   const loadVerificationData = async (force = false) => {
     // Return local cache immediately if data has already been fetched inside this instance lifetime
@@ -84,7 +89,7 @@ export default function SPVerificationCentre() {
         title: meta.label || meta.title,
         subtitle:
           meta.requirements && meta.requirements.length > 0
-            ? `Accepted: ${meta.requirements.join(" · ")}`
+            ? `Accepted: ${Array.isArray(meta.requirements) ? meta.requirements.join(" · ") : meta.requirements}`
             : meta.label || meta.subtitle,
         status: request?.status || "not-uploaded",
         icon: meta.icon,
@@ -118,7 +123,7 @@ export default function SPVerificationCentre() {
           title: meta?.label || meta?.title || "Unknown Category",
           subtitle:
             meta?.requirements && meta.requirements.length > 0
-              ? `Accepted: ${meta.requirements.map((r) => r.title || r).join(" · ")}`
+              ? `Accepted: ${Array.isArray(meta.requirements) ? meta.requirements.map((r) => r.title || r).join(" · ") : meta.requirements}`
               : meta?.label || meta?.title || "Category Credentials",
           icon: meta?.icon || "📁",
           status: req.status,
@@ -162,61 +167,20 @@ export default function SPVerificationCentre() {
     );
   };
 
-  const handleOpenUploadModal = (doc) => {
-    setUploadModalContext(doc);
-    setIsUploadModalOpen(true);
+  const handleOpenModal = ({ type, mode, id, status }) => {
+    setModalConfig({ type, mode, id, status });
+    setIsModalOpen(true);
   };
 
-  // 5. Update multi-asset array upon local upload actions safely
-  const handleConfirmUpload = async (uploadedFiles) => {
-    if (!uploadModalContext || !uploadedFiles) return;
+  const handleModalSubmit = async ({ type, relatedId, files }) => {
+    if (!relatedId || !files || files.length === 0) return;
 
     const fd = new FormData();
-    fd.append("type", "identity");
-    fd.append("relatedId", uploadModalContext.id);
-
-    const filesArray = Array.isArray(uploadedFiles) ? uploadedFiles : [uploadedFiles];
-    filesArray.forEach((file) => {
-      const fieldName = file.type.startsWith("image/") ? "verificationImage" : "verificationDocument";
-      fd.append(fieldName, file);
-    });
-
-    try {
-      setLoading(true);
-      const res = await uploadVerificationFile(fd);
-      if (res.success) {
-        await loadVerificationData(true);
-      }
-    } catch (err) {
-      console.error("Upload failed:", err);
-      alert("Failed to upload document. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleOpenRequestModal = (categoryId) => {
-    setCategoryModalMode("request");
-    setPreselectedCategoryId(categoryId);
-    setIsCategoryModalOpen(true);
-  };
-
-  const handleOpenInfoModal = (categoryId) => {
-    setCategoryModalMode("info");
-    setPreselectedCategoryId(categoryId);
-    setIsCategoryModalOpen(true);
-  };
-
-  const handleSubmitCategoryRequest = async ({ categoryId, files }) => {
-    if (!categoryId || files.length === 0) return;
-
-    const fd = new FormData();
-    fd.append("type", "category");
-    fd.append("relatedId", categoryId);
+    fd.append("type", type);
+    fd.append("relatedId", relatedId);
 
     files.forEach((file) => {
-      const fieldName = file.type.startsWith("image/") ? "verificationImage" : "verificationDocument";
-      fd.append(fieldName, file);
+      fd.append("files", file);
     });
 
     try {
@@ -226,8 +190,8 @@ export default function SPVerificationCentre() {
         await loadVerificationData(true);
       }
     } catch (err) {
-      console.error("Category request failed:", err);
-      alert("Failed to submit category request.");
+      console.error(`${type} request failed:`, err);
+      alert(`Failed to submit ${type} request. Please try again.`);
     } finally {
       setLoading(false);
     }
@@ -312,7 +276,14 @@ export default function SPVerificationCentre() {
               iconBgColor="bg-red-50"
               iconTextColor="text-red-600"
               documents={personalDocs}
-              onUploadTrigger={handleOpenUploadModal}
+              onUploadTrigger={(doc) =>
+                handleOpenModal({
+                  type: "identity",
+                  mode: "request",
+                  id: doc.id,
+                  status: doc.status,
+                })
+              }
               gridCols="grid-cols-1"
             />
             <DocumentSegment
@@ -322,7 +293,14 @@ export default function SPVerificationCentre() {
               iconBgColor="bg-blue-50"
               iconTextColor="text-[#024CEE]"
               documents={businessDocs}
-              onUploadTrigger={handleOpenUploadModal}
+              onUploadTrigger={(doc) =>
+                handleOpenModal({
+                  type: "identity",
+                  mode: "request",
+                  id: doc.id,
+                  status: doc.status,
+                })
+              }
               gridCols="grid-cols-1"
             />
           </div>
@@ -337,7 +315,14 @@ export default function SPVerificationCentre() {
               iconBgColor="bg-blue-50"
               iconTextColor="text-[#024CEE]"
               documents={userCategories}
-              onUploadTrigger={(doc) => handleOpenInfoModal(doc.id)}
+              onUploadTrigger={(doc) =>
+                handleOpenModal({
+                  type: "category",
+                  mode: doc.id ? "info" : "request",
+                  id: doc.id,
+                  status: doc.status,
+                })
+              }
               gridCols="grid-cols-2"
               isCategorySegment={true}
             />
@@ -373,9 +358,12 @@ export default function SPVerificationCentre() {
                         )}
                         <button
                           onClick={() =>
-                            isRequested
-                              ? handleOpenInfoModal(cat.id)
-                              : handleOpenRequestModal(cat.id)
+                            handleOpenModal({
+                              type: "category",
+                              mode: isRequested ? "info" : "request",
+                              id: cat.id,
+                              status: status,
+                            })
                           }
                           className="text-[10.5px] font-semibold px-2 py-0.5 rounded bg-blue-50 text-[#024CEE] border-none cursor-pointer hover:bg-blue-100"
                         >
@@ -391,19 +379,14 @@ export default function SPVerificationCentre() {
         )}
       </div>
 
-      <UploadModal
-        isOpen={isUploadModalOpen}
-        onClose={() => setIsUploadModalOpen(false)}
-        documentConfig={uploadModalContext}
-        onConfirmUpload={handleConfirmUpload}
-      />
-      <CategoryModal
-        isOpen={isCategoryModalOpen}
-        onClose={() => setIsCategoryModalOpen(false)}
-        mode={categoryModalMode}
-        preselectedCategoryId={preselectedCategoryId}
-        categoryRequestStatus={getCategoryRequestStatus(preselectedCategoryId)}
-        onRequestAccess={handleSubmitCategoryRequest}
+      <VerificationRequestModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        type={modalConfig.type}
+        mode={modalConfig.mode}
+        preselectedId={modalConfig.id}
+        requestStatus={modalConfig.status}
+        onSubmit={handleModalSubmit}
       />
 
       <style

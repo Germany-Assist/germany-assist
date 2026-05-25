@@ -6,76 +6,59 @@ import {
   LayoutGrid,
   CheckCircle,
   FileText,
+  User,
 } from "lucide-react";
 import { useMeta } from "../../../../../contexts/MetadataContext";
 
 const MAX_FILES = 10;
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
-export default function CategoryModal({
+export default function VerificationRequestModal({
   isOpen,
   onClose,
+  /** Type of verification: "category" or "identity" */
+  type = "category",
   /** Modal mode: "request" shows selector + upload, "info" is view-only */
   mode = "info",
-  /** Pre-selected category ID */
-  preselectedCategoryId = null,
-  /** Category's own request status (from user's requests) - for "info" mode display */
-  categoryRequestStatus = null,
-  onRequestAccess,
+  /** Pre-selected ID (Category ID or Identity Type ID) */
+  preselectedId = null,
+  /** Request status (from user's requests) - for "info" mode display */
+  requestStatus = null,
+  onSubmit,
 }) {
-  // Category selector value
-  const [selectedCategoryId, setSelectedCategoryId] = useState(
-    preselectedCategoryId,
-  );
+  const { availableCategoryTypes, availableIdentityTypes } = useMeta();
+
+  // Selector value
+  const [selectedId, setSelectedId] = useState(preselectedId);
   // Uploaded files storage
   const [uploadedFiles, setUploadedFiles] = useState([]);
   // Error message
   const [error, setError] = useState("");
-  const { availableCategoryTypes } = useMeta();
-
   // File input reference
   const fileInputRef = useRef(null);
 
   // Reset state when modal opens/closes or preselected changes
   useEffect(() => {
     if (isOpen) {
-      setSelectedCategoryId(preselectedCategoryId);
+      setSelectedId(preselectedId);
       setUploadedFiles([]);
       setError("");
     }
-  }, [isOpen, preselectedCategoryId]);
+  }, [isOpen, preselectedId]);
 
   if (!isOpen) return null;
 
-  // Get full category data by ID
-  const getCategoryById = (id) =>
-    (availableCategoryTypes || []).find((c) => c.id === id);
-  const selectedCategory = selectedCategoryId
-    ? getCategoryById(selectedCategoryId)
-    : null;
+  // Get current meta list based on type
+  const metaList =
+    type === "identity"
+      ? availableIdentityTypes || []
+      : availableCategoryTypes || [];
+
+  // Get full meta data by ID
+  const getMetaById = (id) => metaList.find((m) => m.id === id);
+  const selectedMeta = selectedId ? getMetaById(selectedId) : null;
 
   // Get status display styles
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case "active":
-      case "verified":
-        return {
-          bg: "bg-emerald-100",
-          color: "text-emerald-600",
-          label: "Active",
-        };
-      case "pending":
-        return {
-          bg: "bg-amber-100",
-          color: "text-amber-600",
-          label: "Pending",
-        };
-      case "rejected":
-        return { bg: "bg-red-100", color: "text-red-600", label: "Rejected" };
-      default:
-        return { bg: "bg-gray-100", color: "text-gray-500", label: "Unknown" };
-    }
-  };
 
   // Handle file selection with validation
   const handleFileSelection = (files) => {
@@ -135,38 +118,47 @@ export default function CategoryModal({
       setError("Please upload at least one supporting document.");
       return;
     }
-    onRequestAccess?.({ categoryId: selectedCategoryId, files: uploadedFiles });
+    onSubmit?.({
+      type,
+      relatedId: selectedId,
+      files: uploadedFiles,
+    });
     onClose();
   };
 
-  // Current status badge (for info mode)
-  const statusBadge =
-    mode === "info" && categoryRequestStatus
-      ? getStatusBadge(categoryRequestStatus)
-      : null;
+  // Current status badge
+
+  const titleText =
+    type === "identity"
+      ? mode === "request"
+        ? "Verify Identity"
+        : "Identity Document"
+      : mode === "request"
+        ? "Add Service Category"
+        : "Category Details";
+
+  const IconComponent = type === "identity" ? User : LayoutGrid;
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4"
+      className="fixed inset-0 z-50  flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="bg-white w-full max-w-md rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div className="bg-white w-full max-w-md rounded-xl shadow-xl overflow-hidden">
         {/* Modal Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-              <LayoutGrid size={15} className="text-[#024CEE]" />
+              <IconComponent size={15} className="text-[#024CEE]" />
             </div>
             <div>
               <h3 className="text-sm font-semibold text-[#0a0f1e]">
-                {mode === "request"
-                  ? "Add Service Category"
-                  : "Category Details"}
+                {titleText}
               </h3>
               <p className="text-[11px] text-gray-500 mt-0.5">
-                {mode === "request" && !selectedCategory
-                  ? "Select category to see required documents"
-                  : selectedCategory?.title || selectedCategory?.label}
+                {mode === "request" && !selectedMeta
+                  ? `Select ${type} to see requirements`
+                  : selectedMeta?.title || selectedMeta?.label}
               </p>
             </div>
           </div>
@@ -179,17 +171,18 @@ export default function CategoryModal({
         </div>
 
         {/* Modal Body */}
-        <div className="p-5 text-left max-h-[60vh] overflow-y-auto">
-          {/* Category Selector (only in request mode) */}
-          {mode === "request" && (
+        <div className="p-5 text-left max-h-[70vh] overflow-y-auto">
+          {/* Selector (only in request mode if no ID pre-selected or if allowed to change) */}
+          {mode === "request" && !preselectedId && (
             <div className="mb-4">
               <label className="block text-xs font-semibold text-[#0a0f1e] mb-1.5">
-                Select category <span className="text-red-500">*</span>
+                Select {type === "identity" ? "document type" : "category"}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <select
-                value={selectedCategoryId || ""}
+                value={selectedId || ""}
                 onChange={(e) => {
-                  setSelectedCategoryId(e.target.value || null);
+                  setSelectedId(e.target.value || null);
                   setUploadedFiles([]);
                 }}
                 className="w-full px-3 py-2 border border-[#e0e7ff] rounded-lg text-[13px] text-[#0a0f1e] bg-white outline-none focus:border-[#024CEE] cursor-pointer appearance-none"
@@ -199,84 +192,95 @@ export default function CategoryModal({
                   backgroundPosition: "right 12px center",
                 }}
               >
-                <option value="">— Choose a category —</option>
-                {(availableCategoryTypes || []).map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.icon} {cat.title || cat.label}
+                <option value="">
+                  — Choose {type === "identity" ? "type" : "category"} —
+                </option>
+                {metaList.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.icon && (typeof m.icon === "string" ? m.icon : "")}{" "}
+                    {m.title || m.label}
                   </option>
                 ))}
               </select>
             </div>
           )}
 
-          {/* Category Info Block */}
-          {selectedCategory && (
+          {/* Info Block */}
+          {selectedMeta && (
             <div className="border border-[#e0e7ff] rounded-xl overflow-hidden mb-4">
-              {/* Category Header with Icon */}
+              {/* Header with Icon */}
               <div className="flex items-center gap-2.5 px-4 py-3 bg-blue-50 border-b border-[#e0e7ff]">
-                <span className="text-xl">{selectedCategory.icon}</span>
+                <span className="text-xl">
+                  {selectedMeta.icon && typeof selectedMeta.icon === "string"
+                    ? selectedMeta.icon
+                    : type === "identity"
+                      ? "🪪"
+                      : "📁"}
+                </span>
                 <div className="flex-1">
                   <div className="text-[13px] font-semibold text-[#0a0f1e]">
-                    {selectedCategory.title || selectedCategory.label}
+                    {selectedMeta.title || selectedMeta.label}
                   </div>
-                  {selectedCategory.categoryType && (
+                  {selectedMeta.categoryType && (
                     <div className="text-[11px] text-gray-500 mt-0.5">
-                      {selectedCategory.categoryType}
+                      {selectedMeta.categoryType}
                     </div>
                   )}
                 </div>
-                {/* Status badge (info mode only, if category is requested) */}
-                {statusBadge && (
-                  <span
-                    className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${statusBadge.bg} ${statusBadge.color}`}
-                  >
-                    {statusBadge.label}
-                  </span>
-                )}
               </div>
 
               <div className="p-4">
-                {/* Requirements from API */}
-                {selectedCategory.requirements &&
-                  selectedCategory.requirements.length > 0 && (
+                {/* Requirements */}
+                {selectedMeta.requirements &&
+                  selectedMeta.requirements.length > 0 && (
                     <div className="mb-4">
                       <div className="text-[10.5px] font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                        Accepted credentials & files
+                        Accepted formats & details
                       </div>
                       <ul className="space-y-3">
-                        {selectedCategory.requirements.map((req, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-2 flex-shrink-0" />
-                            <div className="flex-1">
-                              <div className="text-sm font-semibold text-[#0a0f1e]">
-                                {req.icon} {req.title}
-                                {req.badge && (
-                                  <span className="text-[10px] font-semibold ml-1.5 px-1.5 py-0.5 rounded-full bg-blue-50 text-[#024CEE] border border-blue-200">
-                                    🏅 {req.badge}
-                                  </span>
-                                )}
-                              </div>
-                              {req.description && (
-                                <div className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
-                                  {req.description}
+                        {Array.isArray(selectedMeta.requirements) &&
+                        typeof selectedMeta.requirements[0] === "string"
+                          ? selectedMeta.requirements.map((req, idx) => (
+                              <li key={idx} className="flex items-start gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-2 flex-shrink-0" />
+                                <div className="text-[12.5px] text-[#0a0f1e]">
+                                  {req}
                                 </div>
-                              )}
-                            </div>
-                          </li>
-                        ))}
+                              </li>
+                            ))
+                          : selectedMeta.requirements.map((req, idx) => (
+                              <li key={idx} className="flex items-start gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-2 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <div className="text-sm font-semibold text-[#0a0f1e]">
+                                    {req.icon} {req.title}
+                                    {req.badge && (
+                                      <span className="text-[10px] font-semibold ml-1.5 px-1.5 py-0.5 rounded-full bg-blue-50 text-[#024CEE] border border-blue-200">
+                                        🏅 {req.badge}
+                                      </span>
+                                    )}
+                                  </div>
+                                  {req.description && (
+                                    <div className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                                      {req.description}
+                                    </div>
+                                  )}
+                                </div>
+                              </li>
+                            ))}
                       </ul>
                     </div>
                   )}
 
-                {/* Required Documents from API */}
-                {selectedCategory.documents &&
-                  selectedCategory.documents.length > 0 && (
+                {/* Required Documents (mostly for categories) */}
+                {selectedMeta.documents &&
+                  selectedMeta.documents.length > 0 && (
                     <div className="mb-4">
                       <div className="text-[10.5px] font-semibold text-gray-500 uppercase tracking-wide mb-2">
                         Required documents
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        {selectedCategory.documents.map((doc, idx) => (
+                        {selectedMeta.documents.map((doc, idx) => (
                           <div
                             key={idx}
                             className="flex items-start gap-2 px-3 py-2 border border-[#e0e7ff] rounded-lg"
@@ -300,7 +304,7 @@ export default function CategoryModal({
                     </div>
                   )}
 
-                {/* File Upload Area (only in request mode with category selected) */}
+                {/* File Upload Area (only in request mode) */}
                 {mode === "request" && (
                   <div>
                     <div className="text-[10.5px] font-semibold text-gray-500 uppercase tracking-wide mb-2">
@@ -362,7 +366,7 @@ export default function CategoryModal({
                                   e.stopPropagation();
                                   removeFile(index);
                                 }}
-                                className="text-gray-400 hover:text-red-500 text-sm px-1"
+                                className="text-gray-400 hover:text-red-500 text-sm px-1 border-none bg-transparent cursor-pointer"
                               >
                                 ✕
                               </button>
@@ -390,9 +394,17 @@ export default function CategoryModal({
           )}
 
           {/* Empty State */}
-          {mode === "request" && !selectedCategory && (
+          {mode === "request" && !selectedMeta && (
             <div className="text-center py-8 text-gray-500 text-sm">
-              Select a category above to see which credentials you can upload.
+              Select {type === "identity" ? "a type" : "a category"} above to
+              see requirements.
+            </div>
+          )}
+
+          {/* Fallback for info mode with no selection */}
+          {mode === "info" && !selectedMeta && (
+            <div className="text-center py-8 text-gray-500 text-sm">
+              No details available for this request.
             </div>
           )}
         </div>
@@ -409,7 +421,7 @@ export default function CategoryModal({
         <div className="flex items-center justify-between px-5 py-4 border-t border-gray-100">
           <div className="text-[11px] text-gray-500">
             {mode === "request" && uploadedFiles.length === 0
-              ? "Upload your supporting documents below."
+              ? "Upload supporting documents below."
               : mode === "request" && uploadedFiles.length > 0
                 ? `${uploadedFiles.length} file${uploadedFiles.length > 1 ? "s" : ""} ready to submit`
                 : ""}
@@ -426,7 +438,7 @@ export default function CategoryModal({
               <button
                 type="button"
                 onClick={handleSubmit}
-                disabled={!selectedCategoryId || uploadedFiles.length === 0}
+                disabled={!selectedId || uploadedFiles.length === 0}
                 className="px-4 py-1.5 rounded-lg bg-[#024CEE] text-white text-xs font-semibold hover:bg-blue-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
               >
                 Submit Request
