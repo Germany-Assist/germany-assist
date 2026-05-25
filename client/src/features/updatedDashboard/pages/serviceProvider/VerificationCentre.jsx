@@ -338,37 +338,47 @@ export default function SPVerificationCentre() {
                     return (
                       <div
                         key={cat.id}
-                        className="flex items-center gap-2.5 px-3 py-2 border border-[#e0e7ff] rounded-lg"
+                        className="flex justify-between items-center gap-2.5 px-3 py-2 border border-[#e0e7ff] rounded-lg"
                       >
-                        <span className="text-lg">{cat.icon}</span>
-                        <div className="flex-1">
-                          <div className="text-[12.5px] font-medium text-[#0a0f1e]">
-                            {cat.title || cat.label}
-                          </div>
-                          <div className="text-[11px] text-gray-500">
-                            {cat.categoryType || ""}
+                        {/* left side */}
+                        {/* Changed from grid to flex for better icon-to-text alignment */}
+                        <div className="flex items-center gap-3">
+                          <div className="flex text-lg">{cat.icon}</div>
+                          <div className="flex flex-col items-start">
+                            {/* Removed conflicting font-medium */}
+                            <div className="text-sm font-semibold text-[#0a0f1e]">
+                              {cat.title || cat.label}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              {cat.label}
+                            </div>
                           </div>
                         </div>
-                        {badge && (
-                          <span
-                            className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${badge.bg} ${badge.color}`}
+
+                        {/* right side */}
+                        {/* Added items-center and gap-2 so badge and button don't touch */}
+                        <div className="flex items-center gap-2">
+                          {badge && (
+                            <div
+                              className={`text-xs font-semibold px-2 py-0.5 rounded-full ${badge.bg} ${badge.color}`}
+                            >
+                              {badge.label}
+                            </div>
+                          )}
+                          <button
+                            onClick={() =>
+                              handleOpenModal({
+                                type: "category",
+                                mode: isRequested ? "info" : "request",
+                                id: cat.id,
+                                status: status, // Note: Ensure 'status' is defined in your component's scope
+                              })
+                            }
+                            className="text-[10.5px] font-semibold px-2 py-0.5 rounded bg-blue-50 text-[#024CEE] border-none cursor-pointer hover:bg-blue-100"
                           >
-                            {badge.label}
-                          </span>
-                        )}
-                        <button
-                          onClick={() =>
-                            handleOpenModal({
-                              type: "category",
-                              mode: isRequested ? "info" : "request",
-                              id: cat.id,
-                              status: status,
-                            })
-                          }
-                          className="text-[10.5px] font-semibold px-2 py-0.5 rounded bg-blue-50 text-[#024CEE] border-none cursor-pointer hover:bg-blue-100"
-                        >
-                          {isRequested ? "View" : "Request"}
-                        </button>
+                            {isRequested ? "View" : "Request"}
+                          </button>
+                        </div>
                       </div>
                     );
                   })}
