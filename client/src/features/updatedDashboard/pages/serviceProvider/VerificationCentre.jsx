@@ -318,7 +318,7 @@ export default function SPVerificationCentre() {
               onUploadTrigger={(doc) =>
                 handleOpenModal({
                   type: "category",
-                  mode: doc.id ? "info" : "request",
+                  mode: "request",
                   id: doc.id,
                   status: doc.status,
                 })

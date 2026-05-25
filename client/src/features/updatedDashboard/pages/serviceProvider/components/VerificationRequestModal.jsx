@@ -59,6 +59,28 @@ export default function VerificationRequestModal({
   const selectedMeta = selectedId ? getMetaById(selectedId) : null;
 
   // Get status display styles
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case "active":
+      case "approved":
+      case "verified":
+        return {
+          bg: "bg-emerald-100",
+          color: "text-emerald-600",
+          label: "Verified",
+        };
+      case "pending":
+        return {
+          bg: "bg-amber-100",
+          color: "text-amber-600",
+          label: "Pending",
+        };
+      case "rejected":
+        return { bg: "bg-red-100", color: "text-red-600", label: "Rejected" };
+      default:
+        return { bg: "bg-gray-100", color: "text-gray-500", label: "Unknown" };
+    }
+  };
 
   // Handle file selection with validation
   const handleFileSelection = (files) => {
@@ -127,6 +149,7 @@ export default function VerificationRequestModal({
   };
 
   // Current status badge
+  const statusBadge = requestStatus ? getStatusBadge(requestStatus) : null;
 
   const titleText =
     type === "identity"
@@ -141,10 +164,10 @@ export default function VerificationRequestModal({
 
   return (
     <div
-      className="fixed inset-0 z-50  flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-md p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="bg-white w-full max-w-md rounded-xl shadow-xl overflow-hidden">
+      <div className="bg-white w-full max-w-sm rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Modal Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <div className="flex items-center gap-2.5">
