@@ -210,7 +210,6 @@ export const registerFreelancer = async (body, files) => {
               ? "verificationDocument"
               : "verificationImage",
           userId: user.id,
-          label: idFiles[0].originalname,
           transaction: t,
         });
       }
@@ -238,7 +237,6 @@ export const registerFreelancer = async (body, files) => {
           files: catFiles,
           ownerId: categoryRequest.id,
           typeKey: "verificationDocument",
-          label: catFiles[0].originalname,
           userId: user.id,
           transaction: t,
         });
@@ -374,7 +372,6 @@ export const registerCompany = async (body, files) => {
               ? "verificationDocument"
               : "verificationImage",
           userId: user.id,
-          label: idFiles[0].originalname,
           transaction: t,
         });
       }
@@ -402,7 +399,6 @@ export const registerCompany = async (body, files) => {
           files: catFiles,
           ownerId: categoryRequest.id,
           typeKey: "verificationDocument",
-          label: catFiles[0].originalname,
           userId: user.id,
           transaction: t,
         });

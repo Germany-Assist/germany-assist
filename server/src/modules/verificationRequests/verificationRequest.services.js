@@ -36,19 +36,21 @@ async function handleUserRequest({ auth, files, body, t }) {
 
   let request =
     await verificationRequestRepository.findExistingRequest(filters);
-  if (request && request.status === "pending") {
-    throw new AppError(
-      400,
-      "You already have a pending request for this verification type",
-      true,
-      "You already have a pending request for this verification type",
-    );
-  }
+
   if (request) {
     // 3. Status Transition Logic
-    // If it's already pending, we just add files (or could replace, but usually addition is safe)
-    // If it's approved or rejected, we move it back to pending for re-evaluation
-    if (["approved", "rejected"].includes(request.status)) {
+    // If it's already pending, we don't allow re-upload to prevent review spamming
+    if (request.status === "pending") {
+      throw new AppError(
+        400,
+        "You already have a pending request for this verification type",
+        true,
+        "You already have a request for verification",
+      );
+    }
+
+    // If it's approved (Verified) or rejected, we move it back to pending for re-evaluation
+    if (["approved", "rejected", "adminRequest"].includes(request.status)) {
       await verificationRequestRepository.updateAdmin(
         request.id,
         { status: "pending", adminNote: null },
@@ -70,20 +72,23 @@ async function handleUserRequest({ auth, files, body, t }) {
   }
 
   // 5. Upload Assets
-  if (files && Object.values(files).length > 0) {
+  if (files && files.length > 0) {
     await Promise.all(
-      Object.values(files)
-        .flat()
-        .map((file) =>
-          AssetService.uploadAsset({
-            files: [file],
-            ownerId: request.id,
-            typeKey: file.fieldname,
-            userId: userId,
-            label: file.originalname,
-            transaction: t,
-          }),
-        ),
+      files.map((file) => {
+        // Automatically determine typeKey based on mimetype
+        const typeKey = file.mimetype.startsWith("image/")
+          ? "verificationImage"
+          : "verificationDocument";
+
+        return AssetService.uploadAsset({
+          files: [file],
+          ownerId: request.id,
+          typeKey,
+          userId: userId,
+          label: file.originalname,
+          transaction: t,
+        });
+      }),
     );
   }
 

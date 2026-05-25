@@ -24,20 +24,24 @@ async function handleUpload(req, res, next) {
       throw new AppError(422, "Type and relatedId are required", true);
     }
 
-    if (!req.files || Object.values(req.files).length < 1) {
+    const uploadedFiles = req.files || [];
+    if (uploadedFiles.length < 1) {
       throw new AppError(422, "No files uploaded", true);
     }
 
     // 3. Delegate to service
     await verificationRequestService.handleUserRequest({
       auth: req.auth,
-      files: req.files,
+      files: uploadedFiles,
       body: req.body,
       t,
     });
 
     await t.commit();
-    res.status(200).json({ success: true, message: "Verification request submitted successfully" });
+    res.status(200).json({
+      success: true,
+      message: "Verification request submitted successfully",
+    });
   } catch (error) {
     await t.rollback();
     next(error);

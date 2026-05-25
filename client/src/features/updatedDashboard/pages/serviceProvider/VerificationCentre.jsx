@@ -64,7 +64,7 @@ export default function SPVerificationCentre() {
   }, []); // Safe dependency lock to execute exactly once
 
   const categoryMetaMap = useMemo(
-    () => new Map(availableCategoryTypes.map((c) => [c.id, c])),
+    () => new Map((availableCategoryTypes || []).map((c) => [c.id, c])),
     [availableCategoryTypes],
   );
 
@@ -73,7 +73,7 @@ export default function SPVerificationCentre() {
     const personal = [];
     const business = [];
 
-    availableIdentityTypes.forEach((meta) => {
+    (availableIdentityTypes || []).forEach((meta) => {
       // Find request wrapper checking cross-match targets
       const request = requests.find(
         (r) => r.type === "identity" && r.relatedId === meta.id,

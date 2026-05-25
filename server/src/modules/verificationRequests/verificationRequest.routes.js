@@ -15,10 +15,7 @@ router.get(
 router.post(
   "/upload",
   jwtUtils.authenticateJwt,
-  multerUpload.fields([
-    { name: "verificationImage", maxCount: 5 },
-    { name: "verificationDocument", maxCount: 5 },
-  ]),
+  multerUpload.array("files", 10),
   verificationRequestController.handleUpload,
 );
 

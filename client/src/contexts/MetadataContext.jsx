@@ -10,8 +10,8 @@ const MetaContext = createContext(null);
 export const MetaContextProvider = ({ children }) => {
   const [meta, setMeta] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [availableCategoryTypes, setAvailableCategoryTypes] = useState(null);
-  const [availableIdentityTypes, setAvailableIdentityTypes] = useState(null);
+  const [availableCategoryTypes, setAvailableCategoryTypes] = useState([]);
+  const [availableIdentityTypes, setAvailableIdentityTypes] = useState([]);
 
   useEffect(() => {
     (async () => {

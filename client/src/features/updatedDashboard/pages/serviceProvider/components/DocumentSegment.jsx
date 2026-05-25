@@ -66,7 +66,6 @@ export default function DocumentSegment({
   isCategorySegment = false,
 }) {
   const [isOpen, setIsOpen] = useState(true);
-  console.info(documents);
   return (
     <div className="bg-white border border-[#e0e7ff] rounded-xl mb-3 overflow-hidden text-left">
       {/* Clickable Section Header */}
