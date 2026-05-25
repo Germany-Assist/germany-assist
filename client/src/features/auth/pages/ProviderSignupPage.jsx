@@ -122,12 +122,15 @@ const ProviderSignupPage = () => {
       fd.append("role", "provider");
       fd.append("subRole", subRole || "");
       setEmail(fd.get("email"));
-
       const result =
         subRole === "company"
           ? await signUpCompany(fd)
           : await signUpFreelancer(fd);
-      if (result) {
+
+      //flag delete this to stop the skip
+      return;
+
+      if (result && result.success == "true") {
         setCurrentStep(4);
         startResendCooldown(180);
       }

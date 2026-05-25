@@ -144,8 +144,13 @@ export const registerFreelancer = async (body, files) => {
       });
     }
 
+    // adjust the signup to read from the meta and send the request type id with the document
+    // create new request for each document with the related if pointing to the id for the request type
     const idDocument = getFile(files, "idDocument");
-    if (idDocument) {
+    const proofOfResidence = getFile(files, "proofOfResidence");
+    const businessRegistration = getFile(files, "businessRegistration");
+
+    if (idDocument || proofOfResidence || businessRegistration) {
       const request = await verificationRequestRepository.createRequest(
         {
           userId: user.id,
@@ -155,17 +160,46 @@ export const registerFreelancer = async (body, files) => {
         },
         t,
       );
-      await AssetService.uploadAsset({
-        files: [idDocument],
-        ownerId: request.id,
-        typeKey:
-          idDocument.mimetype === "application/pdf"
-            ? "verificationDocument"
-            : "verificationImage",
-        label: "Identity Document",
-        userId: user.id,
-        transaction: t,
-      });
+
+      if (idDocument) {
+        await AssetService.uploadAsset({
+          files: [idDocument],
+          ownerId: request.id,
+          typeKey:
+            idDocument.mimetype === "application/pdf"
+              ? "verificationDocument"
+              : "verificationImage",
+          userId: user.id,
+          label: "Identity Document",
+          transaction: t,
+        });
+      }
+      if (proofOfResidence) {
+        await AssetService.uploadAsset({
+          files: [proofOfResidence],
+          ownerId: request.id,
+          typeKey:
+            proofOfResidence.mimetype === "application/pdf"
+              ? "verificationDocument"
+              : "verificationImage",
+          userId: user.id,
+          label: "proofOfResidence",
+          transaction: t,
+        });
+      }
+      if (businessRegistration) {
+        await AssetService.uploadAsset({
+          files: [businessRegistration],
+          ownerId: request.id,
+          typeKey:
+            businessRegistration.mimetype === "application/pdf"
+              ? "verificationDocument"
+              : "verificationImage",
+          userId: user.id,
+          label: "businessRegistration",
+          transaction: t,
+        });
+      }
     }
 
     // Process category credential files
@@ -199,11 +233,20 @@ export const registerFreelancer = async (body, files) => {
 
     const { accessToken, refreshToken } = jwtUtils.generateTokens(user);
     const sanitizedUser = await userMapper.sanitizeUser(user);
+    console.log(idDocument);
+
+    throw new AppError(
+      400,
+      "User registered successfully",
+      false,
+      "User registered successfully",
+    );
 
     await t.commit();
     await authServices.sendVerificationEmail(email, user.id);
 
     return {
+      success: true,
       user: sanitizedUser,
       accessToken,
       refreshToken,
@@ -390,6 +433,7 @@ export const registerCompany = async (body, files) => {
     await authServices.sendVerificationEmail(email, user.id);
 
     return {
+      success: true,
       user: sanitizedUser,
       accessToken,
       refreshToken,

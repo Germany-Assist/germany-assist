@@ -134,6 +134,7 @@ export const registerClient = async (body, files) => {
     await t.commit();
     await authServices.sendVerificationEmail(email, user.id);
     return {
+      success: true,
       user: sanitizedUser,
       accessToken,
       refreshToken,

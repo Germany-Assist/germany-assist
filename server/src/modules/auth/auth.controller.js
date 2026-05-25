@@ -51,18 +51,6 @@ async function googleAuthSignin(req, res, next) {
   }
 }
 
-// TODO needs to be deleted or updated
-
-// export async function verifyAccount(req, res, next) {
-//   try {
-//     const token = req.query.token;
-//     const success = await authServices.verifyAccountConfirm(token);
-//     if (!success) return res.redirect(`${FRONTEND_URL}/verified?status=error`);
-//     res.redirect(`${FRONTEND_URL}/verified?status=success`);
-//   } catch (error) {
-//     next(error);
-//   }
-// }
 export async function verifyAccountByDigits(req, res, next) {
   try {
     const token = req.body.token;
