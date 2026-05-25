@@ -227,11 +227,9 @@ const AdditionalInfo = ({
                   icon={type.icon}
                   title={type.label}
                   subtitle={
-                    type.title === "Personal Identification"
-                      ? "Required for all providers to publish services on the platform. Upload a clear photo or scan — PDF, JPG, or PNG."
-                      : type.title === "businessRegistration"
-                        ? "Upload your official company registration document (Gewerbeanmeldung or equivalent)."
-                        : "Upload a clear photo or scan — PDF, JPG, or PNG."
+                    type.requirements && type.requirements.length > 0
+                      ? `Accepted: ${type.requirements.join(" · ")}`
+                      : "Upload a clear photo or scan — PDF, JPG, or PNG."
                   }
                   badge
                   badgeText={

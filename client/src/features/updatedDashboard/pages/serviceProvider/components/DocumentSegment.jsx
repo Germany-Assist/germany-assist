@@ -11,8 +11,7 @@ import {
 
 const getStatusColor = (status) => {
   switch (status) {
-    case "verified":
-    case "active":
+    case "approved":
       return {
         bg: "bg-emerald-50",
         color: "text-emerald-600",
@@ -45,8 +44,7 @@ const getStatusColor = (status) => {
 
 const getStatusLabel = (status) => {
   switch (status) {
-    case "verified":
-    case "active":
+    case "approved":
       return "Verified";
     case "rejected":
       return "Rejected";
@@ -68,7 +66,7 @@ export default function DocumentSegment({
   isCategorySegment = false,
 }) {
   const [isOpen, setIsOpen] = useState(true);
-
+  console.info(documents);
   return (
     <div className="bg-white border border-[#e0e7ff] rounded-xl mb-3 overflow-hidden text-left">
       {/* Clickable Section Header */}
@@ -115,7 +113,7 @@ export default function DocumentSegment({
                 className={`border rounded-xl p-4 flex flex-col justify-between md:flex-row gap-4 transition-all ${statusStyle.border} ${statusStyle.bg}/30`}
               >
                 {/* Left side Metadata block */}
-                <div className="flex-1 flex flex-col items-start gap-2">
+                <div className="flex-1 flex flex-col items-start gap-2 justify-between">
                   <div className="flex gap-2 items-center">
                     <div
                       className={`w-[36px] h-[36px] rounded-lg ${statusStyle.bg} flex items-center justify-center shrink-0`}
@@ -140,25 +138,21 @@ export default function DocumentSegment({
                     <div className="flex flex-wrap gap-1.5 mt-1 w-full">
                       {doc.assets.map((asset, index) => {
                         // Extract file name clean values from encoded S3/Storage URLs
-                        const cleanFileName = asset.url
-                          ? asset.url.split("/").pop().split("?")[0].slice(-16)
-                          : `Asset-${index + 1}`;
-
                         return (
                           <a
                             key={index}
                             href={asset.url || "#"}
                             target="_blank"
                             rel="noopener noreferrer"
-                            title={asset.label || cleanFileName}
-                            className="inline-flex items-center gap-1 bg-white border border-[#e0e7ff] hover:border-blue-300 hover:text-[#024CEE] transition-all rounded-lg px-2 py-1 text-[10.5px] text-[#0a0f1e] max-w-[130px] sm:max-w-[150px]"
+                            title={asset.label}
+                            className=" inline-flex items-center gap-1 bg-white border border-[#e0e7ff] hover:border-blue-300 hover:text-[#024CEE] transition-all rounded-lg px-2 py-1 text-[10.5px] text-[#0a0f1e] max-w-[130px] sm:max-w-[150px]"
                           >
                             <FileText
                               size={11}
                               className="text-gray-400 shrink-0"
                             />
-                            <span className="truncate flex-1 text-left">
-                              {asset.label || cleanFileName}
+                            <span className="truncate flex-1 text-left ">
+                              {asset.label}
                             </span>
                             <ExternalLink
                               size={10}
@@ -184,23 +178,17 @@ export default function DocumentSegment({
                         ` — ${doc.reason}`}
                     </span>
                   </div>
-
                   {doc.expDate && (
                     <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-red-100 text-red-600">
                       Exp: {doc.expDate}
                     </span>
                   )}
-
                   <button
                     type="button"
                     onClick={() => onUploadTrigger(doc)}
                     className="text-[11px] font-semibold px-3 py-1.5 rounded-lg border border-[#e0e7ff] bg-white text-[#024CEE] cursor-pointer hover:bg-gray-50 transition-colors shadow-xs w-full md:w-auto text-center"
                   >
-                    {hasExistingAssets
-                      ? isCategorySegment
-                        ? "View"
-                        : "Update"
-                      : "Upload"}
+                    {hasExistingAssets ? "Update" : "Upload"}
                   </button>
                 </div>
               </div>

@@ -13,22 +13,17 @@ import UploadModal from "./components/UploadFileModal";
 import CategoryModal from "./components/CategoryModal";
 import { fetchRequests } from "../../../../api/publicApis";
 
-// ⚠️ Add your real fetch call import statement here
-// import { fetchVerificationRequests } from "../../../../api/verification";
-
 const TAB_CONFIG = [
   { id: "profile", label: "Profile Verification", icon: User },
   { id: "categories", label: "Categories", icon: LayoutGrid },
   { id: "badges", label: "Badges", icon: Award },
 ];
 
-// Module-level local cache to completely eliminate double fetching across mounting/unmounting states
 let requestCache = null;
 
 export default function SPVerificationCentre() {
   const { availableCategoryTypes = [], availableIdentityTypes = [] } =
     useMeta();
-
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("profile");
 
@@ -86,8 +81,11 @@ export default function SPVerificationCentre() {
 
       const docItem = {
         id: meta.id,
-        title: meta.title || meta.label,
-        subtitle: meta.label || meta.subtitle,
+        title: meta.label || meta.title,
+        subtitle:
+          meta.requirements && meta.requirements.length > 0
+            ? `Accepted: ${meta.requirements.join(" · ")}`
+            : meta.label || meta.subtitle,
         status: request?.status || "not-uploaded",
         icon: meta.icon,
         required: true,
@@ -137,22 +135,21 @@ export default function SPVerificationCentre() {
 
   const getStatusBadge = (status) => {
     const systems = {
-      active: {
+      approved: {
         bg: "bg-emerald-100",
         color: "text-emerald-600",
-        label: "Active",
-      },
-      verified: {
-        bg: "bg-emerald-100",
-        color: "text-emerald-600",
-        label: "Active",
+        label: "Verified",
       },
       pending: {
         bg: "bg-amber-100",
         color: "text-amber-600",
         label: "Pending",
       },
-      rejected: { bg: "bg-red-100", color: "text-red-600", label: "Rejected" },
+      rejected: {
+        bg: "bg-red-100",
+        color: "text-red-600",
+        label: "Rejected",
+      },
     };
     return (
       systems[status] || {

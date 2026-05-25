@@ -42,7 +42,7 @@ VerificationRequest.init(
       validate: {
         isIn: {
           args: [["pending", "approved", "rejected", "adminRequest"]],
-          msg: "Status must be 'adminRequest', 'pending', 'approved', or 'rejected'",
+          msg: "Status must be 'pending', 'approved', 'rejected', or 'adminRequest'",
         },
       },
     },

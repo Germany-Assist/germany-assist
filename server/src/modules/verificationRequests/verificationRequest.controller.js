@@ -104,8 +104,8 @@ async function updateAdmin(req, res, next) {
 
   try {
     const hasPermission = await authUtil.checkRoleAndPermission(req.auth, [
-      "service_provider_root",
-      "service_provider_rep",
+      "admin",
+      "super_admin",
     ]);
     const requestId = hashIdUtil.hashIdDecode(req.params.id);
     await verificationRequestService.updateAdmin(requestId, req.body, t);
@@ -120,6 +120,13 @@ async function updateAdmin(req, res, next) {
 }
 async function getAll(req, res, next) {
   try {
+    await authUtil.checkRoleAndPermission(req.auth, [
+      "admin",
+      "super_admin",
+      "client",
+      "service_provider_root",
+      "service_provider_rep",
+    ]);
     const results = await verificationRequestService.getAll(req.auth);
     res.status(200).json({ success: true, data: results });
   } catch (error) {
