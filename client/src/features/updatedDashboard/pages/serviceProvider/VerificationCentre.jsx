@@ -6,6 +6,7 @@ import {
   LayoutGrid,
   Award,
   HelpCircle,
+  Menu,
 } from "lucide-react";
 import { useMeta } from "../../../../contexts/MetadataContext";
 import DocumentSegment from "./components/DocumentSegment";
@@ -328,8 +329,21 @@ export default function SPVerificationCentre() {
             />
 
             <div className="bg-white border border-[#e0e7ff] rounded-xl mb-3 overflow-hidden">
-              <div className="p-4">
-                <div className="flex flex-col gap-1.5">
+              <div className="">
+                <div className="p-4 flex items-center gap-2 text-left font-semibold text-[#0a0f1e] pb-4">
+                  <div className="flex items-center justify-center p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors">
+                    <Menu size={20} />
+                  </div>
+                  <div className="flex flex-col text-[0.8rem]">
+                    <span> All Available Categories</span>
+                    <span className="text-xs text-gray-500">
+                      {availableCategoryTypes.length} main categories on Germany
+                      Assist
+                    </span>
+                  </div>
+                </div>
+                <hr className="border-t border-gray-200 mb-1 " />
+                <div className="flex flex-col gap-1.5 p-4">
                   {availableCategoryTypes.map((cat) => {
                     const status = getCategoryRequestStatus(cat.id);
                     const isRequested = isCategoryRequested(cat.id);
