@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Default accent theme variables (Electric Cyan dark / Azure light).
+   Overridden at runtime by ThemeContext when the user picks a theme. */
+:root {
+  --accent-rgb: 34 211 238;
+  --accent-soft-rgb: 10 142 204;
+}
+
 /* Animations from examples */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(22px); }
@@ -138,7 +145,7 @@
 
   /* Custom glow for active elements */
   .accent-glow {
-    @apply shadow-[0_0_20px_rgba(34,211,238,0.2)] border-accent/30;
+    @apply shadow-[0_0_20px_rgb(var(--accent-rgb)/0.2)] border-accent/30;
   }
 }
 
@@ -166,16 +173,16 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(34, 211, 238, 0.2); /* Cyan-500 with low opacity */
+  background: rgb(var(--accent-rgb) / 0.2);
   border-radius: 20px;
   transition: all 0.3s ease;
 }
 
 .custom-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(34, 211, 238, 0.5); /* Brightens when hovering the area */
-  box-shadow: 0 0 10px rgba(34, 211, 238, 0.3); /* Subtle neon glow */
+  background: rgb(var(--accent-rgb) / 0.5);
+  box-shadow: 0 0 10px rgb(var(--accent-rgb) / 0.3); /* Subtle neon glow */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #22d3ee; /* Solid Cyan-500 when dragging */
+  background: rgb(var(--accent-rgb)); /* Solid accent when dragging */
 }
