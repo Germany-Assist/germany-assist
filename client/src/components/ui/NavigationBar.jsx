@@ -3,6 +3,7 @@ import { useProfile } from "../../contexts/ProfileContext";
 import ProfileAvatar from "./ProfileAvatar";
 import logo from "../../assets/brand/logo.png";
 import ThemeSwitch from "./ThemeSwitch";
+import ThemePicker from "./ThemePicker";
 import NotificationBell from "./NotificationBell";
 
 const NavigationBar = () => {
@@ -22,7 +23,6 @@ const NavigationBar = () => {
     return `${baseStyles} text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5`;
   };
 
-  //testing
   return (
     <header className="pt-7 z-50 w-full px-4">
       <div className="max-w-7xl mx-auto">
@@ -60,6 +60,8 @@ const NavigationBar = () => {
             <div className="flex items-center gap-3">
               {/* Elegant Integrated Theme Toggle */}
               <ThemeSwitch />
+              {/* Accent Theme Picker */}
+              <ThemePicker />
               <div className="h-6 w-[1px] bg-light-700 dark:bg-white/10 mx-1" />
 
               {/* Auth Section */}
@@ -109,5 +111,5 @@ const NavigationBar = () => {
     </header>
   );
 };
-// testing if the bar is ok 123
+
 export default NavigationBar;
