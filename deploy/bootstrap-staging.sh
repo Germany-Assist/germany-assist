@@ -43,6 +43,7 @@ usermod -aG docker "$DEPLOY_USER"
 log "Fetching the repository..."
 if [[ ! -d "$APP_DIR/.git" ]]; then
   mkdir -p "$APP_DIR"
+  chown "$DEPLOY_USER:$DEPLOY_USER" "$APP_DIR"
   if sudo -u "$DEPLOY_USER" git clone "$REPO_URL" "$APP_DIR" 2>/dev/null; then
     log "Cloned ${REPO_URL}"
   else
