@@ -21,9 +21,11 @@ module.exports = {
           text: "#1e293b", // Slate 800 for elegant readability
         },
         // --- Common Accents ---
+        // Driven by CSS variables set by ThemeContext, so users can pick
+        // their own accent theme. <alpha-value> keeps bg-accent/10 etc. working.
         accent: {
-          DEFAULT: "#22d3ee", // Electric Cyan (Dark Mode)
-          soft: "#0a8eccff", // Azure/Sky (Light Mode)
+          DEFAULT: "rgb(var(--accent-rgb) / <alpha-value>)",
+          soft: "rgb(var(--accent-soft-rgb) / <alpha-value>)",
         },
       },
       animation: {
@@ -56,7 +58,8 @@ module.exports = {
           "50%": { width: "100%", left: "0%" },
           "100%": { width: "0%", left: "100%" },
         },
-        pulseRing: {
+
+       pulseRing: {
           "0%": { transform: "scale(0.33)", opacity: "0.7" },
           "80%, 100%": { transform: "scale(4)", opacity: "0" },
         },

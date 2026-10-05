@@ -3,6 +3,7 @@ import "./index.css";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
+import { ThemeProvider } from "./contexts/ThemeContext.jsx";
 import { AuthProvider, useAuth } from "./contexts/AuthContext.jsx";
 import { ProfileProvider } from "./contexts/ProfileContext.jsx";
 import { MetaContextProvider } from "./contexts/MetadataContext.jsx";
@@ -31,20 +32,22 @@ export const BootstrapGate = ({ children }) => {
 };
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <MetaContextProvider>
-      <BrowserRouter>
-        <AuthProvider>
-          <ProfileProvider>
-            <SocketProvider>
-              <NotificationProvider>
-                <BootstrapGate>
-                  <App />
-                </BootstrapGate>
-              </NotificationProvider>
-            </SocketProvider>
-          </ProfileProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </MetaContextProvider>
+    <ThemeProvider>
+      <MetaContextProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <ProfileProvider>
+              <SocketProvider>
+                <NotificationProvider>
+                  <BootstrapGate>
+                    <App />
+                  </BootstrapGate>
+                </NotificationProvider>
+              </SocketProvider>
+            </ProfileProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </MetaContextProvider>
+    </ThemeProvider>
   </React.StrictMode>,
 );
