@@ -1,4 +1,4 @@
-name: Deploy Full Stack App
+name: Staging build & deploy
 
 on:
   push:
@@ -6,22 +6,30 @@ on:
       - main
 
 jobs:
-  deploy:
+  staging:
     runs-on: ubuntu-latest
-    environment: production
+    environment: staging
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install server dependencies
-        run: npm install --prefix server
+      - name: Build and smoke test the staging stack
+        run: |
+          set -e
+          docker compose -f docker-compose.staging.yml up --build -d --wait app
+          docker compose -f docker-compose.staging.yml up -d mailhog s3-init
+          curl -fsS http://127.0.0.1:3000/health
+          docker compose -f docker-compose.staging.yml down -v
 
-      - name: Install client dependencies
-        run: npm install --prefix client
+  deploy-droplet:
+    # Runs automatically once the repository variable SERVER_DOMAIN is configured
+    needs: staging
+    if: ${{ vars.SERVER_DOMAIN != '' }}
+    runs-on: ubuntu-latest
+    environment: staging
 
-      - name: Build frontend
-        run: npm run build --prefix client
+    steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -37,19 +45,8 @@ jobs:
             git fetch origin
             git reset --hard origin/main
 
-            echo "Installing root dependencies..."
-            npm install
-
-            echo "Installing client dependencies..."
-            npm install --prefix client
-
-            echo "Installing server dependencies..."
-            npm install --prefix server
-
-            echo "Building frontend..."
-            npm run build --prefix client
-
-            echo "Restarting PM2..."
-            pm2 reload ecosystem.config.cjs || pm2 start ecosystem.config.cjs
+            echo "Rebuilding and restarting the staging stack..."
+            docker compose -f docker-compose.staging.yml up --build -d --wait app
+            docker compose -f docker-compose.staging.yml up -d mailhog s3-init
 
             echo "Deployment completed successfully."

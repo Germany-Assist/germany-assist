@@ -1,4 +1,3 @@
-import { func } from "testdouble";
 import { getIO } from "../index.js";
 
 export function sendSocketNotification(userId, payload) {

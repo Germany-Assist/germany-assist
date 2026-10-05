@@ -74,7 +74,8 @@ this will create the tables and the required minimum data please note that this 
 
 ### 5. Future Steps
 
-- Fully CI/CD deployment for the new repo.
+- Staging: fully containerized and documented in [DEPLOYMENT.md](DEPLOYMENT.md).
+- Production CI/CD deployment.
 - Enhanced scripts and testing for the new repo.
 
 ### 6. Notes

@@ -3,7 +3,7 @@ services:
     image: redis:7-alpine
     container_name: germany-assist-redis
     ports:
-      - "6378:6379"
+      - "127.0.0.1:6378:6379"
     volumes:
       - germany_assist_redis_data:/data
     command:
@@ -16,7 +16,7 @@ services:
     image: gresau/localstack-persist:4
     container_name: germany-assist-localstack
     ports:
-      - "4566:4566"
+      - "127.0.0.1:4566:4566"
     environment:
       - SERVICES=s3
       - PERSIST_DEFAULT=0
@@ -37,7 +37,7 @@ services:
       - POSTGRES_PASSWORD=123456789
       - POSTGRES_DB=germany_assist_development
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql
     networks:

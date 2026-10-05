@@ -1,0 +1,158 @@
+# Full staging stack: app (API + SPA), Postgres, Redis, LocalStack S3, Mailhog.
+# Credentials here are staging-grade and safe to commit; do not reuse in production.
+# Optional overrides via a root .env file (gitignored):
+#   STAGING_ORIGIN, STRIPE_SK, STRIPE_WEBHOOK_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
+
+x-app-env: &app-env
+  ENV_IS_LOADED: "true"
+  NODE_ENV: "staging"
+  SERVER_PORT: "3000"
+  ACCESS_TOKEN_SECRET: "stagingAccessTokenSecret"
+  REFRESH_TOKEN_SECRET: "stagingRefreshTokenSecret"
+  ACCESS_TOKEN_EXPIRE_DURATION: "15m"
+  REFRESH_TOKEN_EXPIRE_DURATION: "7d"
+  REFRESH_COOKIE_AGE: "604800000"
+  HASH_ID_SALT: "stagingHashIdSalt"
+  APP_DOMAIN: "${STAGING_ORIGIN:-http://localhost:3000}"
+  FRONTEND_URL: "${STAGING_ORIGIN:-http://localhost:3000}"
+  LOG_LEVEL: "http"
+  DB_USERNAME: "postgres"
+  DB_PASSWORD: "123456789"
+  DB_NAME: "germany_assist_staging"
+  DB_HOST: "postgres"
+  DB_DIALECT: "postgres"
+  DB_PORT: "5432"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: "redis123"
+  AWS_ACCESS_KEY_ID: "staging"
+  AWS_SECRET_ACCESS_KEY: "staging"
+  AWS_REGION: "us-east-2"
+  S3_BUCKET_NAME: "germany-assist-staging"
+  S3_ENDPOINT: "http://localstack:4566"
+  SIGN_URL_EXPIRATION: "600"
+  STRIPE_SK: "${STRIPE_SK:-}"
+  STRIPE_WEBHOOK_SECRET: "${STRIPE_WEBHOOK_SECRET:-}"
+  GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID:-}"
+  GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET:-}"
+  EMAIL_HOST: "mailhog"
+  EMAIL_USER: "staging"
+  EMAIL_PASS: "staging"
+  EMAIL_SMTP_PORT: "1025"
+  SEND_EMAILS: "${SEND_EMAILS:-false}"
+  RESEND_API_KEY: "${RESEND_API_KEY:-}"
+  SENTRY_DSN: ""
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: germany-assist-staging-app
+    environment:
+      <<: *app-env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      localstack:
+        condition: service_started
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  db-init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    profiles: ["tools"]
+    environment:
+      <<: *app-env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["node", "src/database/migrateAndSeed.js"]
+    networks:
+      - app-network
+    restart: "no"
+
+  postgres:
+    image: postgres:18-alpine
+    container_name: germany-assist-staging-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456789
+      - POSTGRES_DB=germany_assist_staging
+    volumes:
+      - staging_pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d germany_assist_staging"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: germany-assist-staging-redis
+    command:
+      ["redis-server", "--requirepass", "redis123", "--appendonly", "yes"]
+    volumes:
+      - staging_redis_data:/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  localstack:
+    image: gresau/localstack-persist:4
+    container_name: germany-assist-staging-localstack
+    environment:
+      - SERVICES=s3
+      - PERSIST_DEFAULT=0
+      - PERSIST_S3=1
+      - PERSIST_FREQUENCY=10
+    volumes:
+      - staging_localstack_data:/persisted-data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  s3-init:
+    image: amazon/aws-cli:latest
+    container_name: germany-assist-staging-s3-init
+    depends_on:
+      - localstack
+    environment:
+      - AWS_ACCESS_KEY_ID=staging
+      - AWS_SECRET_ACCESS_KEY=staging
+      - AWS_REGION=us-east-2
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      [
+        "for i in $(seq 1 15); do aws s3api head-bucket --bucket germany-assist-staging --endpoint-url http://localstack:4566 && exit 0; aws s3 mb s3://germany-assist-staging --endpoint-url http://localstack:4566 && exit 0; sleep 3; done; exit 0",
+      ]
+    networks:
+      - app-network
+    restart: "no"
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: germany-assist-staging-mailhog
+    ports:
+      - "127.0.0.1:8025:8025"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+volumes:
+  staging_pgdata:
+  staging_redis_data:
+  staging_localstack_data:
+
+networks:
+  app-network:
