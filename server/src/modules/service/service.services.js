@@ -12,7 +12,6 @@ import {
 } from "../../configs/constants.js";
 import notificationQueue from "../../jobs/queues/notification.queue.js";
 import AssetRepository from "../assets/assets.repository.js";
-import { app } from "../../app.js";
 import timelineRepository from "../timeline/timeline.repository.js";
 import VariantRepository from "../variant/variant.repository.js";
 

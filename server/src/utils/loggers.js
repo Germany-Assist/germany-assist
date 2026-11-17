@@ -115,6 +115,17 @@ export const httpLogger = winston.loggers.get("httpLogger").http;
 export const rawErrorLogger = winston.loggers.get("errorLogger").error;
 
 export const errorLogger = (error, ...args) => {
-  rawErrorLogger(error, ...args);
+  // winston formats mutate the info object in place; passing the original
+  // Error would strip its properties (e.g. AppError.httpCode) before it
+  // reaches the error middleware. Log a clone instead.
+  let logTarget = error;
+  if (error instanceof Error) {
+    logTarget = Object.assign(
+      Object.create(Object.getPrototypeOf(error)),
+      { message: error.message, stack: error.stack },
+      error
+    );
+  }
+  rawErrorLogger(logTarget, ...args);
   captureError(error, { extraArgs: args });
 };

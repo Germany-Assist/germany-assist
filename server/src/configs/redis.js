@@ -1,7 +1,6 @@
 import Redis from "ioredis";
 import { NODE_ENV } from "./serverConfig.js";
 import { errorLogger, infoLogger } from "../utils/loggers.js";
-import { shutdown } from "../bootstrap/shutdown.js";
 
 export const REDIS_HOST = process.env.REDIS_HOST || "127.0.0.1";
 export const REDIS_PORT = process.env.REDIS_PORT || 6379;
@@ -33,7 +32,9 @@ if (NODE_ENV === "test") {
       retryCount = times;
       if (times > 10) {
         infoLogger("⚠️ Redis max retries reached — shutting down server");
-        shutdown("Redis connection closed");
+        import("../bootstrap/shutdown.js").then((module) =>
+          module.shutdown("Redis connection closed"),
+        );
         return null;
       }
 

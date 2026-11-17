@@ -20,9 +20,6 @@ export async function createReview(req, res, next) {
       },
       t
     );
-    res.sendStatus(201);
-    //i can create a worker for this
-    // TODO
     await serviceServices.updateServiceRating(
       {
         serviceId: serviceId,
@@ -32,6 +29,7 @@ export async function createReview(req, res, next) {
       t
     );
     await t.commit();
+    res.sendStatus(201);
   } catch (error) {
     await t.rollback();
     next(error);
@@ -61,8 +59,8 @@ export async function updateReview(req, res, next) {
       },
       t
     );
-    res.sendStatus(200);
     await t.commit();
+    res.sendStatus(200);
   } catch (error) {
     await t.rollback();
     next(error);
