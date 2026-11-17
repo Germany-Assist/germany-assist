@@ -3,10 +3,8 @@ import sinon from "sinon";
 import assert from "node:assert";
 import postController from "../../src/modules/post/post.controller.js";
 import postServices from "../../src/modules/post/post.service.js";
-import timelineServices from "../../src/modules/timeline/timeline.service.js";
 import authUtil from "../../src/utils/authorize.util.js";
 import { AppError } from "../../src/utils/error.class.js";
-import hashIdUtil from "../../src/utils/hashId.util.js";
 import { sequelize } from "../../src/configs/database.js";
 
 describe("Post Controller - createNewPost", () => {
@@ -17,12 +15,11 @@ describe("Post Controller - createNewPost", () => {
   beforeEach(() => {
     sandbox = sinon.createSandbox();
 
-    // --- Mocks & setup
     req = {
       body: {
-        serviceId: "encoded-service-id",
+        timelineId: "encoded-timeline-id",
         description: "Testing post creation",
-        attachments: ["img1.png"],
+        isPinned: false,
       },
       auth: {
         id: 42,
@@ -44,13 +41,8 @@ describe("Post Controller - createNewPost", () => {
       rollback: sandbox.stub(),
     };
 
-    // --- Stubs
     sandbox.stub(sequelize, "transaction").resolves(fakeTransaction);
     sandbox.stub(authUtil, "checkRoleAndPermission").resolves(true);
-    sandbox.stub(hashIdUtil, "hashIdDecode").returns(123);
-    sandbox
-      .stub(timelineServices, "activeTimeline")
-      .resolves({ id: 55, Service: { owner: 111 } });
     sandbox
       .stub(postServices, "createNewPost")
       .resolves({ id: 1, description: "Testing post creation" });
@@ -58,25 +50,18 @@ describe("Post Controller - createNewPost", () => {
 
   afterEach(() => sandbox.restore());
 
-  // ✅ Successful flow
   it("should create a new post successfully", async () => {
     await postController.createNewPost(req, res, next);
 
     sandbox.assert.calledOnce(authUtil.checkRoleAndPermission);
-    sandbox.assert.calledOnce(hashIdUtil.hashIdDecode);
-    sandbox.assert.calledOnce(timelineServices.activeTimeline);
     sandbox.assert.calledOnce(postServices.createNewPost);
 
-    // Should pass correct post data
     sandbox.assert.calledWith(
       postServices.createNewPost,
       sinon.match({
-        description: "Testing post creation",
-        attachments: ["img1.png"],
-        timelineId: 55,
-        userId: 42,
-      }),
-      fakeTransaction
+        body: req.body,
+        auth: req.auth,
+      })
     );
 
     sandbox.assert.calledOnce(fakeTransaction.commit);
@@ -89,40 +74,6 @@ describe("Post Controller - createNewPost", () => {
     sandbox.assert.notCalled(next);
   });
 
-  // ❌ No timeline found
-  it("should call next with AppError(404) if timeline not found", async () => {
-    timelineServices.activeTimeline.resolves(null);
-
-    await postController.createNewPost(req, res, next);
-
-    sandbox.assert.calledOnce(fakeTransaction.rollback);
-    sandbox.assert.calledOnce(next);
-
-    const err = next.firstCall.args[0];
-    assert(err instanceof AppError);
-    assert.strictEqual(err.httpCode, 404);
-    assert.strictEqual(err.message, "failed to find timeline");
-  });
-
-  // ❌ Invalid ownership
-  it("should call next with AppError(403) if ownership is invalid", async () => {
-    timelineServices.activeTimeline.resolves({
-      id: 55,
-      Service: { owner: 999 },
-    });
-
-    await postController.createNewPost(req, res, next);
-
-    sandbox.assert.calledOnce(fakeTransaction.rollback);
-    sandbox.assert.calledOnce(next);
-
-    const err = next.firstCall.args[0];
-    assert(err instanceof AppError);
-    assert.strictEqual(err.httpCode, 403);
-    assert.strictEqual(err.message, "invalid ownership");
-  });
-
-  // ❌ postServices.createNewPost throws
   it("should rollback and call next if post creation fails", async () => {
     postServices.createNewPost.rejects(new AppError(500, "DB error", true));
 
@@ -135,7 +86,6 @@ describe("Post Controller - createNewPost", () => {
     assert(err instanceof AppError);
   });
 
-  // ❌ authUtil.checkRoleAndPermission throws
   it("should rollback and call next if permission check fails", async () => {
     authUtil.checkRoleAndPermission.rejects(
       new AppError(403, "forbidden", true)

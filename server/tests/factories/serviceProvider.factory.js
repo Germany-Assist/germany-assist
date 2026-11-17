@@ -12,6 +12,7 @@ export async function serviceProviderFactory(overrides = {}) {
       about: "About Provider",
       phoneNumber: "123456789",
       image: null,
+      type: "freelancer",
     };
     const sp = await db.ServiceProvider.create({ ...defaults, ...overrides });
     return await sp.toJSON();

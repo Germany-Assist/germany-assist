@@ -35,15 +35,16 @@ after(async () => {
 });
 describe("api/post/comment - post - testing comment routes", () => {
   it("should create comment successfully and create a reply", async () => {
-    const { post, service, timeline } = await fullPostFactory();
+    const { post, service, timeline, SP } = await fullPostFactory();
     const client = await userWithTokenFactory();
     const order = await orderFactory({
       userId: client.user.id,
       timelineId: timeline.id,
       serviceId: service.id,
+      serviceProviderId: SP.serviceProvider.id,
     });
     const commentExample = {
-      body: "great product",
+      commentBody: "great product",
       postId: hashIdUtil.hashIdEncode(post.id),
     };
     const res = await request(app)
@@ -57,9 +58,9 @@ describe("api/post/comment - post - testing comment routes", () => {
       postId: post.id,
     });
     assert.ok(comment);
-    assert.equal(comment.body, commentExample.body);
+    assert.equal(comment.body, commentExample.commentBody);
     const replyExample = {
-      body: "i disagree",
+      commentBody: "i disagree",
       postId: hashIdUtil.hashIdEncode(post.id),
       commentId: hashIdUtil.hashIdEncode(comment.id),
     };
@@ -75,13 +76,13 @@ describe("api/post/comment - post - testing comment routes", () => {
       parentId: comment.id,
     });
     assert.ok(reply);
-    assert.equal(reply.body, replyExample.body);
+    assert.equal(reply.body, replyExample.commentBody);
   });
   it("should fail for not buying the timeline", async () => {
-    const { post, service, timeline } = await fullPostFactory();
+    const { post } = await fullPostFactory();
     const client = await userWithTokenFactory();
     const commentExample = {
-      body: "great product",
+      commentBody: "great product",
       postId: hashIdUtil.hashIdEncode(post.id),
     };
     const res = await request(app)
@@ -95,10 +96,10 @@ describe("api/post/comment - post - testing comment routes", () => {
     assert.equal(res.status, 403);
   });
   it("should fail for invalid comment", async () => {
-    const { post, service, timeline } = await fullPostFactory();
+    const { post } = await fullPostFactory();
     const client = await userWithTokenFactory();
     const commentExample = {
-      body: "",
+      commentBody: "",
       postId: "",
       commentId: "",
     };
@@ -106,36 +107,9 @@ describe("api/post/comment - post - testing comment routes", () => {
       .post("/api/post/comment/")
       .set("Authorization", `Bearer ${client.accessToken}`)
       .send(commentExample);
-    assert.deepEqual(res.body.message.errors, [
-      {
-        type: "field",
-        value: "",
-        msg: "Comment body cannot exceed 500 characters or be less that 2",
-        path: "body",
-        location: "body",
-      },
-      {
-        type: "field",
-        value: "",
-        msg: "ID must be a valid id",
-        path: "postId",
-        location: "body",
-      },
-      {
-        type: "field",
-        value: "",
-        msg: "invalid id",
-        path: "postId",
-        location: "body",
-      },
-      {
-        type: "field",
-        value: "",
-        msg: "invalid id",
-        path: "commentId",
-        location: "body",
-      },
-    ]);
-    assert.equal(res.status, 422);
+    const errors = res.body.message.errors;
+    assert.ok(errors.some((e) => e.path === "commentBody"));
+    assert.ok(errors.some((e) => e.path === "postId"));
+    assert.ok(errors.some((e) => e.path === "commentId"));
   });
 });

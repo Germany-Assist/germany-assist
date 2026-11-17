@@ -7,6 +7,7 @@ import assert from "node:assert";
 import { fullServiceFactory } from "../factories/service.factory.js";
 import hashIdUtil from "../../src/utils/hashId.util.js";
 import db from "../../src/database/index.js";
+
 beforeEach(async () => {
   try {
     await initDatabase(false);
@@ -30,14 +31,14 @@ after(async () => {
 });
 describe("api/post - post - testing create new post", () => {
   it("should create new post successfully", async () => {
-    const { SP, timeline, service } = await fullServiceFactory();
+    const { SP, timeline } = await fullServiceFactory();
     const examplePost = {
-      serviceId: hashIdUtil.hashIdEncode(service.id),
+      timelineId: hashIdUtil.hashIdEncode(timeline.id),
       description: "please send your email by the end of the day",
-      attachments: [{ name: "sheet.drive.com", url: "doc.ecample.com" }],
+      isPinned: false,
     };
     const res = await request(app)
-      .post("/api/post")
+      .post("/api/post/createNewPost")
       .set("Authorization", `Bearer ${SP.accessToken}`)
       .send(examplePost);
     assert.equal(res.status, 201);
@@ -49,52 +50,19 @@ describe("api/post - post - testing create new post", () => {
     assert.equal(post.description, examplePost.description);
   });
   it("should fail for validation errors", async () => {
-    const { SP, timeline, service } = await fullServiceFactory();
+    const { SP } = await fullServiceFactory();
     const examplePost = {
-      serviceId: "",
+      timelineId: "",
       description: "",
-      attachments: "",
+      isPinned: "",
     };
     const res = await request(app)
-      .post("/api/post")
+      .post("/api/post/createNewPost")
       .set("Authorization", `Bearer ${SP.accessToken}`)
       .send(examplePost);
-    assert.deepEqual(res.body.message.errors, [
-      {
-        type: "field",
-        value: "",
-        msg: "Description cannot be empty",
-        path: "description",
-        location: "body",
-      },
-      {
-        type: "field",
-        value: "",
-        msg: "Description must be between 5 and 255 characters",
-        path: "description",
-        location: "body",
-      },
-      {
-        type: "field",
-        value: "",
-        msg: "service id cannot be empty",
-        path: "serviceId",
-        location: "body",
-      },
-      {
-        type: "field",
-        value: "",
-        msg: "invalid id",
-        path: "serviceId",
-        location: "body",
-      },
-      {
-        type: "field",
-        value: "",
-        msg: "Attachments must be an array",
-        path: "attachments",
-        location: "body",
-      },
-    ]);
+    assert.equal(res.status, 422);
+    const errors = res.body.message.errors;
+    assert.ok(errors.some((e) => e.path === "description"));
+    assert.ok(errors.some((e) => e.path === "timelineId"));
   });
 });

@@ -5,8 +5,8 @@ import orderController from "../../src/modules/order/order.controller.js";
 import authUtil from "../../src/utils/authorize.util.js";
 import hashIdUtil from "../../src/utils/hashId.util.js";
 import orderService from "../../src/modules/order/order.services.js";
-import userServices from "../../src/modules/user/user.services.js";
-import stripeUtils from "../../src/utils/stripe.util.js";
+import notificationQueue from "../../src/jobs/queues/notification.queue.js";
+import { sequelize } from "../../src/configs/database.js";
 import { AppError } from "../../src/utils/error.class.js";
 
 function mockReqRes(
@@ -33,188 +33,127 @@ afterEach(() => {
 });
 
 describe("testing order controllers", () => {
-  test("checkoutController → should send correct user and service info", async () => {
-    const { req, res, next } = mockReqRes({}, {}, { id: "abc" });
+  test("payOrder → should send success with the service message", async () => {
+    const { req, res, next } = mockReqRes();
     sandbox.stub(authUtil, "checkRoleAndPermission").resolves();
-    sandbox.stub(hashIdUtil, "hashIdDecode").returns(1);
-    sandbox.stub(userServices, "getUserById").resolves({ firstName: "John" });
     sandbox
-      .stub(orderService, "getServiceForPaymentPrivate")
-      .resolves({ title: "Gold Plan", price: 15 });
+      .stub(orderService, "payOrder")
+      .resolves("order created successfully");
 
-    await orderController.checkoutController(req, res, next);
+    await orderController.payOrder(req, res, next);
 
+    assert.ok(orderService.payOrder.calledOnceWith(req));
     assert.ok(res.send.calledOnce);
-    assert.match(res.send.firstCall.args[0], /John/);
-    assert.match(res.send.firstCall.args[0], /Gold Plan/);
+    assert.match(res.send.firstCall.args[0].message, /order created/);
+    assert.equal(next.called, false);
   });
 
-  test("checkoutController → should call next on missing user/service", async () => {
-    const { req, res, next } = mockReqRes({}, {}, { id: "abc" });
+  test("payOrder → should call next when the service rejects", async () => {
+    const { req, res, next } = mockReqRes();
     sandbox.stub(authUtil, "checkRoleAndPermission").resolves();
-    sandbox.stub(hashIdUtil, "hashIdDecode").returns(1);
-    sandbox.stub(userServices, "getUserById").resolves(null);
-    sandbox.stub(orderService, "getServiceForPaymentPrivate").resolves({});
+    sandbox
+      .stub(orderService, "payOrder")
+      .rejects(new AppError(403, "permission denied", true, "permission denied"));
 
-    await orderController.checkoutController(req, res, next);
+    await orderController.payOrder(req, res, next);
 
     assert.ok(next.calledOnce);
     assert.ok(next.firstCall.args[0] instanceof AppError);
+    assert.equal(res.send.called, false);
   });
 
-  test("payOrder → should create free order when price = 0", async () => {
-    const { req, res, next } = mockReqRes({}, {}, { id: "xyz" });
-    sandbox.stub(authUtil, "checkRoleAndPermission").resolves();
-    sandbox.stub(hashIdUtil, "hashIdDecode").returns(1);
-    sandbox.stub(orderService, "getServiceForPaymentPrivate").resolves({
-      price: 0,
-      "Timelines.id": 9,
+  test("getOrdersSP → should send the provider orders", async () => {
+    const { req, res, next } = mockReqRes({
+      id: 1,
+      relatedId: 10,
+      role: "service_provider_root",
     });
-    const createStub = sandbox.stub(orderService, "createOrder").resolves();
-    await orderController.payOrder(req, res, next);
-    assert.ok(createStub.calledOnce);
-    assert.ok(res.send.calledWithMatch({ success: true }));
-    assert.strictEqual(next.called, false);
-  });
-
-  test("payOrder → should create payment intent for paid service", async () => {
-    const { req, res, next } = mockReqRes({}, {}, { id: "xyz" });
     sandbox.stub(authUtil, "checkRoleAndPermission").resolves();
-    sandbox.stub(hashIdUtil, "hashIdDecode").returns(1);
-    sandbox.stub(orderService, "getServiceForPaymentPrivate").resolves({
-      price: 50,
-      "Timelines.id": 10,
-    });
-    const stripeStub = sandbox
-      .stub(stripeUtils, "createPaymentIntent")
-      .resolves({ client_secret: "secret-123" });
-
-    await orderController.payOrder(req, res, next);
-
-    assert.ok(stripeStub.calledOnce);
-    assert.ok(
-      res.send.calledOnceWithMatch({
-        success: true,
-        message: { clientSecret: "secret-123" },
-      })
-    );
-  });
-
-  test("getOrderAdmin → should send encoded order", async () => {
-    const { req, res, next } = mockReqRes({ role: "admin" }, {}, { id: "123" });
-    const order = { id: 1, userId: 2, timelineId: 3, serviceId: 4 };
-
-    sandbox.stub(authUtil, "checkRoleAndPermission").resolves();
-    sandbox.stub(hashIdUtil, "hashIdDecode").returns(10);
-    sandbox.stub(orderService, "getOrder").resolves(order);
-    sandbox.stub(hashIdUtil, "hashIdEncode").returns("encoded");
-
-    await orderController.getOrderAdmin(req, res, next);
-
-    assert.ok(res.send.calledOnce);
-    assert.deepEqual(res.send.firstCall.args[0], {
-      ...order,
-      id: "encoded",
-      userId: "encoded",
-      timelineId: "encoded",
-      serviceId: "encoded",
-    });
-  });
-
-  test("getOrderSP → should fetch and send encoded order for service provider", async () => {
-    const { req, res, next } = mockReqRes(
-      { role: "service_provider_root", relatedId: 9 },
-      {},
-      { id: "456" }
-    );
-    const order = { id: 1, userId: 2, timelineId: 3, user_iserviceId: 4 };
-
-    sandbox.stub(authUtil, "checkRoleAndPermission").resolves();
-    sandbox.stub(hashIdUtil, "hashIdDecode").returns(10);
-    sandbox.stub(orderService, "getOrderByIdAndSPID").resolves(order);
-    sandbox.stub(hashIdUtil, "hashIdEncode").returns("encoded");
-
-    await orderController.getOrderSP(req, res, next);
-
-    assert.ok(res.send.calledOnce);
-    assert.deepEqual(res.send.firstCall.args[0], {
-      ...order,
-      id: "encoded",
-      userId: "encoded",
-      timelineId: "encoded",
-      serviceId: "encoded",
-    });
-  });
-
-  test("getOrderCL → should fetch and send encoded order for client", async () => {
-    const { req, res, next } = mockReqRes(
-      { id: 7, role: "client" },
-      {},
-      { id: "789" }
-    );
-    const order = { id: 1, userId: 7, timelineId: 3, user_iserviceId: 4 };
-
-    sandbox.stub(authUtil, "checkRoleAndPermission").resolves();
-    sandbox.stub(hashIdUtil, "hashIdDecode").returns(10);
-    sandbox.stub(orderService, "getOrder").resolves(order);
-    sandbox.stub(hashIdUtil, "hashIdEncode").returns("encoded");
-
-    await orderController.getOrderCL(req, res, next);
-
-    assert.ok(res.send.calledOnce);
-    assert.deepEqual(res.send.firstCall.args[0], {
-      ...order,
-      id: "encoded",
-      userId: "encoded",
-      timelineId: "encoded",
-      serviceId: "encoded",
-    });
-  });
-
-  test("getOrdersAdmin → should encode and send all admin orders", async () => {
-    const { req, res, next } = mockReqRes({ role: "admin" });
-    const orders = [{ id: 1, userId: 2, timelineId: 3, user_iserviceId: 4 }];
-
-    sandbox.stub(authUtil, "checkRoleAndPermission").resolves();
-    sandbox.stub(orderService, "getOrders").resolves(orders);
-    sandbox.stub(hashIdUtil, "hashIdEncode").returns("encoded");
-
-    await orderController.getOrdersAdmin(req, res, next);
-
-    assert.ok(res.send.calledOnce);
-    assert.ok(res.send.firstCall.args[0][0].id === "encoded");
-  });
-
-  test("getOrdersSP → should encode and send SP orders", async () => {
-    const { req, res, next } = mockReqRes(
-      { role: "service_provider_rep", relatedId: 22 },
-      {},
-      {},
-      { filter: "test" }
-    );
-    const orders = [{ id: 1, userId: 2, timelineId: 3, user_iserviceId: 4 }];
-
-    sandbox.stub(authUtil, "checkRoleAndPermission").resolves();
-    sandbox.stub(orderService, "getOrders").resolves(orders);
-    sandbox.stub(hashIdUtil, "hashIdEncode").returns("encoded");
+    const getOrdersStub = sandbox
+      .stub(orderService, "getOrdersForSP")
+      .resolves({ data: [{ id: 1 }] });
 
     await orderController.getOrdersSP(req, res, next);
 
+    assert.ok(getOrdersStub.calledOnceWith(10, req.query));
     assert.ok(res.send.calledOnce);
-    assert.ok(res.send.firstCall.args[0][0].id === "encoded");
+    assert.equal(next.called, false);
   });
 
-  test("getOrdersCL → should encode and send client orders", async () => {
-    const { req, res, next } = mockReqRes({ id: 5, role: "client" });
-    const orders = [{ id: 1, userId: 5, timelineId: 3, user_iserviceId: 4 }];
-
+  test("getOrdersClient → should send the client orders", async () => {
+    const { req, res, next } = mockReqRes();
     sandbox.stub(authUtil, "checkRoleAndPermission").resolves();
-    sandbox.stub(orderService, "getOrders").resolves(orders);
-    sandbox.stub(hashIdUtil, "hashIdEncode").returns("encoded");
+    const getOrdersStub = sandbox
+      .stub(orderService, "getOrdersForClient")
+      .resolves({ data: [{ id: 2 }] });
 
-    await orderController.getOrdersCL(req, res, next);
+    await orderController.getOrdersClient(req, res, next);
 
+    assert.ok(getOrdersStub.calledOnceWith(1, req.query));
     assert.ok(res.send.calledOnce);
-    assert.ok(res.send.firstCall.args[0][0].id === "encoded");
+    assert.equal(next.called, false);
+  });
+
+  test("serviceProviderCloseOrder → should close the order and queue the notification", async () => {
+    const { req, res, next } = mockReqRes({
+      id: 1,
+      relatedId: 10,
+      role: "service_provider_root",
+    });
+    req.params = { orderId: "abc123" };
+    const tMock = { commit: sinon.stub(), rollback: sinon.stub() };
+    sandbox.stub(sequelize, "transaction").resolves(tMock);
+    sandbox.stub(authUtil, "checkRoleAndPermission").resolves({ id: 1 });
+    sandbox.stub(hashIdUtil, "hashIdDecode").returns(77);
+    sandbox.stub(orderService, "serviceProviderCloseOrder").resolves();
+    const queueStub = sandbox.stub(notificationQueue, "add").resolves();
+
+    await orderController.serviceProviderCloseOrder(req, res, next);
+
+    assert.ok(orderService.serviceProviderCloseOrder.calledOnce);
+    assert.ok(queueStub.calledOnce);
+    assert.ok(tMock.commit.calledOnce);
+    assert.ok(res.send.calledOnce);
+    assert.equal(next.called, false);
+  });
+
+  test("serviceProviderCloseOrder → should rollback and call next on failure", async () => {
+    const { req, res, next } = mockReqRes({
+      id: 1,
+      relatedId: 10,
+      role: "service_provider_root",
+    });
+    req.params = { orderId: "abc123" };
+    const tMock = { commit: sinon.stub(), rollback: sinon.stub() };
+    sandbox.stub(sequelize, "transaction").resolves(tMock);
+    sandbox.stub(authUtil, "checkRoleAndPermission").resolves({ id: 1 });
+    sandbox.stub(hashIdUtil, "hashIdDecode").returns(77);
+    sandbox
+      .stub(orderService, "serviceProviderCloseOrder")
+      .rejects(new Error("close failed"));
+
+    await orderController.serviceProviderCloseOrder(req, res, next);
+
+    assert.ok(tMock.rollback.calledOnce);
+    assert.ok(next.calledOnce);
+    assert.match(next.firstCall.args[0].message, /close failed/);
+    assert.equal(res.send.called, false);
+  });
+
+  test("checkIfUserBoughtService → should send the purchase status", async () => {
+    const { req, res, next } = mockReqRes();
+    req.params = { serviceId: "abc123" };
+    sandbox.stub(authUtil, "checkRoleAndPermission").resolves();
+    const boughtStub = sandbox
+      .stub(orderService, "checkIfUserBoughtService")
+      .resolves({ bought: true });
+
+    await orderController.checkIfUserBoughtService(req, res, next);
+
+    assert.ok(
+      boughtStub.calledOnceWith({ userId: 1, serviceId: "abc123" })
+    );
+    assert.ok(res.send.calledOnce);
+    assert.equal(next.called, false);
   });
 });

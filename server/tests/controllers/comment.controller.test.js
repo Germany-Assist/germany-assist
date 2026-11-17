@@ -5,12 +5,11 @@ import sinon from "sinon";
 import commentController from "../../src/modules/comment/comment.controller.js";
 import commentServices from "../../src/modules/comment/comment.services.js";
 import { AppError } from "../../src/utils/error.class.js";
-import hashIdUtil from "../../src/utils/hashId.util.js";
 import { sequelize } from "../../src/configs/database.js";
 describe("testing comment controller", () => {
   test("should create a new comment successfully", async (t) => {
     const req = {
-      body: { body: "Nice post!", postId: "abc123", commentId: null },
+      body: { commentBody: "Nice post!", postId: "abc123", commentId: null },
       auth: { id: 1 },
     };
     const res = { send: sinon.stub(), status: sinon.stub().returnsThis() };
@@ -20,21 +19,11 @@ describe("testing comment controller", () => {
     const tMock = { commit: sinon.stub(), rollback: sinon.stub() };
     sinon.stub(sequelize, "transaction").resolves(tMock);
 
-    // Decode mocks
-    sinon
-      .stub(hashIdUtil, "hashIdDecode")
-      .onFirstCall()
-      .returns(101) // postId
-      .onSecondCall()
-      .returns(null); // commentId
-
     // Service stubs
-    sinon.stub(commentServices, "canCommentOnPost").resolves(true);
     sinon.stub(commentServices, "createNewComment").resolves({ id: 55 });
 
     await commentController.createNewComment(req, res, next);
 
-    assert.ok(commentServices.canCommentOnPost.calledOnceWith(1, 101));
     assert.ok(commentServices.createNewComment.calledOnce);
     assert.ok(res.status.calledOnceWith(201));
     assert.ok(res.send.calledOnce);
@@ -47,7 +36,7 @@ describe("testing comment controller", () => {
 
   test("should throw AppError when user cannot comment", async (t) => {
     const req = {
-      body: { body: "test", postId: "xyz", commentId: null },
+      body: { commentBody: "test", postId: "xyz", commentId: null },
       auth: { id: 2 },
     };
     const res = { send: sinon.stub() };
@@ -55,9 +44,9 @@ describe("testing comment controller", () => {
 
     const tMock = { commit: sinon.stub(), rollback: sinon.stub() };
     sinon.stub(sequelize, "transaction").resolves(tMock);
-    sinon.stub(hashIdUtil, "hashIdDecode").returns(88);
-    sinon.stub(commentServices, "canCommentOnPost").resolves(false);
-    sinon.stub(commentServices, "createNewComment");
+    sinon
+      .stub(commentServices, "createNewComment")
+      .rejects(new AppError(403, "permission denied", true, "permission denied"));
 
     await commentController.createNewComment(req, res, next);
 
@@ -72,7 +61,7 @@ describe("testing comment controller", () => {
 
   test("should rollback transaction and call next on unexpected error", async (t) => {
     const req = {
-      body: { body: "bad data", postId: "111", commentId: null },
+      body: { commentBody: "bad data", postId: "111", commentId: null },
       auth: { id: 3 },
     };
     const res = { send: sinon.stub() };
@@ -80,8 +69,6 @@ describe("testing comment controller", () => {
 
     const tMock = { commit: sinon.stub(), rollback: sinon.stub() };
     sinon.stub(sequelize, "transaction").resolves(tMock);
-    sinon.stub(hashIdUtil, "hashIdDecode").returns(90);
-    sinon.stub(commentServices, "canCommentOnPost").resolves(true);
     sinon
       .stub(commentServices, "createNewComment")
       .rejects(new Error("DB crash"));

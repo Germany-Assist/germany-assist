@@ -11,6 +11,17 @@ export async function serviceFactory(overrides = {}) {
     throw new AppError(400, "missing parameters for service factory");
   }
   const { id: catId } = (await db.Category.findAll())[0];
+  let subcategory = await db.Subcategory.findOne({
+    where: { categoryId: catId },
+    paranoid: false,
+  });
+  if (!subcategory) {
+    subcategory = await db.Subcategory.create({
+      categoryId: catId,
+      title: "Test Subcategory",
+      label: `test-subcategory-${Date.now()}`,
+    });
+  }
   try {
     const defaults = {
       title: "Full Stack Web Development Bootcamp",
@@ -24,11 +35,20 @@ export async function serviceFactory(overrides = {}) {
       price: 4999.99,
       image: "https://example.com/d.jpg",
       categoryId: catId,
-      Timelines: [{ label: "default" }],
+      subcategoryId: subcategory.id,
+      timelines: [
+        {
+          label: "default",
+          price: 99.99,
+          startDate: new Date("2026-01-01"),
+          deadlineDate: new Date("2026-02-01"),
+          endDate: new Date("2026-03-01"),
+        },
+      ],
     };
     const service = await db.Service.create(
       { ...defaults, ...overrides },
-      { include: db.Timeline, transaction }
+      { include: { model: db.Timeline, as: "timelines" }, transaction }
     );
     await transaction.commit();
     return service;
@@ -61,8 +81,8 @@ export async function fullServiceFactory(overrides = {}) {
       published: true,
       ...overrides,
     });
-    const timelineId = service.Timelines[0].id;
-    return { service, timeline: service.Timelines[0], SP };
+    const timelineId = service.timelines[0].id;
+    return { service, timeline: service.timelines[0], SP };
   } catch (error) {
     console.log(error);
   }
@@ -76,9 +96,9 @@ export async function fullPostFactory(overrides = {}) {
       approved: true,
       published: true,
     });
-    const timelineId = service.Timelines[0].id;
+    const timelineId = service.timelines[0].id;
     const post = await postFactory({ timelineId, userId: SP.user.id });
-    return { post, service, timeline: service.Timelines[0], SP };
+    return { post, service, timeline: service.timelines[0], SP };
   } catch (error) {
     console.log(error);
   }
