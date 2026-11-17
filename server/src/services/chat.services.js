@@ -129,10 +129,10 @@ export async function startNewConversation(friendId, userId) {
     },
   });
   const friendProfile = await db.User.findByPk(friendId, {
-    attributes: ["id", "firstName", "lastName", "image"],
+    attributes: ["id", "firstName", "lastName"],
   });
   const userProfile = await db.User.findByPk(userId, {
-    attributes: ["id", "firstName", "lastName", "image"],
+    attributes: ["id", "firstName", "lastName"],
   });
   return { newChat, friendProfile, userProfile };
 }

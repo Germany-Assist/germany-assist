@@ -3,6 +3,7 @@ import { FRONTEND_URL, NODE_ENV } from "../configs/serverConfig.js";
 import socketAuthMiddleware from "./middlewares/socketAuth.middleware.js";
 import { AppError } from "../utils/error.class.js";
 import { registerEvents } from "./events.js";
+import chatNamespace from "./events/chat.js";
 class usersLiveModel {
   constructor() {
     this.users = {};
@@ -78,6 +79,7 @@ export default function createSocketServer(server) {
   io.on("connection", (socket) => {
     registerEvents(socket, io);
   });
+  chatNamespace(io);
   return io;
 }
 export function getIO() {

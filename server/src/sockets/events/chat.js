@@ -1,14 +1,11 @@
 import * as chatService from "../../services/chat.services.js";
-import { socketErrorMiddleware } from "../../middlewares/socket.error.middleware.js";
-import socketAuthMiddleware from "../../middlewares/socketAuth.middleware.js";
+import { socketErrorMiddleware } from "../middlewares/socket.error.middleware.js";
+import socketAuthMiddleware from "../middlewares/socketAuth.middleware.js";
 import { debugLogger, infoLogger } from "../../utils/loggers.js";
 import { activeUsers } from "../index.js";
 import { v4 as uuidv4 } from "uuid";
 import { AppError } from "../../utils/error.class.js";
-import userServices, {
-  getUserById,
-  userExists,
-} from "../../services/user.services.js";
+import { userExists } from "../../modules/user/user.repository.js";
 
 const rateLimits = {};
 const RATE_LIMIT_WINDOW_MS = 1000;
@@ -36,16 +33,22 @@ export default function chatNamespace(io) {
   chat.use(socketAuthMiddleware);
   //
   chat.on("connection", async (socket) => {
+    socket.user = socket.auth;
     const userId = socket.user.id;
-    try {
-      infoLogger(`New connection to chat app: ${socket.id} user id ${userId}`);
-      //step 1 register the user online
+    infoLogger(`New connection to chat app: ${socket.id} user id ${userId}`);
+    //step 1 register the user online (synchronous, in-memory)
+    activeUsers.registerUser(socket);
 
-      activeUsers.registerUser(socket);
-      //step 2 get his friends list and conversations
+    //step 2 register event handlers synchronously so messages sent
+    //immediately after the client "connect" are not dropped while the
+    //conversation bootstrap below awaits the database
+    registerChatEvents(chat, socket, userId);
+
+    //step 3 bootstrap conversations and friends status
+    try {
       const conversations = await chatService.getConversations(userId);
 
-      if (conversations.length > 0) {
+      if (conversations && conversations.length > 0) {
         socket.emit("conversations", conversations);
         //step 3 send user friends status and send friends user status and update status
         let listOfFriends = chatService.filterUserFriends(
@@ -69,8 +72,25 @@ export default function chatNamespace(io) {
       } else {
         socket.noResultsError("empty conversations", "conversations");
       }
+    } catch (error) {
+      if (error instanceof AppError) {
+        socket.error(error);
+      } else {
+        const er = new AppError(
+          500,
+          error.message,
+          true,
+          "opps",
+          `user id ${userId}`
+        );
+        socket.error(er);
+      }
+    }
+  });
+}
 
-      socket.on("disconnect", () => {
+function registerChatEvents(chat, socket, userId) {
+  socket.on("disconnect", () => {
         try {
           if (!activeUsers.checkIfUserActiveById(userId)) return;
           activeUsers.removeUser(userId);
@@ -114,7 +134,7 @@ export default function chatNamespace(io) {
             }
           }
 
-          if (!(await userServices.userExists(friendId))) {
+          if (!(await userExists(friendId))) {
             socket.validationError(
               "The specified user does not exist",
               "add-new-friend"
@@ -144,7 +164,7 @@ export default function chatNamespace(io) {
           if (newChat) {
             activeUsers.appendFriendToUser(userId, Number(friendId));
             socket.emit("new-friend", newChat, friendProfile);
-            const friendSocket = activeUsers.checkIfUserActiveById(friendId);
+            const friendSocket = activeUsers.getSocketIdForActiveUser(friendId);
             if (friendSocket)
               chat.to(friendSocket).emit("new-friend", newChat, userProfile);
           }
@@ -205,7 +225,7 @@ export default function chatNamespace(io) {
 
           socket.emit("recive-conversation", con);
 
-          let friend = activeUsers.checkIfUserActiveById(friendId);
+          let friend = activeUsers.getSocketIdForActiveUser(friendId);
           if (friend) {
             chat.to(friend).emit("just-fetched", con.id);
           }
@@ -266,7 +286,7 @@ export default function chatNamespace(io) {
         if (isRateLimited(socket, "send-message")) {
           if (typeof ack === "function")
             ack({ success: false, status: "limit reached" });
-          socket.rateLimitError("sending messages");
+          return socket.rateLimitError("sending messages");
         }
         const con = await chatService.getConversation(participant, userId);
         if (!con) {
@@ -330,7 +350,7 @@ export default function chatNamespace(io) {
         async (participantId, msgId, status) => {
           const conId = await chatService.updateMessageStatus(
             msgId,
-            socket.user.userId,
+            socket.user.id,
             participantId,
             status || "seen",
             true
@@ -341,19 +361,4 @@ export default function chatNamespace(io) {
           }
         }
       );
-    } catch (error) {
-      if (error instanceof AppError) {
-        socket.error(error);
-      } else {
-        const er = new AppError(
-          500,
-          error.message,
-          true,
-          "opps",
-          `user id ${userId}`
-        );
-        socket.error(error);
-      }
-    }
-  });
 }
