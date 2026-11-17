@@ -67,7 +67,7 @@ const TimelinePage = () => {
 
   if (loading)
     return (
-      <div className="h-screen flex items-center justify-center bg-light-950 dark:bg-dark-950">
+      <div className="h-screen flex items-center justify-center bg-light-950">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-10 h-10 text-accent animate-spin" />
           <span className="text-[10px] uppercase font-black tracking-[0.3em] text-accent">
@@ -78,21 +78,21 @@ const TimelinePage = () => {
     );
 
   return (
-    <div className="min-h-screen bg-light-950 dark:bg-dark-950 transition-colors duration-700 ease-in-out">
+    <div className="min-h-screen bg-light-950 transition-colors duration-700 ease-in-out">
       <NavigationBar />
 
       <main className="pt-24 pb-20">
         {/* Banner Section */}
         <div className="px-6 mb-12">
-          <div className="max-w-7xl mx-auto relative h-64 md:h-80 overflow-hidden rounded-[2.5rem] border border-light-700 dark:border-white/10 shadow-2xl">
+          <div className="max-w-7xl mx-auto relative h-64 md:h-80 overflow-hidden rounded-[2.5rem] border border-light-700 shadow-2xl">
             <img
               src={banner}
               alt="Berlin Architecture"
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-light-950 dark:from-dark-950 via-transparent to-transparent opacity-80" />
+            <div className="absolute inset-0 bg-gradient-to-t from-light-950 via-transparent to-transparent opacity-80" />
             <div className="absolute bottom-10 left-10">
-              <h1 className="text-4xl md:text-5xl font-light text-slate-900 dark:text-white tracking-tight">
+              <h1 className="text-4xl md:text-5xl font-light text-slate-900 tracking-tight">
                 Relocation{" "}
                 <span className="text-accent font-medium">Journey</span>
               </h1>
@@ -110,8 +110,8 @@ const TimelinePage = () => {
         </section>
       </main>
 
-      <footer className="py-12 border-t border-light-700 dark:border-white/5 text-center">
-        <p className="text-sm text-slate-500 dark:text-slate-400 font-light tracking-widest uppercase">
+      <footer className="py-12 border-t border-light-700 text-center">
+        <p className="text-sm text-slate-500 font-light tracking-widest uppercase">
           © 2026 Germany Assist
         </p>
       </footer>

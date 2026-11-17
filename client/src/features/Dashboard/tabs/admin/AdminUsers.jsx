@@ -209,8 +209,8 @@ const FilterToggle = ({ label, active, onClick }) => (
     onClick={onClick}
     className={`px-5 py-2.5 rounded-xl text-[9px] font-black uppercase border transition-all ${
       active
-        ? "bg-zinc-900 dark:bg-white text-white dark:text-black border-zinc-900 dark:border-white"
-        : "bg-white dark:bg-zinc-900 text-zinc-400 border-zinc-200 dark:border-white/5 hover:border-zinc-400"
+        ? "bg-[#024CEE] text-white border-light-700"
+        : "bg-white text-zinc-400 border-zinc-200 hover:border-zinc-400"
     }`}
   >
     {label}

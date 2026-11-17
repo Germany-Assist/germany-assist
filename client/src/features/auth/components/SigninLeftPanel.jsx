@@ -37,7 +37,7 @@ const SigninLeftPanel = () => {
 
   return (
     <div className="w-[480px] text-left flex-shrink-0 bg-gradient-to-b from-[#EBF4FF] via-[#C7E8FF] to-[#E0F3FF] px-11 py-10 flex flex-col relative overflow-hidden border-r border-[#B8DEFF] animate-slide-in-left">
-      <div className="inline-flex items-center gap-1.5  bg-white border border-[#B8DEFF] rounded-full px-3 py-1 text-xs font-semibold text-[#024CEE] tracking-wider mb-4 w-fit shadow-[0_2px_8px_rgba(2,76,238,0.08)] animate-fade-up">
+      <div className="inline-flex items-center gap-1.5 bg-white border border-[#B8DEFF] rounded-full px-3 py-1 text-xs font-semibold text-[#024CEE] tracking-wider mb-4 w-fit shadow-[0_2px_8px_rgba(2,76,238,0.08)] animate-fade-up">
         <span className="relative flex items-center justify-center w-2 h-2">
           <span className="absolute inline-flex h-full w-full rounded-full bg-[#024CEE] animate-ping"></span>
           <span className="relative inline-flex rounded-full w-2 h-2 bg-[#024CEE]"></span>

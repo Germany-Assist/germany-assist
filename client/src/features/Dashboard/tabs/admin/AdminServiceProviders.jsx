@@ -9,7 +9,7 @@ export default function AdminServiceProvider() {
     setData((prev) => {
       if (!prev) return prev;
       const newData = prev.data.map((row) =>
-        row.id === id ? { ...row, ...updater(row) } : row
+        row.id === id ? { ...row, ...updater(row) } : row,
       );
       return { ...prev, data: newData };
     });

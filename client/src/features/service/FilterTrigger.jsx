@@ -19,13 +19,13 @@ function FilterTrigger({ label, options = [], onSelect, activeValue }) {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`group flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border transition-all duration-300 ${
+        className={`group flex items-center gap-2 px-4 py-2 rounded-xl bg-white border transition-all duration-300 ${
           isOpen || activeValue
             ? "border-cyan-500/50 bg-cyan-500/10 shadow-[0_0_15px_rgba(34,211,238,0.1)]"
-            : "border-white/10"
+            : "border-light-700"
         }`}
       >
-        <span className="text-sm font-semibold text-slate-300 group-hover:text-white">
+        <span className="text-sm font-semibold text-slate-600 group-hover:text-slate-900">
           {activeLabel || label}
         </span>
         <svg
@@ -46,7 +46,7 @@ function FilterTrigger({ label, options = [], onSelect, activeValue }) {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full mt-3 left-0 min-w-[260px] bg-[#1a1d23]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-2 z-[100]">
+        <div className="absolute top-full mt-3 left-0 min-w-[260px] bg-white/95 backdrop-blur-2xl border border-light-700 rounded-2xl shadow-[0_16px_40px_rgba(30,41,59,0.15)] p-2 z-[100]">
           {/* APPLYING THE COOL SCROLLBAR HERE */}
           <div className="max-h-64 overflow-y-auto custom-scrollbar pr-2">
             <button
@@ -54,12 +54,12 @@ function FilterTrigger({ label, options = [], onSelect, activeValue }) {
                 onSelect("");
                 setIsOpen(false);
               }}
-              className="w-full text-left px-4 py-2.5 text-[10px] font-bold text-slate-500 hover:text-white uppercase tracking-[0.2em] transition-colors"
+              className="w-full text-left px-4 py-2.5 text-[10px] font-bold text-slate-500 hover:text-slate-900 uppercase tracking-[0.2em] transition-colors"
             >
               Reset {label}
             </button>
 
-            <div className="h-[1px] bg-white/5 my-1 mx-2" />
+            <div className="h-[1px] bg-light-700/60 my-1 mx-2" />
 
             {options.map((opt) => (
               <button
@@ -71,7 +71,7 @@ function FilterTrigger({ label, options = [], onSelect, activeValue }) {
                 className={`w-full text-left px-4 py-2.5 text-sm rounded-lg transition-all ${
                   activeValue === opt.title
                     ? "bg-cyan-500 text-black font-bold shadow-[0_0_15px_rgba(34,211,238,0.4)]"
-                    : "text-slate-300 hover:bg-white/5 hover:text-white"
+                    : "text-slate-600 hover:bg-light-900 hover:text-slate-900"
                 }`}
               >
                 {opt.label}

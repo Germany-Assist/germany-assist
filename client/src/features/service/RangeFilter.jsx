@@ -20,13 +20,13 @@ function RangeFilter({ label, minKey, maxKey, filters, onUpdate }) {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`group flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border transition-all duration-300 ${
+        className={`group flex items-center gap-2 px-4 py-2 rounded-xl bg-white border transition-all duration-300 ${
           isOpen || isActive
             ? "border-cyan-500/50 bg-cyan-500/10 shadow-[0_0_15px_rgba(34,211,238,0.1)]"
-            : "border-white/10"
+            : "border-light-700"
         }`}
       >
-        <span className="text-sm font-semibold text-slate-300 group-hover:text-white">
+        <span className="text-sm font-semibold text-slate-600 group-hover:text-slate-900">
           {label}
         </span>
         <svg
@@ -47,7 +47,7 @@ function RangeFilter({ label, minKey, maxKey, filters, onUpdate }) {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full mt-3 right-0 min-w-[240px] bg-[#1a1d23]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-5 z-[110]">
+        <div className="absolute top-full mt-3 right-0 min-w-[240px] bg-white/95 backdrop-blur-2xl border border-light-700 rounded-2xl shadow-[0_16px_40px_rgba(30,41,59,0.15)] p-5 z-[110]">
           <div className="space-y-4">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
               Set {label} Range
@@ -58,7 +58,7 @@ function RangeFilter({ label, minKey, maxKey, filters, onUpdate }) {
                 placeholder="Min"
                 value={filters[minKey]}
                 onChange={(e) => onUpdate(minKey, e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-cyan-500 outline-none"
+                className="w-full bg-white border border-light-700 rounded-lg px-3 py-2 text-sm text-light-text focus:ring-1 focus:ring-sky-600 outline-none"
               />
               <span className="text-slate-600">-</span>
               <input
@@ -66,7 +66,7 @@ function RangeFilter({ label, minKey, maxKey, filters, onUpdate }) {
                 placeholder="Max"
                 value={filters[maxKey]}
                 onChange={(e) => onUpdate(maxKey, e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-cyan-500 outline-none"
+                className="w-full bg-white border border-light-700 rounded-lg px-3 py-2 text-sm text-light-text focus:ring-1 focus:ring-sky-600 outline-none"
               />
             </div>
             <button

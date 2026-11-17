@@ -166,7 +166,7 @@ export default function ClientOrders() {
           <select
             value={filters.status}
             onChange={(e) => handleFilterChange("status", e.target.value)}
-            className="w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 pl-10 pr-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest appearance-none focus:ring-2 ring-blue-500/20 transition-all outline-none"
+            className="w-full bg-white border border-zinc-200 pl-10 pr-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest appearance-none focus:ring-2 ring-blue-500/20 transition-all outline-none"
           >
             <option value="">All Statuses</option>
             <option value="active">Active</option>
@@ -183,7 +183,7 @@ export default function ClientOrders() {
           <select
             value={filters.type}
             onChange={(e) => handleFilterChange("type", e.target.value)}
-            className="w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 pl-10 pr-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest appearance-none outline-none"
+            className="w-full bg-white border border-zinc-200 pl-10 pr-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest appearance-none outline-none"
           >
             <option value="">All Types</option>
             <option value="oneTime">One-Time</option>
@@ -198,7 +198,7 @@ export default function ClientOrders() {
           className={`flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border ${
             filters.onlyDisputed
               ? "bg-red-500 border-red-500 text-white shadow-lg shadow-red-500/20"
-              : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-white/5 text-zinc-500 hover:border-red-500/50"
+              : "bg-white border-zinc-200 text-zinc-500 hover:border-red-500/50"
           }`}
         >
           <AlertTriangle size={14} /> Only Disputed

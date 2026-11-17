@@ -9,21 +9,24 @@ import { routesConfig } from "../config/routesConfig";
  */
 export function useActiveRoute() {
   const location = useLocation();
-  
+
   // matchRoutes returns the matches for the current location against the config
-  const matches = useMemo(() => matchRoutes(routesConfig, location), [location]);
-  
+  const matches = useMemo(
+    () => matchRoutes(routesConfig, location),
+    [location],
+  );
+
   const activeRoute = useMemo(() => {
     if (!matches) return { label: "General" };
 
     // Reverse matches to find the deepest match first (the actual page)
     const match = [...matches].reverse().find((m) => m.route?.handle?.label);
-    
+
     if (match) {
       return {
         label: match.route.handle.label,
         icon: match.route.handle.icon,
-        ...match
+        ...match,
       };
     }
     return { label: "General" };
@@ -38,11 +41,13 @@ export function useActiveRoute() {
  */
 export const filterRoutesByRole = (routes, role) => {
   if (!role) return routes;
-  
+
   return routes
     .filter((route) => !route.roles || route.roles.includes(role))
     .map((route) => ({
       ...route,
-      children: route.children ? filterRoutesByRole(route.children, role) : undefined,
+      children: route.children
+        ? filterRoutesByRole(route.children, role)
+        : undefined,
     }));
 };

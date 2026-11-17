@@ -46,7 +46,7 @@ function DisputeModal({ isOpen, onClose, onSubmit, itemName = "this post" }) {
       {/* Modal Container */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative z-10 w-full max-w-lg rounded-[32px] bg-white dark:bg-zinc-900 shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-4 duration-300"
+        className="relative z-10 w-full max-w-lg rounded-[32px] bg-white shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-4 duration-300"
       >
         {/* Header Section */}
         <div className="bg-amber-500/10 p-8 pb-12">
@@ -61,22 +61,20 @@ function DisputeModal({ isOpen, onClose, onSubmit, itemName = "this post" }) {
             <div className="w-16 h-16 rounded-2xl bg-amber-500 flex items-center justify-center text-white shadow-xl shadow-amber-500/20 mb-4 animate-pulse">
               <Scale size={32} />
             </div>
-            <h3 className="text-2xl font-black text-slate-900 dark:text-white leading-none">
+            <h3 className="text-2xl font-black text-slate-900 leading-none">
               Open a Dispute
             </h3>
             <p className="text-slate-500 text-sm mt-3 max-w-[280px]">
               You are disputing{" "}
-              <span className="font-bold text-slate-700 dark:text-slate-300">
-                {itemName}
-              </span>
-              . Our team will review your claim.
+              <span className="font-bold text-slate-700">{itemName}</span>. Our
+              team will review your claim.
             </p>
           </div>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="p-8 -mt-6 bg-white dark:bg-zinc-900 rounded-t-[32px] relative z-20"
+          className="p-8 -mt-6 bg-white rounded-t-[32px] relative z-20"
         >
           {/* Reason Select */}
           <div className="mb-6">
@@ -88,7 +86,7 @@ function DisputeModal({ isOpen, onClose, onSubmit, itemName = "this post" }) {
                 required
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
-                className="w-full p-4 pr-10 rounded-2xl bg-slate-50 dark:bg-zinc-800/50 border-2 border-transparent focus:border-amber-500 outline-none appearance-none transition-all text-slate-900 dark:text-white font-bold"
+                className="w-full p-4 pr-10 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-amber-500 outline-none appearance-none transition-all text-slate-900 font-bold"
               >
                 <option value="" disabled>
                   Select a reason...
@@ -116,7 +114,7 @@ function DisputeModal({ isOpen, onClose, onSubmit, itemName = "this post" }) {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Please provide as much detail as possible..."
-              className="w-full min-h-[120px] p-4 rounded-2xl bg-slate-50 dark:bg-zinc-800/50 border-2 border-transparent focus:border-amber-500 focus:bg-white dark:focus:bg-zinc-800 outline-none transition-all text-slate-900 dark:text-white resize-none text-sm leading-relaxed"
+              className="w-full min-h-[120px] p-4 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-amber-500 focus:bg-white outline-none transition-all text-slate-900 resize-none text-sm leading-relaxed"
             />
           </div>
 
@@ -125,7 +123,7 @@ function DisputeModal({ isOpen, onClose, onSubmit, itemName = "this post" }) {
             <button
               type="button"
               onClick={onClose}
-              className="py-4 rounded-2xl font-black uppercase tracking-widest text-xs text-slate-500 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-all"
+              className="py-4 rounded-2xl font-black uppercase tracking-widest text-xs text-slate-500 hover:bg-slate-100 transition-all"
             >
               Cancel
             </button>

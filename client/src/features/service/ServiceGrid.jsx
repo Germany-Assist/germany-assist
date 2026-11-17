@@ -7,7 +7,7 @@ const ServiceGrid = ({ services, isSearching }) => {
 
   if (services.length === 0) {
     return (
-      <div className="text-center py-40 bg-white/5 rounded-[3rem] border border-white/5">
+      <div className="text-center py-40 bg-light-900 rounded-[3rem] border border-light-700">
         <p className="text-2xl text-slate-500 font-light">No results found.</p>
       </div>
     );

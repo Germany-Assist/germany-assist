@@ -82,7 +82,7 @@ const ProviderTimeline = () => {
 
   if (loading)
     return (
-      <div className="h-screen flex flex-col items-center justify-center bg-white dark:bg-zinc-950">
+      <div className="h-screen flex flex-col items-center justify-center bg-white">
         <Loader2 className="w-8 h-8 text-blue-600 animate-spin mb-4" />
         <span className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400">
           Loading Timeline
@@ -91,20 +91,20 @@ const ProviderTimeline = () => {
     );
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 transition-colors duration-500">
+    <div className="min-h-screen bg-white transition-colors duration-500">
       <NavigationBar />
       <StatusModal {...statusModalProps} />
       <main className="pt-28 pb-20">
         {/* Modern Banner Section */}
         <div className="px-6 mb-16">
-          <div className="max-w-7xl mx-auto relative h-72 md:h-[400px] overflow-hidden rounded-[40px] border border-zinc-100 dark:border-white/5 shadow-2xl shadow-blue-500/5">
+          <div className="max-w-7xl mx-auto relative h-72 md:h-[400px] overflow-hidden rounded-[40px] border border-zinc-100 shadow-2xl shadow-blue-500/5">
             <img
               src={banner}
               alt="Timeline Cover"
               className="w-full h-full object-cover scale-105 hover:scale-100 transition-transform duration-1000"
             />
             {/* Overlay Glassmorphism */}
-            <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-zinc-950 via-transparent to-black/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-black/20" />
 
             <div className="absolute bottom-12 left-12 right-12 flex justify-between items-end">
               <div className="space-y-2">
@@ -114,7 +114,7 @@ const ProviderTimeline = () => {
                     Active Branch
                   </span>
                 </div>
-                <h1 className="text-4xl md:text-6xl font-black text-zinc-900 dark:text-white tracking-tighter">
+                <h1 className="text-4xl md:text-6xl font-black text-zinc-900 tracking-tighter">
                   Relocation <span className="text-blue-600">Journey</span>
                 </h1>
               </div>
@@ -126,7 +126,7 @@ const ProviderTimeline = () => {
         <section className="max-w-7xl mx-auto px-6">
           {data?.posts?.posts?.length === 0 &&
           data?.pinnedPosts?.posts?.length === 0 ? (
-            <div className="py-20 text-center border-2 border-dashed border-zinc-100 dark:border-white/5 rounded-[40px]">
+            <div className="py-20 text-center border-2 border-dashed border-zinc-100 rounded-[40px]">
               <p className="text-zinc-400 font-bold uppercase tracking-widest text-xs">
                 No updates posted yet
               </p>
@@ -142,7 +142,7 @@ const ProviderTimeline = () => {
         </section>
       </main>
 
-      <footer className="py-12 border-t border-zinc-100 dark:border-white/5 text-center">
+      <footer className="py-12 border-t border-zinc-100 text-center">
         <p className="text-[10px] text-zinc-400 font-black tracking-[0.3em] uppercase">
           © 2026 Germany Assist • All Rights Reserved
         </p>

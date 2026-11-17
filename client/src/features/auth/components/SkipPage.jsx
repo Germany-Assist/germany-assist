@@ -8,7 +8,7 @@ const SkipPage = ({
   error = "",
 }) => {
   return (
-    <div className="w-full max-w-[560px] text-left px-4  sm:px-0">
+    <div className="w-full max-w-[560px] text-left px-4 sm:px-0">
       {error && (
         <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-sm mb-3.5 animate-shake">
           <span>⚠</span>

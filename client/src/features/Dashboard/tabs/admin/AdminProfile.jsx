@@ -16,7 +16,7 @@ const AdminProfile = () => {
   };
 
   return (
-    <div className="flex-1 flex  h-full justify-center p-6">
+    <div className="flex-1 flex h-full justify-center p-6">
       <div className="bg-white rounded-2xl shadow-2xl min-w-full p-8 flex flex-col md:flex-row gap-8">
         {/* Left: Avatar & Info */}
         <div className="md:w-1/3 flex flex-col items-center">

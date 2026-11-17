@@ -231,12 +231,12 @@ export default function ServiceProviderTimelines() {
             {service.timelines?.timelines?.map((timeline) => (
               <div
                 key={timeline.id}
-                className="group relative p-4 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-900/40 hover:border-blue-400 transition-all mb-3 last:mb-0 shadow-sm"
+                className="group relative p-4 rounded-2xl border border-zinc-200 bg-white hover:border-blue-400 transition-all mb-3 last:mb-0 shadow-sm"
               >
                 {/* Header: Identity & Price */}
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex flex-col gap-0.5">
-                    <h4 className="text-[11px] font-bold uppercase text-zinc-800 dark:text-zinc-100 tracking-tight leading-none">
+                    <h4 className="text-[11px] font-bold uppercase text-zinc-800 tracking-tight leading-none">
                       {timeline.label}
                     </h4>
                     <div className="flex items-center gap-2 mt-1">
@@ -252,7 +252,7 @@ export default function ServiceProviderTimelines() {
                       </div>
                     </div>
                   </div>
-                  <span className="text-[13px] font-black italic text-blue-600 bg-blue-50 dark:bg-blue-500/10 px-2 py-0.5 rounded-lg border border-blue-100 dark:border-blue-500/20">
+                  <span className="text-[13px] font-black italic text-blue-600 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">
                     ${timeline.price}
                   </span>
                 </div>
@@ -260,13 +260,13 @@ export default function ServiceProviderTimelines() {
                 {/* Compact Date Chips - Light Tints */}
                 <div className="flex flex-wrap items-center gap-2 mb-4">
                   {/* Deadline Chip */}
-                  <div className="flex items-center gap-2 px-2.5 py-1.5 bg-amber-50 dark:bg-amber-500/5 border border-amber-200 dark:border-amber-500/20 rounded-xl">
+                  <div className="flex items-center gap-2 px-2.5 py-1.5 bg-amber-50 border border-amber-200 rounded-xl">
                     <Timer size={11} className="text-amber-500" />
                     <div className="flex flex-col leading-none">
                       <span className="text-[7px] font-bold uppercase text-amber-600 mb-0.5">
                         Registration
                       </span>
-                      <span className="text-[10px] font-bold text-zinc-800 dark:text-zinc-200">
+                      <span className="text-[10px] font-bold text-zinc-800">
                         {new Date(timeline.deadlineDate).toLocaleDateString(
                           "en-US",
                           { month: "short", day: "numeric" },
@@ -276,13 +276,13 @@ export default function ServiceProviderTimelines() {
                   </div>
 
                   {/* Start Chip */}
-                  <div className="flex items-center gap-2 px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-500/5 border border-emerald-200 dark:border-emerald-500/20 rounded-xl">
+                  <div className="flex items-center gap-2 px-2.5 py-1.5 bg-emerald-50 border border-emerald-200 rounded-xl">
                     <Calendar size={11} className="text-emerald-500" />
                     <div className="flex flex-col leading-none">
                       <span className="text-[7px] font-bold uppercase text-emerald-600 mb-0.5">
                         Starts
                       </span>
-                      <span className="text-[10px] font-bold text-zinc-800 dark:text-zinc-200">
+                      <span className="text-[10px] font-bold text-zinc-800">
                         {new Date(timeline.startDate).toLocaleDateString(
                           "en-US",
                           { month: "short", day: "numeric" },
@@ -292,12 +292,12 @@ export default function ServiceProviderTimelines() {
                   </div>
 
                   {/* End Chip */}
-                  <div className="flex items-center gap-2 px-2.5 py-1.5 bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-xl">
+                  <div className="flex items-center gap-2 px-2.5 py-1.5 bg-zinc-50 border border-zinc-200 rounded-xl">
                     <div className="flex flex-col leading-none">
                       <span className="text-[7px] font-bold uppercase text-zinc-500 mb-0.5">
                         Ends
                       </span>
-                      <span className="text-[10px] font-bold text-zinc-800 dark:text-zinc-200">
+                      <span className="text-[10px] font-bold text-zinc-800">
                         {new Date(timeline.endDate).toLocaleDateString(
                           "en-US",
                           { month: "short", day: "numeric" },
@@ -308,7 +308,7 @@ export default function ServiceProviderTimelines() {
                 </div>
 
                 {/* Bottom Action Strip - Clear & Oriented */}
-                <div className="flex items-center gap-1.5 pt-3 border-t border-zinc-100 dark:border-white/5">
+                <div className="flex items-center gap-1.5 pt-3 border-t border-zinc-100">
                   <button
                     onClick={() => setSelectedTimelineId(timeline.id)}
                     className="flex-1 flex items-center justify-center gap-2 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-[10px] font-bold uppercase shadow-sm shadow-blue-200 transition-all active:scale-95"
@@ -320,7 +320,7 @@ export default function ServiceProviderTimelines() {
                     onClick={() =>
                       navigate(`/provider/timeline/${timeline.id}`)
                     }
-                    className="p-2 bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-white dark:hover:text-zinc-900 rounded-xl transition-all"
+                    className="p-2 bg-zinc-100 text-zinc-600 hover:bg-zinc-200 rounded-xl transition-all"
                     title="View Details"
                   >
                     <Eye size={14} />
@@ -330,7 +330,7 @@ export default function ServiceProviderTimelines() {
                     onClick={() =>
                       handleArchiveRequest(timeline.id, service.id)
                     }
-                    className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all"
+                    className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
                     title="Archive"
                   >
                     <Archive size={14} />

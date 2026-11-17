@@ -8,7 +8,7 @@ function FallbackUI({ error, onRetry }) {
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-md" />
 
       {/* Modal Container */}
-      <div className="relative z-10 w-full max-w-md rounded-3xl bg-white dark:bg-zinc-900 shadow-2xl p-6 animate-in zoom-in-95 duration-200 border border-slate-100 dark:border-zinc-800">
+      <div className="relative z-10 w-full max-w-md rounded-3xl bg-white shadow-2xl p-6 animate-in zoom-in-95 duration-200 border border-slate-100">
         {/* Decorative Close (Optional based on your logic) */}
         <button
           onClick={onRetry}
@@ -23,13 +23,13 @@ function FallbackUI({ error, onRetry }) {
             <AlertOctagon size={44} className="animate-pulse" />
           </div>
 
-          <h3 className="text-3xl font-black text-slate-900 dark:text-white mb-3">
+          <h3 className="text-3xl font-black text-slate-900 mb-3">
             Something went wrong
           </h3>
 
           {/* Error Message Box */}
-          <div className="w-full bg-slate-50 dark:bg-zinc-800/50 rounded-2xl p-4 mb-8 border border-slate-100 dark:border-zinc-800">
-            <p className="text-sm font-mono text-rose-600 dark:text-rose-400 break-words">
+          <div className="w-full bg-slate-50 rounded-2xl p-4 mb-8 border border-slate-100">
+            <p className="text-sm font-mono text-rose-600 break-words">
               {error?.message || "An unexpected system error occurred."}
             </p>
           </div>

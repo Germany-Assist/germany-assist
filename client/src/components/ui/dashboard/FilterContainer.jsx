@@ -18,7 +18,7 @@ export const FilterContainer = ({
         placeholder={placeholder || "Search..."}
         value={searchValue}
         onChange={(e) => onSearchChange(e.target.value)}
-        className="w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 pl-10 pr-4 py-3 rounded-2xl text-[10px] font-black uppercase outline-none focus:ring-2 ring-blue-500/20 transition-all"
+        className="w-full bg-white border border-zinc-200 pl-10 pr-4 py-3 rounded-2xl text-[10px] font-black uppercase outline-none focus:ring-2 ring-blue-500/20 transition-all"
       />
     </div>
     {/* Slots for Dropdowns and Toggles */}
@@ -30,13 +30,13 @@ export const FilterToggle = ({ label, active, onClick, variant = "blue" }) => {
   const themes = {
     emerald: active
       ? "bg-emerald-500/10 border-emerald-500 text-emerald-500"
-      : "border-zinc-200 dark:border-white/5 text-zinc-400",
+      : "border-zinc-200 text-zinc-400",
     blue: active
       ? "bg-blue-500/10 border-blue-500 text-blue-500"
-      : "border-zinc-200 dark:border-white/5 text-zinc-400",
+      : "border-zinc-200 text-zinc-400",
     red: active
       ? "bg-red-500/10 border-red-500 text-red-500"
-      : "border-zinc-200 dark:border-white/5 text-zinc-400",
+      : "border-zinc-200 text-zinc-400",
   };
 
   return (

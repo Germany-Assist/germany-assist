@@ -43,7 +43,7 @@ const SigninRightPanel = () => {
   return (
     <div className="flex-1 flex flex-col justify-center items-center py-9 px-5 overflow-y-auto text-left">
       <div className="w-full max-w-[560px]">
-        <div className="text-[0.6rem] font-bold  text-[#3f75e7] tracking-widest mb-1">
+        <div className="text-[0.6rem] font-bold text-[#3f75e7] tracking-widest mb-1">
           WELCOME BACK
         </div>
         <div className="text-[1.35rem] font-bold text-[#111827] tracking-tight mb-1">

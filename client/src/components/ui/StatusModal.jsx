@@ -92,10 +92,10 @@ function StatusModal({
         onClick={onClose}
       />
 
-      <div className="relative z-10 w-full max-w-md rounded-[2.5rem] bg-white dark:bg-zinc-900 shadow-2xl p-8 animate-in zoom-in-95 duration-200 border border-zinc-100 dark:border-white/5">
+      <div className="relative z-10 w-full max-w-md rounded-[2.5rem] bg-white shadow-2xl p-8 animate-in zoom-in-95 duration-200 border border-zinc-100">
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-white transition"
+          className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-600 transition"
         >
           <X size={18} />
         </button>
@@ -107,12 +107,12 @@ function StatusModal({
             {currentStyle.icon}
           </div>
 
-          <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2 uppercase tracking-tighter">
+          <h3 className="text-2xl font-black text-slate-900 mb-2 uppercase tracking-tighter">
             {title || currentStyle.title}{" "}
             {/* Uses passed title or default from STYLES */}
           </h3>
 
-          <p className="text-slate-500 dark:text-slate-400 mb-6 text-sm leading-relaxed">
+          <p className="text-slate-500 mb-6 text-sm leading-relaxed">
             {message}
           </p>
 
@@ -123,7 +123,7 @@ function StatusModal({
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder={inputPlaceholder}
-                className="w-full min-h-[120px] p-4 rounded-2xl bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-white/5 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 ring-blue-500/20 transition-all resize-none"
+                className="w-full min-h-[120px] p-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm text-slate-900 outline-none focus:ring-2 ring-blue-500/20 transition-all resize-none"
               />
             </div>
           )}
@@ -132,7 +132,7 @@ function StatusModal({
             {isConfirmation && (
               <button
                 onClick={onClose}
-                className="flex-1 px-6 py-4 rounded-2xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-all"
+                className="flex-1 px-6 py-4 rounded-2xl text-slate-500 hover:bg-slate-100 transition-all"
               >
                 {secondaryButtonText}
               </button>
@@ -142,11 +142,11 @@ function StatusModal({
               disabled={showInput && !inputValue.trim()}
               onClick={() => (onConfirm ? onConfirm(inputValue) : onClose())}
               className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-2xl transition-all active:scale-95 disabled:opacity-30
-                ${
-                  type === "operation" || type === "input"
-                    ? "bg-red-600 text-white shadow-lg shadow-red-600/20"
-                    : "bg-zinc-900 text-white dark:bg-white dark:text-black shadow-lg shadow-black/10"
-                }`}
+ ${
+   type === "operation" || type === "input"
+     ? "bg-red-600 text-white shadow-lg shadow-red-600/20"
+     : "bg-[#024CEE] text-white shadow-lg shadow-blue-600/20"
+ }`}
             >
               {buttonText} <ArrowRight size={16} />
             </button>

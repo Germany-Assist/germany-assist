@@ -37,7 +37,10 @@ function App() {
     });
   };
 
-  const finalRoutes = useMemo(() => prepareRoutes(filteredRoutes), [filteredRoutes]);
+  const finalRoutes = useMemo(
+    () => prepareRoutes(filteredRoutes),
+    [filteredRoutes],
+  );
   const element = useRoutes(finalRoutes);
 
   return <ErrorBoundary>{element}</ErrorBoundary>;

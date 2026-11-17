@@ -68,10 +68,10 @@ function VariantsCreationModal({ isOpen, onClose, onSubmit }) {
         onClick={onClose}
       />
 
-      <div className="relative z-10 w-full max-w-lg rounded-[32px] bg-white dark:bg-zinc-900 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
+      <div className="relative z-10 w-full max-w-lg rounded-[32px] bg-white shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors"
+          className="absolute top-6 right-6 p-2 text-zinc-400 hover:bg-zinc-100 rounded-full transition-colors"
         >
           <X size={20} />
         </button>
@@ -82,7 +82,7 @@ function VariantsCreationModal({ isOpen, onClose, onSubmit }) {
               <Layers size={24} />
             </div>
             <div>
-              <h3 className="text-2xl font-black text-zinc-900 dark:text-white leading-none">
+              <h3 className="text-2xl font-black text-zinc-900 leading-none">
                 New Variant
               </h3>
               <p className="text-zinc-500 text-sm mt-1">
@@ -102,7 +102,7 @@ function VariantsCreationModal({ isOpen, onClose, onSubmit }) {
               onChange={(e) => handleChange("label", e.target.value)}
               onBlur={() => handleBlur("label")}
               placeholder="e.g. Premium Package"
-              className={`w-full p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border-2 outline-none transition-all font-bold ${
+              className={`w-full p-5 rounded-2xl bg-zinc-50 border-2 outline-none transition-all font-bold ${
                 touched.label && errors.label
                   ? "border-red-500/50"
                   : "border-transparent focus:border-indigo-500"
@@ -127,7 +127,7 @@ function VariantsCreationModal({ isOpen, onClose, onSubmit }) {
                 onChange={(e) => handleChange("price", e.target.value)}
                 onBlur={() => handleBlur("price")}
                 placeholder="0.00"
-                className={`w-full p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border-2 outline-none transition-all font-bold ${
+                className={`w-full p-4 rounded-2xl bg-zinc-50 border-2 outline-none transition-all font-bold ${
                   touched.price && errors.price
                     ? "border-red-500/50"
                     : "border-transparent focus:border-indigo-500"
@@ -151,7 +151,7 @@ function VariantsCreationModal({ isOpen, onClose, onSubmit }) {
                 onChange={(e) => handleChange("deliveryTime", e.target.value)}
                 onBlur={() => handleBlur("deliveryTime")}
                 placeholder="Days"
-                className={`w-full p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border-2 outline-none transition-all font-bold ${
+                className={`w-full p-4 rounded-2xl bg-zinc-50 border-2 outline-none transition-all font-bold ${
                   touched.deliveryTime && errors.deliveryTime
                     ? "border-red-500/50"
                     : "border-transparent focus:border-indigo-500"
@@ -172,7 +172,7 @@ function VariantsCreationModal({ isOpen, onClose, onSubmit }) {
             className={`w-full flex items-center justify-center gap-3 py-5 rounded-[20px] font-black uppercase tracking-widest text-xs transition-all active:scale-[0.98] shadow-xl ${
               isFormValid
                 ? "bg-indigo-600 text-white shadow-indigo-500/20 hover:bg-indigo-700"
-                : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed opacity-50 shadow-none"
+                : "bg-zinc-100 text-zinc-400 cursor-not-allowed opacity-50 shadow-none"
             }`}
           >
             Deploy Variant{" "}

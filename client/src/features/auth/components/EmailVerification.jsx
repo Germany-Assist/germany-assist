@@ -1,6 +1,13 @@
 import React, { useState, useRef } from "react";
 
-const EmailVerification = ({ email, onVerify, onResend, error, setError, cooldown = 0 }) => {
+const EmailVerification = ({
+  email,
+  onVerify,
+  onResend,
+  error,
+  setError,
+  cooldown = 0,
+}) => {
   const [code, setCode] = useState(["", "", "", "", "", "", "", ""]);
   const inputRefs = useRef([]);
 
@@ -70,7 +77,7 @@ const EmailVerification = ({ email, onVerify, onResend, error, setError, cooldow
         </div>
       </div>
 
-      <div className="flex  justify-center my-4 gap-2">
+      <div className="flex justify-center my-4 gap-2">
         {code.map((digit, i) => (
           <input
             key={i}
@@ -98,8 +105,8 @@ const EmailVerification = ({ email, onVerify, onResend, error, setError, cooldow
         className={`text-center mt-2.25 text-xs ${cooldown > 0 ? "text-gray-400 cursor-not-allowed" : "text-[#024CEE] cursor-pointer hover:underline"}`}
         onClick={cooldown > 0 ? undefined : onResend}
       >
-        {cooldown > 0 
-          ? `Resend code in ${Math.floor(cooldown / 60)}:${(cooldown % 60).toString().padStart(2, '0')}` 
+        {cooldown > 0
+          ? `Resend code in ${Math.floor(cooldown / 60)}:${(cooldown % 60).toString().padStart(2, "0")}`
           : "Didn't receive it? Resend code"}
       </div>
 

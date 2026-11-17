@@ -2,7 +2,12 @@ import React from "react";
 import SignupHeader from "./SignupHeader";
 import SignupSidebar from "./SignupSidebar";
 
-const SignupLayout = ({ currentSidebarStep, children, sidebarOpen, setSidebarOpen }) => {
+const SignupLayout = ({
+  currentSidebarStep,
+  children,
+  sidebarOpen,
+  setSidebarOpen,
+}) => {
   return (
     <div className="flex flex-col h-screen bg-white text-[#111827] font-[Outfit,sans-serif]">
       <SignupHeader />
@@ -10,12 +15,12 @@ const SignupLayout = ({ currentSidebarStep, children, sidebarOpen, setSidebarOpe
       <div className="flex flex-1 overflow-hidden h-[calc(100vh-65px)]">
         <aside
           className={`
-            ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} 
-            lg:translate-x-0 fixed lg:static z-40 w-[280px] h-full 
-            bg-[#F9FAFB] border-r border-[#E5E7EB] px-6 py-9 
-            transition-transform duration-300 ease-in-out
-            flex flex-col flex-shrink-0 
-          `}
+ ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} 
+ lg:translate-x-0 fixed lg:static z-40 w-[280px] h-full 
+ bg-[#F9FAFB] border-r border-[#E5E7EB] px-6 py-9 
+ transition-transform duration-300 ease-in-out
+ flex flex-col flex-shrink-0 
+ `}
         >
           <SignupSidebar currentStep={currentSidebarStep} />
         </aside>
@@ -29,9 +34,7 @@ const SignupLayout = ({ currentSidebarStep, children, sidebarOpen, setSidebarOpe
 
         <main className="flex-1 overflow-y-auto bg-white">
           <div className="min-h-full flex flex-col items-center px-4 sm:px-10 py-12">
-            <div className="w-full max-w-xl">
-              {children}
-            </div>
+            <div className="w-full max-w-xl">{children}</div>
           </div>
         </main>
 

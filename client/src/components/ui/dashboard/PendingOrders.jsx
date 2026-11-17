@@ -8,7 +8,12 @@ const statusStyles = {
   cancelled: { bg: "bg-zinc-100 text-zinc-500", dot: "bg-zinc-400" },
 };
 
-export function PendingOrders({ items = [], onItemClick, onViewAll, emptyMessage = "No pending orders" }) {
+export function PendingOrders({
+  items = [],
+  onItemClick,
+  onViewAll,
+  emptyMessage = "No pending orders",
+}) {
   if (!items.length) {
     return (
       <div className="py-8 text-center text-zinc-400 text-sm">
@@ -21,26 +26,28 @@ export function PendingOrders({ items = [], onItemClick, onViewAll, emptyMessage
     <div className="space-y-0">
       {items.slice(0, 5).map((item, idx) => {
         const style = statusStyles[item.status] || statusStyles.pending;
-        
+
         return (
           <div
             key={item.id || idx}
             onClick={() => onItemClick?.(item)}
-            className="flex items-center gap-3 py-2.5 border-b border-zinc-100 dark:border-zinc-800 last:border-0 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 cursor-pointer rounded-lg transition-colors"
+            className="flex items-center gap-3 py-2.5 border-b border-zinc-100 last:border-0 hover:bg-zinc-50 cursor-pointer rounded-lg transition-colors"
           >
             <div className="flex-1 min-w-0">
-              <div className="text-[12.5px] font-medium text-zinc-900 dark:text-zinc-100 truncate">
+              <div className="text-[12.5px] font-medium text-zinc-900 truncate">
                 {item.service}
               </div>
-              <div className="text-[11px] text-zinc-500 dark:text-zinc-400">
+              <div className="text-[11px] text-zinc-500">
                 {item.client} · #{item.orderId}
               </div>
             </div>
             <div className="text-right">
-              <div className="text-[12px] font-semibold text-zinc-900 dark:text-zinc-100">
+              <div className="text-[12px] font-semibold text-zinc-900">
                 {item.amount}
               </div>
-              <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${style.bg}`}>
+              <span
+                className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${style.bg}`}
+              >
                 <span className={`w-1 h-1 rounded-full ${style.dot}`} />
                 {item.status}
               </span>

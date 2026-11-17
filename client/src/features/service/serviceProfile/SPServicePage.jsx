@@ -117,7 +117,7 @@ const SPServicePage = () => {
                   {data.type} session • {data.category?.replace("-", " ")}
                 </p>
               </div>
-              <div className="h-14 w-14 bg-gray-900 rounded-full flex items-center justify-center text-white text-xl font-bold">
+              <div className="h-14 w-14 bg-[#024CEE] rounded-full flex items-center justify-center text-white text-xl font-bold">
                 {(data.ServiceProvider?.name || "S").charAt(0).toUpperCase()}
               </div>
             </div>
@@ -173,14 +173,14 @@ export default SPServicePage;
 // "rejected": false,
 // "published": true,
 // "User": {
-//     "firstName": "root",
-//     "lastName": "serviceProvider",
-//     "email": "amr_imad@hotmail.com"
+// "firstName": "root",
+// "lastName": "serviceProvider",
+// "email": "amr_imad@hotmail.com"
 // },
 // "timelines": [
-//     {
-//         "id": "8dHE",
-//         "isArchived": false,
-//         "label": null
-//     }
+// {
+// "id": "8dHE",
+// "isArchived": false,
+// "label": null
+// }
 // ],

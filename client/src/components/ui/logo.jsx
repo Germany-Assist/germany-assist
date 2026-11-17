@@ -1,6 +1,11 @@
 import logo from "../../assets/brand/logo.png";
 
-export default function Logo({ className="max-w-[120px] dark:brightness-110 transition-all", alt = "Logo", onClick, href }) {
+export default function Logo({
+  className = "max-w-[120px] transition-all",
+  alt = "Logo",
+  onClick,
+  href,
+}) {
   const img = (
     <img
       src={logo}

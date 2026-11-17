@@ -14,7 +14,7 @@ import { fetchCommentsForPost, sendCommentApi } from "../../api/clientUserApis";
 // --- ATTACHMENT COMPONENT ---
 const PostContent = ({ post }) => (
   <div className="space-y-6">
-    <p className="text-slate-600 dark:text-slate-300 font-light leading-relaxed text-lg">
+    <p className="text-slate-600 font-light leading-relaxed text-lg">
       {post.description}
     </p>
 
@@ -26,12 +26,12 @@ const PostContent = ({ post }) => (
             href={asset.url || "#"}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 p-3 rounded-2xl bg-light-900 dark:bg-white/5 border border-light-700 dark:border-white/10 hover:border-accent transition-all group"
+            className="flex items-center gap-3 p-3 rounded-2xl bg-light-900 border border-light-700 hover:border-accent transition-all group"
           >
             <div className="bg-accent/10 p-2 rounded-lg text-accent group-hover:bg-accent group-hover:text-white transition-colors">
               <Download size={16} />
             </div>
-            <span className="text-xs font-bold truncate dark:text-white">
+            <span className="text-xs font-bold truncate">
               {asset.name || "Attachment"}
             </span>
           </a>
@@ -134,9 +134,9 @@ const TimelineView = ({ data, loadMore, hasMore, isFetching }) => {
           {pinnedPosts.map((post) => (
             <div
               key={post.id}
-              className="bg-light-800 dark:bg-white/[0.03] border border-light-700 dark:border-white/10 p-6 rounded-[2rem] shadow-sm"
+              className="bg-light-800 border border-light-700 p-6 rounded-[2rem] shadow-sm"
             >
-              <p className="text-sm italic text-slate-500 dark:text-slate-400 leading-relaxed font-light">
+              <p className="text-sm italic text-slate-500 leading-relaxed font-light">
                 "{post.description}"
               </p>
             </div>
@@ -144,7 +144,7 @@ const TimelineView = ({ data, loadMore, hasMore, isFetching }) => {
         </aside>
 
         {/* Main Feed */}
-        <div className="flex-1 border-l border-light-700 dark:border-white/10 ml-4">
+        <div className="flex-1 border-l border-light-700 ml-4">
           {mainPosts.map((post, idx) => (
             <motion.div
               key={`${post.id}-${idx}`}
@@ -153,12 +153,12 @@ const TimelineView = ({ data, loadMore, hasMore, isFetching }) => {
               viewport={{ once: true }}
               className="mb-16 ml-8 relative group"
             >
-              <div className="absolute -left-[41px] top-2 w-4 h-4 rounded-full bg-light-950 dark:bg-dark-950 border-2 border-accent shadow-[0_0_10px_rgba(34,211,238,0.3)]" />
+              <div className="absolute -left-[41px] top-2 w-4 h-4 rounded-full bg-light-950 border-2 border-accent shadow-[0_0_10px_rgba(34,211,238,0.3)]" />
               <div className="space-y-4">
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">
                   Update 0{idx + 1}
                 </span>
-                <div className="bg-light-800 dark:bg-white/[0.03] border border-light-700 dark:border-white/10 rounded-[2.5rem] p-8 hover:border-accent/40 transition-all shadow-xl">
+                <div className="bg-light-800 border border-light-700 rounded-[2.5rem] p-8 hover:border-accent/40 transition-all shadow-xl">
                   <PostContent post={post} />
                 </div>
                 <button
@@ -199,17 +199,15 @@ const TimelineView = ({ data, loadMore, hasMore, isFetching }) => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-full max-w-md bg-white dark:bg-dark-950 z-[110] shadow-2xl flex flex-col border-l dark:border-white/10"
+              className="fixed top-0 right-0 h-full w-full max-w-md bg-white z-[110] shadow-2xl flex flex-col border-l"
             >
-              <div className="p-8 border-b dark:border-white/10 flex justify-between items-center">
-                <h3 className="font-black uppercase italic dark:text-white">
-                  Discussion
-                </h3>
+              <div className="p-8 border-b flex justify-between items-center">
+                <h3 className="font-black uppercase italic">Discussion</h3>
                 <button
                   onClick={() => setSelectedPost(null)}
-                  className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-full"
+                  className="p-2 hover:bg-slate-100 rounded-full"
                 >
-                  <X className="dark:text-white" />
+                  <X className="text-slate-500" />
                 </button>
               </div>
 
@@ -229,8 +227,8 @@ const TimelineView = ({ data, loadMore, hasMore, isFetching }) => {
                           {c.user?.firstName} {c.user?.lastName}
                         </span>
                       </div>
-                      <div className="bg-light-900 dark:bg-white/5 p-4 rounded-2xl rounded-tl-none border border-light-700 dark:border-white/5">
-                        <p className="text-sm font-light leading-relaxed dark:text-slate-300">
+                      <div className="bg-light-900 p-4 rounded-2xl rounded-tl-none border border-light-700">
+                        <p className="text-sm font-light leading-relaxed">
                           {c.commentBody}
                         </p>
                       </div>
@@ -251,14 +249,14 @@ const TimelineView = ({ data, loadMore, hasMore, isFetching }) => {
                   e.preventDefault();
                   handleSendComment();
                 }}
-                className="p-6 border-t dark:border-white/10 bg-light-800/50 dark:bg-black/20"
+                className="p-6 border-t bg-light-800/50"
               >
                 <div className="relative">
                   <textarea
                     placeholder="Type a message..."
                     rows={1}
                     value={commentText}
-                    className="w-full bg-white dark:bg-white/5 border border-light-700 dark:border-white/10 rounded-2xl p-4 pr-14 text-sm focus:outline-none focus:border-accent dark:text-white resize-none"
+                    className="w-full bg-white border border-light-700 rounded-2xl p-4 pr-14 text-sm focus:outline-none focus:border-accent resize-none"
                     onChange={(e) => setCommentText(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && !e.shiftKey) {

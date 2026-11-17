@@ -57,7 +57,7 @@ const getServiceStatus = (service) => {
     default:
       return {
         label: "Unknown",
-        color: "text-zinc-300 bg-zinc-300/10 border-zinc-300/20",
+        color: "text-zinc-500 bg-zinc-500/10 border-zinc-500/20",
         dot: "bg-zinc-300",
       };
   }
@@ -230,10 +230,10 @@ export default function ServiceProviderVariants() {
                 activeVariants.map((variant) => (
                   <div
                     key={variant.id}
-                    className="group flex items-center justify-between p-3 rounded-xl border border-zinc-100 dark:border-white/5 bg-zinc-50/50 dark:bg-white/[0.02] hover:border-blue-500/30 transition-all shadow-sm"
+                    className="group flex items-center justify-between p-3 rounded-xl border border-zinc-100 bg-zinc-50/50 hover:border-blue-500/30 transition-all shadow-sm"
                   >
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-black uppercase text-zinc-800 dark:text-zinc-200 leading-none mb-1">
+                      <span className="text-[10px] font-black uppercase text-zinc-800 leading-none mb-1">
                         {variant.label}
                       </span>
                       <span className="text-[9px] font-bold text-zinc-400">
@@ -249,7 +249,7 @@ export default function ServiceProviderVariants() {
                         onClick={() =>
                           handleArchiveRequest(variant.id, service.id)
                         }
-                        className="p-1.5 opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-all"
+                        className="p-1.5 opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
                       >
                         <Archive size={14} />
                       </button>
@@ -332,7 +332,7 @@ export default function ServiceProviderVariants() {
         }
       />
 
-      <div className="bg-white dark:bg-zinc-950 rounded-3xl border border-zinc-100 dark:border-white/5 overflow-hidden shadow-sm">
+      <div className="bg-white rounded-3xl border border-zinc-100 overflow-hidden shadow-sm">
         <MultiUseTable
           columns={variantColumns}
           data={services}

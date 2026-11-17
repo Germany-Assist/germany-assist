@@ -84,18 +84,18 @@ function TimelineModal({ isOpen, onClose, onSubmit }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-white/60 dark:bg-black/60 backdrop-blur-md animate-in fade-in duration-500"
+        className="absolute inset-0 bg-white/60 backdrop-blur-md animate-in fade-in duration-500"
         onClick={onClose}
       />
 
       {/* Modal Container */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative z-10 w-full max-w-lg rounded-[32px] bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-white/5 shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-4 duration-300"
+        className="relative z-10 w-full max-w-lg rounded-[32px] bg-white border border-zinc-100 shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-4 duration-300"
       >
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 rounded-full p-2 text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+          className="absolute top-6 right-6 rounded-full p-2 text-zinc-400 hover:bg-zinc-100 transition-colors"
         >
           <X size={20} />
         </button>
@@ -107,7 +107,7 @@ function TimelineModal({ isOpen, onClose, onSubmit }) {
               <Calendar size={24} strokeWidth={2.5} />
             </div>
             <div>
-              <h3 className="text-xl font-black text-zinc-900 dark:text-white uppercase tracking-tight">
+              <h3 className="text-xl font-black text-zinc-900 uppercase tracking-tight">
                 Add Timeline
               </h3>
               <p className="text-zinc-500 text-xs font-medium flex items-center gap-1">
@@ -127,7 +127,7 @@ function TimelineModal({ isOpen, onClose, onSubmit }) {
               value={formData.label}
               onChange={(e) => handleChange("label", e.target.value)}
               placeholder="e.g. Winter Cohort 2026"
-              className="w-full p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-transparent focus:border-blue-500 focus:bg-white dark:focus:bg-zinc-800 outline-none transition-all text-zinc-900 dark:text-white font-bold"
+              className="w-full p-4 rounded-2xl bg-zinc-50 border border-transparent focus:border-blue-500 focus:bg-white outline-none transition-all text-zinc-900 font-bold"
             />
             {validation.errors.label && (
               <p className={errorTextStyle}>{validation.errors.label}</p>
@@ -146,7 +146,7 @@ function TimelineModal({ isOpen, onClose, onSubmit }) {
                 value={formData.price}
                 onChange={(e) => handleChange("price", e.target.value)}
                 placeholder="0.00"
-                className="w-full p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-transparent focus:border-blue-500 outline-none transition-all text-zinc-900 dark:text-white font-bold"
+                className="w-full p-4 rounded-2xl bg-zinc-50 border border-transparent focus:border-blue-500 outline-none transition-all text-zinc-900 font-bold"
               />
               {validation.errors.price && (
                 <p className={errorTextStyle}>{validation.errors.price}</p>
@@ -164,7 +164,7 @@ function TimelineModal({ isOpen, onClose, onSubmit }) {
                   handleChange("maxParticipants", e.target.value)
                 }
                 placeholder="Max Pax"
-                className="w-full p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-transparent focus:border-blue-500 outline-none transition-all text-zinc-900 dark:text-white font-bold"
+                className="w-full p-4 rounded-2xl bg-zinc-50 border border-transparent focus:border-blue-500 outline-none transition-all text-zinc-900 font-bold"
               />
               {validation.errors.maxParticipants && (
                 <p className={errorTextStyle}>
@@ -175,7 +175,7 @@ function TimelineModal({ isOpen, onClose, onSubmit }) {
           </div>
 
           {/* Dates Section - Light Tints */}
-          <div className="bg-zinc-50 dark:bg-white/5 p-6 rounded-[28px] border border-zinc-100 dark:border-white/5 space-y-5 mb-8">
+          <div className="bg-zinc-50 p-6 rounded-[28px] border border-zinc-100 space-y-5 mb-8">
             <div className="flex flex-col">
               <p className="text-[10px] uppercase font-black tracking-[0.15em] text-amber-600 mb-2 flex items-center gap-1.5">
                 <Timer size={12} /> Registration Deadline
@@ -183,13 +183,13 @@ function TimelineModal({ isOpen, onClose, onSubmit }) {
               <input
                 type="date"
                 required
-                className="w-full bg-transparent text-sm font-bold text-zinc-800 dark:text-white outline-none"
+                className="w-full bg-transparent text-sm font-bold text-zinc-800 outline-none"
                 value={formData.deadlineDate}
                 onChange={(e) => handleChange("deadlineDate", e.target.value)}
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-zinc-200/50 dark:border-white/10">
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-zinc-200/50">
               <div>
                 <p className="text-[10px] uppercase font-black tracking-widest text-emerald-600 mb-2">
                   Start Date
@@ -197,7 +197,7 @@ function TimelineModal({ isOpen, onClose, onSubmit }) {
                 <input
                   type="date"
                   required
-                  className="w-full bg-transparent text-sm font-bold text-zinc-800 dark:text-white outline-none"
+                  className="w-full bg-transparent text-sm font-bold text-zinc-800 outline-none"
                   value={formData.startDate}
                   onChange={(e) => handleChange("startDate", e.target.value)}
                 />
@@ -214,7 +214,7 @@ function TimelineModal({ isOpen, onClose, onSubmit }) {
                 <input
                   type="date"
                   required
-                  className="w-full bg-transparent text-sm font-bold text-zinc-800 dark:text-white outline-none"
+                  className="w-full bg-transparent text-sm font-bold text-zinc-800 outline-none"
                   value={formData.endDate}
                   onChange={(e) => handleChange("endDate", e.target.value)}
                 />
@@ -232,7 +232,7 @@ function TimelineModal({ isOpen, onClose, onSubmit }) {
             className={`w-full group flex items-center justify-center gap-3 py-5 rounded-[22px] font-black uppercase tracking-widest text-xs transition-all shadow-xl active:scale-95 ${
               validation.isValid
                 ? "bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/20"
-                : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed shadow-none"
+                : "bg-zinc-100 text-zinc-400 cursor-not-allowed shadow-none"
             }`}
           >
             Create Timeline

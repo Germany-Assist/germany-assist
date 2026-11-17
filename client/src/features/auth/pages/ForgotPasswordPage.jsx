@@ -1,6 +1,10 @@
 import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { forgotPassword, verifyResetCode, resetPassword } from "../../../api/authService";
+import {
+  forgotPassword,
+  verifyResetCode,
+  resetPassword,
+} from "../../../api/authService";
 
 const ForgotPasswordPage = () => {
   const [step, setStep] = useState(1);
@@ -55,7 +59,10 @@ const ForgotPasswordPage = () => {
       startTimer();
       setTimeout(() => codeInputs.current[0]?.focus(), 200);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to send reset code. Please try again.");
+      setError(
+        err.response?.data?.message ||
+          "Failed to send reset code. Please try again.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -101,7 +108,10 @@ const ForgotPasswordPage = () => {
       setStep(3);
       setTimeout(() => document.getElementById("passwordInput")?.focus(), 200);
     } catch (err) {
-      setError(err.response?.data?.message || "Invalid code. Please check and try again.");
+      setError(
+        err.response?.data?.message ||
+          "Invalid code. Please check and try again.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -133,10 +143,22 @@ const ForgotPasswordPage = () => {
 
   const passwordRequirements = [
     { id: "len", label: "At least 8 characters", met: password.length >= 8 },
-    { id: "upper", label: "Contains uppercase letter", met: /[A-Z]/.test(password) },
-    { id: "lower", label: "Contains lowercase letter", met: /[a-z]/.test(password) },
+    {
+      id: "upper",
+      label: "Contains uppercase letter",
+      met: /[A-Z]/.test(password),
+    },
+    {
+      id: "lower",
+      label: "Contains lowercase letter",
+      met: /[a-z]/.test(password),
+    },
     { id: "num", label: "Contains a number", met: /\d/.test(password) },
-    { id: "sym", label: "Contains a special character", met: /[^a-zA-Z0-9]/.test(password) },
+    {
+      id: "sym",
+      label: "Contains a special character",
+      met: /[^a-zA-Z0-9]/.test(password),
+    },
   ];
 
   const handleResetPassword = async () => {
@@ -161,7 +183,10 @@ const ForgotPasswordPage = () => {
       await resetPassword({ token: resetToken, password });
       setStep(4);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to reset password. Please try again.");
+      setError(
+        err.response?.data?.message ||
+          "Failed to reset password. Please try again.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -175,14 +200,23 @@ const ForgotPasswordPage = () => {
     { label: "Very strong", color: "#16A34A", width: "100%" },
   ];
   const strength = getPasswordStrength();
-  const strengthInfo = strengthLevel[Math.max(0, strength - 1)] || strengthLevel[0];
+  const strengthInfo =
+    strengthLevel[Math.max(0, strength - 1)] || strengthLevel[0];
 
   return (
     <div className="min-h-screen bg-white text-[#111827] font-[Outfit,sans-serif]">
       <header className="flex items-center justify-between px-8 py-3.5 border-b border-[#E5E7EB]">
         <Link to="/" className="flex items-center gap-2.5 no-underline">
           <div className="w-9 h-9 bg-[#024CEE] rounded-lg flex items-center justify-center">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#fff"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-5 h-5"
+            >
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
               <polyline points="9 22 9 12 15 12 15 22" />
             </svg>
@@ -191,7 +225,10 @@ const ForgotPasswordPage = () => {
             Germany<span className="text-[#024CEE]">Assists</span>
           </span>
         </Link>
-        <Link to="/signin" className="text-sm text-[#6B7280] no-underline hover:text-[#024CEE] flex items-center gap-1.5">
+        <Link
+          to="/signin"
+          className="text-sm text-[#6B7280] no-underline hover:text-[#024CEE] flex items-center gap-1.5"
+        >
           ← Back to Sign In
         </Link>
       </header>
@@ -209,14 +246,16 @@ const ForgotPasswordPage = () => {
                           s < step
                             ? "border-green-500 bg-green-500 text-white"
                             : s === step
-                            ? "border-[#024CEE] bg-[#024CEE] text-white shadow-[0_0_0_4px_rgba(2,76,238,0.12)]"
-                            : "border-[#E5E7EB] bg-white text-[#6B7280]"
+                              ? "border-[#024CEE] bg-[#024CEE] text-white shadow-[0_0_0_4px_rgba(2,76,238,0.12)]"
+                              : "border-[#E5E7EB] bg-white text-[#6B7280]"
                         }`}
                       >
                         {s < step ? "✓" : s}
                       </div>
                       {s < 3 && (
-                        <div className={`flex-1 h-0.5 transition-all ${s < step ? "bg-green-500" : "bg-[#E5E7EB]"}`} />
+                        <div
+                          className={`flex-1 h-0.5 transition-all ${s < step ? "bg-green-500" : "bg-[#E5E7EB]"}`}
+                        />
                       )}
                     </React.Fragment>
                   ))}
@@ -226,7 +265,11 @@ const ForgotPasswordPage = () => {
                     <span
                       key={label}
                       className={`text-[11px] font-medium text-center flex-1 ${
-                        i + 1 === step ? "text-[#024CEE] font-bold" : i + 1 < step ? "text-green-500" : "text-[#6B7280]"
+                        i + 1 === step
+                          ? "text-[#024CEE] font-bold"
+                          : i + 1 < step
+                            ? "text-green-500"
+                            : "text-[#6B7280]"
                       }`}
                     >
                       {label}
@@ -238,9 +281,15 @@ const ForgotPasswordPage = () => {
 
             {step === 1 && (
               <div className="animate-fade-up">
-                <div className="text-xs font-semibold text-[#024CEE] uppercase tracking-wider mb-2">Step 1 of 3</div>
-                <h2 className="text-2xl font-extrabold mb-1.5">Forgot your password?</h2>
-                <p className="text-sm text-[#6B7280] mb-5">Enter your email and we'll send you a reset code.</p>
+                <div className="text-xs font-semibold text-[#024CEE] uppercase tracking-wider mb-2">
+                  Step 1 of 3
+                </div>
+                <h2 className="text-2xl font-extrabold mb-1.5">
+                  Forgot your password?
+                </h2>
+                <p className="text-sm text-[#6B7280] mb-5">
+                  Enter your email and we'll send you a reset code.
+                </p>
 
                 {error && (
                   <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-sm mb-4">
@@ -250,9 +299,13 @@ const ForgotPasswordPage = () => {
                 )}
 
                 <div className="mb-5">
-                  <label className="block text-sm font-medium text-[#111827] mb-1.5">Email address</label>
+                  <label className="block text-sm font-medium text-[#111827] mb-1.5">
+                    Email address
+                  </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]">✉</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]">
+                      ✉
+                    </span>
                     <input
                       type="email"
                       value={email}
@@ -276,17 +329,28 @@ const ForgotPasswordPage = () => {
                 </button>
 
                 <div className="text-center mt-4 text-sm text-[#6B7280]">
-                  Remembered it? <Link to="/signin" className="text-[#024CEE] font-semibold no-underline hover:underline">Sign in instead</Link>
+                  Remembered it?{" "}
+                  <Link
+                    to="/signin"
+                    className="text-[#024CEE] font-semibold no-underline hover:underline"
+                  >
+                    Sign in instead
+                  </Link>
                 </div>
               </div>
             )}
 
             {step === 2 && (
               <div className="animate-fade-up">
-                <div className="text-xs font-semibold text-[#024CEE] uppercase tracking-wider mb-2">Step 2 of 3</div>
-                <h2 className="text-2xl font-extrabold mb-1.5">Check your email</h2>
+                <div className="text-xs font-semibold text-[#024CEE] uppercase tracking-wider mb-2">
+                  Step 2 of 3
+                </div>
+                <h2 className="text-2xl font-extrabold mb-1.5">
+                  Check your email
+                </h2>
                 <p className="text-sm text-[#6B7280] mb-5">
-                  We sent an 8-character code to <b className="text-[#111827]">{maskEmail(email)}</b>
+                  We sent an 8-character code to{" "}
+                  <b className="text-[#111827]">{maskEmail(email)}</b>
                 </p>
 
                 {error && (
@@ -303,7 +367,9 @@ const ForgotPasswordPage = () => {
                 )}
 
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-[#111827] mb-1.5">Verification code</label>
+                  <label className="block text-sm font-medium text-[#111827] mb-1.5">
+                    Verification code
+                  </label>
                   <div className="flex gap-2.5 justify-between">
                     {code.map((c, i) => (
                       <input
@@ -326,13 +392,17 @@ const ForgotPasswordPage = () => {
                 </div>
 
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs text-[#6B7280]">Didn't receive it?</span>
+                  <span className="text-xs text-[#6B7280]">
+                    Didn't receive it?
+                  </span>
                   <button
                     onClick={handleResendCode}
                     disabled={timer > 0}
                     className="text-xs text-[#024CEE] font-semibold bg-none border-none cursor-pointer font-[Outfit] disabled:text-[#6B7280] disabled:cursor-not-allowed"
                   >
-                    {timer > 0 ? `Resend (${Math.floor(timer / 60)}:${(timer % 60).toString().padStart(2, "0")})` : "Resend code"}
+                    {timer > 0
+                      ? `Resend (${Math.floor(timer / 60)}:${(timer % 60).toString().padStart(2, "0")})`
+                      : "Resend code"}
                   </button>
                 </div>
 
@@ -361,9 +431,15 @@ const ForgotPasswordPage = () => {
 
             {step === 3 && (
               <div className="animate-fade-up">
-                <div className="text-xs font-semibold text-[#024CEE] uppercase tracking-wider mb-2">Step 3 of 3</div>
-                <h2 className="text-2xl font-extrabold mb-1.5">Create new password</h2>
-                <p className="text-sm text-[#6B7280] mb-5">Choose a strong password you haven't used before.</p>
+                <div className="text-xs font-semibold text-[#024CEE] uppercase tracking-wider mb-2">
+                  Step 3 of 3
+                </div>
+                <h2 className="text-2xl font-extrabold mb-1.5">
+                  Create new password
+                </h2>
+                <p className="text-sm text-[#6B7280] mb-5">
+                  Choose a strong password you haven't used before.
+                </p>
 
                 {error && (
                   <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-sm mb-4">
@@ -373,9 +449,13 @@ const ForgotPasswordPage = () => {
                 )}
 
                 <div className="mb-5">
-                  <label className="block text-sm font-medium text-[#111827] mb-1.5">New password</label>
+                  <label className="block text-sm font-medium text-[#111827] mb-1.5">
+                    New password
+                  </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]">🔒</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]">
+                      🔒
+                    </span>
                     <input
                       id="passwordInput"
                       type={showPassword ? "text" : "password"}
@@ -384,7 +464,9 @@ const ForgotPasswordPage = () => {
                         setPassword(e.target.value);
                         setError("");
                       }}
-                      onKeyDown={(e) => e.key === "Enter" && handleResetPassword()}
+                      onKeyDown={(e) =>
+                        e.key === "Enter" && handleResetPassword()
+                      }
                       placeholder="At least 8 characters"
                       className="w-full py-2.5 pl-9 pr-10 border border-[#E5E7EB] rounded-xl text-sm text-[#111827] bg-white outline-none focus:border-[#024CEE] focus:shadow-[0_0_0_3px_rgba(2,76,238,0.07)]"
                     />
@@ -401,10 +483,16 @@ const ForgotPasswordPage = () => {
                       <div className="h-1 rounded-full bg-[#E5E7EB] overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all"
-                          style={{ width: strengthInfo.width, background: strengthInfo.color }}
+                          style={{
+                            width: strengthInfo.width,
+                            background: strengthInfo.color,
+                          }}
                         />
                       </div>
-                      <div className="text-[11px] mt-1" style={{ color: strengthInfo.color }}>
+                      <div
+                        className="text-[11px] mt-1"
+                        style={{ color: strengthInfo.color }}
+                      >
                         {strengthInfo.label}
                       </div>
                     </div>
@@ -417,7 +505,9 @@ const ForgotPasswordPage = () => {
                       >
                         <span
                           className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center text-[8px] ${
-                            req.met ? "bg-green-500 border-green-500 text-white" : "border-[#E5E7EB]"
+                            req.met
+                              ? "bg-green-500 border-green-500 text-white"
+                              : "border-[#E5E7EB]"
                           }`}
                         >
                           ✓
@@ -429,9 +519,13 @@ const ForgotPasswordPage = () => {
                 </div>
 
                 <div className="mb-5">
-                  <label className="block text-sm font-medium text-[#111827] mb-1.5">Confirm password</label>
+                  <label className="block text-sm font-medium text-[#111827] mb-1.5">
+                    Confirm password
+                  </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]">🔒</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]">
+                      🔒
+                    </span>
                     <input
                       type={showConfirmPassword ? "text" : "password"}
                       value={confirmPassword}
@@ -439,21 +533,29 @@ const ForgotPasswordPage = () => {
                         setConfirmPassword(e.target.value);
                         setError("");
                       }}
-                      onKeyDown={(e) => e.key === "Enter" && handleResetPassword()}
+                      onKeyDown={(e) =>
+                        e.key === "Enter" && handleResetPassword()
+                      }
                       placeholder="Repeat your password"
                       className="w-full py-2.5 pl-9 pr-10 border border-[#E5E7EB] rounded-xl text-sm text-[#111827] bg-white outline-none focus:border-[#024CEE] focus:shadow-[0_0_0_3px_rgba(2,76,238,0.07)]"
                     />
                     <button
                       type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280] cursor-pointer"
                     >
                       {showConfirmPassword ? "🙈" : "👁"}
                     </button>
                   </div>
                   {confirmPassword && (
-                    <div className={`text-xs mt-1.5 ml-1 ${password === confirmPassword ? "text-green-600" : "text-red-600"}`}>
-                      {password === confirmPassword ? "✓ Passwords match" : "✗ Passwords do not match"}
+                    <div
+                      className={`text-xs mt-1.5 ml-1 ${password === confirmPassword ? "text-green-600" : "text-red-600"}`}
+                    >
+                      {password === confirmPassword
+                        ? "✓ Passwords match"
+                        : "✗ Passwords do not match"}
                     </div>
                   )}
                 </div>
@@ -487,9 +589,12 @@ const ForgotPasswordPage = () => {
                 <div className="w-[72px] h-[72px] rounded-full bg-gradient-to-br from-green-100 to-green-200 border-2 border-green-400 flex items-center justify-center text-4xl mx-auto mb-5">
                   🎉
                 </div>
-                <h2 className="text-2xl font-extrabold mb-2">Password reset!</h2>
+                <h2 className="text-2xl font-extrabold mb-2">
+                  Password reset!
+                </h2>
                 <p className="text-sm text-[#6B7280] mb-6 leading-relaxed">
-                  Your password has been updated successfully. You can now sign in with your new password.
+                  Your password has been updated successfully. You can now sign
+                  in with your new password.
                 </p>
                 <button
                   onClick={() => navigate("/signin")}

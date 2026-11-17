@@ -15,7 +15,7 @@ const ServicesHUD = ({
   return (
     <header className="sticky top-8 z-[100] max-w-6xl mx-auto mb-20 px-4">
       {/* Main Container - Swapped to light-800 / dark-800 */}
-      <div className="relative bg-light-800/80 dark:bg-dark-800/90 backdrop-blur-3xl border border-light-700 dark:border-white/10 rounded-[2.5rem] p-4 shadow-2xl flex flex-wrap items-center gap-6 px-10 transition-colors duration-500">
+      <div className="relative bg-light-800/80 backdrop-blur-3xl border border-light-700 rounded-[2.5rem] p-4 shadow-2xl flex flex-wrap items-center gap-6 px-10 transition-colors duration-500">
         {/* Animated Loading Line */}
         {isSearching && (
           <div className="absolute top-0 left-0 right-0 h-[2px] overflow-hidden rounded-t-[2.5rem]">
@@ -30,7 +30,7 @@ const ServicesHUD = ({
         <div className="flex-1 flex items-center gap-4">
           <svg
             className={`w-6 h-6 transition-colors duration-300 ${
-              isSearching ? "text-accent" : "text-slate-400 dark:text-slate-500"
+              isSearching ? "text-accent" : "text-slate-400"
             }`}
             fill="none"
             stroke="currentColor"
@@ -48,7 +48,7 @@ const ServicesHUD = ({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search relocation services..."
-            className="flex-1 bg-transparent border-none focus:ring-0 text-xl md:text-2xl placeholder:text-slate-300 dark:placeholder:text-slate-700 text-slate-900 dark:text-white font-light outline-none"
+            className="flex-1 bg-transparent border-none focus:ring-0 text-xl md:text-2xl placeholder:text-slate-300 text-slate-900 font-light outline-none"
           />
         </div>
 
@@ -74,11 +74,11 @@ const ServicesHUD = ({
           />
 
           {/* Vertical Divider */}
-          <div className="h-8 w-[1px] bg-light-700 dark:bg-white/10 mx-2" />
+          <div className="h-8 w-[1px] bg-light-700 mx-2" />
 
           <button
             onClick={onApply}
-            className="bg-slate-900 dark:bg-accent hover:bg-slate-800 dark:hover:bg-cyan-400 text-white dark:text-black px-8 py-3 rounded-2xl font-bold text-sm transition-all shadow-lg hover:shadow-accent/20 active:scale-95"
+            className="bg-[#024CEE] hover:bg-[#0341cc] text-white px-8 py-3 rounded-2xl font-bold text-sm transition-all shadow-lg hover:shadow-accent/20 active:scale-95"
           >
             Apply
           </button>

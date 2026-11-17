@@ -70,7 +70,7 @@ const ServicesPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-light-950 dark:bg-dark-950 transition-colors duration-700 ease-elegant">
+    <div className="min-h-screen bg-light-950 transition-colors duration-700 ease-elegant">
       {/* Navigation shared across all pages */}
       <NavigationBar />
 
@@ -94,13 +94,13 @@ const ServicesPage = () => {
               {[...Array(6)].map((_, i) => (
                 <div
                   key={i}
-                  className="h-[480px] w-full bg-light-900/50 dark:bg-dark-800/50 animate-pulse rounded-[2.5rem] border border-light-700 dark:border-white/5"
+                  className="h-[480px] w-full bg-light-900/50 animate-pulse rounded-[2.5rem] border border-light-700"
                 >
-                  <div className="h-48 w-full bg-light-800 dark:bg-dark-700 rounded-t-[2.5rem] opacity-50" />
+                  <div className="h-48 w-full bg-light-800 rounded-t-[2.5rem] opacity-50" />
                   <div className="p-8 space-y-4">
-                    <div className="h-6 w-2/3 bg-light-800 dark:bg-dark-700 rounded-lg" />
-                    <div className="h-4 w-full bg-light-800 dark:bg-dark-700 rounded-lg" />
-                    <div className="h-4 w-5/6 bg-light-800 dark:bg-dark-700 rounded-lg" />
+                    <div className="h-6 w-2/3 bg-light-800 rounded-lg" />
+                    <div className="h-4 w-full bg-light-800 rounded-lg" />
+                    <div className="h-4 w-5/6 bg-light-800 rounded-lg" />
                   </div>
                 </div>
               ))}
@@ -119,7 +119,7 @@ const ServicesPage = () => {
           {/* Empty State */}
           {!loading && services.length === 0 && (
             <div className="text-center py-20">
-              <p className="text-slate-500 dark:text-slate-400 text-lg font-light italic">
+              <p className="text-slate-500 text-lg font-light italic">
                 No services found matching your criteria.
               </p>
             </div>
@@ -140,12 +140,12 @@ const ServicesPage = () => {
 
       {/* Global CSS for the HUD loading line */}
       <style>{`
-        @keyframes loading-bar { 
-          0% { width: 0%; left: 0%; } 
-          50% { width: 100%; left: 0%; } 
-          100% { width: 0%; left: 100%; } 
-        }
-      `}</style>
+ @keyframes loading-bar { 
+ 0% { width: 0%; left: 0%; } 
+ 50% { width: 100%; left: 0%; } 
+ 100% { width: 0%; left: 100%; } 
+ }
+ `}</style>
     </div>
   );
 };

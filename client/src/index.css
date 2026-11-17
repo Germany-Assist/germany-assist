@@ -130,10 +130,24 @@
 .stagger-7 { animation-delay: 0.43s; }
 .stagger-8 { animation-delay: 0.47s; }
 
+/* Respect reduced motion: show final state immediately */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-fade-in,
+  .animate-slide-in-left,
+  .animate-alert-in,
+  .animate-count-up,
+  .animate-feat-in,
+  .animate-pop,
+  .animate-shake {
+    animation: none !important;
+  }
+}
+
 @layer components {
   /* This creates the 'floating' glass look across all components */
   .glass-card {
-    @apply bg-[#141414]/60 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)];
+    @apply bg-white/70 backdrop-blur-xl border border-light-700 rounded-2xl shadow-[0_10px_30px_rgba(30,41,59,0.08)];
   }
 
   /* Custom glow for active elements */
@@ -142,9 +156,9 @@
   }
 }
 
-/* Global body style to ensure the dark theme looks right */
+/* Global body style: light mode only, white page background */
 body {
-  @apply bg-light-950 dark:bg-dark-950 text-light-text dark:text-white custom-scrollbar;
+  @apply bg-light-950 text-light-text custom-scrollbar;
   overflow-x: hidden;
 }
 .no-scrollbar::-webkit-scrollbar {

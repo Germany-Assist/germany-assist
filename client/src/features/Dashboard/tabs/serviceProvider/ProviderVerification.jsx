@@ -132,8 +132,8 @@ const VerificationHub = () => {
 
   if (loading)
     return (
-      <div className="flex h-screen items-center justify-center bg-zinc-950">
-        <Loader2 className="animate-spin text-white/20" size={40} />
+      <div className="flex h-screen items-center justify-center bg-light-950">
+        <Loader2 className="animate-spin text-slate-300" size={40} />
       </div>
     );
 
@@ -194,7 +194,7 @@ const VerificationHub = () => {
         </div>
 
         {/* MAIN DISPLAY AREA */}
-        <div className="lg:col-span-8 bg-zinc-900/50 border border-white/5 rounded-[3rem] p-10 shadow-2xl backdrop-blur-md min-h-[600px] relative overflow-hidden">
+        <div className="lg:col-span-8 bg-light-800 border border-light-700 rounded-[3rem] p-10 shadow-2xl backdrop-blur-md min-h-[600px] relative overflow-hidden">
           {currentStatus === "approved" ? (
             <div className="flex flex-col items-center justify-center h-full text-center space-y-6 py-20">
               <div className="w-24 h-24 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-500 border border-emerald-500/20">
@@ -228,7 +228,7 @@ const VerificationHub = () => {
                 <h2 className="text-3xl font-black uppercase tracking-tighter italic text-red-500">
                   Rejected
                 </h2>
-                <p className="text-zinc-400 text-sm max-w-md mx-auto">
+                <p className="text-slate-500 text-sm max-w-md mx-auto">
                   This verification request has been permanently declined by our
                   compliance team.
                 </p>
@@ -239,7 +239,7 @@ const VerificationHub = () => {
                   <span className="text-[10px] font-black uppercase text-red-400 tracking-widest">
                     Rejection Reason
                   </span>
-                  <p className="text-zinc-300 text-sm italic mt-2">
+                  <p className="text-slate-600 text-sm italic mt-2">
                     "{currentItem.adminNote}"
                   </p>
                 </div>
@@ -247,7 +247,7 @@ const VerificationHub = () => {
 
               <a
                 href={`mailto:support@yourdomain.com?subject=Verification Rejection - ${activeCategoryLabel}`}
-                className="flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl transition-all"
+                className="flex items-center gap-3 px-8 py-4 bg-light-900 hover:bg-slate-100 border border-light-700 rounded-2xl transition-all"
               >
                 <Mail size={18} className="text-zinc-400" />
                 <span className="text-xs font-black uppercase tracking-widest">
@@ -271,7 +271,7 @@ const VerificationHub = () => {
               {currentStatus === "adminRequest" && (
                 <div className="p-6 rounded-[2rem] bg-blue-500/5 border border-blue-500/10 flex gap-5 items-center border-l-4 border-l-blue-500">
                   <MessageCircle className="text-blue-400" size={24} />
-                  <p className="text-zinc-300 text-sm italic font-medium leading-relaxed">
+                  <p className="text-slate-600 text-sm italic font-medium leading-relaxed">
                     "{currentItem.adminNote}"
                   </p>
                 </div>
@@ -355,7 +355,7 @@ const VerificationTab = ({ icon: Icon, label, status, isActive, onClick }) => {
       className={`w-full flex items-center justify-between p-5 rounded-[2rem] border transition-all duration-500 ${
         isActive
           ? "bg-white border-white shadow-2xl scale-[1.03] z-10"
-          : "bg-zinc-900 border-white/5"
+          : "bg-white border-light-700"
       }`}
     >
       <div className="flex items-center gap-4">
@@ -387,10 +387,10 @@ const UploadBox = ({ label, file, type, onChange, onClear }) => {
   const isImage = type === "image";
   return (
     <div className="space-y-4">
-      <h5 className="text-[10px] font-black uppercase tracking-widest text-zinc-200 ml-1">
+      <h5 className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">
         {label}
       </h5>
-      <div className="relative aspect-video rounded-[2.5rem] bg-zinc-800/50 border-2 border-dashed border-white/5 flex flex-col items-center justify-center overflow-hidden transition-all hover:border-blue-500/30">
+      <div className="relative aspect-video rounded-[2.5rem] bg-light-900 border-2 border-dashed border-light-700 flex flex-col items-center justify-center overflow-hidden transition-all hover:border-blue-500/30">
         {file ? (
           <div className="relative w-full h-full animate-in zoom-in-95">
             {isImage ? (
@@ -399,7 +399,7 @@ const UploadBox = ({ label, file, type, onChange, onClear }) => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-zinc-900">
+              <div className="w-full h-full flex items-center justify-center bg-light-900">
                 <FileText className="text-blue-500" size={48} />
               </div>
             )}

@@ -29,12 +29,12 @@ function PostCreationModal({ isOpen, onClose, onSubmit }) {
       {/* Modal Container */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative z-10 w-full max-w-lg rounded-[32px] bg-white dark:bg-zinc-900 shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-4 duration-300"
+        className="relative z-10 w-full max-w-lg rounded-[32px] bg-white shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-4 duration-300"
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 rounded-full p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors"
+          className="absolute top-6 right-6 rounded-full p-2 text-slate-400 hover:bg-slate-100 transition-colors"
         >
           <X size={20} />
         </button>
@@ -46,7 +46,7 @@ function PostCreationModal({ isOpen, onClose, onSubmit }) {
               <Layout size={24} />
             </div>
             <div>
-              <h3 className="text-2xl font-black text-slate-900 dark:text-white leading-none">
+              <h3 className="text-2xl font-black text-slate-900 leading-none">
                 New Post
               </h3>
               <p className="text-slate-500 text-sm mt-1 flex items-center gap-1">
@@ -66,7 +66,7 @@ function PostCreationModal({ isOpen, onClose, onSubmit }) {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Start typing your story..."
-              className="w-full min-h-[160px] p-5 rounded-2xl bg-slate-50 dark:bg-zinc-800/50 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-zinc-800 outline-none transition-all text-slate-900 dark:text-white resize-none text-lg"
+              className="w-full min-h-[160px] p-5 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-indigo-500 focus:bg-white outline-none transition-all text-slate-900 resize-none text-lg"
             />
           </div>
 
@@ -76,7 +76,7 @@ function PostCreationModal({ isOpen, onClose, onSubmit }) {
             className={`group flex items-center justify-between p-4 rounded-2xl border-2 transition-all cursor-pointer mb-8 ${
               isPinned
                 ? "border-amber-500/50 bg-amber-500/5"
-                : "border-slate-100 dark:border-zinc-800 bg-transparent hover:border-slate-200 dark:hover:border-zinc-700"
+                : "border-slate-100 bg-transparent hover:border-slate-200"
             }`}
           >
             <div className="flex items-center gap-4">
@@ -84,15 +84,13 @@ function PostCreationModal({ isOpen, onClose, onSubmit }) {
                 className={`p-2.5 rounded-xl transition-all ${
                   isPinned
                     ? "bg-amber-500 text-white"
-                    : "bg-slate-100 dark:bg-zinc-800 text-slate-400 group-hover:text-slate-600"
+                    : "bg-slate-100 text-slate-400 group-hover:text-slate-600"
                 }`}
               >
                 <Pin size={20} className={isPinned ? "rotate-45" : ""} />
               </div>
               <div>
-                <p className="font-bold text-slate-900 dark:text-white">
-                  Pin this post
-                </p>
+                <p className="font-bold text-slate-900">Pin this post</p>
                 <p className="text-xs text-slate-500">
                   Feature it at the top of your feed
                 </p>
@@ -101,7 +99,7 @@ function PostCreationModal({ isOpen, onClose, onSubmit }) {
 
             {/* Custom Toggle UI */}
             <div
-              className={`w-12 h-6 rounded-full transition-colors relative ${isPinned ? "bg-amber-500" : "bg-slate-200 dark:bg-zinc-700"}`}
+              className={`w-12 h-6 rounded-full transition-colors relative ${isPinned ? "bg-amber-500" : "bg-slate-200"}`}
             >
               <div
                 className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${isPinned ? "left-7" : "left-1"}`}
@@ -112,7 +110,7 @@ function PostCreationModal({ isOpen, onClose, onSubmit }) {
           {/* Action Button */}
           <button
             type="submit"
-            className="w-full group flex items-center justify-center gap-3 bg-slate-900 dark:bg-white text-white dark:text-black py-5 rounded-[20px] font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all active:scale-[0.97] shadow-xl"
+            className="w-full group flex items-center justify-center gap-3 bg-[#024CEE] text-white py-5 rounded-[20px] font-black uppercase tracking-widest text-xs hover:bg-[#0341cc] transition-all active:scale-[0.97] shadow-xl"
           >
             Share to Timeline
             <Send

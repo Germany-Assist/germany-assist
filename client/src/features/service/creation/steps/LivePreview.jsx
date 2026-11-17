@@ -3,7 +3,7 @@ import ServiceCard from "../../ServiceCard";
 const LivePreview = ({ data }) => {
   //TODO i should fix this
   const profileImg = data.assets?.find(
-    (a) => a.key === "serviceProfileImage"
+    (a) => a.key === "serviceProfileImage",
   )?.url;
   return (
     <div className=" top-32 flex flex-col items-center">

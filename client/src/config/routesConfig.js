@@ -22,18 +22,42 @@ import {
 } from "lucide-react";
 
 // Updated Dashboard
-const UpdatedDashboardLayout = lazy(() => import("../features/updatedDashboard/UpdatedDashboardLayout"));
-const UpdatedDashboard = lazy(() => import("../features/updatedDashboard/pages/Dashboard"));
-const UpdatedMessages = lazy(() => import("../features/updatedDashboard/pages/Messages"));
-const UpdatedNotifications = lazy(() => import("../features/updatedDashboard/pages/SPNotifications"));
-const UpdatedOrders = lazy(() => import("../features/updatedDashboard/pages/Orders"));
-const UpdatedMyServices = lazy(() => import("../features/updatedDashboard/pages/MyServices"));
-const UpdatedMyEvents = lazy(() => import("../features/updatedDashboard/pages/MyEvents"));
-const UpdatedClients = lazy(() => import("../features/updatedDashboard/pages/Clients"));
-const UpdatedFinance = lazy(() => import("../features/updatedDashboard/pages/Finance"));
-const UpdatedProfile = lazy(() => import("../features/updatedDashboard/pages/Profile"));
-const UpdatedVerification = lazy(() => import("../features/updatedDashboard/pages/VerificationCentre"));
-const UpdatedSettings = lazy(() => import("../features/updatedDashboard/pages/Settings"));
+const UpdatedDashboardLayout = lazy(
+  () => import("../features/updatedDashboard/UpdatedDashboardLayout"),
+);
+const UpdatedDashboard = lazy(
+  () => import("../features/updatedDashboard/pages/Dashboard"),
+);
+const UpdatedMessages = lazy(
+  () => import("../features/updatedDashboard/pages/Messages"),
+);
+const UpdatedNotifications = lazy(
+  () => import("../features/updatedDashboard/pages/SPNotifications"),
+);
+const UpdatedOrders = lazy(
+  () => import("../features/updatedDashboard/pages/Orders"),
+);
+const UpdatedMyServices = lazy(
+  () => import("../features/updatedDashboard/pages/MyServices"),
+);
+const UpdatedMyEvents = lazy(
+  () => import("../features/updatedDashboard/pages/MyEvents"),
+);
+const UpdatedClients = lazy(
+  () => import("../features/updatedDashboard/pages/Clients"),
+);
+const UpdatedFinance = lazy(
+  () => import("../features/updatedDashboard/pages/Finance"),
+);
+const UpdatedProfile = lazy(
+  () => import("../features/updatedDashboard/pages/Profile"),
+);
+const UpdatedVerification = lazy(
+  () => import("../features/updatedDashboard/pages/VerificationCentre"),
+);
+const UpdatedSettings = lazy(
+  () => import("../features/updatedDashboard/pages/Settings"),
+);
 
 // Public Pages
 const Homepage = lazy(() => import("../pages/HomePage"));
@@ -53,8 +77,12 @@ const TimelinePage = lazy(() => import("../pages/TimelinePage"));
 const ProviderTimeline = lazy(() => import("../pages/ProviderTimelinePage"));
 const SigninPage = lazy(() => import("../features/auth/pages/SigninPage"));
 const SignupPage = lazy(() => import("../features/auth/pages/SignupPage"));
-const IndividualSignupPage = lazy(() => import("../features/auth/pages/IndividualSignupPage"));
-const ProviderSignupPage = lazy(() => import("../features/auth/pages/ProviderSignupPage"));
+const IndividualSignupPage = lazy(
+  () => import("../features/auth/pages/IndividualSignupPage"),
+);
+const ProviderSignupPage = lazy(
+  () => import("../features/auth/pages/ProviderSignupPage"),
+);
 const ForgotPasswordPage = lazy(
   () => import("../features/auth/pages/ForgotPasswordPage"),
 );
@@ -125,7 +153,9 @@ const ServiceProviderGeneral = lazy(
 );
 const ServiceProviderServices = lazy(
   () =>
-    import("../features/Dashboard/tabs/serviceProvider/ServiceProviderServices"),
+    import(
+      "../features/Dashboard/tabs/serviceProvider/ServiceProviderServices"
+    ),
 );
 const ServiceProviderFinance = lazy(
   () =>
@@ -139,7 +169,9 @@ const SPManageTimelines = lazy(
 );
 const ServiceProviderVariants = lazy(
   () =>
-    import("../features/Dashboard/tabs/serviceProvider/ServiceProviderVariants"),
+    import(
+      "../features/Dashboard/tabs/serviceProvider/ServiceProviderVariants"
+    ),
 );
 const SPDisputes = lazy(
   () => import("../features/Dashboard/tabs/serviceProvider/SPDisputes"),
@@ -486,6 +518,6 @@ export const routesConfig = [
         element: UpdatedSettings,
         handle: { label: "Settings", icon: Settings },
       },
-    ]
+    ],
   },
 ];

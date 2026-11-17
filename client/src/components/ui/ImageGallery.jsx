@@ -70,7 +70,7 @@ const ImageGallery = ({ assets = [] }) => {
                 alt="Gallery"
               />
               {idx === 3 && mainImages.length > 5 && (
-                <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white font-bold">
+                <div className="absolute inset-0 bg-white/70 flex flex-col items-center justify-center text-slate-900 font-bold">
                   <Maximize2 size={24} className="mb-2" />
                   <span>+{mainImages.length - 5} photos</span>
                 </div>
@@ -81,10 +81,10 @@ const ImageGallery = ({ assets = [] }) => {
 
       {/* Lightbox */}
       {isLightboxOpen && hasImages && (
-        <div className="fixed inset-0 z-[100] bg-black/95 flex flex-col items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center p-4">
           <button
             onClick={() => setIsLightboxOpen(false)}
-            className="absolute top-6 right-6 text-white p-2 hover:bg-white/10 rounded-full z-[110]"
+            className="absolute top-6 right-6 text-slate-900 p-2 hover:bg-slate-100 rounded-full z-[110]"
           >
             <X size={32} />
           </button>
@@ -92,10 +92,10 @@ const ImageGallery = ({ assets = [] }) => {
           <button
             onClick={() =>
               setActivePhotoIdx((prev) =>
-                prev === 0 ? mainImages.length - 1 : prev - 1
+                prev === 0 ? mainImages.length - 1 : prev - 1,
               )
             }
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-white p-2 hover:bg-white/10 rounded-full transition"
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-900 p-2 hover:bg-slate-100 rounded-full transition"
           >
             <ChevronLeft size={48} />
           </button>
@@ -114,10 +114,10 @@ const ImageGallery = ({ assets = [] }) => {
           <button
             onClick={() =>
               setActivePhotoIdx((prev) =>
-                prev === mainImages.length - 1 ? 0 : prev + 1
+                prev === mainImages.length - 1 ? 0 : prev + 1,
               )
             }
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-white p-2 hover:bg-white/10 rounded-full transition"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-900 p-2 hover:bg-slate-100 rounded-full transition"
           >
             <ChevronRight size={48} />
           </button>

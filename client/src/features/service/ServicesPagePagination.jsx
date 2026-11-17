@@ -6,7 +6,7 @@ const ServicesPagePagination = ({ page, setPage, hasMore }) => {
       <button
         disabled={page === 1}
         onClick={() => setPage((p) => p - 1)}
-        className="group flex items-center gap-2 text-slate-500 hover:text-white disabled:opacity-10 transition-all uppercase text-[10px] font-bold tracking-[0.2em]"
+        className="group flex items-center gap-2 text-slate-500 hover:text-slate-900 disabled:opacity-10 transition-all uppercase text-[10px] font-bold tracking-[0.2em]"
       >
         <svg
           className="w-5 h-5 group-hover:-translate-x-1 transition-transform"
@@ -29,7 +29,7 @@ const ServicesPagePagination = ({ page, setPage, hasMore }) => {
       <button
         disabled={!hasMore}
         onClick={() => setPage((p) => p + 1)}
-        className="group flex items-center gap-2 text-slate-500 hover:text-white disabled:opacity-10 transition-all uppercase text-[10px] font-bold tracking-[0.2em]"
+        className="group flex items-center gap-2 text-slate-500 hover:text-slate-900 disabled:opacity-10 transition-all uppercase text-[10px] font-bold tracking-[0.2em]"
       >
         Next
         <svg

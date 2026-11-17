@@ -53,12 +53,12 @@ const CreateNewSP = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-dark-950 text-slate-900 dark:text-white transition-colors duration-500">
+    <div className="min-h-screen bg-white text-slate-900 transition-colors duration-500">
       <StatusModal {...statusCon} />
       {/* Top Navigation Bar */}
-      <nav className="border-b border-light-700 dark:border-white/5 px-8 py-4 flex items-center justify-between sticky top-0 bg-white/80 dark:bg-dark-950/80 backdrop-blur-md z-10">
+      <nav className="border-b border-light-700 px-8 py-4 flex items-center justify-between sticky top-0 bg-white/80 backdrop-blur-md z-10">
         <div className="flex items-center gap-4">
-          <button className="p-2 hover:bg-light-900 dark:hover:bg-white/5 rounded-full transition-colors">
+          <button className="p-2 hover:bg-light-900 rounded-full transition-colors">
             <ArrowLeft size={20} />
           </button>
           <h2 className="text-sm font-black uppercase tracking-widest">
@@ -67,7 +67,7 @@ const CreateNewSP = () => {
         </div>
         <button
           onClick={handleSubmit}
-          className="bg-slate-900 dark:bg-white text-white dark:text-black px-8 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-accent hover:text-white dark:hover:bg-accent dark:hover:text-white transition-all active:scale-95 shadow-lg shadow-slate-200 dark:shadow-none"
+          className="bg-[#024CEE] text-white px-8 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-[#0341cc] transition-all active:scale-95 shadow-lg shadow-blue-200"
         >
           Save Profile
         </button>
@@ -78,7 +78,7 @@ const CreateNewSP = () => {
           <h1 className="text-5xl font-black tracking-tight uppercase mb-4">
             Company Profile
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 text-lg font-light max-w-2xl">
+          <p className="text-slate-500 text-lg font-light max-w-2xl">
             This information will be displayed publicly to users. Ensure the
             details reflect the professional identity of the organization.
           </p>
@@ -104,7 +104,7 @@ const CreateNewSP = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full text-3xl font-bold bg-transparent border-none outline-none focus:ring-0 placeholder:text-slate-200 dark:placeholder:text-white/10 p-0"
+                  className="w-full text-3xl font-bold bg-transparent border-none outline-none focus:ring-0 placeholder:text-slate-400 p-0"
                   placeholder="Enter Name..."
                 />
               </div>
@@ -117,7 +117,7 @@ const CreateNewSP = () => {
                   name="about"
                   value={formData.about}
                   onChange={handleChange}
-                  className="w-full text-xl font-light bg-transparent border-none outline-none focus:ring-0 text-slate-600 dark:text-slate-300 p-0"
+                  className="w-full text-xl font-light bg-transparent border-none outline-none focus:ring-0 text-slate-600 p-0"
                   placeholder="Briefly describe the mission..."
                 />
               </div>
@@ -131,7 +131,7 @@ const CreateNewSP = () => {
                   rows="8"
                   value={formData.description}
                   onChange={handleChange}
-                  className="w-full text-lg font-light bg-light-900/30 dark:bg-white/5 rounded-3xl p-6 border border-light-700 dark:border-white/10 focus:border-accent outline-none transition-all resize-none leading-relaxed"
+                  className="w-full text-lg font-light bg-light-900/30 rounded-3xl p-6 border border-light-700 focus:border-accent outline-none transition-all resize-none leading-relaxed"
                   placeholder="Tell the story of the company..."
                 />
               </div>
@@ -140,7 +140,7 @@ const CreateNewSP = () => {
 
           {/* Right Column: Contact & Security */}
           <div className="lg:col-span-1 space-y-10">
-            <section className="space-y-8 bg-light-900/20 dark:bg-white/5 p-8 rounded-[2.5rem] border border-light-700 dark:border-white/10">
+            <section className="space-y-8 bg-light-900/20 p-8 rounded-[2.5rem] border border-light-700">
               <h3 className="text-xs font-black uppercase tracking-tighter text-accent">
                 Contact Details
               </h3>
@@ -155,7 +155,7 @@ const CreateNewSP = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-light-700 dark:border-white/10 py-2 outline-none focus:border-accent transition-all"
+                    className="w-full bg-transparent border-b border-light-700 py-2 outline-none focus:border-accent transition-all"
                   />
                 </div>
 
@@ -168,7 +168,7 @@ const CreateNewSP = () => {
                     name="phone_number"
                     value={formData.phone_number}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-light-700 dark:border-white/10 py-2 outline-none focus:border-accent transition-all"
+                    className="w-full bg-transparent border-b border-light-700 py-2 outline-none focus:border-accent transition-all"
                   />
                 </div>
               </div>
@@ -186,7 +186,7 @@ const CreateNewSP = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full bg-transparent border-b border-light-700 dark:border-white/10 py-2 outline-none focus:border-accent transition-all"
+                    className="w-full bg-transparent border-b border-light-700 py-2 outline-none focus:border-accent transition-all"
                   />
                 </div>
               </div>

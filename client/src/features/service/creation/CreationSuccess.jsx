@@ -46,8 +46,8 @@ const CreationSuccess = ({ serviceId, isEditMode, status }) => {
       title: "All Set!",
       desc: "Your service is now live and ready for bookings.",
       icon: <PartyPopper size={48} />,
-      color: "bg-slate-900 dark:bg-white",
-      shadow: "shadow-slate-900/20 dark:shadow-white/10",
+      color: "bg-[#024CEE]",
+      shadow: "shadow-blue-900/20",
     };
   };
 
@@ -61,7 +61,7 @@ const CreationSuccess = ({ serviceId, isEditMode, status }) => {
           className={`absolute inset-0 ${content.color} blur-3xl opacity-20 animate-pulse`}
         />
         <div
-          className={`relative w-24 h-24 ${content.color} ${content.color === "bg-slate-900 dark:bg-white" ? "text-white dark:text-black" : "text-white"} rounded-[2.5rem] flex items-center justify-center shadow-2xl ${content.shadow} transition-transform duration-500 hover:scale-110`}
+          className={`relative w-24 h-24 ${content.color} ${content.color === "bg-[#024CEE]" ? "text-white" : "text-white"} rounded-[2.5rem] flex items-center justify-center shadow-2xl ${content.shadow} transition-transform duration-500 hover:scale-110`}
         >
           {content.icon}
         </div>
@@ -69,10 +69,10 @@ const CreationSuccess = ({ serviceId, isEditMode, status }) => {
 
       {/* Dynamic Text Content */}
       <div className="space-y-4 mb-12">
-        <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight tracking-tight">
+        <h1 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight tracking-tight">
           {content.title}
         </h1>
-        <p className="text-slate-500 dark:text-slate-400 text-lg max-w-sm mx-auto leading-relaxed font-medium">
+        <p className="text-slate-500 text-lg max-w-sm mx-auto leading-relaxed font-medium">
           {content.desc}
         </p>
       </div>
@@ -81,7 +81,7 @@ const CreationSuccess = ({ serviceId, isEditMode, status }) => {
       <div className="flex flex-col gap-4 w-full max-w-sm">
         <button
           onClick={() => navigate(`/provider/service/${serviceId}`)}
-          className="group flex items-center justify-center gap-3 bg-slate-900 dark:bg-white text-white dark:text-black font-black py-5 px-8 rounded-[2rem] shadow-xl transition-all hover:scale-[1.02] active:scale-95"
+          className="group flex items-center justify-center gap-3 bg-[#024CEE] text-white font-black py-5 px-8 rounded-[2rem] shadow-xl transition-all hover:scale-[1.02] active:scale-95 hover:bg-[#0341cc]"
         >
           Preview Service
           <ArrowRight
@@ -92,7 +92,7 @@ const CreationSuccess = ({ serviceId, isEditMode, status }) => {
 
         <button
           onClick={() => navigate("/provider/dashboard")}
-          className="font-bold text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors py-2"
+          className="font-bold text-slate-400 hover:text-slate-900 transition-colors py-2"
         >
           Go to Dashboard
         </button>

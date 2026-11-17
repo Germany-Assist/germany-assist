@@ -30,7 +30,7 @@ const ServiceProfileAdmin = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-light-950 dark:bg-dark-950 flex items-center justify-center">
+      <div className="min-h-screen bg-light-950 flex items-center justify-center">
         <Loader2 className="animate-spin text-accent" size={32} />
       </div>
     );
@@ -65,18 +65,18 @@ const ServiceProfileAdmin = () => {
       : data.timelines || data.Timelines || [];
 
   return (
-    <div className="min-h-screen bg-light-950 dark:bg-dark-950 text-slate-900 dark:text-slate-100 pb-20 relative transition-colors duration-500">
+    <div className="min-h-screen bg-light-950 text-slate-900 pb-20 relative transition-colors duration-500">
       <NavigationBar />
 
       {/* Breadcrumb Header - Read Only */}
-      <nav className="border-b border-light-700 dark:border-white/5 bg-light-900/50 dark:bg-black/20 backdrop-blur-md sticky top-0 z-50">
+      <nav className="border-b border-light-700 bg-light-900/50 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-3 text-sm">
             <span className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">
               Admin Console
             </span>
             <ChevronRight size={14} className="text-slate-600" />
-            <span className="text-slate-900 dark:text-white font-bold tracking-tight">
+            <span className="text-slate-900 font-bold tracking-tight">
               Reviewing: {data.category?.label || "Service"}
             </span>
           </div>
@@ -101,14 +101,14 @@ const ServiceProfileAdmin = () => {
               <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold text-xs">
                 {data.ServiceProvider?.name?.charAt(0)}
               </div>
-              <span className="text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px] tracking-[0.2em]">
+              <span className="text-slate-500 font-bold uppercase text-[10px] tracking-[0.2em]">
                 By{" "}
-                <span className="text-slate-900 dark:text-white">
+                <span className="text-slate-900">
                   {data.ServiceProvider?.name}
                 </span>
               </span>
             </div>
-            <div className="flex items-center gap-4 text-slate-400 border-l border-slate-200 dark:border-white/10 pl-6">
+            <div className="flex items-center gap-4 text-slate-400 border-l border-slate-200 pl-6">
               <div className="flex items-center gap-2 text-[10px] font-black uppercase">
                 <Mail size={12} /> {data.ServiceProvider?.email}
               </div>
@@ -117,7 +117,7 @@ const ServiceProfileAdmin = () => {
         </div>
 
         {/* Media Section - The Gallery works here now */}
-        <div className="rounded-[3rem] overflow-hidden shadow-2xl border border-light-700 dark:border-white/5 mb-16 aspect-video lg:aspect-auto">
+        <div className="rounded-[3rem] overflow-hidden shadow-2xl border border-light-700 mb-16 aspect-video lg:aspect-auto">
           <ImageGallery assets={galleryAssets} />
         </div>
 
@@ -128,12 +128,12 @@ const ServiceProfileAdmin = () => {
               <h3 className="text-xs font-black uppercase tracking-[0.3em] text-accent mb-8 flex items-center gap-2">
                 Description Detail
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 text-xl md:text-2xl font-light leading-relaxed whitespace-pre-line break-words">
+              <p className="text-slate-600 text-xl md:text-2xl font-light leading-relaxed whitespace-pre-line break-words">
                 {data.description}
               </p>
             </section>
 
-            <section className="pt-10 border-t border-light-700 dark:border-white/5">
+            <section className="pt-10 border-t border-light-700">
               <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-500 mb-6">
                 Service Metrics
               </h3>
@@ -166,7 +166,7 @@ const ServiceProfileAdmin = () => {
 
           {/* Sticky Sidebar - Simplified for Admin */}
           <aside className="lg:col-span-1">
-            <div className="sticky top-24 bg-white dark:bg-white/5 border border-light-700 dark:border-white/5 rounded-[2.5rem] p-8 shadow-xl">
+            <div className="sticky top-24 bg-white border border-light-700 rounded-[2.5rem] p-8 shadow-xl">
               <div className="mb-8">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent mb-2">
                   Price Configurations
@@ -182,7 +182,7 @@ const ServiceProfileAdmin = () => {
                 {options.map((option) => (
                   <div
                     key={option.id}
-                    className="p-5 rounded-2xl border border-light-700 dark:border-white/10 bg-light-50 dark:bg-black/20"
+                    className="p-5 rounded-2xl border border-light-700 bg-light-50"
                   >
                     <div className="flex justify-between items-start mb-2">
                       <span className="text-sm font-bold tracking-tight leading-tight">
@@ -209,7 +209,7 @@ const ServiceProfileAdmin = () => {
                 ))}
               </div>
 
-              <div className="mt-8 pt-8 border-t border-light-700 dark:border-white/5">
+              <div className="mt-8 pt-8 border-t border-light-700">
                 <div className="flex items-center gap-3 text-slate-400">
                   <Globe size={14} />
                   <span className="text-[10px] font-black uppercase tracking-widest">

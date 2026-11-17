@@ -178,15 +178,15 @@ const ServiceWizard = ({ initialData = null, isEditMode = false }) => {
       <StatusModal {...statusModalCon} />
 
       {isEditMode && initialData?.rejectionReason && currentStep < 5 && (
-        <div className="mb-6 md:mb-10 bg-red-50 dark:bg-red-500/5 border-2 border-red-500/30 rounded-[1.5rem] md:rounded-[2.5rem] p-4 md:p-6 flex flex-col md:flex-row items-center gap-4 md:gap-6 shadow-xl shadow-red-500/10 animate-in slide-in-from-top-10 duration-700">
+        <div className="mb-6 md:mb-10 bg-red-50 border-2 border-red-500/30 rounded-[1.5rem] md:rounded-[2.5rem] p-4 md:p-6 flex flex-col md:flex-row items-center gap-4 md:gap-6 shadow-xl shadow-red-500/10 animate-in slide-in-from-top-10 duration-700">
           <div className="w-12 h-12 md:w-16 md:h-16 bg-red-500 rounded-xl md:rounded-[1.5rem] flex items-center justify-center text-white animate-pulse shrink-0">
             <ShieldAlert size={28} />
           </div>
           <div className="text-center md:text-left flex-1">
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-red-600 dark:text-red-400">
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-red-600">
               Update Required
             </span>
-            <h3 className="text-lg md:text-xl font-black text-slate-900 dark:text-white mt-1">
+            <h3 className="text-lg md:text-xl font-black text-slate-900 mt-1">
               Rejection Reason: {initialData.rejectionReason}
             </h3>
           </div>
@@ -196,7 +196,7 @@ const ServiceWizard = ({ initialData = null, isEditMode = false }) => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 px-2 gap-4">
         <div className="flex items-center gap-3 flex-wrap">
           <div
-            className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${isEditMode ? "bg-orange-500 text-white" : "bg-zinc-900 dark:bg-white text-white dark:text-black"}`}
+            className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${isEditMode ? "bg-orange-500 text-white" : "bg-[#024CEE] text-white"}`}
           >
             {isEditMode ? "Modifying Existing Service" : "Creating New Service"}
           </div>
@@ -211,7 +211,7 @@ const ServiceWizard = ({ initialData = null, isEditMode = false }) => {
       </div>
 
       <main className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10 items-start">
-        <div className="lg:col-span-7 bg-white/60 dark:bg-white/5 border border-white/20 rounded-[1.5rem] md:rounded-[2.5rem] p-5 md:p-8 shadow-sm">
+        <div className="lg:col-span-7 bg-white/60 border border-light-700 rounded-[1.5rem] md:rounded-[2.5rem] p-5 md:p-8 shadow-sm">
           {currentStep === 1 && (
             <StepBasics
               data={formData}
@@ -261,9 +261,9 @@ const ServiceWizard = ({ initialData = null, isEditMode = false }) => {
         </div>
 
         <div className="hidden lg:block lg:col-span-5 sticky top-4">
-          <div className="bg-zinc-900/5 dark:bg-white/5 border border-zinc-200 rounded-[1.5rem] p-2 backdrop-blur-sm">
+          <div className="bg-zinc-100 border border-zinc-200 rounded-[1.5rem] p-2 backdrop-blur-sm">
             <div className="flex items-center gap-1.5 px-4 py-2">
-              <div className="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+              <div className="w-2 h-2 rounded-full bg-zinc-300" />
               <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">
                 Live Preview
               </span>

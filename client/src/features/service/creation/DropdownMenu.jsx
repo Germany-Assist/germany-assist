@@ -56,14 +56,12 @@ const DropdownMenu = ({
         disabled={disabled}
         onClick={() => setIsOpen(!isOpen)}
         className={`flex w-full items-center justify-between p-4 rounded-2xl border text-sm font-semibold transition-all duration-300
-          ${
-            isOpen
-              ? "border-accent ring-4 ring-accent/10"
-              : "border-light-700 dark:border-white/10 shadow-sm"
-          }
-          bg-transparent text-slate-900 dark:text-white 
-          ${!disabled && "hover:border-slate-300 dark:hover:border-white/20 active:scale-[0.98]"}
-        `}
+ ${
+   isOpen ? "border-accent ring-4 ring-accent/10" : "border-light-700 shadow-sm"
+ }
+ bg-transparent text-slate-900 
+ ${!disabled && "hover:border-slate-300 active:scale-[0.98]"}
+ `}
       >
         <span className="truncate pr-2">
           {selectedItem ? selectedItem.label : placeholder}
@@ -77,7 +75,7 @@ const DropdownMenu = ({
       </button>
 
       {isOpen && !disabled && (
-        <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-2xl border border-light-700 dark:border-white/10 bg-white dark:bg-dark-950 shadow-xl animate-in fade-in zoom-in-95 duration-200">
+        <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-2xl border border-light-700 bg-white shadow-xl animate-in fade-in zoom-in-95 duration-200">
           <div
             ref={scrollRef}
             onScroll={handleScrollDetection}
@@ -96,11 +94,11 @@ const DropdownMenu = ({
                       setIsOpen(false);
                     }}
                     className={`flex w-full items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-colors
-                      ${
-                        isSelected
-                          ? "bg-accent/10 text-accent"
-                          : "text-slate-600 dark:text-slate-400 hover:bg-light-900/50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white"
-                      }`}
+ ${
+   isSelected
+     ? "bg-accent/10 text-accent"
+     : "text-slate-600 hover:bg-light-900/50 hover:text-slate-900"
+ }`}
                   >
                     <span className="truncate">{cat.label}</span>
                     {isSelected && (
@@ -117,7 +115,7 @@ const DropdownMenu = ({
           </div>
 
           {showScrollIndicator && (
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white dark:from-dark-950 to-transparent flex items-end justify-center pb-1">
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white to-transparent flex items-end justify-center pb-1">
               <ArrowDown size={14} className="text-accent animate-bounce" />
             </div>
           )}

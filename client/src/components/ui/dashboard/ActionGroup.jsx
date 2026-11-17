@@ -3,26 +3,20 @@ import React from "react";
 
 const VARIANTS = {
   // Bold but clean
-  primary:
-    "bg-zinc-900 dark:bg-white dark:text-black text-white hover:bg-zinc-800 dark:hover:bg-zinc-100 shadow-lg shadow-zinc-200 dark:shadow-none",
-  secondary:
-    "border-2 border-zinc-100 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/5 text-zinc-600 dark:text-zinc-400",
+  primary: "bg-[#024CEE] text-white hover:bg-[#0341cc] shadow-lg shadow-blue-200",
+  secondary: "border-2 border-zinc-100 hover:bg-zinc-50 text-zinc-600",
 
   // High-Vibrancy Light Variants
-  success:
-    "bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-500/30",
-  info: "bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-400 hover:bg-indigo-200 dark:hover:bg-indigo-500/30",
-  rose: "bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400 hover:bg-rose-200 dark:hover:bg-rose-500/30",
+  success: "bg-emerald-100 text-emerald-700 hover:bg-emerald-200",
+  info: "bg-indigo-100 text-indigo-700 hover:bg-indigo-200",
+  rose: "bg-rose-100 text-rose-700 hover:bg-rose-200",
 
   // High-Vibrancy Warning/Danger
-  danger:
-    "bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-500/30",
-  alert:
-    "bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-500/30",
+  danger: "bg-red-100 text-red-700 hover:bg-red-200",
+  alert: "bg-amber-100 text-amber-700 hover:bg-amber-200",
 
   // Subtitle/Ghost
-  ghost:
-    "bg-transparent hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-zinc-400 font-bold",
+  ghost: "bg-transparent hover:bg-zinc-100 text-zinc-500 font-bold",
 };
 
 const BASE_STYLES =

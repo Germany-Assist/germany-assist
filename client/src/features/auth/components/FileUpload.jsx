@@ -59,7 +59,7 @@ const FileUpload = ({
   };
 
   const getFileExtension = (filename) => {
-    return filename.split('.').pop().toUpperCase();
+    return filename.split(".").pop().toUpperCase();
   };
 
   return (
@@ -79,7 +79,7 @@ const FileUpload = ({
             <div className="text-xs text-[#6B7280] mt-0.5">{subtitle}</div>
           </div>
         </div>
-        
+
         {multiple ? (
           <label className="flex-shrink-0 px-3.5 py-1.5 rounded-lg border-2 border-[#024CEE] text-[#024CEE] text-xs font-semibold cursor-pointer hover:bg-[#EBF1FD] transition-all bg-white">
             Upload
@@ -112,7 +112,10 @@ const FileUpload = ({
       {hasFiles && (
         <div className="space-y-2 mt-3 pt-3 border-t border-[#E5E7EB]">
           {fileList.map((file, index) => (
-            <div key={index} className="flex items-center gap-2 p-2 border border-[#E5E7EB] rounded-lg bg-white">
+            <div
+              key={index}
+              className="flex items-center gap-2 p-2 border border-[#E5E7EB] rounded-lg bg-white"
+            >
               <div className="w-8 h-8 rounded-lg bg-[#EBF1FD] border border-blue-200 flex items-center justify-center text-xs font-bold text-[#024CEE]">
                 {getFileExtension(file.name)}
               </div>
@@ -134,13 +137,15 @@ const FileUpload = ({
               </button>
             </div>
           ))}
-          
+
           {multiple && fileList.length < MAX_FILES && (
             <label className="border-2 border-dashed border-[#E5E7EB] rounded-lg p-3 text-center cursor-pointer hover:border-[#024CEE] hover:bg-[#EBF1FD] transition-all block">
-              <div className="text-sm font-medium text-[#024CEE]">+ Add more files</div>
+              <div className="text-sm font-medium text-[#024CEE]">
+                + Add more files
+              </div>
             </label>
           )}
-          
+
           {!multiple && (
             <button
               type="button"

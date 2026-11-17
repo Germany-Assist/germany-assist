@@ -10,29 +10,29 @@ const MetricCard = ({
 }) => {
   const styles = {
     default: {
-      card: "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100",
-      icon: "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400",
-      label: "text-zinc-500 dark:text-zinc-400",
+      card: "bg-white border-zinc-200 text-zinc-900",
+      icon: "bg-zinc-100 text-zinc-600",
+      label: "text-zinc-500",
     },
     blue: {
-      card: "bg-blue-50/50 dark:bg-blue-950/20 border-blue-100 dark:border-blue-500/20 text-blue-700 dark:text-blue-300",
+      card: "bg-blue-50/50 border-blue-100 text-blue-700",
       icon: "bg-blue-600 text-white shadow-md shadow-blue-500/20",
-      label: "text-blue-600/70 dark:text-blue-400/70",
+      label: "text-blue-600/70",
     },
     red: {
-      card: "bg-red-50/50 dark:bg-red-950/20 border-red-100 dark:border-red-500/20 text-red-700 dark:text-red-300",
+      card: "bg-red-50/50 border-red-100 text-red-700",
       icon: "bg-red-500 text-white shadow-md shadow-red-500/20",
-      label: "text-red-600/70 dark:text-red-400/70",
+      label: "text-red-600/70",
     },
     yellow: {
-      card: "bg-amber-50/50 dark:bg-amber-950/20 border-amber-100 dark:border-amber-500/20 text-amber-700 dark:text-amber-300",
+      card: "bg-amber-50/50 border-amber-100 text-amber-700",
       icon: "bg-amber-500 text-white shadow-md shadow-amber-500/20",
-      label: "text-amber-600/70 dark:text-amber-400/70",
+      label: "text-amber-600/70",
     },
     green: {
-      card: "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-300",
+      card: "bg-emerald-50/50 border-emerald-100 text-emerald-700",
       icon: "bg-emerald-500 text-white shadow-md shadow-emerald-500/20",
-      label: "text-emerald-600/70 dark:text-emerald-400/70",
+      label: "text-emerald-600/70",
     },
   };
 
@@ -41,7 +41,7 @@ const MetricCard = ({
   return (
     <div
       className={`relative overflow-hidden p-8 rounded-[2.5rem] border transition-all duration-500 group 
-      hover:shadow-2xl hover:-translate-y-1 ${currentStyle.card}`}
+ hover:shadow-2xl hover:-translate-y-1 ${currentStyle.card}`}
     >
       {/* Background Decorative Glow (Optional for extra "Pop") */}
       <div className="absolute -right-4 -top-4 w-24 h-24 blur-3xl opacity-10 bg-current transition-opacity group-hover:opacity-20" />

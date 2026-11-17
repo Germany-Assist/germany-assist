@@ -5,7 +5,7 @@ const SigninHeader = () => {
   return (
     <header className="flex items-center justify-between px-8 py-3.5 border-b border-[#E5E7EB] bg-white">
       <Link to="/" className="flex items-center gap-2.25 no-underline gap-2">
-        <div className="w-9 h-9 bg-[#024CEE] rounded-lg flex  items-center justify-center">
+        <div className="w-9 h-9 bg-[#024CEE] rounded-lg flex items-center justify-center">
           <svg
             width="20"
             height="20"

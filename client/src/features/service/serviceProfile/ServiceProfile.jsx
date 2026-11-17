@@ -106,7 +106,7 @@ const ServiceProfile = ({ previewData = null }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-light-950 dark:bg-dark-950 flex items-center justify-center">
+      <div className="min-h-screen bg-light-950 flex items-center justify-center">
         <Loader2 className="animate-spin text-accent" size={32} />
       </div>
     );
@@ -138,7 +138,7 @@ const ServiceProfile = ({ previewData = null }) => {
     data.type === "oneTime" ? data.variants || [] : data.timelines || [];
 
   return (
-    <div className="min-h-screen bg-light-950 dark:bg-dark-950 text-slate-900 dark:text-slate-100 pb-20 relative transition-colors duration-500">
+    <div className="min-h-screen bg-light-950 text-slate-900 pb-20 relative transition-colors duration-500">
       {!previewData && <NavigationBar />}
       <ShareSheet
         isOpen={isShareOpen}
@@ -159,7 +159,7 @@ const ServiceProfile = ({ previewData = null }) => {
         message="Congratulations Your booking is confirmed."
       />
       {/* Breadcrumb Header */}
-      <nav className="border-b border-light-700 dark:border-white/5 bg-light-900/50 dark:bg-black/20 backdrop-blur-md sticky top-0 ">
+      <nav className="border-b border-light-700 bg-light-900/50 backdrop-blur-md sticky top-0 ">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-3 text-sm">
             <span
@@ -169,7 +169,7 @@ const ServiceProfile = ({ previewData = null }) => {
               Services
             </span>
             <ChevronRight size={14} className="text-slate-600" />
-            <span className="text-slate-900 dark:text-white font-bold tracking-tight">
+            <span className="text-slate-900 font-bold tracking-tight">
               {data.category?.label || "General"}
             </span>
           </div>
@@ -207,16 +207,16 @@ const ServiceProfile = ({ previewData = null }) => {
             <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold text-xs">
               {data.serviceProvider?.name?.charAt(0)}
             </div>
-            <span className="text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px] tracking-[0.2em]">
+            <span className="text-slate-500 font-bold uppercase text-[10px] tracking-[0.2em]">
               By{" "}
-              <span className="text-slate-900 dark:text-white">
+              <span className="text-slate-900">
                 {data.serviceProvider?.name}
               </span>
             </span>
           </div>
         </div>
         {/* Media Section */}
-        <div className="rounded-[3rem] overflow-hidden shadow-2xl border border-light-700 dark:border-white/5 mb-16 aspect-video lg:aspect-auto">
+        <div className="rounded-[3rem] overflow-hidden shadow-2xl border border-light-700 mb-16 aspect-video lg:aspect-auto">
           <ImageGallery assets={galleryAssets} />
         </div>
         {/* Content Grid */}
@@ -226,12 +226,12 @@ const ServiceProfile = ({ previewData = null }) => {
               <h3 className="text-xs font-black uppercase tracking-[0.3em] text-accent mb-8">
                 The Experience
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 text-xl md:text-2xl font-light leading-relaxed whitespace-pre-line break-words">
+              <p className="text-slate-600 text-xl md:text-2xl font-light leading-relaxed whitespace-pre-line break-words">
                 {data.description}
               </p>
             </section>
 
-            <section className="pt-10 border-t border-light-700 dark:border-white/5">
+            <section className="pt-10 border-t border-light-700">
               <ReviewsSection
                 reviews={data.reviews || []}
                 totalReviews={data.totalReviews || 0}

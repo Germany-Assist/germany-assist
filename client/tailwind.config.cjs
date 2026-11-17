@@ -4,20 +4,28 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
+        sans: [
+          "Plus Jakarta Sans",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
         outfit: ["Outfit", "sans-serif"],
       },
       colors: {
         dark: {
-          950: "#04080f", // Deepest background
-          900: "#3f3f3fff", // Section background
-          800: "#313131ff", // Card background
-          700: "#1f1f1f", // Borders / Hover states
+          // Dark mode removed: dark-* tokens mirror the light scale so any
+          // legacy `bg-dark-*` usage renders as the light surface.
+          950: "#ffffff",
+          900: "#f1f5f9",
+          800: "#f8fafc",
+          700: "#e2e8f0",
         },
         light: {
-          950: "#efeee5", // The Page Background (Matches across all pages)
-          900: "#e5e4da", // HUD/Section backgrounds
-          800: "#f5f4f0", // Card surfaces
-          700: "#d6d3c4", // Borders
+          950: "#ffffff", // The Page Background (white, light mode only)
+          900: "#f1f5f9", // HUD/Section backgrounds
+          800: "#f8fafc", // Card surfaces
+          700: "#e2e8f0", // Borders
           text: "#1e293b", // Slate 800 for elegant readability
         },
         // --- Common Accents ---

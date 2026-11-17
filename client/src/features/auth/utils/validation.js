@@ -15,10 +15,14 @@ export const validatePhone = (phone) => {
 export const validatePassword = (password) => {
   if (!password) return "Password is required";
   if (password.length < 8) return "Password must be at least 8 characters long";
-  if (!/[A-Z]/.test(password)) return "Password must contain at least one uppercase letter";
-  if (!/[a-z]/.test(password)) return "Password must contain at least one lowercase letter";
-  if (!/[0-9]/.test(password)) return "Password must contain at least one number";
-  if (!/[^a-zA-Z0-9]/.test(password)) return "Password must contain at least one special character";
+  if (!/[A-Z]/.test(password))
+    return "Password must contain at least one uppercase letter";
+  if (!/[a-z]/.test(password))
+    return "Password must contain at least one lowercase letter";
+  if (!/[0-9]/.test(password))
+    return "Password must contain at least one number";
+  if (!/[^a-zA-Z0-9]/.test(password))
+    return "Password must contain at least one special character";
   return "";
 };
 
@@ -30,14 +34,16 @@ export const validateField = (field, value, role, subRole, formData) => {
       else if (value.trim().length < 2 || value.trim().length > 50)
         error = "First name must be between 2 and 50 characters";
       else if (!validateName(value))
-        error = "First name can only contain letters, spaces, hyphens, and apostrophes";
+        error =
+          "First name can only contain letters, spaces, hyphens, and apostrophes";
       break;
     case "lastName":
       if (!value.trim()) error = "Last name is required";
       else if (value.trim().length < 2 || value.trim().length > 50)
         error = "Last name must be between 2 and 50 characters";
       else if (!validateName(value))
-        error = "Last name can only contain letters, spaces, hyphens, and apostrophes";
+        error =
+          "Last name can only contain letters, spaces, hyphens, and apostrophes";
       break;
     case "email":
       if (!value.trim()) error = "Email is required";
@@ -58,8 +64,7 @@ export const validateField = (field, value, role, subRole, formData) => {
       break;
     case "confirmPassword":
       if (!value) error = "Please confirm your password";
-      else if (formData.password !== value)
-        error = "Passwords do not match";
+      else if (formData.password !== value) error = "Passwords do not match";
       break;
     case "nationality":
       if (!value) error = "Please select your nationality";

@@ -63,10 +63,10 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
       <div>
-        <h1 className="text-4xl font-bold text-slate-900 dark:text-white leading-tight">
+        <h1 className="text-4xl font-bold text-slate-900 leading-tight">
           Pricing & Structure
         </h1>
-        <p className="text-slate-500 dark:text-slate-400 mt-3 text-lg">
+        <p className="text-slate-500 mt-3 text-lg">
           Define how you offer this service and your capacity.
         </p>
       </div>
@@ -79,7 +79,7 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
           className={`flex-1 p-4 rounded-2xl border flex flex-col gap-2 transition-all text-left ${
             data.type === "oneTime"
               ? "border-accent bg-accent/5 ring-2 ring-accent/20"
-              : "border-light-700 dark:border-white/10"
+              : "border-light-700"
           }`}
         >
           <Banknote
@@ -88,9 +88,7 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
             }
           />
           <div>
-            <p className="font-bold text-sm text-slate-900 dark:text-white">
-              One-Time
-            </p>
+            <p className="font-bold text-sm text-slate-900">One-Time</p>
             <p className="text-xs text-slate-500">Fixed Tiers & Delivery</p>
           </div>
         </button>
@@ -101,7 +99,7 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
           className={`flex-1 p-4 rounded-2xl border flex flex-col gap-2 transition-all text-left ${
             data.type === "timeline"
               ? "border-accent bg-accent/5 ring-2 ring-accent/20"
-              : "border-light-700 dark:border-white/10"
+              : "border-light-700"
           }`}
         >
           <Calendar
@@ -110,9 +108,7 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
             }
           />
           <div>
-            <p className="font-bold text-sm text-slate-900 dark:text-white">
-              Timeline
-            </p>
+            <p className="font-bold text-sm text-slate-900">Timeline</p>
             <p className="text-xs text-slate-500">Schedules & Capacity</p>
           </div>
         </button>
@@ -122,18 +118,18 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
       <div className="space-y-4">
         {data.type === "oneTime" && (
           <div className="space-y-4 animate-in slide-in-from-top-2 duration-300">
-            <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2 ml-1">
+            <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2 ml-1">
               Service Variants
             </label>
             {(data.variants || []).map((variant, idx) => (
               <div
                 key={idx}
-                className="flex gap-3 items-start bg-light-900/10 p-3 rounded-2xl border border-light-700 dark:border-white/5"
+                className="flex gap-3 items-start bg-light-900/10 p-3 rounded-2xl border border-light-700"
               >
                 <div className="flex-1 space-y-3">
                   <input
                     placeholder="Variant Name (e.g. Basic Package)"
-                    className="w-full p-2 bg-transparent border-b border-light-700 dark:border-white/10 text-slate-900 dark:text-white focus:border-accent outline-none"
+                    className="w-full p-2 bg-transparent border-b border-light-700 text-slate-900 focus:border-accent outline-none"
                     value={variant.label}
                     onChange={(e) => {
                       const v = [...data.variants];
@@ -150,7 +146,7 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
                       <input
                         type="number"
                         placeholder="Delivery Time in Days (e.g. 3) leave zero for unknown delivery times"
-                        className="w-full pl-8 p-2 text-sm border border-light-700 dark:border-white/10 rounded-lg bg-transparent text-slate-900 dark:text-white focus:border-accent outline-none"
+                        className="w-full pl-8 p-2 text-sm border border-light-700 rounded-lg bg-transparent text-slate-900 focus:border-accent outline-none"
                         value={variant.deliveryTime}
                         onChange={(e) => {
                           const v = [...data.variants];
@@ -162,7 +158,7 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
                     <input
                       type="number"
                       placeholder="Price"
-                      className="w-24 p-2 text-sm border border-light-700 dark:border-white/10 rounded-lg bg-transparent text-slate-900 dark:text-white focus:border-accent outline-none"
+                      className="w-24 p-2 text-sm border border-light-700 rounded-lg bg-transparent text-slate-900 focus:border-accent outline-none"
                       value={variant.price}
                       onChange={(e) => {
                         const v = [...data.variants];
@@ -186,18 +182,18 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
 
         {data.type === "timeline" && (
           <div className="space-y-4 animate-in slide-in-from-top-2 duration-300">
-            <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2 ml-1">
+            <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2 ml-1">
               Service Timelines
             </label>
             {(data.timelines || []).map((timeline, idx) => (
               <div
                 key={idx}
-                className="p-5 border border-light-700 dark:border-white/10 rounded-2xl space-y-4 relative group bg-light-900/20 dark:bg-white/5"
+                className="p-5 border border-light-700 rounded-2xl space-y-4 relative group bg-light-900/20"
               >
                 <div className="flex gap-4">
                   <input
                     placeholder="Batch label (e.g. Winter Intake)"
-                    className="flex-1 bg-transparent border-b border-light-700 dark:border-white/10 text-slate-900 dark:text-white font-bold py-2 focus:border-accent outline-none"
+                    className="flex-1 bg-transparent border-b border-light-700 text-slate-900 font-bold py-2 focus:border-accent outline-none"
                     value={timeline.label}
                     onChange={(e) => {
                       const t = [...data.timelines];
@@ -213,7 +209,7 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
                     <input
                       type="number"
                       placeholder="Max Ppl"
-                      className="w-full bg-transparent border-b border-light-700 dark:border-white/10 text-slate-900 dark:text-white font-bold py-2 pl-5 focus:border-accent outline-none"
+                      className="w-full bg-transparent border-b border-light-700 text-slate-900 font-bold py-2 pl-5 focus:border-accent outline-none"
                       value={timeline.maxParticipants}
                       onChange={(e) => {
                         const t = [...data.timelines];
@@ -225,7 +221,7 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
                   <input
                     type="number"
                     placeholder="Price"
-                    className="w-[20%] bg-transparent border-b border-light-700 dark:border-white/10 text-slate-900 dark:text-white font-bold py-2 focus:border-accent outline-none"
+                    className="w-[20%] bg-transparent border-b border-light-700 text-slate-900 font-bold py-2 focus:border-accent outline-none"
                     value={timeline.price}
                     onChange={(e) => {
                       const t = [...data.timelines];
@@ -242,7 +238,7 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
                     </p>
                     <input
                       type="date"
-                      className="w-full bg-transparent text-sm dark:text-white outline-none"
+                      className="w-full bg-transparent text-sm outline-none"
                       value={timeline.startDate}
                       onChange={(e) => {
                         const t = [...data.timelines];
@@ -257,7 +253,7 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
                     </p>
                     <input
                       type="date"
-                      className="w-full bg-transparent text-sm dark:text-white outline-none"
+                      className="w-full bg-transparent text-sm outline-none"
                       value={timeline.endDate}
                       onChange={(e) => {
                         const t = [...data.timelines];
@@ -272,7 +268,7 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
                     </p>
                     <input
                       type="date"
-                      className="w-full bg-transparent text-sm dark:text-white outline-none"
+                      className="w-full bg-transparent text-sm outline-none"
                       value={timeline.deadlineDate}
                       onChange={(e) => {
                         const t = [...data.timelines];
@@ -298,7 +294,7 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
           <button
             type="button"
             onClick={addItem}
-            className="w-full py-4 border-2 border-dashed border-light-700 dark:border-white/10 rounded-2xl text-slate-400 hover:border-accent hover:text-accent hover:bg-accent/5 transition-all flex items-center justify-center gap-2 font-bold text-sm"
+            className="w-full py-4 border-2 border-dashed border-light-700 rounded-2xl text-slate-400 hover:border-accent hover:text-accent hover:bg-accent/5 transition-all flex items-center justify-center gap-2 font-bold text-sm"
           >
             <Plus size={18} /> Add{" "}
             {data.type === "oneTime" ? "Variant" : "Timeline"}
@@ -307,11 +303,11 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
       </div>
 
       {/* Navigation */}
-      <div className="flex gap-4 pt-4 border-t border-light-700 dark:border-white/5">
+      <div className="flex gap-4 pt-4 border-t border-light-700">
         <button
           type="button"
           onClick={onBack}
-          className="p-4 rounded-2xl border border-light-700 dark:border-white/10 text-slate-400 hover:bg-light-900 dark:hover:bg-white/5 transition-all"
+          className="p-4 rounded-2xl border border-light-700 text-slate-400 hover:bg-light-900 transition-all"
         >
           <ChevronLeft size={24} />
         </button>
@@ -319,7 +315,7 @@ const StepTypeAndPricing = ({ data, onUpdate, onNext, onBack }) => {
           type="button"
           disabled={isInvalid}
           onClick={onNext}
-          className="flex-1 flex items-center justify-center gap-2 bg-slate-900 dark:bg-white disabled:opacity-20 text-white dark:text-black font-bold py-4 rounded-2xl transition-all shadow-xl hover:bg-accent hover:text-white active:scale-95"
+          className="flex-1 flex items-center justify-center gap-2 bg-[#024CEE] disabled:opacity-20 text-white font-bold py-4 rounded-2xl transition-all shadow-xl hover:bg-[#0341cc] active:scale-95"
         >
           Next: Media <ChevronRight size={18} />
         </button>

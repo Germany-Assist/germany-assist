@@ -107,7 +107,7 @@ const AdminFinance = () => {
   // Specialized cell for Currency
   const CurrencyCell = ({ amount, isDisputed }) => (
     <p
-      className={`text-xl font-black italic tracking-tighter ${isDisputed ? "text-red-500" : "text-blue-600 dark:text-blue-400"}`}
+      className={`text-xl font-black italic tracking-tighter ${isDisputed ? "text-red-500" : "text-blue-600"}`}
     >
       ${Number(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
     </p>
@@ -146,7 +146,7 @@ const AdminFinance = () => {
 
   if (loading)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#050505]">
+      <div className="min-h-screen flex items-center justify-center bg-light-950">
         <Loader2 className="animate-spin text-zinc-700" size={40} />
       </div>
     );
@@ -157,7 +157,7 @@ const AdminFinance = () => {
         {/* HEADER */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h1 className="text-5xl font-black tracking-tighter uppercase italic dark:text-white">
+            <h1 className="text-5xl font-black tracking-tighter uppercase italic">
               FINANCE
             </h1>
             <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.3em]">
@@ -200,7 +200,7 @@ const AdminFinance = () => {
             <select
               value={filters.status}
               onChange={(e) => handleFilterChange("status", e.target.value)}
-              className="w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 pl-10 pr-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest appearance-none focus:ring-2 ring-blue-500/20 transition-all outline-none"
+              className="w-full bg-white border border-zinc-200 pl-10 pr-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest appearance-none focus:ring-2 ring-blue-500/20 transition-all outline-none"
             >
               <option value="">All Statuses</option>
               <option value="active">Active</option>
@@ -217,7 +217,7 @@ const AdminFinance = () => {
             <select
               value={filters.type}
               onChange={(e) => handleFilterChange("type", e.target.value)}
-              className="w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 pl-10 pr-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest appearance-none outline-none"
+              className="w-full bg-white border border-zinc-200 pl-10 pr-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest appearance-none outline-none"
             >
               <option value="">All Types</option>
               <option value="oneTime">One-Time</option>
@@ -232,7 +232,7 @@ const AdminFinance = () => {
             className={`flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border ${
               filters.onlyDisputed
                 ? "bg-red-500 border-red-500 text-white shadow-lg shadow-red-500/20"
-                : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-white/5 text-zinc-500 hover:border-red-500/50"
+                : "bg-white border-zinc-200 text-zinc-500 hover:border-red-500/50"
             }`}
           >
             <AlertTriangle size={14} /> Only Disputed
@@ -240,9 +240,9 @@ const AdminFinance = () => {
         </div>
 
         {/* LEDGER */}
-        <div className="bg-white dark:bg-zinc-900 rounded-[2.5rem] border border-zinc-200 dark:border-white/5 shadow-sm overflow-hidden relative">
+        <div className="bg-white rounded-[2.5rem] border border-zinc-200 shadow-sm overflow-hidden relative">
           {tableLoading && (
-            <div className="absolute inset-0 bg-white/60 dark:bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">
+            <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center">
               <Loader2 className="animate-spin text-blue-500" />
             </div>
           )}

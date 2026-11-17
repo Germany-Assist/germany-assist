@@ -5,7 +5,7 @@ const TransactionCell = ({
   title,
 }) => {
   const variants = {
-    default: "bg-zinc-100 dark:bg-zinc-800 text-zinc-400",
+    default: "bg-zinc-100 text-zinc-400",
     danger: "bg-red-500/10 text-red-500",
     success: "bg-emerald-500/10 text-emerald-600",
   };
@@ -18,7 +18,7 @@ const TransactionCell = ({
 
       <div>
         <p className="font-black text-lg tracking-tight">{title}</p>
-        <p className="text-[9px] font-bold text-zinc-400  tracking-tighter">
+        <p className="text-[9px] font-bold text-zinc-400 tracking-tighter">
           {subtext}
         </p>
       </div>

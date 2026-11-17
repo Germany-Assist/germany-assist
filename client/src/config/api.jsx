@@ -11,8 +11,8 @@ export const SOCKET_PATH = import.meta.env.VITE_SOCKET_PATH;
 // export const LOCAL_BACKEND_URL = import.meta.env.VITE_LOCAL_BACKEND_URL;
 
 // export const API_URL =
-//   NODE_ENV === "production"
-//     ? `${DROPLET_BACKEND_URL}/api`
-//     : NODE_ENV === "staging"
-//       ? `${STAGING_BACKEND_URL}/api`
-//       : `${LOCAL_BACKEND_URL}/api`;
+// NODE_ENV === "production"
+// ? `${DROPLET_BACKEND_URL}/api`
+// : NODE_ENV === "staging"
+// ? `${STAGING_BACKEND_URL}/api`
+// : `${LOCAL_BACKEND_URL}/api`;

@@ -66,7 +66,7 @@ const getServiceStatus = (service) => {
     default:
       return {
         label: status || "Unknown",
-        color: "text-zinc-300 bg-zinc-300/10 border-zinc-300/20",
+        color: "text-zinc-500 bg-zinc-500/10 border-zinc-500/20",
         dot: "bg-zinc-300",
         icon: Clock,
       };
@@ -226,7 +226,7 @@ export default function AdminServices() {
               service.variants?.variants?.map((v) => (
                 <div
                   key={v.id}
-                  className={`group flex items-center justify-between border p-2.5 rounded-xl transition-all duration-300 ${v.isArchived ? "bg-zinc-100/40 opacity-50 grayscale" : "bg-white dark:bg-white/[0.03] border-zinc-100 dark:border-white/10"}`}
+                  className={`group flex items-center justify-between border p-2.5 rounded-xl transition-all duration-300 ${v.isArchived ? "bg-zinc-100/40 opacity-50 grayscale" : "bg-white border-zinc-100"}`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
                     <div
@@ -235,13 +235,13 @@ export default function AdminServices() {
                       <Tag size={12} strokeWidth={2.5} />
                     </div>
                     <span
-                      className={`text-[11px] font-black uppercase truncate ${v.isArchived ? "text-zinc-500 line-through" : "text-zinc-700 dark:text-zinc-300"}`}
+                      className={`text-[11px] font-black uppercase truncate ${v.isArchived ? "text-zinc-500 line-through" : "text-zinc-700"}`}
                     >
                       {v.label}
                     </span>
                   </div>
                   {!v.isArchived && (
-                    <div className="flex-1 mx-3 border-b border-dotted border-zinc-200 dark:border-zinc-800 mb-1" />
+                    <div className="flex-1 mx-3 border-b border-dotted border-zinc-200 mb-1" />
                   )}
                   <span className="text-[11px] font-black px-2 py-0.5 rounded-md border text-emerald-600 bg-emerald-50 border-emerald-100">
                     ${v.price}
@@ -252,7 +252,7 @@ export default function AdminServices() {
               service.timelines?.timelines?.map((t) => (
                 <div
                   key={t.id}
-                  className="flex flex-col p-3 rounded-xl border bg-white dark:bg-white/[0.03] border-zinc-100 dark:border-white/10 shadow-sm"
+                  className="flex flex-col p-3 rounded-xl border bg-white border-zinc-100 shadow-sm"
                 >
                   <div className="flex justify-between items-center gap-4">
                     <span className="text-[10px] font-black uppercase text-blue-600">
@@ -366,7 +366,7 @@ export default function AdminServices() {
         />
       </div>
 
-      <div className="bg-white dark:bg-zinc-950 p-4 rounded-3xl border border-zinc-100 dark:border-white/5 space-y-4">
+      <div className="bg-white p-4 rounded-3xl border border-zinc-100 space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="relative flex-1 max-w-md">
             <Search
@@ -376,7 +376,7 @@ export default function AdminServices() {
             <input
               type="text"
               placeholder="Search services by title..."
-              className="w-full pl-11 pr-4 py-2.5 bg-zinc-50 dark:bg-white/5 border-none rounded-2xl text-sm focus:ring-2 ring-emerald-500/20 transition-all"
+              className="w-full pl-11 pr-4 py-2.5 bg-zinc-50 border-none rounded-2xl text-sm focus:ring-2 ring-emerald-500/20 transition-all"
               value={filters.title}
               onChange={(e) =>
                 setFilters((p) => ({ ...p, title: e.target.value, page: 1 }))
@@ -424,7 +424,7 @@ export default function AdminServices() {
               }
             />
 
-            <div className="w-[1px] h-6 bg-zinc-200 dark:bg-white/10 mx-1 hidden md:block" />
+            <div className="w-[1px] h-6 bg-zinc-200 mx-1 hidden md:block" />
 
             <FilterToggle
               label="Paused"
@@ -442,7 +442,7 @@ export default function AdminServices() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-zinc-950 rounded-3xl border border-zinc-100 dark:border-white/5 overflow-hidden">
+      <div className="bg-white rounded-3xl border border-zinc-100 overflow-hidden">
         <MultiUseTable
           columns={adminColumns}
           data={services}
@@ -463,8 +463,8 @@ export default function AdminServices() {
 const FilterToggle = ({ label, active, onClick, variant = "default" }) => {
   const variants = {
     default: active
-      ? "bg-zinc-900 text-white dark:bg-white dark:text-black"
-      : "text-zinc-500 hover:bg-zinc-100 dark:hover:bg-white/5",
+      ? "bg-[#024CEE] text-white"
+      : "text-zinc-500 hover:bg-zinc-100",
     emerald: active
       ? "bg-emerald-500 text-white border-emerald-500"
       : "text-zinc-500 hover:border-emerald-500/50",
@@ -479,7 +479,7 @@ const FilterToggle = ({ label, active, onClick, variant = "default" }) => {
   return (
     <button
       onClick={onClick}
-      className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase border border-transparent transition-all duration-200 ${variants[variant]} ${!active && "border-zinc-100 dark:border-white/5"}`}
+      className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase border border-transparent transition-all duration-200 ${variants[variant]} ${!active && "border-zinc-100"}`}
     >
       {label}
     </button>

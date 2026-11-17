@@ -124,7 +124,10 @@ export default function AdminVerificationManager() {
       header: "Verification Type",
       render: (req) => (
         <span className="text-[10px] font-black uppercase px-2.5 py-1 bg-blue-500/5 text-blue-400 rounded-lg border border-blue-500/10 tracking-widest">
-          {req.type} {req.relatedId && req.type !== "identity" && getCategory(req.relatedId)}
+          {req.type}{" "}
+          {req.relatedId &&
+            req.type !== "identity" &&
+            getCategory(req.relatedId)}
         </span>
       ),
     },
@@ -141,7 +144,7 @@ export default function AdminVerificationManager() {
                   href={url}
                   target="_blank"
                   rel="noreferrer"
-                  className="p-2 rounded-xl bg-zinc-800 border border-white/5 hover:bg-zinc-700 hover:border-blue-500/50 transition-all group"
+                  className="p-2 rounded-xl bg-light-900 border border-light-700 hover:bg-slate-200 hover:border-blue-500/50 transition-all group"
                   title={isPdf ? "Open Document" : "Open Image"}
                 >
                   {isPdf ? (
@@ -151,7 +154,7 @@ export default function AdminVerificationManager() {
                   )}
                 </a>
                 {asset.label && (
-                  <span className="text-[10px] font-bold text-zinc-400 bg-zinc-800 px-2 py-1 rounded">
+                  <span className="text-[10px] font-bold text-slate-500 bg-light-900 px-2 py-1 rounded">
                     {asset.label}
                   </span>
                 )}
@@ -293,7 +296,7 @@ export default function AdminVerificationManager() {
           <select
             value={filters.type || ""}
             onChange={(e) => handleFilterChange("type", e.target.value)}
-            className="bg-zinc-900 border border-white/5 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase outline-none focus:ring-2 ring-blue-500/20 transition-all"
+            className="bg-white text-slate-700 border border-light-700 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase outline-none focus:ring-2 ring-blue-500/20 transition-all"
           >
             <option value="">All Verification Types</option>
             <option value="identity">Identity</option>
@@ -320,7 +323,7 @@ export default function AdminVerificationManager() {
         </div>
       </FilterContainer>
 
-      <div className="bg-zinc-900/50 rounded-[2rem] border border-white/5 overflow-hidden">
+      <div className="bg-light-800 rounded-[2rem] border border-light-700 overflow-hidden">
         <MultiUseTable
           columns={verificationColumns}
           data={requests}

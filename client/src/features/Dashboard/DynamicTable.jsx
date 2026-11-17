@@ -58,7 +58,7 @@ const DynamicTable = ({ columns, data }) => {
                 key={col.key}
                 onClick={() => handleSort(col)}
                 className={`px-4 py-3 text-left font-semibold text-gray-600
-                  ${col.sortable ? "cursor-pointer select-none" : ""}`}
+ ${col.sortable ? "cursor-pointer select-none" : ""}`}
               >
                 <div className="flex items-center justify-center gap-2">
                   <span>{col.key}</span>

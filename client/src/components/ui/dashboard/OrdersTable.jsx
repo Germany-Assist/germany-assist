@@ -11,7 +11,9 @@ const statusStyles = {
 function StatusBadge({ status }) {
   const style = statusStyles[status] || statusStyles.pending;
   return (
-    <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full ${style.bg}`}>
+    <span
+      className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full ${style.bg}`}
+    >
       <span className={`w-1 h-1 rounded-full ${style.dot}`} />
       {status}
     </span>
@@ -33,11 +35,25 @@ export function OrdersTable({
   };
 
   const handleExport = () => {
-    const headers = ["Service", "Client", "Order ID", "Date", "Due", "Amount", "Status"];
-    const rows = data.map(row => [
-      row.service, row.client, row.orderId, row.date, row.due, row.amount, row.status
+    const headers = [
+      "Service",
+      "Client",
+      "Order ID",
+      "Date",
+      "Due",
+      "Amount",
+      "Status",
+    ];
+    const rows = data.map((row) => [
+      row.service,
+      row.client,
+      row.orderId,
+      row.date,
+      row.due,
+      row.amount,
+      row.status,
     ]);
-    const csv = [headers, ...rows].map(r => r.join(",")).join("\n");
+    const csv = [headers, ...rows].map((r) => r.join(",")).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -56,30 +72,30 @@ export function OrdersTable({
 
   if (loading) {
     return (
-      <div className="bg-white border border-zinc-200 dark:border-zinc-700 rounded-xl p-4 animate-pulse">
-        <div className="h-8 w-32 bg-zinc-200 dark:bg-zinc-700 rounded mb-4" />
-        {[1,2,3,4,5].map(i => (
-          <div key={i} className="h-12 bg-zinc-100 dark:bg-zinc-800 rounded mb-2" />
+      <div className="bg-white border border-zinc-200 rounded-xl p-4 animate-pulse">
+        <div className="h-8 w-32 bg-zinc-200 rounded mb-4" />
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} className="h-12 bg-zinc-100 rounded mb-2" />
         ))}
       </div>
     );
   }
 
   return (
-    <div className="bg-white border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden">
+    <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden">
       {/* Filters */}
       {showFilters && (
-        <div className="p-4 border-b border-zinc-100 dark:border-zinc-800">
+        <div className="p-4 border-b border-zinc-100">
           <div className="flex items-center gap-3 flex-wrap">
             {/* Filter Tabs */}
-            <div className="flex bg-zinc-50 dark:bg-zinc-800/50 rounded-lg overflow-hidden">
-              {filterTabs.map(tab => (
+            <div className="flex bg-zinc-50 rounded-lg overflow-hidden">
+              {filterTabs.map((tab) => (
                 <button
                   key={tab.value}
                   className={`px-3 py-1.5 text-[11.5px] transition-colors ${
                     (status || "all") === tab.value
                       ? "bg-[#024CEE] text-white font-medium"
-                      : "text-zinc-500 dark:text-zinc-400 hover:text-[#024CEE]"
+                      : "text-zinc-500 hover:text-[#024CEE]"
                   }`}
                 >
                   {tab.label}
@@ -97,12 +113,12 @@ export function OrdersTable({
                 placeholder="Search orders…"
                 value={search}
                 onChange={handleSearch}
-                className="pl-8 pr-3 py-1.5 w-48 text-sm border border-zinc-200 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 focus:outline-none focus:border-[#024CEE]"
+                className="pl-8 pr-3 py-1.5 w-48 text-sm border border-zinc-200 rounded-lg bg-white focus:outline-none focus:border-[#024CEE]"
               />
             </div>
 
             {/* Filter Button */}
-            <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-zinc-200 dark:border-zinc-700 rounded-lg text-zinc-500 hover:border-[#024CEE] hover:text-[#024CEE] transition-colors">
+            <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-zinc-200 rounded-lg text-zinc-500 hover:border-[#024CEE] hover:text-[#024CEE] transition-colors">
               <Filter className="w-4 h-4" />
               Filter
             </button>
@@ -110,7 +126,7 @@ export function OrdersTable({
             {/* Export Button */}
             <button
               onClick={handleExport}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-zinc-200 dark:border-zinc-700 rounded-lg text-zinc-500 hover:border-[#024CEE] hover:text-[#024CEE] transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-zinc-200 rounded-lg text-zinc-500 hover:border-[#024CEE] hover:text-[#024CEE] transition-colors"
             >
               <Download className="w-4 h-4" />
               Export
@@ -123,15 +139,31 @@ export function OrdersTable({
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-zinc-100 dark:border-zinc-800">
-              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500 dark:text-zinc-400">Service</th>
-              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500 dark:text-zinc-400">Client</th>
-              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500 dark:text-zinc-400">Order ID</th>
-              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500 dark:text-zinc-400">Date</th>
-              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500 dark:text-zinc-400">Due</th>
-              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500 dark:text-zinc-400">Amount</th>
-              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500 dark:text-zinc-400">Status</th>
-              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500 dark:text-zinc-400">Action</th>
+            <tr className="border-b border-zinc-100">
+              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500">
+                Service
+              </th>
+              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500">
+                Client
+              </th>
+              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500">
+                Order ID
+              </th>
+              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500">
+                Date
+              </th>
+              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500">
+                Due
+              </th>
+              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500">
+                Amount
+              </th>
+              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500">
+                Status
+              </th>
+              <th className="text-left px-4 py-3 text-[10.5px] font-semibold uppercase text-zinc-500">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -146,27 +178,41 @@ export function OrdersTable({
                 <tr
                   key={row.id || idx}
                   onClick={() => onRowClick?.(row)}
-                  className={`border-b border-zinc-50 dark:border-zinc-800/50 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 cursor-pointer transition-colors ${
+                  className={`border-b border-zinc-50 hover:bg-zinc-50 cursor-pointer transition-colors ${
                     row.isNew ? "bg-amber-50/50" : ""
                   }`}
                 >
                   <td className="px-4 py-3">
-                    <div className="text-[12.5px] font-medium text-zinc-900 dark:text-zinc-100">
+                    <div className="text-[12.5px] font-medium text-zinc-900">
                       {row.service}
                       {row.isNew && (
-                        <span className="ml-2 text-[9px] font-bold text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded">NEW</span>
+                        <span className="ml-2 text-[9px] font-bold text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded">
+                          NEW
+                        </span>
                       )}
                     </div>
-                    <div className="text-[11px] text-zinc-500 dark:text-zinc-400">{row.sub}</div>
+                    <div className="text-[11px] text-zinc-500">{row.sub}</div>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="text-[12.5px] font-medium text-zinc-900 dark:text-zinc-100">{row.client}</div>
-                    <div className="text-[11px] text-zinc-500 dark:text-zinc-400">{row.clientId}</div>
+                    <div className="text-[12.5px] font-medium text-zinc-900">
+                      {row.client}
+                    </div>
+                    <div className="text-[11px] text-zinc-500">
+                      {row.clientId}
+                    </div>
                   </td>
-                  <td className="px-4 py-3 text-[11px] text-zinc-500">{row.orderId}</td>
-                  <td className="px-4 py-3 text-[12px] text-zinc-900 dark:text-zinc-100">{row.date}</td>
-                  <td className="px-4 py-3 text-[12px] text-amber-600">{row.due}</td>
-                  <td className="px-4 py-3 text-[12px] font-semibold text-zinc-900 dark:text-zinc-100">{row.amount}</td>
+                  <td className="px-4 py-3 text-[11px] text-zinc-500">
+                    {row.orderId}
+                  </td>
+                  <td className="px-4 py-3 text-[12px] text-zinc-900">
+                    {row.date}
+                  </td>
+                  <td className="px-4 py-3 text-[12px] text-amber-600">
+                    {row.due}
+                  </td>
+                  <td className="px-4 py-3 text-[12px] font-semibold text-zinc-900">
+                    {row.amount}
+                  </td>
                   <td className="px-4 py-3">
                     <StatusBadge status={row.status} />
                   </td>

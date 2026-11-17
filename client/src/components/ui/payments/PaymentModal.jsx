@@ -43,7 +43,7 @@ const CheckoutForm = ({ clientSecret, onPaymentSuccess, amount }) => {
         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
           Card Details
         </label>
-        <div className="rounded-2xl border border-light-200 bg-white p-5 dark:border-white/5 dark:bg-dark-900 shadow-inner">
+        <div className="rounded-2xl border border-light-200 bg-white p-5 shadow-inner">
           <CardElement
             options={{
               style: {
@@ -93,14 +93,14 @@ const PaymentModal = ({ isOpen, onClose, clientSecret, amount }) => {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-light-950/60 backdrop-blur-md dark:bg-black/80 animate-in fade-in"
+        className="absolute inset-0 bg-light-950/60 backdrop-blur-md animate-in fade-in"
         onClick={handleClose}
       />
 
-      <div className="relative w-full max-w-md bg-white dark:bg-dark-950 rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-15px_rgba(0,0,0,0.3)] ring-1 ring-black/5 animate-in zoom-in-95">
+      <div className="relative w-full max-w-md bg-white rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-15px_rgba(0,0,0,0.3)] ring-1 ring-black/5 animate-in zoom-in-95">
         <button
           onClick={handleClose}
-          className="absolute right-8 top-8 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors z-10"
+          className="absolute right-8 top-8 text-slate-400 hover:text-slate-900 transition-colors z-10"
         >
           <X size={20} />
         </button>
@@ -111,14 +111,14 @@ const PaymentModal = ({ isOpen, onClose, clientSecret, amount }) => {
               <div className="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
                 <ShieldCheck size={32} />
               </div>
-              <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+              <h3 className="text-3xl font-black text-slate-900 tracking-tight">
                 Checkout
               </h3>
-              <p className="text-slate-500 dark:text-slate-400 mt-2 mb-8 italic">
+              <p className="text-slate-500 mt-2 mb-8 italic">
                 Complete your transaction securely.
               </p>
             </div>
-            <div className="bg-light-50/50 dark:bg-white/5 p-10 pt-8">
+            <div className="bg-light-50/50 p-10 pt-8">
               <Elements stripe={stripePromise}>
                 <CheckoutForm
                   clientSecret={clientSecret}

@@ -4,10 +4,7 @@ import QuickQuestions from "../components/QuickQuestions";
 import { useSignup } from "../hooks/useSignup";
 
 const SignupPage = () => {
-  const {
-    sidebarOpen,
-    setSidebarOpen,
-  } = useSignup(1);
+  const { sidebarOpen, setSidebarOpen } = useSignup(1);
 
   return (
     <SignupLayout

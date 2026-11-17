@@ -10,18 +10,17 @@ export const NotificationProvider = ({ children }) => {
   const { setProfile } = useProfile();
   const [latestNotification, setLatestNotification] = useState(null);
   const unreadCount = profile?.unReadNotifications || 0;
-  
-  
+
   useEffect(() => {
     if (!socket) return;
 
     const handleNotification = (data) => {
       setLatestNotification(data);
-     
-        setProfile(prev => ({
+
+      setProfile((prev) => ({
         ...prev,
-        unReadNotifications: (prev?.unReadNotifications || 0) + 1
-        }));
+        unReadNotifications: (prev?.unReadNotifications || 0) + 1,
+      }));
     };
 
     socket.on("notification", handleNotification);
@@ -46,4 +45,3 @@ export const NotificationProvider = ({ children }) => {
 export const useNotifications = () => {
   return useContext(NotificationContext);
 };
-
