@@ -35,6 +35,15 @@ export function sanitizeOrders(orders) {
         currency: order.currency,
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
+        timeline: order.timeline
+          ? {
+              id: hashIdUtil.hashIdEncode(order.timeline.id),
+              label: order.timeline.label,
+              startDate: order.timeline.startDate,
+              deadlineDate: order.timeline.deadlineDate,
+              endDate: order.timeline.endDate,
+            }
+          : null,
         dispute: order.Dispute
           ? {
               id: hashIdUtil.hashIdEncode(order.Dispute.id),

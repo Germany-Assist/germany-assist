@@ -37,6 +37,12 @@ export async function getOrdersForSP(SPId, filters = {}) {
       attributes: ["title"],
     },
     {
+      model: db.Timeline,
+      as: "timeline",
+      attributes: ["id", "label", "startDate", "deadlineDate", "endDate"],
+      required: false,
+    },
+    {
       model: db.Payout,
       required: false,
     },
@@ -141,6 +147,12 @@ export async function getOrdersForClient(userId, filters = {}) {
     {
       model: db.Service,
       attributes: ["title"],
+    },
+    {
+      model: db.Timeline,
+      as: "timeline",
+      attributes: ["id", "label", "startDate", "deadlineDate", "endDate"],
+      required: false,
     },
   ];
   if (filters.onlyDisputed) {
