@@ -24,3 +24,8 @@ export async function fetchCommentsForPost(postId) {
   const res = await api.get(`/post/comment/getPostComments/${postId}`);
   return res.data;
 }
+
+export async function fetchUserChats() {
+  const res = await api.get(`/user/chats`);
+  return res.data;
+}
