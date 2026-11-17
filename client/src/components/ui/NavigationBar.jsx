@@ -1,113 +1,175 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useProfile } from "../../contexts/ProfileContext";
 import ProfileAvatar from "./ProfileAvatar";
 import logo from "../../assets/brand/logo.png";
-import ThemeSwitch from "./ThemeSwitch";
 import NotificationBell from "./NotificationBell";
+
+const NAV_LINKS = [
+  { label: "Home", path: "/" },
+  { label: "Services", path: "/services" },
+  { label: "Jobs", path: "/jobs", badge: "Soon" },
+  { label: "About", path: "/about" },
+];
+
+const LINK_BASE =
+  "relative px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700";
 
 const NavigationBar = () => {
   const { profile } = useProfile();
   const location = useLocation();
-  const isActivePath = (path) => {
-    if (path === "/") return location.pathname === "/";
-    return location.pathname.startsWith(path);
-  };
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const getLinkStyles = (path) => {
-    const baseStyles =
-      "relative font-medium transition-all duration-300 px-4 py-2 rounded-full text-sm tracking-wide";
-    if (isActivePath(path)) {
-      return `${baseStyles} text-accent bg-accent/10 dark:bg-white/5 border border-accent/20 dark:border-white/10 shadow-[0_0_15px_rgba(34,211,238,0.1)]`;
-    }
-    return `${baseStyles} text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5`;
-  };
+  const links = NAV_LINKS.filter(
+    (link) => !profile || link.path !== "/about",
+  );
 
-  //testing
+  const isActivePath = (path) =>
+    path === "/"
+      ? location.pathname === "/"
+      : location.pathname.startsWith(path);
+
+  const getLinkStyles = (path) =>
+    isActivePath(path)
+      ? `${LINK_BASE} text-sky-800 bg-sky-100`
+      : `${LINK_BASE} text-slate-600 hover:text-slate-900 hover:bg-slate-100`;
+
+  const closeMenu = () => setMenuOpen(false);
+
   return (
-    <header className="pt-7 z-50 w-full px-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="bg-light-800/80 dark:bg-dark-800/80 backdrop-blur-md border border-light-700 dark:border-dark-700 shadow-2xl rounded-2xl px-6 py-3 transition-all duration-500">
-          <div className="flex justify-between items-center">
-            {/* Logo */}
-            <Link to="/" className="flex items-center">
-              <img
-                src={logo}
-                alt="Logo"
-                className="max-w-[120px] dark:brightness-110 transition-all"
-              />
-            </Link>
+    <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-slate-200">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <Link
+            to="/"
+            className="flex items-center shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700 rounded-sm"
+            aria-label="Germany Assist home"
+          >
+            <img src={logo} alt="Germany Assist" className="max-w-[110px]" />
+          </Link>
 
-            {/* Desktop Nav - Centered */}
-            <nav className="hidden lg:flex items-center space-x-1 p-1 bg-light-900/50 dark:bg-black/20 rounded-full border border-light-700 dark:border-white/5">
-              <Link to="/" className={getLinkStyles("/")}>
-                Home
+          {/* Desktop nav */}
+          <nav
+            className="hidden lg:flex items-center gap-1"
+            aria-label="Main navigation"
+          >
+            {links.map((link) => (
+              <Link key={link.path} to={link.path} className={getLinkStyles(link.path)}>
+                {link.label}
+                {link.badge && (
+                  <span className="ml-2 bg-sky-100 text-sky-700 text-[10px] px-2 py-0.5 rounded-full uppercase font-bold tracking-wide">
+                    {link.badge}
+                  </span>
+                )}
               </Link>
-              <Link to="/services" className={getLinkStyles("/services")}>
-                Services
-              </Link>
-              <Link to="/jobs" className={getLinkStyles("/jobs")}>
-                Jobs
-                <span className="ml-2 bg-accent/10 text-accent text-[10px] px-2 py-0.5 rounded-full border border-accent/20 uppercase font-bold">
-                  Soon
-                </span>
-              </Link>
-              <Link to="/about" className={getLinkStyles("/about")}>
-                About
-              </Link>
-            </nav>
+            ))}
+          </nav>
 
-            {/* Right Side Actions */}
-            <div className="flex items-center gap-3">
-              {/* Elegant Integrated Theme Toggle */}
-              <ThemeSwitch />
-              <div className="h-6 w-[1px] bg-light-700 dark:bg-white/10 mx-1" />
-
-              {/* Auth Section */}
-              {profile ? (
-                <div className="flex items-center gap-4">
-                  <NotificationBell />
-                  <ProfileAvatar
-                    navDir={"/dashboard"}
-                    className={"relative w-14 h-14 max-w-14"}
-                  />
-                </div>
-              ) : (
-                <>
-                  <Link to="/signup">
-                    <button className="bg-accent text-black text-sm font-bold px-6 py-2 rounded-full transition-all hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] active:scale-95">
-                      sign up
-                    </button>
-                  </Link>
-                  <Link to="/signin">
-                    <button className="bg-accent text-black text-sm font-bold px-6 py-2 rounded-full transition-all hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] active:scale-95">
-                      Log In
-                    </button>
-                  </Link>
-                </>
-              )}
-
-              {/* Mobile Menu */}
-              <button className="lg:hidden p-2 text-slate-500 dark:text-gray-400 bg-light-900 dark:bg-white/5 rounded-xl border border-light-700 dark:border-white/10">
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+          {/* Right side actions */}
+          <div className="flex items-center gap-3">
+            {profile ? (
+              <div className="flex items-center gap-4">
+                <NotificationBell />
+                <ProfileAvatar
+                  navDir={"/dashboard"}
+                  className={"relative w-14 h-14 max-w-14"}
+                />
+              </div>
+            ) : (
+              <div className="hidden lg:flex items-center gap-2">
+                <Link
+                  to="/signin"
+                  className="px-5 py-2 text-sm font-semibold text-slate-700 hover:text-sky-700 hover:bg-sky-50 rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
-            </div>
+                  Log in
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-5 py-2 text-sm font-semibold text-white bg-sky-700 rounded-full hover:bg-sky-800 active:scale-95 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700"
+                >
+                  Sign up
+                </Link>
+              </div>
+            )}
+
+            {/* Mobile menu toggle */}
+            <button
+              type="button"
+              className="lg:hidden p-2.5 text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-700"
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d={menuOpen ? "M6 6l12 12M6 18L18 6" : "M4 6h16M4 12h16M4 18h16"}
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Mobile menu panel */}
+      {menuOpen && (
+        <div
+          id="mobile-menu"
+          className="lg:hidden border-t border-slate-200 bg-white"
+        >
+          <nav className="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-1" aria-label="Mobile navigation">
+            {links.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                onClick={closeMenu}
+                className={`px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                  isActivePath(link.path)
+                    ? "text-sky-800 bg-sky-100"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                }`}
+              >
+                {link.label}
+                {link.badge && (
+                  <span className="ml-2 bg-sky-100 text-sky-700 text-[10px] px-2 py-0.5 rounded-full uppercase font-bold tracking-wide">
+                    {link.badge}
+                  </span>
+                )}
+              </Link>
+            ))}
+            {!profile && (
+              <div className="flex flex-col gap-2 pt-3 mt-2 border-t border-slate-200">
+                <Link
+                  to="/signin"
+                  onClick={closeMenu}
+                  className="px-4 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
+                >
+                  Log in
+                </Link>
+                <Link
+                  to="/signup"
+                  onClick={closeMenu}
+                  className="px-4 py-3 text-center text-sm font-semibold text-white bg-sky-700 rounded-xl hover:bg-sky-800 transition-colors"
+                >
+                  Sign up
+                </Link>
+              </div>
+            )}
+          </nav>
+        </div>
+      )}
     </header>
   );
 };
-// testing if the bar is ok 123
+
 export default NavigationBar;
