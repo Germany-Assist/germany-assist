@@ -4,6 +4,8 @@ import User from "../models/user.js";
 import ServiceProvider from "../models/service_provider.js";
 import Service from "../models/service.js";
 import Category from "../models/category.js";
+import Subcategory from "../models/subcategory.js";
+import Variant from "../models/variants.js";
 import Timeline from "../models/timeline.js";
 import Order from "../models/order.js";
 import Review from "../models/review.js";
@@ -270,6 +272,7 @@ export default async function seedTestData() {
       const name = `${randomElement(firstNames)} ${randomElement(lastNames)} Services`;
       serviceProviders.push({
         name,
+        type: randomElement(["freelancer", "company"]),
         about: `We are a professional service provider specializing in helping people navigate life in Germany. Our team has years of experience and is dedicated to providing excellent service.`,
         description: `Comprehensive services for expats and newcomers to Germany. We offer personalized support and expert guidance to help you succeed.`,
         email: randomEmail(name),
@@ -340,10 +343,11 @@ export default async function seedTestData() {
         relatedType = "ServiceProvider";
       } else if (adjustedIndex < createdServiceProviders.length + createdEmployers.length) {
         // Next users get employer roles
-        const employerIndex = adjustedIndex - createdServiceProviders.length;
+        // (Employer PKs are UUIDs while UserRole.relatedId is an integer,
+        //  so employer roles are kept unlinked — routing works off the role)
         role = randomElement(employerRoles);
-        relatedId = createdEmployers[employerIndex].id;
-        relatedType = "Employer";
+        relatedId = null;
+        relatedType = null;
       } else if (adjustedIndex < createdServiceProviders.length + createdEmployers.length + 5) {
         // Some users get admin roles
         role = randomElement(["admin", "super_admin"]);
@@ -368,72 +372,91 @@ export default async function seedTestData() {
 
     // 5. Seed Services (80-100 records) - IMPORTANT: Services are key
     console.log("🛠️ Seeding Services...");
+    const subcategories = await Subcategory.findAll();
+    const spOwnerMap = new Map();
+    for (const role of userRoles) {
+      if (role.relatedType === "ServiceProvider" && !spOwnerMap.has(role.relatedId)) {
+        spOwnerMap.set(role.relatedId, role.userId);
+      }
+    }
+
     const serviceCount = randomInt(80, 100);
     const services = [];
-    const serviceUserMap = new Map(); // Track which user owns which service
 
     for (let i = 0; i < serviceCount; i++) {
       const serviceProvider = randomElement(createdServiceProviders);
-      // Find a user with service provider role for this provider
-      const providerUser = createdUsers.find((u, idx) => 
-        userRoles[idx]?.relatedId === serviceProvider.id && 
-        userRoles[idx]?.relatedType === "ServiceProvider"
-      ) || randomElement(createdUsers);
+      const ownerUserId =
+        spOwnerMap.get(serviceProvider.id) ?? randomElement(createdUsers).id;
+      const subcategory = randomElement(subcategories);
 
       const title = randomElement(serviceTitles);
       const description = randomElement(serviceDescriptions);
-      const type = randomElement(["oneTime", "subscription"]);
-      const price = parseFloat(randomFloat(10, 500).toFixed(2));
+      const type = randomElement(["oneTime", "timeline"]);
 
       services.push({
         title,
         description,
-        userId: providerUser.id,
+        userId: ownerUserId,
         serviceProviderId: serviceProvider.id,
-        categoryId: randomElement(categoryIds),
+        subcategoryId: subcategory.id,
         type,
-        price,
         views: randomInt(0, 500),
         rating: parseFloat(randomFloat(3.0, 5.0).toFixed(1)),
         totalReviews: randomInt(0, 30),
-        approved: Math.random() > 0.2, // 80% approved
-        rejected: false,
-        published: Math.random() > 0.3, // 70% published
-        quantity: type === "oneTime" ? randomInt(1, 10) : null,
+        status: Math.random() > 0.2 ? "approved" : "pending",
+        deliveryMode: randomElement(["online", "hybrid", "inPerson"]),
       });
-
-      serviceUserMap.set(i, providerUser.id);
     }
     const createdServices = await Service.bulkCreate(services, { returning: true });
     console.log(`✅ Created ${createdServices.length} services`);
 
-    // 6. Seed Timelines (one per service)
-    console.log("📅 Seeding Timelines...");
-    const timelines = createdServices.map((service, index) => ({
-      serviceId: service.id,
-      isArchived: false,
-      label: `Timeline ${index + 1}`,
-    }));
+    // 6. Seed Timelines (one per service) + variants (pricing lives there)
+    console.log("📅 Seeding Timelines and Variants...");
+    const timelines = createdServices.map((service, index) => {
+      const price = parseFloat(randomFloat(10, 500).toFixed(2));
+      const startDate = randomDate(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), new Date());
+      const deadlineDate = randomDate(new Date(), new Date(Date.now() + 60 * 24 * 60 * 60 * 1000));
+      const endDate = randomDate(deadlineDate, new Date(deadlineDate.getTime() + 30 * 24 * 60 * 60 * 1000));
+      return {
+        serviceId: service.id,
+        isArchived: false,
+        label: `Timeline ${index + 1}`,
+        price,
+        startDate,
+        deadlineDate,
+        endDate,
+      };
+    });
     const createdTimelines = await Timeline.bulkCreate(timelines, { returning: true });
-    console.log(`✅ Created ${createdTimelines.length} timelines`);
+    const variants = createdTimelines.map((timeline) => ({
+      serviceId: timeline.serviceId,
+      isArchived: false,
+      price: timeline.price,
+      deliveryTime: randomInt(1, 14),
+      label: "Basic",
+    }));
+    await Variant.bulkCreate(variants);
+    console.log(`✅ Created ${createdTimelines.length} timelines and ${variants.length} variants`);
 
     // 7. Seed Orders (30-60 records)
     console.log("🛒 Seeding Orders...");
     const orderCount = randomInt(30, 60);
     const orders = [];
-    const orderStatuses = ["paid", "fulfilled", "completed", "refunded"];
+    const orderStatuses = ["active", "pending_completion", "completed", "refunded"];
 
     for (let i = 0; i < orderCount; i++) {
       const service = randomElement(createdServices);
       const timeline = createdTimelines.find(t => t.serviceId === service.id);
       const user = randomElement(createdUsers);
       const status = randomElement(orderStatuses);
-      const amount = service.price;
+      const amount = timeline.price;
 
       orders.push({
         userId: user.id,
         serviceId: service.id,
-        timelineId: timeline.id,
+        serviceProviderId: service.serviceProviderId,
+        relatedId: timeline.id,
+        relatedType: "timeline",
         amount,
         status,
         currency: "usd",
@@ -637,34 +660,21 @@ export default async function seedTestData() {
     console.log(`✅ Created ${notifications.length} notifications`);
 
     // 15. Seed Events (20-40 records)
+    // Note: Event.actor_id is a single UUID column, so only employer actors
+    // (Employer PKs are UUIDs) can be represented. Admin/service_provider
+    // actors cannot be stored and are skipped.
     console.log("📊 Seeding Events...");
     const eventCount = randomInt(20, 40);
     const events = [];
     const eventTypes = ["service_created", "service_approved", "order_placed", "review_submitted", "user_registered"];
-    const actorTypes = ["admin", "service_provider", "employer"];
 
     for (let i = 0; i < eventCount; i++) {
-      const actorType = randomElement(actorTypes);
-      let userActorId, providerActorId;
-
-      if (actorType === "service_provider") {
-        const provider = randomElement(createdServiceProviders);
-        providerActorId = provider.id;
-        userActorId = randomElement(createdUsers).id;
-      } else if (actorType === "employer") {
-        const employer = randomElement(createdEmployers);
-        providerActorId = employer.id;
-        userActorId = randomElement(createdUsers).id;
-      } else {
-        userActorId = randomElement(createdUsers).id;
-        providerActorId = null;
-      }
+      const employer = randomElement(createdEmployers);
 
       events.push({
         eventType: randomElement(eventTypes),
-        userActorId,
-        providerActorId,
-        actorType,
+        providerActorId: employer.id,
+        actorType: "employer",
         metadata: { test: true, timestamp: new Date().toISOString() },
       });
     }
