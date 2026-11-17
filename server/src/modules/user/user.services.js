@@ -11,6 +11,8 @@ import AssetRepository from "../assets/assets.repository.js";
 import authServices from "../auth/auth.service.js";
 import permissionServices from "../permission/permission.services.js";
 import verificationRequestRepository from "../verificationRequests/verificationRequest.repository.js";
+import * as chatServices from "../../services/chat.services.js";
+import db from "../../database/index.js";
 import userDomain from "./user.domain.js";
 import userMapper from "./user.mapper.js";
 import userRepository from "./user.repository.js";
@@ -289,6 +291,60 @@ export const updateImage = async (auth, file) => {
   // console.log(file);
 };
 
+export async function getUserChats(userId) {
+  const conversations = await chatServices.getConversations(userId);
+  if (!conversations) return [];
+
+  const otherIds = [
+    ...new Set(
+      conversations.flatMap((chat) =>
+        Object.keys(chat.participants || {})
+          .map(Number)
+          .filter((id) => id && id !== Number(userId)),
+      ),
+    ),
+  ];
+  const users = otherIds.length
+    ? await db.User.findAll({
+        where: { id: otherIds },
+        attributes: ["id", "firstName", "lastName"],
+        raw: true,
+      })
+    : [];
+  const nameById = Object.fromEntries(
+    users.map((u) => [
+      u.id,
+      `${u.firstName || ""} ${u.lastName || ""}`.trim() || "Unknown",
+    ]),
+  );
+
+  return conversations.map((chat) => {
+    const messages = Array.isArray(chat.conversation) ? chat.conversation : [];
+    const last = messages[messages.length - 1] || null;
+    const lastFrom = last ? Number(last.from ?? last.senderId) : null;
+    const lastSentAt = last
+      ? last.sentAt ||
+        (last.timestamp ? new Date(Number(last.timestamp)).toISOString() : null)
+      : null;
+    return {
+      id: chat.id,
+      participants: Object.keys(chat.participants || {})
+        .map(Number)
+        .filter((id) => id && id !== Number(userId))
+        .map((id) => ({ id: hashIdUtil.hashIdEncode(id), name: nameById[id] || "Unknown" })),
+      lastMessage: last
+        ? {
+            body: String(last.body || ""),
+            fromMe: lastFrom === Number(userId),
+            sentAt: lastSentAt,
+          }
+        : null,
+      messageCount: messages.length,
+      updatedAt: chat.updatedAt,
+    };
+  });
+}
+
 const userServices = {
   updateImage,
   registerClient,
@@ -296,5 +352,6 @@ const userServices = {
   registerAdmin,
   getAllUsers,
   getReps,
+  getUserChats,
 };
 export default userServices;

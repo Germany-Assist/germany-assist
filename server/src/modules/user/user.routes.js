@@ -35,6 +35,7 @@ userRouter.post(
 );
 userRouter.get("/root/rep", jwt.authenticateJwt, userControllers.getReps);
 userRouter.get("/admin/all", jwt.authenticateJwt, userControllers.getAllUsers);
+userRouter.get("/chats", jwt.authenticateJwt, userControllers.getUserChats);
 // update user profile image
 userRouter.post(
   "/profile/image",

@@ -59,10 +59,19 @@ export async function updateImage(req, res, next) {
     next(error);
   }
 }
+export async function getUserChats(req, res, next) {
+  try {
+    const chats = await userServices.getUserChats(req.auth.id);
+    res.send({ chats });
+  } catch (error) {
+    next(error);
+  }
+}
 const userController = {
   getReps,
   getAllUsers,
   updateImage,
+  getUserChats,
   createAdminController,
   createRepController,
   createClientController,
