@@ -59,7 +59,7 @@ services:
       localstack:
         condition: service_started
     ports:
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:3002:3000"
     networks:
       - app-network
     restart: unless-stopped

@@ -20,7 +20,7 @@ jobs:
           set -e
           docker compose -f docker-compose.staging.yml up --build -d --wait app
           docker compose -f docker-compose.staging.yml up -d mailhog s3-init
-          curl -fsS http://127.0.0.1:3000/health
+          curl -fsS http://127.0.0.1:3002/health
           docker compose -f docker-compose.staging.yml down -v
 
   deploy-droplet:
