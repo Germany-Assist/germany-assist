@@ -81,8 +81,6 @@ if (!isProd) {
 }
 
 // if (isProd) {
-app.get("/health", (_, res) => res.sendStatus(200));
-
 const clientPath = path.join(process.cwd(), "public");
 
 app.use(express.static(clientPath));
@@ -93,6 +91,8 @@ app.get(/.*/, (req, res) => {
   res.sendFile(path.join(clientPath, "index.html"));
 });
 // }
+
+app.get("/health", (_, res) => res.sendStatus(200));
 
 app.use((req, res, next) => {
   next(new AppError(404, "bad route", true));

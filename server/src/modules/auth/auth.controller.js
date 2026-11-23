@@ -92,7 +92,7 @@ export async function resendVerificationEmail(req, res, next) {
 }
 export async function login(req, res, next) {
   try {
-    const result = await authServices.loginUser(req.body);
+    const results = await authServices.loginUser(req.body);
     const rememberMe = req.body.rememberMe;
     const { refreshToken, accessToken, user, status } = result;
 
