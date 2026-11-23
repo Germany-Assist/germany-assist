@@ -1,6 +1,7 @@
 import { sequelize } from "../../configs/database.js";
 import { NODE_ENV } from "../../configs/serverConfig.js";
 import seedTestData from "./testData.seed.js";
+import seedDevAccounts from "./devAccounts.seed.js";
 
 async function runSeed() {
   try {
@@ -12,6 +13,7 @@ async function runSeed() {
     console.log(`📝 Environment: ${NODE_ENV || "dev"}\n`);
 
     await seedTestData();
+    await seedDevAccounts();
 
     console.log("\n✅ Test data seeding completed successfully!");
     await sequelize.close();
