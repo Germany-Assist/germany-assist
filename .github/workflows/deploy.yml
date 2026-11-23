@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - release/current
 
 jobs:
   deploy:
@@ -35,7 +36,7 @@ jobs:
 
             echo "Pulling latest code..."
             git fetch origin
-            git reset --hard origin/main
+            git reset --hard origin/${{ github.ref_name }}
 
             echo "Installing root dependencies..."
             npm install
