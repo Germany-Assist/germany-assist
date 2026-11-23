@@ -24,11 +24,9 @@ jobs:
           docker compose -f docker-compose.staging.yml down -v
 
   deploy-droplet:
-    # Runs automatically once the repository variable SERVER_DOMAIN is configured
     needs: staging
-    if: ${{ vars.SERVER_DOMAIN != '' }}
     runs-on: ubuntu-latest
-    environment: staging
+    environment: production
 
     steps:
       - name: Deploy via SSH
