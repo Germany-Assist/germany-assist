@@ -274,8 +274,8 @@ describe("E2E: create and publish a service", () => {
       { where: { id: serviceId } },
     );
 
-    const count = await backfillServiceImages();
-    assert.ok(count >= 1);
+    const result = await backfillServiceImages();
+    assert.ok(result.created >= 1);
 
     const list = await request(app).get("/api/service");
     const service = list.body.data.find((item) => item.title === "E2E Relocation Package");

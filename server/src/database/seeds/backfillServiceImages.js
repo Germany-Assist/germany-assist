@@ -6,19 +6,19 @@ import db from "../index.js";
 import { getServiceCoverImage } from "../../configs/serviceImages.js";
 
 /**
- * Gives every service without a cover asset a category-based external image.
+ * Gives demo services without a cover asset a title/category-based image.
  *
- * This is intended for demo/seed data. Real provider uploads are never touched:
- * only services whose `assets` association is empty are backfilled.
+ * Real provider uploads are never touched. Pass `refreshExternal: true` to
+ * also re-point previously seeded external images after the mapping changes.
  */
-export async function backfillServiceImages() {
+export async function backfillServiceImages({ refreshExternal = false } = {}) {
   const services = await db.Service.findAll({
-    attributes: ["id", "userId"],
+    attributes: ["id", "title", "userId"],
     include: [
       {
         model: db.Asset,
         as: "assets",
-        attributes: ["id", "mediaType"],
+        attributes: ["id", "mediaType", "isLocal"],
         required: false,
       },
       {
@@ -30,46 +30,67 @@ export async function backfillServiceImages() {
     ],
   });
 
-  const missing = services.filter(
-    (service) =>
-      !service.assets?.some((asset) => asset.mediaType === "image"),
-  );
-  if (missing.length === 0) return 0;
-
   const transaction = await sequelize.transaction();
+  let created = 0;
+  let refreshed = 0;
+
   try {
-    for (const service of missing) {
+    for (const service of services) {
       const imageUrl = getServiceCoverImage(
         service.Subcategory?.Category?.title,
         service.id,
+        service.title,
       );
-      const asset = await db.Asset.create(
-        {
-          name: uuidv4(),
-          mediaType: "image",
-          userId: service.userId,
-          isLocal: false,
-          key: "serviceProfileImage",
-          confirmed: true,
-          size: 0,
-          url: imageUrl,
-          thumb: false,
-          label: "Service cover",
-        },
-        { transaction },
+      const imageAssets = (service.assets || []).filter(
+        (asset) => asset.mediaType === "image",
       );
-      await db.ServiceAsset.create(
-        { serviceId: service.id, assetId: asset.id },
-        { transaction },
-      );
+
+      if (imageAssets.length === 0) {
+        const asset = await db.Asset.create(
+          {
+            name: uuidv4(),
+            mediaType: "image",
+            userId: service.userId,
+            isLocal: false,
+            key: "serviceProfileImage",
+            confirmed: true,
+            size: 0,
+            url: imageUrl,
+            thumb: false,
+            label: "Service cover",
+          },
+          { transaction },
+        );
+        await db.ServiceAsset.create(
+          { serviceId: service.id, assetId: asset.id },
+          { transaction },
+        );
+        created += 1;
+      } else if (refreshExternal) {
+        const externalAssets = imageAssets.filter((asset) => !asset.isLocal);
+        if (externalAssets.length > 0) {
+          await db.Asset.update(
+            { url: imageUrl },
+            {
+              where: {
+                id: externalAssets.map((asset) => asset.id),
+                isLocal: false,
+              },
+              transaction,
+            },
+          );
+          refreshed += externalAssets.length;
+        }
+      }
     }
+
     await transaction.commit();
   } catch (error) {
     await transaction.rollback();
     throw error;
   }
 
-  return missing.length;
+  return { created, refreshed };
 }
 
 const isMain =
@@ -78,11 +99,11 @@ const isMain =
 
 if (isMain) {
   try {
-    const count = await backfillServiceImages();
+    const { created, refreshed } = await backfillServiceImages({
+      refreshExternal: process.argv.includes("--refresh"),
+    });
     console.log(
-      count > 0
-        ? `🖼️  Added cover images to ${count} services`
-        : "🖼️  Every service already has a cover image",
+      `🖼️  Service covers: ${created} created, ${refreshed} refreshed`,
     );
     await sequelize.close();
     process.exit(0);

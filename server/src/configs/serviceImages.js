@@ -26,8 +26,49 @@ export const SERVICE_CATEGORY_IMAGES = {
 const FALLBACK_IMAGE = (serviceId) =>
   `https://picsum.photos/seed/germany-assist-service-${serviceId}/1200/800`;
 
-export function getServiceCoverImage(categoryTitle, serviceId) {
-  return SERVICE_CATEGORY_IMAGES[categoryTitle] || FALLBACK_IMAGE(serviceId);
+// Title keywords win over the category, because some demo services are seeded
+// with a generic/career subcategory even when they are clearly something else.
+const TITLE_IMAGE_RULES = [
+  {
+    match: /visa|immigration|residence permit|work permit|blue card|passport/i,
+    category: "visa-immigration",
+  },
+  {
+    match: /german|language|deutsch|testdaf|goethe|tutoring|course/i,
+    category: "german-language",
+  },
+  {
+    match: /university|student|school|study|admission|blocked account/i,
+    category: "university-student-services",
+  },
+  {
+    match: /translation|document|driver'?s license|contract|legal|tax|notary/i,
+    category: "translation-services",
+  },
+  {
+    match: /certificate|recognition|anerkennung|approbation|credential/i,
+    category: "certificate-recognition",
+  },
+  {
+    match: /apartment|housing|rent|anmeldung|registration|bank|insurance|utilit|relocation|moving|city/i,
+    category: "relocation-services",
+  },
+  {
+    match: /recruit|employer|hiring|networking|integration|workshop/i,
+    category: "recruitment-services",
+  },
+  {
+    match: /career|coach|cv|resume|interview|job search|linkedin|application/i,
+    category: "career-coaching",
+  },
+];
+
+export function getServiceCoverImage(categoryTitle, serviceId, serviceTitle = "") {
+  const byTitle = TITLE_IMAGE_RULES.find((rule) =>
+    rule.match.test(serviceTitle),
+  );
+  const key = byTitle?.category || categoryTitle;
+  return SERVICE_CATEGORY_IMAGES[key] || FALLBACK_IMAGE(serviceId);
 }
 
 export default getServiceCoverImage;
