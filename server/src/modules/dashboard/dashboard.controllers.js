@@ -23,8 +23,8 @@ export async function adminStatisticalFinance(req, res, next) {
       req.auth,
       ["admin", "super_admin"],
       true,
-      "view",
       "analytics",
+      "view",
     );
     const results = await dashboardServices.adminStatisticalFinance();
     res.send(results);

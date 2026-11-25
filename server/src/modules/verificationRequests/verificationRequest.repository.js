@@ -9,14 +9,10 @@ async function getAllProvider(serviceProviderId, filters = {}) {
     where: { ...filters, serviceProviderId },
     include: [
       {
-        model: db.VerificationRequestAsset,
-        as: "verificationRequestAssets",
-        include: [
-          {
-            model: db.Asset,
-            attributes: ["mediaType", "url"],
-          },
-        ],
+        model: db.Asset,
+        as: "assets",
+        through: { attributes: [] },
+        attributes: ["mediaType", "url", "label"],
       },
     ],
     order: [["updatedAt", "DESC"]],

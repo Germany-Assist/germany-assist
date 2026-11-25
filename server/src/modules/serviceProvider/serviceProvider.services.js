@@ -400,20 +400,102 @@ export const registerCompany = async (body, files) => {
   }
 };
 
+export const createServiceProvider = async (body = {}) => {
+  const t = await sequelize.transaction();
+  try {
+    const name = body.name?.trim();
+    const email = body.email?.trim()?.toLowerCase();
+    const phoneNumber = body.phoneNumber || body.phone_number || body.phone;
+    if (!name || !email)
+      throw new AppError(
+        422,
+        "name and email are required",
+        true,
+        "name and email are required",
+      );
+
+    const existingUser = await userRepository.getUserByEmail(email);
+    if (existingUser)
+      throw new AppError(
+        409,
+        "User already exists",
+        false,
+        "Email already in use",
+      );
+
+    const profile = await serviceProviderRepository.createServiceProvider(
+      {
+        name,
+        about: body.about || "",
+        description: body.description || "",
+        phoneNumber,
+        image: body.image,
+        email,
+        type: body.type || PROVIDER_TYPES.company,
+      },
+      t,
+    );
+
+    // Admins can create a provider together with its root dashboard account.
+    if (body.password) {
+      const domain = userDomain.setRoleAndType("serviceProvider");
+      // The admin form only collects a company name; derive model-safe names.
+      const safeName = name
+        .replace(/[^a-zA-Z\s'-]/g, "")
+        .trim()
+        .replace(/\s+/g, " ");
+      const [derivedFirst = "", ...derivedRest] = safeName.split(" ");
+      const firstName =
+        body.firstName || (derivedFirst.slice(0, 50) || "Provider");
+      const lastName =
+        body.lastName || (derivedRest.join(" ").slice(0, 50) || "Root");
+      const user = await userRepository.createUser(
+        {
+          firstName,
+          lastName,
+          email,
+          password: bcryptUtil.hashPassword(body.password),
+          isVerified: true,
+          UserRole: {
+            role: domain.rootRole,
+            relatedType: domain.rootRelatedType,
+            relatedId: profile.id,
+          },
+          UserProfile: {
+            nationality: body.nationality || null,
+            countryOfResidence: body.countryOfResidence || null,
+            phoneNumber,
+          },
+        },
+        t,
+      );
+      await permissionServices.initPermissions(
+        user.id,
+        roleTemplates[domain.rootRole],
+        t,
+      );
+    }
+
+    await t.commit();
+    return profile.toJSON();
+  } catch (error) {
+    await t.rollback();
+    throw error;
+  }
+};
+
 export const getAllServiceProvider = async () => {
   return await db.ServiceProvider.findAll({
     attributes: [
       "id",
       "name",
       "about",
-      "description",
       "phoneNumber",
       "image",
       "isVerified",
       "totalReviews",
       "rating",
       "email",
-      "views",
     ],
   });
 };
@@ -424,23 +506,21 @@ export const getServiceProviderById = async (id) => {
       "id",
       "name",
       "about",
-      "description",
       "phoneNumber",
       "image",
       "isVerified",
       "totalReviews",
       "rating",
       "email",
-      "views",
     ],
     include: [
       {
         model: db.Service,
         attributes: ["id", "title", "rating"],
         required: false,
-        where: { published: true, approved: true, rejected: false },
+        where: { status: "approved", isPaused: false },
         include: [
-          { model: db.Asset, attributes: ["url"], as: "profileImages" },
+          { model: db.Asset, attributes: ["url"], as: "assets" },
         ],
       },
     ],
@@ -452,8 +532,6 @@ export const getServiceProviderById = async (id) => {
       true,
       "Service Provider not found",
     );
-  profile.increment("views");
-  await profile.save();
   return profile.toJSON();
 };
 
@@ -520,6 +598,7 @@ export const updateServiceProviderRating = async (id, newRating) => {
 };
 const serviceProviderService = {
   getAllServiceProvider,
+  createServiceProvider,
   getServiceProviderById,
   updateServiceProvider,
   deleteServiceProvider,

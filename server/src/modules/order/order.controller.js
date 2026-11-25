@@ -4,6 +4,7 @@ import authUtil from "../../utils/authorize.util.js";
 import { sequelize } from "../../configs/database.js";
 import notificationQueue from "../../jobs/queues/notification.queue.js";
 import { NOTIFICATION_EVENTS } from "../../configs/constants.js";
+import { AppError } from "../../utils/error.class.js";
 export async function payOrder(req, res, next) {
   try {
     await authUtil.checkRoleAndPermission(req.auth, ["client"], false);
@@ -73,6 +74,29 @@ export async function serviceProviderCloseOrder(req, res, next) {
     next(err);
   }
 }
+export async function getOrdersAdmin(req, res, next) {
+  try {
+    await authUtil.checkRoleAndPermission(req.auth, ["admin", "super_admin"]);
+    const orders = await orderService.getOrdersForAdmin(req.query);
+    res.send(orders);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function getOrderAdmin(req, res, next) {
+  try {
+    await authUtil.checkRoleAndPermission(req.auth, ["admin", "super_admin"]);
+    const order = await orderService.getOrderById(
+      hashIdUtil.hashIdDecode(req.params.orderId),
+    );
+    if (!order) throw new AppError(404, "Order not found", true);
+    res.send(order);
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function checkIfUserBoughtService(req, res, next) {
   try {
     await authUtil.checkRoleAndPermission(req.auth, ["client"]);
@@ -89,6 +113,8 @@ export async function checkIfUserBoughtService(req, res, next) {
 const orderController = {
   serviceProviderCloseOrder,
   checkIfUserBoughtService,
+  getOrdersAdmin,
+  getOrderAdmin,
   payOrder,
   getOrdersSP,
   getOrdersClient,

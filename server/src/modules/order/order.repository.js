@@ -170,6 +170,69 @@ export async function findOrderById(orderId) {
   return await db.Order.findByPk(orderId, { raw: true });
 }
 
+export async function getOrdersAdmin(filters = {}) {
+  const page = Math.max(Number(filters.page) || 1, 1);
+  const limit = Math.min(Number(filters.limit) || 20, 100);
+  const offset = (page - 1) * limit;
+  const where = {};
+  if (filters.status) where.status = filters.status;
+  if (filters.type) where.relatedType = filters.type;
+  if (filters.serviceProviderId)
+    where.serviceProviderId = filters.serviceProviderId;
+  const include = [
+    { model: db.Service, attributes: ["id", "title"], required: false },
+    {
+      model: db.User,
+      attributes: ["id", "firstName", "lastName", "email"],
+      required: false,
+    },
+    {
+      model: db.Dispute,
+      attributes: ["id", "status"],
+      required: false,
+    },
+    { model: db.Payout, required: false },
+  ];
+  if (filters.onlyDisputed) {
+    where["$Dispute.id$"] = { [Op.ne]: null };
+  }
+  if (filters.disputeStatus) {
+    where["$Dispute.status$"] = filters.disputeStatus;
+  }
+  const { rows, count } = await db.Order.findAndCountAll({
+    where,
+    include,
+    limit,
+    offset,
+    distinct: true,
+    order: [["createdAt", "DESC"]],
+  });
+  return {
+    data: rows,
+    meta: {
+      page,
+      limit,
+      total: count,
+      totalPages: Math.ceil(count / limit),
+    },
+  };
+}
+
+export async function getOrderById(orderId) {
+  return await db.Order.findByPk(orderId, {
+    include: [
+      { model: db.Service, attributes: ["id", "title"], required: false },
+      {
+        model: db.User,
+        attributes: ["id", "firstName", "lastName", "email"],
+        required: false,
+      },
+      { model: db.Dispute, required: false },
+      { model: db.Payout, required: false },
+    ],
+  });
+}
+
 export const checkIfUserBoughtService = async (userId, serviceId) => {
   const bought = db.Order.findAll({
     attributes: ["relatedId"],
@@ -184,6 +247,8 @@ export const checkIfUserBoughtService = async (userId, serviceId) => {
 const orderRepository = {
   serviceProviderFindOrder,
   findOrderById,
+  getOrdersAdmin,
+  getOrderById,
   getOrdersForSP,
   getOrdersForClient,
   getServiceForPayment,

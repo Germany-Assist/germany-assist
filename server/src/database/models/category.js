@@ -38,10 +38,12 @@ Category.init(
     requirements: {
       type: DataTypes.JSON,
       allowNull: false,
+      defaultValue: [],
     },
     icon: {
       type: DataTypes.STRING,
       allowNull: false,
+      defaultValue: "📁",
     },
   },
   {

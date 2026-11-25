@@ -2,7 +2,7 @@ import { generateDownloadUrl } from "../../configs/s3Configs.js";
 import hashIdUtil from "../../utils/hashId.util.js";
 
 const singleRequestMapper = async (request) => {
-  const assets = request.verificationRequestAssets?.map((i) => i.Asset) || [];
+  const assets = request.assets || [];
   return {
     id: hashIdUtil.hashIdEncode(request.id),
     serviceProviderId: request.serviceProviderId,
@@ -27,7 +27,7 @@ const multiRequestMapper = async (requests) => {
         status: i.status,
         adminNote: i.adminNote,
         assets: await Promise.all(
-          i.assets.filter(Boolean).map(async (x) => ({
+          (i.assets || []).filter(Boolean).map(async (x) => ({
             url: await generateDownloadUrl(x.url),
             label: x.label,
           })),

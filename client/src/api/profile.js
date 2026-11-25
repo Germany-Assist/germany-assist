@@ -5,11 +5,8 @@ export const profileRequest = async () => {
   return res.data; // { user }
 };
 export const uploadProfileImage = async (payload) => {
-  const res = await api.post(
-    "/asset/upload/users/post/image/profileImage",
-    payload,
-  );
-  return res.data; // { user }
+  const res = await api.post("/user/profile/image", payload);
+  return res.data; // { publicUrls }
 };
 export const addToFavoriteApi = async (id) => {
   const res = await api.put(`/service/client/favorite/${id}`);

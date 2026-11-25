@@ -7,11 +7,18 @@ import {
   createFreelancerValidator,
   createCompanyValidator,
 } from "./serviceProvider.validators.js";
-import { idUUIDparamValidator } from "../../validators/general.validators.js";
+import { idIntParamValidator } from "../../validators/general.validators.js";
 import multerUpload from "../../configs/multer.config.js";
 const serviceProviderRouter = express.Router();
 
 serviceProviderRouter.get("/", serviceProviderController.getAllServiceProvider);
+
+// Admin-created service provider (company profile + optional root account)
+serviceProviderRouter.post(
+  "/",
+  jwt.authenticateJwt,
+  serviceProviderController.createServiceProvider,
+);
 
 serviceProviderRouter.post(
   "/freelancer/signup",
@@ -45,13 +52,13 @@ serviceProviderRouter.post(
 
 serviceProviderRouter.get(
   "/:id",
-  idUUIDparamValidator,
+  idIntParamValidator,
   validateExpress,
   serviceProviderController.getServiceProviderById,
 );
 serviceProviderRouter.delete(
   "/:id",
-  idUUIDparamValidator,
+  idIntParamValidator,
   validateExpress,
   jwt.authenticateJwt,
   serviceProviderController.deleteServiceProvider,
@@ -66,7 +73,7 @@ serviceProviderRouter.put(
 
 serviceProviderRouter.get(
   "/restore/:id",
-  idUUIDparamValidator,
+  idIntParamValidator,
   validateExpress,
   jwt.authenticateJwt,
   serviceProviderController.restoreServiceProvider,

@@ -45,27 +45,33 @@ export async function payOrder(req) {
   // // in the future subscription may go here
   if (amount === 0) {
     const t = await sequelize.transaction();
-    //free service
-    const orderData = {
-      amount: 0,
-      status: "active",
-      userId: metadata.userId,
-      serviceId: metadata.serviceId,
-      serviceProviderId: service.serviceProviderId,
-      relatedType: type,
-      relatedId: optionId,
-      stripePaymentIntentId: uuidv4(),
-      currency: "usd",
-    };
-    const order = await orderRepository.createOrder(orderData, t);
-    const logData = {
-      orderId: order.id,
-      action: AUDIT_LOGS_CONSTANTS.ORDER_CREATE,
-      reason: "free service",
-      newValue: order.toJSON(),
-      actorType: AUDIT_LOGS_CONSTANTS.ACTOR_SYSTEM,
-    };
-    await auditLogsRepository.createNewLogRecord(logData, t);
+    try {
+      //free service
+      const orderData = {
+        amount: 0,
+        status: "active",
+        userId: metadata.userId,
+        serviceId: metadata.serviceId,
+        serviceProviderId: service.serviceProviderId,
+        relatedType: type,
+        relatedId: optionId,
+        stripePaymentIntentId: uuidv4(),
+        currency: "usd",
+      };
+      const order = await orderRepository.createOrder(orderData, t);
+      const logData = {
+        orderId: order.id,
+        action: AUDIT_LOGS_CONSTANTS.ORDER_CREATE,
+        reason: "free service",
+        newValue: order.toJSON(),
+        actorType: AUDIT_LOGS_CONSTANTS.ACTOR_SYSTEM,
+      };
+      await auditLogsRepository.createNewLogRecord(logData, t);
+      await t.commit();
+    } catch (error) {
+      if (!t.finished) await t.rollback();
+      throw error;
+    }
 
     return { success: true };
   } else {
@@ -109,8 +115,19 @@ export async function getOrdersForClient(userId, filters) {
   return { ...orders, data: ordersMapper.sanitizeOrders(orders.data) };
 }
 
+export async function getOrdersForAdmin(filters) {
+  const orders = await orderRepository.getOrdersAdmin(filters);
+  return { ...orders, data: ordersMapper.sanitizeOrders(orders.data) };
+}
+
+export async function getOrderById(orderId) {
+  return await orderRepository.getOrderById(orderId);
+}
+
 export const orderService = {
   getOrdersForSP,
+  getOrdersForAdmin,
+  getOrderById,
   serviceProviderCloseOrder,
   getOrdersForClient,
   payOrder,

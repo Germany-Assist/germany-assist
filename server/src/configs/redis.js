@@ -1,7 +1,11 @@
 import Redis from "ioredis";
 import { NODE_ENV } from "./serverConfig.js";
 import { errorLogger, infoLogger } from "../utils/loggers.js";
-import { shutdown } from "../bootstrap/shutdown.js";
+
+// Imported lazily to avoid a circular dependency:
+// bullMQ.config -> redis -> shutdown -> cron -> queues -> bullMQ.config
+const shutdownServer = (reason) =>
+  import("../bootstrap/shutdown.js").then(({ shutdown }) => shutdown(reason));
 
 export const REDIS_HOST = process.env.REDIS_HOST || "127.0.0.1";
 export const REDIS_PORT = process.env.REDIS_PORT || 6379;
@@ -33,7 +37,7 @@ if (NODE_ENV === "test") {
       retryCount = times;
       if (times > 10) {
         infoLogger("⚠️ Redis max retries reached — shutting down server");
-        shutdown("Redis connection closed");
+        shutdownServer("Redis connection closed");
         return null;
       }
 
@@ -47,9 +51,7 @@ if (NODE_ENV === "test") {
   redis.on("end", async () => {
     if (retryCount > 10) {
       infoLogger("⚠️ Redis connection closed after max retries");
-      import("../app.js").then((module) =>
-        module.shutdownServer("Redis connection closed")
-      );
+      shutdownServer("Redis connection closed");
     }
   });
 }

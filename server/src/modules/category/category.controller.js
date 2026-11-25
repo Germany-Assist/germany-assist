@@ -2,6 +2,27 @@ import categoryServices from "./category.services.js";
 import authUtil from "../../utils/authorize.util.js";
 import hashIdUtil from "../../utils/hashId.util.js";
 
+export async function getAllCategories(req, res, next) {
+  try {
+    const categories = await categoryServices.getAllCategories();
+    res.status(200).json(
+      categories.map((category) => {
+        const { Subcategories, ...data } = category.toJSON();
+        return {
+          ...data,
+          id: hashIdUtil.hashIdEncode(data.id),
+          subcategories: Subcategories?.map((sub) => ({
+            ...sub,
+            id: hashIdUtil.hashIdEncode(sub.id),
+          })),
+        };
+      }),
+    );
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function createCategory(req, res, next) {
   try {
     await authUtil.checkRoleAndPermission(
@@ -42,6 +63,7 @@ export async function updateCategory(req, res, next) {
 }
 
 const categoryController = {
+  getAllCategories,
   createCategory,
   updateCategory,
 };

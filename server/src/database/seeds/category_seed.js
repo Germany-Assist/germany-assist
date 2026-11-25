@@ -1,4 +1,5 @@
 import Category from "../models/category.js";
+import { sequelize } from "../../configs/database.js";
 
 const categories = [
   {
@@ -166,5 +167,14 @@ const categories = [
 ];
 const seedCategory = async () => {
   await Category.bulkCreate(categories);
+  // The seed inserts explicit ids; move the sequence past them so new
+  // categories created through the API do not collide.
+  await sequelize.query(
+    `SELECT setval(
+      pg_get_serial_sequence('categories', 'id'),
+      (SELECT COALESCE(MAX(id), 1) FROM categories),
+      (SELECT COUNT(*) FROM categories) > 0
+    )`,
+  );
 };
 export default seedCategory;

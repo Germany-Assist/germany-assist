@@ -24,13 +24,6 @@ serviceRouter.use("/variant", variantRouter);
 /* ---------------- Public Routes ---------------- */
 // Get all services that are approved & published
 serviceRouter.get("/", serviceController.getAllServices);
-//service profile
-serviceRouter.get(
-  "/:id",
-  idHashedParamValidator,
-  validateExpress,
-  serviceController.getServiceProfile,
-);
 /* ---------------- Provider Routes ---------------- */
 // Create a new service
 serviceRouter.post(
@@ -145,5 +138,16 @@ serviceRouter.get(
   "/client/services",
   jwt.authenticateJwt,
   serviceController.getClientServices,
+);
+/* ---------------- Dynamic Routes ----------------
+ * Keep the catch-all ":id" route last: otherwise "/provider/...",
+ * "/admin/..." and "/client/..." are swallowed by it and fail the
+ * hash-id validator.
+ */
+serviceRouter.get(
+  "/:id",
+  idHashedParamValidator,
+  validateExpress,
+  serviceController.getServiceProfile,
 );
 export default serviceRouter;

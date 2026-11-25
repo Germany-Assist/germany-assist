@@ -58,11 +58,11 @@ export async function getServiceProviderById(req, res, next) {
     );
     const sanitizedSPProfile = {
       ...profile,
-      services: profile.Services.map((i) => {
+      services: (profile.Services ?? []).map((i) => {
         return {
           title: i.title,
           rating: i.rating,
-          image: i.image,
+          image: i.assets?.[0]?.url,
           id: hashIdUtil.hashIdEncode(i.id),
         };
       }),
@@ -115,7 +115,7 @@ export async function deleteServiceProvider(req, res, next) {
   try {
     const hasPermission = await authUtils.checkRoleAndPermission(
       req.auth,
-      ["superAdmin", "admin"],
+      ["admin", "super_admin"],
       true,
       "serviceProvider",
       "delete",
@@ -130,7 +130,7 @@ export async function restoreServiceProvider(req, res, next) {
   try {
     const hasPermission = await authUtils.checkRoleAndPermission(
       req.auth,
-      ["superAdmin", "admin"],
+      ["admin", "super_admin"],
       true,
       "serviceProvider",
       "delete",

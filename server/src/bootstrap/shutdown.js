@@ -1,6 +1,6 @@
 import { sequelize } from "../configs/database.js";
 import { disconnectRedis } from "../configs/redis.js";
-import { QueueManager } from "../configs/bullMQ.config.js";
+import queueManager from "../configs/bullMQ.config.js";
 import { infoLogger, errorLogger } from "../utils/loggers.js";
 import { shutdownCron } from "../cron/index.js";
 import { AppError } from "../utils/error.class.js";
@@ -54,7 +54,7 @@ export async function shutdown(event, server, io, error) {
     }
 
     // 4 Stop BullMQ workers & events
-    await QueueManager.shutdownAll();
+    await queueManager.shutdownAll();
 
     // 5 Close DB
     await sequelize?.close();

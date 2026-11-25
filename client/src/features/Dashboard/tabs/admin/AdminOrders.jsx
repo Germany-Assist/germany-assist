@@ -12,8 +12,12 @@ export default function AdminOrders() {
   useEffect(() => {
     (async () => {
       const res = await adminApis.getAllOrders();
-      if (!res.length) return;
-      const columns = Object.keys(res[0])
+      const rows = Array.isArray(res) ? res : res?.data || [];
+      if (!rows.length) {
+        setData({ columns: [], data: [] });
+        return;
+      }
+      const columns = Object.keys(rows[0])
         .filter((key) => key !== "dob")
         .map((key) => ({
           key,
@@ -56,7 +60,7 @@ export default function AdminOrders() {
           />
         ),
       });
-      setData({ columns, data: res });
+      setData({ columns, data: rows });
     })();
   }, []);
 

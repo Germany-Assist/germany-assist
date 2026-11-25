@@ -77,6 +77,23 @@ this will create the tables and the required minimum data please note that this 
 - Fully CI/CD deployment for the new repo.
 - Enhanced scripts and testing for the new repo.
 
-### 6. Notes
+### 6. Testing
+
+The end-to-end suite exercises the HTTP API against a real PostgreSQL test
+database (`server/test.env`). Start PostgreSQL and create the
+`germany_assist_testing` database first, then from the repository root run:
+
+```bash
+npm test          # same as: npm run test:e2e
+npm run test:e2e  # runs server/tests/routes/coreFlows.e2e.test.js
+```
+
+It covers login, admin-created providers, creating/approving/listing services
+(one-time and timeline), buying a service (free and Stripe flows), client
+services, disputes and admin orders. The older unit/controller suite is still
+available with `npm run test:legacy`; parts of it target APIs that no longer
+exist in this snapshot.
+
+### 7. Notes
 
 - Some Features like stripe requires manual installation and configuration for stripe cli.

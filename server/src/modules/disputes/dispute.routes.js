@@ -10,13 +10,15 @@ import {
 
 const router = express.Router();
 // TODO Validation should be for creation as enum for the reason
-router.post(
-  "/create",
+const openDisputeHandlers = [
   openDisputeValidator,
   validateExpress,
   jwtUtils.authenticateJwt,
   disputeController.openDispute,
-);
+];
+// Kept for backwards compatibility with older clients.
+router.post("/", ...openDisputeHandlers);
+router.post("/create", ...openDisputeHandlers);
 
 router.post(
   "/provider/response/:id",

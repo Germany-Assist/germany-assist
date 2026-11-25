@@ -1,4 +1,5 @@
 import Subcategory from "../models/subcategory.js";
+import { sequelize } from "../../configs/database.js";
 const subcategories = [
   // ======================
   // Career Coaching (1)
@@ -405,5 +406,12 @@ const subcategories = [
 
 const seedSubcategory = async () => {
   await Subcategory.bulkCreate(subcategories);
+  await sequelize.query(
+    `SELECT setval(
+      pg_get_serial_sequence('subcategories', 'id'),
+      (SELECT COALESCE(MAX(id), 1) FROM subcategories),
+      (SELECT COUNT(*) FROM subcategories) > 0
+    )`,
+  );
 };
 export default seedSubcategory;

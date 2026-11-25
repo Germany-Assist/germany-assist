@@ -233,7 +233,7 @@ export async function registerAdmin(body, auth) {
 export async function getAllUsers(auth) {
   await authUtil.checkRoleAndPermission(
     auth,
-    ["admin", "superAdmin"],
+    ["admin", "super_admin"],
     true,
     "user",
     "read",
@@ -273,7 +273,7 @@ export const updateImage = async (auth, file) => {
     if (profileImageIds) {
       await AssetRepository.markAsUnconfirmed(profileImageIds, t);
     }
-    await AssetService.uploadAsset({
+    const result = await AssetService.uploadAsset({
       files: [file],
       ownerId: auth.id,
       typeKey: "userImage",
@@ -281,12 +281,12 @@ export const updateImage = async (auth, file) => {
       transaction: t,
     });
     await t.commit();
+    return result;
   } catch (error) {
     errorLogger(error);
     await t.rollback();
+    throw error;
   }
-
-  // console.log(file);
 };
 
 const userServices = {

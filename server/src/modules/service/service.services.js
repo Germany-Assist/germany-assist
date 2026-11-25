@@ -132,12 +132,9 @@ async function createService(req, transaction) {
         : SERVICES_STATUS.draft,
   };
   if (serviceData.type === SERVICE_TYPES.timeline) {
-    serviceData.timelines = safeJsonParseTimelines(
-      req.body.timelines,
-      "timelines",
-    );
+    serviceData.timelines = safeJsonParseTimelines(req.body.timelines);
   } else if (serviceData.type === SERVICE_TYPES.oneTime) {
-    serviceData.variants = safeJsonParseVariants(req.body.variants, "variants");
+    serviceData.variants = safeJsonParseVariants(req.body.variants);
   }
   if (!serviceData.variants && !serviceData.timelines)
     throw new AppError(422, "invalid option for timeline or variants");
@@ -383,10 +380,15 @@ async function getClientServices(userId) {
         attributes: ["id"],
         where: {
           userId,
-          status: { [Op.or]: ["paid", "fulfilled", "completed"] },
+          status: { [Op.in]: ["active", "pending_completion", "completed"] },
         },
         include: [
-          { model: db.Timeline, attributes: ["id", "label"], required: true },
+          {
+            model: db.Timeline,
+            as: "timeline",
+            attributes: ["id", "label"],
+            required: false,
+          },
         ],
       },
     ],

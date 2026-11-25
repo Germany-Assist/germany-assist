@@ -250,8 +250,10 @@ export async function getClientServices(req, res, next) {
         timelines: ts.Orders.map((t) => {
           return {
             orderId: hashIdUtil.hashIdEncode(t.id),
-            timelineId: hashIdUtil.hashIdEncode(t.Timeline.id),
-            timelineLabel: t.Timeline.label,
+            timelineId: t.timeline
+              ? hashIdUtil.hashIdEncode(t.timeline.id)
+              : null,
+            timelineLabel: t.timeline?.label ?? null,
           };
         }),
       };

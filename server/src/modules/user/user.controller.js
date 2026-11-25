@@ -54,6 +54,7 @@ export async function updateImage(req, res, next) {
     res.send({
       success: true,
       message: "image updated successfully",
+      publicUrls: result?.urls || [],
     });
   } catch (error) {
     next(error);

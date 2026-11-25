@@ -104,8 +104,8 @@ async function updateAdmin(req, res, next) {
 
   try {
     const hasPermission = await authUtil.checkRoleAndPermission(req.auth, [
-      "service_provider_root",
-      "service_provider_rep",
+      "admin",
+      "super_admin",
     ]);
     const requestId = hashIdUtil.hashIdDecode(req.params.id);
     await verificationRequestService.updateAdmin(requestId, req.body, t);

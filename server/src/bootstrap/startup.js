@@ -1,6 +1,5 @@
 import { sequelize } from "../configs/database.js";
 import { connectRedis } from "../configs/redis.js";
-import { QueueManager } from "../configs/bullMQ.config.js";
 import { infoLogger } from "../utils/loggers.js";
 import { DB_NAME } from "../configs/database.js";
 

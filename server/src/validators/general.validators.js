@@ -26,6 +26,13 @@ export const idUUIDparamValidator = [
     .isUUID()
     .withMessage("not valid id"),
 ];
+export const idIntParamValidator = [
+  param("id")
+    .notEmpty()
+    .withMessage("ID must be a valid")
+    .isInt({ min: 1 })
+    .withMessage("not valid id"),
+];
 export const idHashedParamValidator = [
   param("id")
     .notEmpty()

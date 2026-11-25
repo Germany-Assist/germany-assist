@@ -9,6 +9,8 @@ import { validateExpress } from "../../middlewares/expressValidator.js";
 
 const categoryRouter = express.Router();
 
+categoryRouter.get("/", categoryController.getAllCategories);
+
 categoryRouter.post(
   "/",
   jwt.authenticateJwt,

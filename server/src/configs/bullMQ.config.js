@@ -103,7 +103,8 @@ export class QueueManager {
     }
   }
 }
-export default QueueManager = new QueueManager();
+export const queueManager = new QueueManager();
+export default queueManager;
 
 export async function listAllJobs(queue) {
   try {

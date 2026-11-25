@@ -14,8 +14,10 @@ import MultiUseTable from "../../../../components/ui/dashboard/MultiUseTable";
 import OrderStatusBadge from "../../../../components/ui/dashboard/OrderStatusBadge";
 import MetricCard from "../../../../components/ui/dashboard/MetricCard";
 import TransactionCell from "../../../../components/ui/dashboard/TransactionCell";
-import ActionGroup from "../../../../components/ui/dashboard/ActionGroup";
-import { getAllFinanceStatistical } from "../../../../api/adminApis";
+import {
+  getAllFinanceStatistical,
+  getAllOrders,
+} from "../../../../api/adminApis";
 
 const AdminFinance = () => {
   const [orders, setOrders] = useState([]);
@@ -28,7 +30,6 @@ const AdminFinance = () => {
   const [meta, setMeta] = useState({ page: 1, totalPages: 1, total: 0 });
   const [loading, setLoading] = useState(true);
   const [tableLoading, setTableLoading] = useState(false);
-  const [processingId, setProcessingId] = useState(null);
 
   const [filters, setFilters] = useState({
     page: 1,
@@ -48,8 +49,6 @@ const AdminFinance = () => {
           escrow: response.data.escrow,
           disputes: response.data.disputes,
         });
-        setOrders(response.data.orders.data);
-        setMeta(response.data.orders.meta);
       }
     } catch (err) {
       console.error(err);
@@ -86,23 +85,6 @@ const AdminFinance = () => {
         />
       ),
     },
-    {
-      header: "Action",
-      align: "right",
-      render: (row) => (
-        <ActionGroup
-          actions={[
-            {
-              label: "Close Order",
-              show: row.status === "active" && row.type === "oneTime",
-              loading: processingId === row.orderId,
-              onClick: () => handleCloseOrder(row.orderId),
-              variant: "primary",
-            },
-          ]}
-        />
-      ),
-    },
   ];
   // Specialized cell for Currency
   const CurrencyCell = ({ amount, isDisputed }) => (
@@ -123,7 +105,7 @@ const AdminFinance = () => {
         ...(filters.type && { type: filters.type }),
         ...(filters.onlyDisputed && { onlyDisputed: true }),
       };
-      const response = await serviceProviderGetAllOrders(params);
+      const response = await getAllOrders(params);
       setOrders(response.data || []);
       setMeta(response.meta || { page: 1, totalPages: 1 });
     } catch (err) {
@@ -138,7 +120,7 @@ const AdminFinance = () => {
   }, []);
   useEffect(() => {
     if (!loading) fetchFilteredData();
-  }, [filters, fetchFilteredData]);
+  }, [filters, fetchFilteredData, loading]);
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value, page: 1 }));
