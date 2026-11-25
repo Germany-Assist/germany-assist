@@ -271,23 +271,10 @@ export const routesConfig = [
         roles: ["admin", "super_admin"],
       },
       {
-        path: "providers",
-        element: AdminServiceProviders,
-        handle: { label: "Service Providers", icon: Users },
-        roles: ["admin"],
-        children: [
-          {
-            path: "create",
-            element: CreateNewSP,
-            handle: { label: "Create New Service Provider" },
-          },
-        ],
-      },
-      {
         path: "service-providers",
         element: AdminServiceProviders,
         handle: { label: "Service Providers", icon: Users },
-        roles: ["super_admin"],
+        roles: ["admin", "super_admin"],
         children: [
           {
             path: "new",

@@ -17,7 +17,7 @@ import StatusModal from "../../../../components/ui/StatusModal";
 import serviceProviderApis from "../../../../api/serviceProviderApis";
 import DashboardHeader from "../../../../components/ui/dashboard/DashboardHeader";
 import { getErrorMessage } from "../../../../api/errorMessages";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet, useLocation } from "react-router-dom";
 
 /**
  * Standardized Status Helper
@@ -88,12 +88,13 @@ export default function ServiceProviderServices() {
   });
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const fetchServices = useCallback(async () => {
     setLoading(true);
     try {
       const cleanParams = Object.fromEntries(
-        Object.entries(filters).filter(([_, v]) => v !== undefined && v !== ""),
+        Object.entries(filters).filter(([, v]) => v !== undefined && v !== ""),
       );
       const response = await serviceProviderApis.getAllServices(cleanParams);
       if (response) {
@@ -273,6 +274,13 @@ export default function ServiceProviderServices() {
     ],
     [navigate, services],
   );
+
+  if (
+    /^\/dashboard\/services\/(?:variants|timelines|create)\/?$/.test(
+      location.pathname,
+    )
+  )
+    return <Outlet />;
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 p-6">

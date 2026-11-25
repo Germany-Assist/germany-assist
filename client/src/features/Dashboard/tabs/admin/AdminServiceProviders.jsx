@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import adminApis from "../../../../api/adminApis";
 import DynamicTable from "../../DynamicTable";
 import ActionMenu from "../../ActionMenu";
 import { FcCheckmark } from "react-icons/fc";
 import { ImCross } from "react-icons/im";
 export default function AdminServiceProvider() {
+  const location = useLocation();
   const updateRow = (id, updater) => {
     setData((prev) => {
       if (!prev) return prev;
@@ -77,6 +79,12 @@ export default function AdminServiceProvider() {
       setData({ columns, data: res });
     })();
   }, []);
+
+  const isChildRoute =
+    /^\/dashboard\/(?:providers|service-providers)\/(?:create|new|verification)\/?$/.test(
+      location.pathname,
+    );
+  if (isChildRoute) return <Outlet />;
 
   return (
     <div>

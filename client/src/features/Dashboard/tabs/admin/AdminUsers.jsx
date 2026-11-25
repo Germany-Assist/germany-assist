@@ -12,8 +12,10 @@ import TransactionCell from "../../../../components/ui/dashboard/TransactionCell
 import ActionGroup from "../../../../components/ui/dashboard/ActionGroup";
 import FilterContainer from "../../../../components/ui/dashboard/FilterContainer";
 import adminApis from "../../../../api/adminApis";
+import { Outlet, useLocation } from "react-router-dom";
 
 export default function AdminUsers() {
+  const location = useLocation();
   const [users, setUsers] = useState([]);
   const [meta, setMeta] = useState({ page: 1, totalPages: 1, total: 0 });
   const [loading, setLoading] = useState(false);
@@ -29,7 +31,7 @@ export default function AdminUsers() {
     setLoading(true);
     try {
       const cleanParams = Object.fromEntries(
-        Object.entries(filters).filter(([_, v]) => v !== undefined && v !== ""),
+        Object.entries(filters).filter(([, v]) => v !== undefined && v !== ""),
       );
       const response = await adminApis.getAllUsers(cleanParams);
       if (response) {
@@ -151,6 +153,9 @@ export default function AdminUsers() {
       ),
     },
   ];
+
+  if (/^\/dashboard\/users\/create\/?$/.test(location.pathname))
+    return <Outlet />;
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 p-5">
