@@ -13,6 +13,7 @@ import jwtUtils from "../../src/middlewares/jwt.middleware.js";
 import permissionServices from "../../src/modules/permission/permission.services.js";
 import { roleTemplates } from "../../src/database/templates.js";
 import stripeUtils from "../../src/utils/stripe.util.js";
+import { backfillServiceImages } from "../../src/database/seeds/backfillServiceImages.js";
 
 const PROVIDER_PASSWORD = "Provider@2026";
 const CLIENT_PASSWORD = "Client@2026";
@@ -258,6 +259,32 @@ describe("E2E: create and publish a service", () => {
     assert.equal(res.body.total, 1);
     assert.equal(res.body.data.length, 1);
     assert.equal(res.body.data[0].title, "E2E Relocation Package");
+  });
+
+  it("backfills a cover image for services without uploaded assets", async () => {
+    const provider = await createProvider();
+    const subcategory = await firstSubcategory();
+    const created = await createServiceViaApi({
+      token: provider.token,
+      subcategory,
+    });
+    const serviceId = hashIdUtil.hashIdDecode(created.body.data.id);
+    await db.Service.update(
+      { status: "approved" },
+      { where: { id: serviceId } },
+    );
+
+    const count = await backfillServiceImages();
+    assert.ok(count >= 1);
+
+    const list = await request(app).get("/api/service");
+    const service = list.body.data.find((item) => item.title === "E2E Relocation Package");
+    assert.match(service.image, /^https:\/\//);
+
+    const profile = await request(app).get(`/api/service/${created.body.data.id}`);
+    assert.equal(profile.status, 200);
+    assert.equal(profile.body.assets.length, 1);
+    assert.equal(profile.body.assets[0].url, service.image);
   });
 
   it("lets an admin approve it and serves the public profile", async () => {

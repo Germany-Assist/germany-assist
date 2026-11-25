@@ -2,6 +2,7 @@ import { sequelize } from "../../configs/database.js";
 import { NODE_ENV } from "../../configs/serverConfig.js";
 import seedTestData from "./testData.seed.js";
 import seedDevAccounts from "./devAccounts.seed.js";
+import { backfillServiceImages } from "./backfillServiceImages.js";
 
 async function runSeed() {
   try {
@@ -14,6 +15,7 @@ async function runSeed() {
 
     await seedTestData();
     await seedDevAccounts();
+    await backfillServiceImages();
 
     console.log("\n✅ Test data seeding completed successfully!");
     await sequelize.close();

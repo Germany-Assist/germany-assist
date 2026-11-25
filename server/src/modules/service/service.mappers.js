@@ -6,7 +6,10 @@ import hashIdUtil from "../../utils/hashId.util.js";
 const encodeId = (id) => hashIdUtil.hashIdEncode(id);
 
 const resolveImageUrl = async (url) => {
-  return url ? await generateDownloadUrl(url) : undefined;
+  if (!url) return undefined;
+  // Assets seeded with external URLs (or public files) are already usable.
+  if (/^(https?:\/\/|\/)/i.test(url)) return url;
+  return await generateDownloadUrl(url);
 };
 
 const timelinesFormatter = (timelines) => {
