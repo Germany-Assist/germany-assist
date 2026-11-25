@@ -61,7 +61,7 @@ const DynamicTable = ({ columns, data }) => {
                   ${col.sortable ? "cursor-pointer select-none" : ""}`}
               >
                 <div className="flex items-center justify-center gap-2">
-                  <span>{col.key}</span>
+                  <span>{col.label || col.key}</span>
 
                   {sortConfig?.key === col.key && (
                     <span className="text-xs text-gray-400">

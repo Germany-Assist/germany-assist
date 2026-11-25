@@ -9,6 +9,17 @@ export default function AdminOrders() {
     window.open(url, "_blank");
   };
   const [data, setData] = useState(null);
+
+  const formatCell = (value) => {
+    if (value === null || value === undefined || value === "") return "—";
+    if (Array.isArray(value)) return value.length;
+    if (typeof value === "object") {
+      if (value.status) return value.status;
+      return JSON.stringify(value);
+    }
+    return value;
+  };
+
   useEffect(() => {
     (async () => {
       const res = await adminApis.getAllOrders();
@@ -34,7 +45,7 @@ export default function AdminOrders() {
                 </div>
               )
             ) : (
-              row[key]
+              formatCell(row[key])
             ),
           sortable: true,
         }));
@@ -45,16 +56,12 @@ export default function AdminOrders() {
           <ActionMenu
             actions={[
               {
-                label: "View User",
-                onClick: () => openNewTab(`user/${row.id}`),
-              },
-              {
                 label: "View Service",
-                onClick: () => openNewTab(`service/${row.id}`),
+                onClick: () => openNewTab(`/service/${row.serviceId}`),
               },
               {
                 label: "View Timeline",
-                onClick: () => openNewTab(`timeline/${row.id}`),
+                onClick: () => openNewTab(`/timeline/${row.relatedId}`),
               },
             ]}
           />
